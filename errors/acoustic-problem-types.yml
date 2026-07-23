@@ -1,0 +1,91 @@
+generated: '2026-07-17'
+method: searched
+source: https://developer.goacoustic.com/acoustic-content/reference/post_authoring-v1-changes-status-ready.md
+api: Acoustic Content
+format: acoustic-content-error
+# Acoustic Content does NOT use RFC 9457 application/problem+json. It returns a
+# provider-specific error envelope. Captured verbatim from the published bulk
+# workflow (changes/status) reference, which enumerates the documented error keys.
+envelope:
+  description: >-
+    Item-level failures are returned per item inside a `messages` object, keyed by
+    the item uid. Bulk operations also group item uids into outcome arrays
+    (successful, skipped, userErrors, genericErrors, missing).
+  fields:
+    uid: classification:id combined unique identifier of the item
+    id: item identifier
+    classification: content | asset
+    key: dotted error key (e.g. mismatched.revs.20000)
+    code: numeric error code
+    parameters: error-specific context object
+  outcome_arrays:
+  - successful
+  - skipped
+  - userErrors
+  - genericErrors
+  - missing
+problem_types:
+- code: 1000
+  key: error.generic.1000
+  title: Generic error
+  detail: Something unexpectedly went wrong trying to complete the action on this item.
+  category: server
+- code: 20000
+  key: mismatched.revs.20000
+  title: Mismatched revisions
+  detail: >-
+    The revision provided for the item is not the current revision. Check the recent
+    state of the item and retry with the current revision.
+  category: conflict
+  remediation: Re-fetch the item to obtain currentRev, then retry.
+- code: 20001
+  key: invalid.item.20001
+  title: Item is not in a valid state
+  detail: >-
+    Draft items may be saved with validation errors, but the errors must be resolved
+    before the status can change from draft to ready.
+  category: validation
+  remediation: Resolve validation errors, then retry.
+- code: 20002
+  key: not.found.20002
+  title: Item not found
+  detail: The specified item was not found. Verify the ID is correct or whether the item was deleted.
+  category: not_found
+- code: 20003
+  key: invalid.target.workflow.state.20003
+  title: Invalid target state
+  detail: The workflow status this item is attempting to move to is not allowed from its current state.
+  category: conflict
+- code: 20005
+  key: unmanaged.asset.20005
+  title: Workflow not supported for unmanaged assets
+  detail: Workflow actions are not supported for unmanaged developer assets.
+  category: validation
+- code: 20010
+  key: insufficient.permissions.20010
+  title: Insufficient permissions
+  detail: >-
+    The user lacks permission for the action. Drafts may be deleted by anyone, but
+    non-draft items may only be deleted by a manager or administrator; library moves
+    require contributor access in both source and destination libraries.
+  category: authorization
+- code: 20100
+  key: dependencies.failed.20100
+  title: Dependencies failed
+  detail: The item's status cannot be changed because one or more of its dependencies failed.
+  category: dependency
+- code: 20200
+  key: missing.dependencies.20200
+  title: Missing dependencies
+  detail: >-
+    The item's status cannot be changed because one or more of its dependencies were
+    not specified in the request.
+  category: dependency
+  remediation: Include the dependent items in the bulk request and retry.
+- code: 20201
+  key: missing.dependencies.details.20201
+  title: Missing dependencies (detailed)
+  detail: >-
+    A dependency required for the operation is missing; the response enumerates the
+    missing items (uid, id, classification, name).
+  category: dependency

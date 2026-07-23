@@ -1,0 +1,72 @@
+generated: '2026-07-17'
+method: searched
+source: https://developer.goacoustic.com/acoustic-content/
+api: Acoustic Content
+# Cross-cutting API semantics captured from the published Acoustic Content
+# developer documentation. Multi-tenant SaaS: the REST base host is
+# tenant-specific; relative resource paths (e.g. /authoring/v1/assets) are stable.
+authentication:
+  styles:
+  - basic-auth
+  - api-key
+  notes: >-
+    Content APIs support both unauthenticated (delivery/read) and authenticated
+    (authoring) calls. Authoring calls require Basic authentication or an API key.
+  see: llms/acoustic-llms.txt
+authorization:
+  model: role-based
+  roles:
+  - admin
+  - manager
+  - editor
+  - viewer
+  notes: Each operation documents the user roles permitted (admin, manager, editor, viewer).
+conditional_requests:
+  supported: true
+  notes: >-
+    GET operations on assets and categories support conditional requests
+    (ETag / If-None-Match style caching semantics per the reference).
+workflow_states:
+  supported: true
+  applies_to:
+  - content
+  - asset
+  states:
+  - draft
+  - ready
+  - retired
+  notes: >-
+    Assets and content move through draft -> ready -> retired workflow states via
+    the /changes/status endpoints (single and bulk).
+identifiers:
+  scheme: uid
+  format: "{classification}:{id}"
+  notes: >-
+    Items are addressable by a classification+id "uid" (e.g. content:579c...,
+    asset:448e...) that is unique across all content hub items.
+bulk_operations:
+  supported: true
+  endpoints:
+  - /authoring/v1/changes/status/ready
+  - /authoring/v1/changes/status/retire
+  - /authoring/v1/changes/delete
+  - /authoring/v1/changes/set-library
+  outcome_arrays:
+  - successful
+  - skipped
+  - userErrors
+  - genericErrors
+  - missing
+error_envelope:
+  format: acoustic-content-error
+  see: errors/acoustic-problem-types.yml
+  fields:
+  - uid
+  - id
+  - classification
+  - key
+  - code
+  - parameters
+idempotency:
+  documented: false
+  notes: No explicit idempotency-key header is documented; not asserted.
