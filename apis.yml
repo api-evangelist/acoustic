@@ -1,37 +1,42 @@
 aid: acoustic
 accessModel:
-  pricing: unknown
-  onboarding: unknown
+  pricing: paid
+  onboarding: sales
   trial: false
   try_now: false
-  public: false
-  label: Unknown
-  confidence: low
-  source: []
-  generated: '2026-07-22'
-  method: derived
+  public: true
+  label: Public docs, gated onboarding
+  confidence: medium
+  source:
+  - https://developer.goacoustic.com
+  - https://www.acoustic.com/pricing
+  generated: '2026-08-13'
+  method: searched
 image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/acoustic.png
 name: Acoustic
 description: >-
   Acoustic is a real-time behavioral marketing platform for B2C companies, delivering
-  omnichannel customer engagement across email, SMS, WhatsApp, and mobile push. Its
-  flagship product, Acoustic Connect, turns customer behavior and intent into timely,
-  relevant messages through real-time orchestration and audience segmentation.
-  Acoustic's developer surface at developer.goacoustic.com documents the Acoustic
-  Content headless CMS / digital asset management REST API and the Acoustic
-  Personalization library for delivering tailored content to each visitor in real
-  time. Formerly IBM Watson Marketing, Acoustic was carved out as an independent
+  omnichannel customer engagement across email, SMS, WhatsApp, mobile push and web.
+  Its developer portal at developer.goacoustic.com publishes an RFC 9727 api-catalog
+  advertising six API products: Acoustic Connect (a GraphQL API for contacts,
+  consent, audiences, product catalog and signals), Acoustic Campaign (a long-lived
+  REST + XML API estate inherited from Silverpop, with a live Swagger service
+  description per regional pod), Acoustic Content (a headless CMS / digital asset
+  management REST API covering authoring, delivery, rendering, publishing and
+  webhooks), Acoustic Personalization (a client-side library for real-time content
+  and product recommendations), Acoustic Experience Analytics (Tealeaf) and Acoustic
+  Exchange. Formerly IBM Watson Marketing, Acoustic was carved out as an independent
   martech company and is a portfolio company of Sapphire Ventures.
 url: https://raw.githubusercontent.com/api-evangelist/acoustic/refs/heads/main/apis.yml
 x-type: company
 x-source: vc-portfolio
 x-backed-by:
 - sapphire-ventures
-x-tier: stub
-x-tier-reason: portfolio-lead
+x-tier: profiled
+x-tier-reason: machine-readable-contracts-harvested
 specificationVersion: '0.20'
 created: '2026-07-17'
-modified: '2026-07-17'
+modified: '2026-08-13'
 tags:
 - Company
 - Martech
@@ -41,15 +46,31 @@ tags:
 - Content Management
 - Personalization
 - Email
+- SMS
+- Push Notifications
+- Headless CMS
+- Digital Asset Management
+- Customer Data
+- GraphQL
+- Consent Management
 apis:
 - name: Acoustic Content API
   description: >-
     Headless CMS and digital asset management REST API (authoring and delivery) for
-    managing assets, content items, categories/taxonomies, libraries, and publishing
-    workflow states. Multi-tenant SaaS; the REST base host is tenant-specific.
+    managing assets, resources, renditions, content items, content types, element
+    definitions, categories/taxonomies, layouts, layout mappings, libraries, sites,
+    pages, comments, reviews, versions, search, rendering, publishing jobs and the
+    tenant webhook profile. Multi-tenant SaaS: the REST base host is regional and the
+    path carries the tenant's Content Hub ID, so the base is
+    https://{DomainName}/api/{ContentHubId} (for example
+    https://content-us-1.content-cms.com/api/{tenantId}).
   humanURL: https://developer.goacoustic.com/acoustic-content/
-  baseURL: https://developer.goacoustic.com/acoustic-content/reference
+  baseURL: https://content-us-1.content-cms.com/api/{tenantId}
   properties:
+  - type: OpenAPI
+    url: openapi/acoustic-content-openapi-original.json
+  - type: Swagger
+    url: openapi/acoustic-content-swagger2-original.yaml
   - type: Documentation
     url: https://developer.goacoustic.com/acoustic-content/docs
   - type: APIReference
@@ -60,32 +81,153 @@ apis:
     url: errors/acoustic-problem-types.yml
   - type: Conventions
     url: conventions/acoustic-conventions.yml
+  - type: DataModel
+    url: data-model/acoustic-data-model.yml
+  - type: Overlay
+    url: overlays/acoustic-content-overlay.yaml
+  - type: Webhooks
+    url: asyncapi/acoustic-webhooks.yml
+  - type: LLMsTxt
+    url: llms/acoustic-llms.txt
+- name: Acoustic Campaign REST API
+  description: >-
+    REST API for the Acoustic Campaign (formerly Silverpop Engage) marketing
+    automation platform, covering contact databases, relational tables, programs,
+    contact sources, channels (push, SMS, in-app, rich content), messages, web
+    tracking, Universal Behaviors (events), event types, organization settings and
+    GDPR job status. Acoustic serves a live, unauthenticated Swagger 1.1 service
+    description from every regional pod at /restdoc, and each pod is a separate base
+    host (api-campaign-us-1..6, -eu-1, -ap-2, -ap-3, -ca-1).
+  humanURL: https://developer.goacoustic.com/acoustic-campaign/reference/rest-api-overview
+  baseURL: https://api-campaign-us-1.goacoustic.com/rest
+  properties:
+  - type: Swagger
+    url: openapi/acoustic-campaign-rest-swagger-index.json
+  - type: Swagger
+    name: Channels
+    url: openapi/acoustic-campaign-channels-swagger.json
+  - type: Swagger
+    name: Contact databases
+    url: openapi/acoustic-campaign-databases-swagger.json
+  - type: Swagger
+    name: Relational tables
+    url: openapi/acoustic-campaign-relationaltables-swagger.json
+  - type: Swagger
+    name: Programs
+    url: openapi/acoustic-campaign-programs-swagger.json
+  - type: Swagger
+    name: Organization settings
+    url: openapi/acoustic-campaign-orgs-swagger.json
+  - type: Swagger
+    name: Contact sources
+    url: openapi/acoustic-campaign-contactsources-swagger.json
+  - type: Swagger
+    name: Universal Behaviors (events)
+    url: openapi/acoustic-campaign-events-swagger.json
+  - type: Swagger
+    name: Event types
+    url: openapi/acoustic-campaign-eventtypes-swagger.json
+  - type: Swagger
+    name: Messages
+    url: openapi/acoustic-campaign-messages-swagger.json
+  - type: Swagger
+    name: Web tracking
+    url: openapi/acoustic-campaign-webtracking-swagger.json
+  - type: Swagger
+    name: GDPR jobs
+    url: openapi/acoustic-campaign-gdpr_jobs-swagger.json
+  - type: RateLimits
+    url: rate-limits/acoustic-rate-limits.yml
+  - type: Webhooks
+    url: asyncapi/acoustic-webhooks.yml
+  - type: APIReference
+    url: https://api-campaign-us-1.goacoustic.com/restdoc/
+  - type: Documentation
+    url: https://developer.goacoustic.com/acoustic-campaign/reference/rest-api-overview
+  - type: ErrorCatalog
+    url: errors/acoustic-campaign-error-codes.yml
+  - type: Authentication
+    url: authentication/acoustic-authentication.yml
+- name: Acoustic Campaign XML API
+  description: >-
+    The long-lived XML-over-HTTP API for Acoustic Campaign, inherited from Silverpop
+    Engage. A single POST endpoint per regional pod accepts XML request documents for
+    contact list management, recipient management, mailing and template management,
+    relational tables, scheduling, reporting and data export. Authenticated with
+    OAuth 2 (refresh-token grant) or the legacy jsessionid session. Acoustic
+    publishes a public Postman collection for it.
+  humanURL: https://developer.goacoustic.com/acoustic-campaign/reference/xml-api-overview-1
+  baseURL: https://api-campaign-us-1.goacoustic.com/XMLAPI
+  properties:
+  - type: Documentation
+    url: https://developer.goacoustic.com/acoustic-campaign/reference/xml-api-overview-1
+  - type: Postman
+    url: https://documenter.getpostman.com/view/1643559/2sBXqQEHNz
+  - type: Authentication
+    url: authentication/acoustic-authentication.yml
+- name: Acoustic Connect API
+  description: >-
+    The GraphQL API for Acoustic Connect — the platform's contact, consent, audience,
+    reference-set, product-catalog, product-performance and signal surface. A single
+    POST endpoint at the region host root, authenticated with an X-API-Key header
+    generated in Connect under Administration > General settings > API keys. Three
+    regional endpoints (us-east-1, ap-southeast-2, eu-central-1). Schema
+    introspection is authentication-gated.
+  humanURL: https://developer.goacoustic.com/acoustic-connect/reference/introduction
+  baseURL: https://connect-gql-us-1.goacoustic.com/
+  properties:
+  - type: Documentation
+    url: https://developer.goacoustic.com/acoustic-connect/reference/introduction
+  - type: GettingStarted
+    url: https://developer.goacoustic.com/acoustic-connect/reference/use-connect-api
+  - type: ChangeLog
+    url: https://developer.goacoustic.com/acoustic-connect/changelog
+  - type: Authentication
+    url: authentication/acoustic-authentication.yml
 - name: Acoustic Personalization
   description: >-
     Real-time personalization library and APIs for delivering optimized, tailored
     content to each visitor based on behavior and contextual data, with product
-    catalog, recommendations, and behavioral analytics capture.
+    catalog, recommendations, zones, geolocation and behavioral analytics capture.
+    Delivered as a client-side PZN library (MPA script deployment via Exchange
+    Capture, or an npm package for Angular/React SPAs distributed from Acoustic's
+    private Artifactory). Acoustic publishes no callable API host for Personalization:
+    /acoustic-personalization/reference returns 404, and the endpoints the library
+    talks to are registered per tenant inside Exchange rather than documented, so
+    baseURL is deliberately left unset rather than pointed at a docs page.
   humanURL: https://developer.goacoustic.com/acoustic-personalization/
-  baseURL: https://developer.goacoustic.com/acoustic-personalization/reference
+  x-baseURL-status: no-usable-base
+  x-baseURL-note: >-
+    Checked 2026-08-13. https://developer.goacoustic.com/acoustic-personalization/reference
+    returns HTTP 404; the docs describe a browser library and Exchange-registered
+    endpoints, never a public API host.
   properties:
   - type: Documentation
     url: https://developer.goacoustic.com/acoustic-personalization/docs
   - type: GettingStarted
     url: https://developer.goacoustic.com/acoustic-personalization/docs/quick-start-guide-for-personalization
+  - type: Components
+    url: components/acoustic-components.yml
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: AgenticAccess
+  url: agentic-access/acoustic-agentic-access.yml
+- type: TrustCenter
+  url: security/acoustic-trust-center.yml
 - type: Website
-  url: https://www.acoustic.com/tealeaf
+  url: https://www.acoustic.com
 - type: DeveloperPortal
   url: https://developer.goacoustic.com
 - type: Documentation
   url: https://developer.goacoustic.com
 - type: APIReference
   url: https://developer.goacoustic.com/acoustic-content/reference
+- type: GettingStarted
+  url: https://developer.goacoustic.com/acoustic-content/reference/get-started
 - type: Blog
   url: https://www.acoustic.com/resources/blog
 - type: Support
@@ -98,6 +240,16 @@ common:
   url: https://www.acoustic.com/terms-conditions
 - type: PrivacyPolicy
   url: https://www.acoustic.com/privacy-notice
+- type: GitHubOrganization
+  url: https://github.com/acoustic-content-samples
+- type: Postman
+  url: https://documenter.getpostman.com/view/1643559/2sBXqQEHNz
+- type: StatusPage
+  url: https://status.goacoustic.com
+- type: TrustCenter
+  url: security/acoustic-trust-center.yml
+- type: Compliance
+  url: https://trust.acoustic.com
 - type: LLMsTxt
   url: llms/acoustic-llms.txt
 - type: ErrorCatalog
@@ -106,8 +258,57 @@ common:
   url: conventions/acoustic-conventions.yml
 - type: DomainSecurity
   url: security/acoustic-domain-security.yml
+- type: WellKnown
+  url: well-known/acoustic-well-known.yml
+- type: APICatalog
+  url: well-known/acoustic-api-catalog.json
+- type: Authentication
+  url: authentication/acoustic-authentication.yml
+- type: Packages
+  url: packages/acoustic-packages.yml
+- type: SDKs
+  url: packages/acoustic-packages.yml
+- type: CLI
+  url: cli/acoustic-cli.yml
+- type: Components
+  url: components/acoustic-components.yml
+- type: ChangeLog
+  url: changelog/acoustic-changelog.yml
+- type: Lifecycle
+  url: lifecycle/acoustic-lifecycle.yml
+- type: Conformance
+  url: conformance/acoustic-conformance.yml
+- type: Plans
+  url: plans/acoustic-plans-pricing.yml
+- type: RateLimits
+  url: rate-limits/acoustic-rate-limits.yml
+- type: DataModel
+  url: data-model/acoustic-data-model.yml
+- type: Webhooks
+  url: asyncapi/acoustic-webhooks.yml
+- type: AgentSkill
+  url: skills/_index.yml
+- type: ToolCrosswalk
+  url: mcp/acoustic-tool-crosswalk.yml
+- type: Overlay
+  url: overlays/acoustic-content-overlay.yaml
+
 x-enrichment:
-  date: '2026-07-19'
-  status: backfilled
+  date: '2026-08-13'
+  status: enriched
+  artifacts_added: 39
   pass: local-v1
-  note: backfilled from .gitignore signal + verified work evidence
+  note: >-
+    Contract discovery beat a JS-rendered docs host twice. The full Acoustic Content
+    OpenAPI 3.0.0 (136 paths / 178 operations / 294 schemas) was extracted from the
+    ReadMe-embedded API definition at /branches/1.0/apis/acoustic-content-api.json on
+    developer.goacoustic.com, and a first-party Swagger 2.0 copy (142 paths / 187
+    operations) was found at
+    github.com/acoustic-content-samples/wch-openapi-documentation. Acoustic Campaign
+    turned out to serve a live, unauthenticated Swagger 1.1 service description from
+    every regional pod at /restdoc (11 resources, 64 operations), and Acoustic Connect
+    is a GraphQL API whose endpoint is the region host root with introspection gated
+    behind X-API-Key. The developer portal also serves a real RFC 9727
+    /.well-known/api-catalog advertising six API products, four more than this profile
+    previously knew about.
+
