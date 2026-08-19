@@ -1,0 +1,257 @@
+
+
+
+
+
+
+
+{
+    "basePath":"https://api-campaign-us-1.goacoustic.com/rest",
+    "resourcePath": "/orgs",
+    "apis":[
+        {
+            "path":"/orgs/{id}/bccemailaddress",
+            "description":"Retrieve BCC Email Address.",
+            "operations":[
+                {
+                    "method":"GET",
+                    "summary":"Retrieve BCC Email Address",
+                    "notes":"Use this API to get the Org BCC Address.",
+                    "nickname":"org-bccemailaddress-get",
+                    "responseClass":"BccAddress",
+                    "parameters":[
+                        {
+                            "paramType": "path",
+                            "name": "id",
+                            "description": "Organization id",
+                            "dataType": "String",
+                            "required": true,
+                            "allowMultiple": false
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "path":"/orgs/{id}/bccemailaddress",
+            "description":"Set Org BCC Email Address",
+            "operations":[
+                {
+                    "method":"PATCH",
+                    "summary":"Update Org BCC Email Address",
+                    "notes":"Use this API to set the Org BCC Address.",
+                    "nickname":"org-bccemailaddress-put",
+                    "responseClass":"",
+                    "parameters":[
+                        {
+                            "paramType": "path",
+                            "name": "id",
+                            "description": "Organization id",
+                            "dataType": "String",
+                            "required": true,
+                            "allowMultiple": false
+                        },
+                        {
+                            "paramType": "body",
+                            "name": "BccAddress",
+                            "description": "BCC Email Address",
+                            "dataType": "BccAddress",
+                            "required": true,
+                            "allowMultiple": false
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "path":"/orgs/{orgId}/dll_whitelist_domains",
+            "description":"Add Domain to Org DLL Whitelist",
+            "operations":[
+                {
+                    "method":"POST",
+                    "summary":"Add Domain to Org DLL Whitelist",
+                    "notes":"Use this API to add domain to Org DLL Whitelist",
+                    "nickname":"org-dllwhitelist-post",
+                    "responseClass":"DomainPostResponse",
+                    "parameters":[
+                        {
+                            "paramType": "path",
+                            "name": "orgId",
+                            "description": "Organization id2",
+                            "dataType": "int",
+                            "required": true,
+                            "allowMultiple": false
+                        },
+                        {
+                            "paramType": "body",
+                            "name": "name",
+                            "description": "Domain Name",
+                            "dataType": "DomainName",
+                            "required": true,
+                            "allowMultiple": false
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "path":"/orgs/{orgId}/dll_whitelist_domains",
+            "description":"Get List of Domains in Org DLL Whitelist",
+            "operations":[
+                {
+                    "method":"GET",
+                    "summary":"Get List of Domains in Org DLL Whitelist",
+                    "notes":"Use this API to get list of all domains in Org DLL Whitelist",
+                    "nickname":"org-dllwhitelist-get-all",
+                    "responseClass":"DomainGetResponse",
+                    "parameters":[
+                        {
+                            "paramType": "path",
+                            "name": "orgId",
+                            "description": "Organization id2",
+                            "dataType": "int",
+                            "required": true,
+                            "allowMultiple": false
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "path":"/orgs/{orgId}/dll_whitelist_domains/{domainId}",
+            "description":"Get Domain in Org DLL Whitelist",
+            "operations":[
+                {
+                    "method":"GET",
+                    "summary":"Get Domain in Org DLL Whitelist",
+                    "notes":"Use this API to get domain in Org DLL Whitelist by providing domainId in path",
+                    "nickname":"org-dllwhitelist-get-by-id",
+                    "responseClass":"DomainGetResponse",
+                    "parameters":[
+                        {
+                            "paramType": "path",
+                            "name": "orgId",
+                            "description": "Organization id2",
+                            "dataType": "int",
+                            "required": true,
+                            "allowMultiple": false
+                        },
+                        {
+                            "paramType": "path",
+                            "name": "domainId",
+                            "description": "Domain Id",
+                            "dataType": "int",
+                            "required": true,
+                            "allowMultiple": false
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "path":"/orgs/{orgId}/dll_whitelist_domains/{domainId}",
+            "description":"Delete Domain from Org DLL Whitelist",
+	        "operations":[
+                {
+                    "method":"DELETE",
+                    "summary":"Delete Domain from Org DLL Whitelist",
+                    "notes":"Use this API to delete a domain from Org DLL Whitelist",
+                    "nickname":"org-dllwhitelist-delete",
+                    "responseClass":"",
+                    "parameters":[
+                        {
+                            "paramType": "path",
+                            "name": "orgId",
+                            "description": "Organization id",
+                            "dataType": "String",
+                            "required": true,
+                            "allowMultiple": false
+                        },
+                        {
+                            "paramType": "path",
+                            "name": "domainId",
+                            "description": "Domain id",
+                            "dataType": "String",
+                            "required": true,
+                            "allowMultiple": false
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "models": {
+        "BccAddress": {
+            "properties": {
+                "email": {
+                    "type": "String",
+                    "description": "The Org's Bcc Email Address",
+                    "required": true
+           			}
+
+      		}
+   		},
+        "DomainName": {
+            "properties": {
+                "name": {
+                    "type": "String",
+                    "description": "Domain Name to be added to the Org's DLL Whitelist",
+                    "required": true
+                }
+            }
+        },
+        "DomainPostResponse" : {
+            "properties": {
+                "id": {
+                    "type": "int",
+                    "description": "Domain Id of Domain successfully added to Org's DLL Whitelist",
+                    "required": true
+                }
+            }
+        },
+        "DomainGetResponse" : {
+            "properties": {
+                "id": {
+                    "type": "int",
+                    "description": "Domain Id of Domain in Org's DLL Whitelist",
+                    "required": true
+                },
+                "name": {
+                    "type": "String",
+                    "description": "Domain Name of Domain in Org's DLL Whitelist",
+                    "required": true
+                },
+                "createdBy": {
+                    "type": "CreatedBy",
+                    "description": "User data on who added the domain to the Org's Dll Whitelist",
+                    "required": true,
+                    "$ref":"CreatedBy"
+                },
+                "creationDate": {
+                    "type": "Date",
+                    "description": "When the domain was added to the Org's DLL Whitelist. Date is represented in a String as per ISO 8601",
+                    "required": true
+                }
+            }
+        },
+        "CreatedBy": {
+            "properties" : {
+                "id" : {
+                    "type": "int",
+                    "description": "User ID2 of the user who added the domain to Org's DLL Whitelist",
+                    "required": true
+                },
+                "firstName" : {
+                    "type": "String",
+                    "description": "First name of the user who added the domain to Org's DLL Whitelist",
+                    "required": true
+                },
+                "lastName" : {
+                    "type": "String",
+                    "description": "Last name of the user who added the domain to Org's DLL Whitelist",
+                    "required": true
+                }
+            }
+        }
+    }
+}

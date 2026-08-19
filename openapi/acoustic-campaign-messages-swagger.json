@@ -1,0 +1,58 @@
+
+
+
+
+
+
+
+{
+  "basePath": "https://api-campaign-us-1.goacoustic.com/rest",
+  "resourcePath": "/messages",
+  "apis": [
+		{
+	    "path":"/messages/{messageid}/offers",
+	    "description":"Retrieve offer details for scheduled messages.",
+	    "operations":[
+	        	{
+	            "method":"GET",
+	            "summary":"Retrieve offer details for scheduled message Id.",
+	            "notes":"Use this API to Retrieve offer details for a scheduled message Id",
+	            "nickname":"offer-details-get",
+	            "responseClass":"RestOfferDetails",
+	            "parameters": [
+	                           {
+	                             "paramType": "path",
+	                             "name": "messageid",
+	                             "description": "id of the message for which offer details are required",
+	                             "dataType": "long",
+	                             "required": true,
+	                             "allowMultiple": false
+	                           }
+	        	]
+	        	}
+	    ]
+		}	
+	],
+	
+	"models": {
+    	
+     "RestOfferDetails": {
+        "properties" : {             
+           "offerID": {
+         	"type": "Long",
+         	"description": "Offer Id of Offer which is attached with scheduled message Id  "
+         },
+          "trackingCode": {
+          "type": "String",
+          "description": "Tracking Code of Offer which is attached with scheduled message Id "
+        },
+         "offerAttributes": {
+          "type": "Map",
+          "description": "Map of name value pairs of offerAttributes for Offer which is attached with scheduled message Id ",
+          "$ref": "OfferAttributes"
+        }
+        }
+    }
+	
+  }
+  }

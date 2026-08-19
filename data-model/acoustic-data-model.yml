@@ -1,0 +1,248 @@
+generated: '2026-08-13'
+method: derived
+source: openapi/acoustic-content-openapi-original.json
+docs: https://developer.goacoustic.com/acoustic-content/reference
+note: >-
+  Derived from the Acoustic Content contract (136 paths, 178 operations, 294 component
+  schemas) plus the identifier conventions the reference documents. Acoustic Content
+  is the only Acoustic API with a machine-readable object graph: the Campaign service
+  descriptions are Swagger 1.1 with flat models, and the Connect GraphQL schema is
+  introspection-gated. Relationships marked `via` name the real field carrying the
+  reference; where the contract expresses a link only as a free-form uid string, that
+  is recorded rather than upgraded to a typed reference.
+identifiers:
+  scheme: uid
+  format: '{classification}:{id}'
+  examples:
+  - content:579c2232-7398-4c8b-921d-3932bfc45d19
+  - asset:448e8d63-ed15-4d59-85e5-53908a84ca93
+  classifications: [content, asset]
+  id_format: uuid
+  note: >-
+    Most operations accept either the bare {id} plus a {classification}, or the
+    combined uid. Revisions are carried separately as `rev` / `currentRev` and are
+    the concurrency token — a stale rev is error 20000, mismatched.revs.
+domains:
+- name: authoring
+  base_path: /authoring/v1
+  summary: The editorial system of record — create, review, version and promote items.
+- name: delivery
+  base_path: /delivery/v1
+  summary: Anonymous published read surface, with server-side rendering contexts.
+- name: mydelivery
+  base_path: /mydelivery/v1
+  summary: Authenticated twin of delivery that also returns restricted items.
+- name: publishing
+  base_path: /publishing/v1
+  summary: Publishing jobs and site revisions that move authoring state into delivery.
+- name: registry
+  base_path: /registry/v1
+  summary: Tenant record.
+- name: user-profile
+  base_path: /user-profile/v1
+  summary: Users and roles.
+- name: webhook
+  base_path: /webhook/v1
+  summary: One webhook profile per tenant.
+entities:
+- name: Tenant
+  domain: registry
+  path: /registry/v1/currenttenant
+  summary: The Content Hub. Its id is the {ContentHubId} segment of every API URL.
+  relationships:
+  - has_many: User
+  - has_many: Library
+  - has_one: WebhookProfile
+- name: Asset
+  domain: authoring
+  path: /authoring/v1/assets
+  classification: asset
+  summary: A managed or unmanaged file record, addressed by id or by path.
+  workflow: [draft, ready, retired]
+  relationships:
+  - belongs_to: Resource
+    via: resource
+    note: An asset points at the binary Resource that backs it; both can be created in one multipart call.
+  - has_many: Rendition
+  - belongs_to: ImageProfile
+    via: imageProfileId
+  - has_many: Category
+    via: tags
+  - belongs_to: Library
+    via: libraryId
+- name: Resource
+  domain: authoring
+  path: /authoring/v1/resources
+  summary: The raw binary behind an asset; created separately or inline with the asset.
+  relationships:
+  - has_many: Asset
+- name: Rendition
+  domain: authoring
+  path: /authoring/v1/renditions
+  summary: A derived representation of a resource.
+  relationships:
+  - belongs_to: Resource
+- name: ImageProfile
+  domain: authoring
+  path: /authoring/v1/image-profiles
+  summary: Named set of image transformations applied to image elements.
+  relationships:
+  - has_many: Asset
+- name: Content
+  domain: authoring
+  path: /authoring/v1/content
+  classification: content
+  summary: A content item — an instance of a content type, holding element values.
+  workflow: [draft, ready, retired]
+  relationships:
+  - belongs_to: Type
+    via: typeId
+    note: /authoring/v1/types/{id}/new-content returns the skeleton content item for a type.
+  - has_many: Content
+    via: elements[reference]
+    note: Reference elements link content to content; the delivery rendering context resolves them recursively and marks cycles with a $$CYCLE key.
+  - has_many: Asset
+    via: elements[image|file|video]
+  - has_many: Category
+    via: tags
+  - belongs_to: Library
+    via: libraryId
+  - has_many: Comment
+  - has_many: Version
+- name: Type
+  domain: authoring
+  path: /authoring/v1/types
+  summary: A content type document — the schema for content items. Exposes its own JSON Schema at /types/{id}/schema.
+  relationships:
+  - has_many: ElementDefinition
+    via: elements
+  - has_many: Content
+  - has_many: LayoutMapping
+  - has_one: Type
+    via: typeRef
+    note: A group element embeds another type whose kind contains "embedded".
+- name: ElementDefinition
+  domain: authoring
+  path: /authoring/v1/elementdefs
+  summary: >-
+    The catalogue of element varieties (text, formattedtext, number, datetime, image,
+    video, file, link, location, reference, category, group, optionselection, toggle)
+    that can be merged into a type's elements.
+  relationships:
+  - has_many: Type
+- name: Category
+  domain: authoring
+  path: /authoring/v1/categories
+  summary: A taxonomy node; root categories are taxonomies, children nest arbitrarily.
+  relationships:
+  - belongs_to: Category
+    via: parent
+  - has_many: Category
+    via: children
+  - has_many: Content
+  - has_many: Asset
+- name: Layout
+  domain: authoring
+  path: /authoring/v1/layouts
+  summary: A rendering template.
+  relationships:
+  - has_many: LayoutMapping
+- name: LayoutMapping
+  domain: authoring
+  path: /authoring/v1/layout-mappings
+  summary: Binds a layout to a content type for a rendering context.
+  relationships:
+  - belongs_to: Type
+    via: type-id
+  - belongs_to: Layout
+    via: layoutId
+- name: Site
+  domain: authoring
+  path: /authoring/v1/sites
+  summary: A site container with a page hierarchy and its own draft/ready metadata lifecycle.
+  relationships:
+  - has_many: Page
+- name: Page
+  domain: authoring
+  path: /authoring/v1/sites/{site-id}/pages
+  summary: A node in a site's page tree, positioned relative to its siblings.
+  relationships:
+  - belongs_to: Site
+    via: site-id
+  - belongs_to: Page
+    via: parentId
+  - belongs_to: Content
+    via: contentId
+  - belongs_to: Type
+    via: contentTypeId
+  - belongs_to: Layout
+    via: layoutId
+- name: Library
+  domain: authoring
+  summary: Access-control container; items are moved between libraries in bulk via /changes/set-library.
+  relationships:
+  - has_many: Content
+  - has_many: Asset
+- name: Comment
+  domain: authoring
+  path: /authoring/v1/comments
+  summary: A comment targeted at an item, retrievable by item or by user.
+  relationships:
+  - belongs_to: Content
+    via: target
+  - belongs_to: User
+    via: userId
+- name: Review
+  domain: authoring
+  path: /authoring/v1/review
+  summary: An approval record with approve, approve-all and complete transitions.
+  relationships:
+  - belongs_to: Content
+- name: Version
+  domain: authoring
+  path: /authoring/v1/versions/{classification}/{id}
+  summary: A point-in-time snapshot addressed by classification, id and timestamp; restore always produces a draft.
+  relationships:
+  - belongs_to: Content
+  - belongs_to: Asset
+- name: PublishingJob
+  domain: publishing
+  path: /publishing/v1/jobs
+  summary: Asynchronous publish run; only one current-job is addressable at a time.
+  relationships:
+  - belongs_to: Tenant
+- name: SiteRevision
+  domain: publishing
+  path: /publishing/v1/site-revisions/default
+  summary: The default site revision, carrying the autoPublishEnabled flag.
+  relationships:
+  - belongs_to: Site
+- name: User
+  domain: user-profile
+  path: /user-profile/v1/users
+  summary: A tenant user; roles are admin, manager, editor, viewer, authenticatedVisitor, anonymous.
+  relationships:
+  - belongs_to: Tenant
+- name: WebhookProfile
+  domain: webhook
+  path: /webhook/v1/profile
+  summary: >-
+    One profile per tenant listing the URLs Acoustic Content POSTs change events to.
+    See asyncapi/acoustic-webhooks.yml.
+  relationships:
+  - belongs_to: Tenant
+cross_cutting:
+  dependency_graph: >-
+    /authoring/v1/references/incoming and /references/outgoing expose the live
+    reference graph for any item, which is what makes the bulk workflow errors
+    dependencies.failed.20100 and missing.dependencies.20200 resolvable.
+  search:
+    engines:
+    - /authoring/v1/search and /authoring/v1/search/json
+    - /delivery/v1/search, /mydelivery/v1/search
+    - contextualsearch on both authoring and delivery, with proximity, accept-language and similar filters
+    note: Solr-style query surface (q, fq, fl, rows, sort, filter).
+summary:
+  entities: 21
+  relationships: 38
+  render: null

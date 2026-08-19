@@ -1,0 +1,124 @@
+generated: '2026-08-13'
+method: searched
+source: registry.npmjs.org + https://github.com/acoustic-content-samples
+note: >-
+  Every first-party Acoustic client library found on a public registry is for
+  Acoustic Content (the headless CMS). Acoustic Campaign, Acoustic Connect and
+  Acoustic Experience Analytics ship no public SDK. The currency signal is stark:
+  the newest first-party release on npm is wchtools 4.5.6 from 2021-03-17, and the
+  @acoustic-content-sdk/* family last published 2020-03-26 — while the Acoustic
+  Content API contract itself is still being republished (spec version 1.0.142,
+  reference pages updated 2026-04-08). The published SDKs trail the API they wrap by
+  roughly five years.
+packages:
+- language: javascript
+  registry: npm
+  name: wchtools-cli
+  url: https://www.npmjs.com/package/wchtools-cli
+  install: npm install -g wchtools-cli
+  official: true
+  version: 4.5.6
+  published: '2021-03-17'
+  source_code: https://github.com/acoustic-content-samples/wchtools-cli
+  note: The Acoustic Content command-line tool; its command surface is in cli/acoustic-cli.yml.
+- language: javascript
+  registry: npm
+  name: wchtools-api
+  url: https://www.npmjs.com/package/wchtools-api
+  install: npm install wchtools-api
+  official: true
+  version: 4.5.6
+  published: '2021-03-17'
+  note: The Node library the CLI is built on — push/pull of Content artifacts.
+- language: javascript
+  registry: npm
+  name: '@acoustic-content-sdk/api'
+  url: https://www.npmjs.com/package/@acoustic-content-sdk/api
+  install: npm install @acoustic-content-sdk/api
+  official: true
+  version: 9.0.10076
+  published: '2020-03-26'
+- language: javascript
+  registry: npm
+  name: '@acoustic-content-sdk/rest-api'
+  url: https://www.npmjs.com/package/@acoustic-content-sdk/rest-api
+  install: npm install @acoustic-content-sdk/rest-api
+  official: true
+  version: 9.0.10076
+  published: '2020-03-26'
+- language: javascript
+  registry: npm
+  name: '@acoustic-content-sdk/cli'
+  url: https://www.npmjs.com/package/@acoustic-content-sdk/cli
+  install: npm install @acoustic-content-sdk/cli
+  official: true
+  version: 9.0.10076
+  published: '2020-03-26'
+- language: typescript
+  registry: npm
+  name: '@acoustic-content-sdk/react-api'
+  url: https://www.npmjs.com/package/@acoustic-content-sdk/react-api
+  install: npm install @acoustic-content-sdk/react-api
+  official: true
+  version: 9.0.10076
+  published: '2020-03-26'
+- language: typescript
+  registry: npm
+  name: '@acoustic-content-sdk/ng-api'
+  url: https://www.npmjs.com/package/@acoustic-content-sdk/ng-api
+  install: npm install @acoustic-content-sdk/ng-api
+  official: true
+  version: 9.0.10076
+  published: '2020-03-26'
+- language: javascript
+  registry: npm
+  name: '@acoustic-content/delivery-sdk'
+  url: https://www.npmjs.com/package/@acoustic-content/delivery-sdk
+  install: npm install @acoustic-content/delivery-sdk
+  official: true
+  version: 1.0.3
+  published: '2020-07-16'
+  source_code: https://github.com/acoustic-content-samples/content-delivery-js-sdk
+- language: javascript
+  registry: npm
+  name: '@acoustic-content-sdk/wch-flux-sdk'
+  url: https://www.npmjs.com/package/@acoustic-content-sdk/wch-flux-sdk
+  install: npm install @acoustic-content-sdk/wch-flux-sdk
+  official: true
+  version: 1.5.0
+  published: '2021-06-22'
+- language: javascript
+  registry: private-artifactory
+  name: Personalization library (PZN) for Angular/React SPA
+  url: https://artifactory.acoustic.co/ui/login/
+  official: true
+  version: null
+  published: null
+  note: >-
+    Checked, nothing to record: the SPA build of the Personalization library is
+    distributed as an npm package from Acoustic's own Artifactory, which requires a
+    login, so there is no public registry metadata endpoint to read a version or
+    release date from. The docs reference "Personalization library version 2.3" in
+    prose; that is a docs statement, not a registry fact, so it is not recorded as a
+    version field.
+absent_registries:
+- registry: pypi
+  note: No first-party Acoustic package found.
+- registry: rubygems
+  note: No first-party Acoustic package found.
+- registry: maven-central
+  note: No first-party Acoustic package found.
+- registry: nuget
+  note: No first-party Acoustic package found.
+- registry: packagist
+  note: No first-party Acoustic package found.
+- registry: crates.io
+  note: No first-party Acoustic package found.
+- registry: pkg.go.dev
+  note: No first-party Acoustic module found.
+summary:
+  official_count: 10
+  newest_public_release: '2021-06-22'
+  languages: [javascript, typescript]
+  apis_covered: [Acoustic Content API]
+  apis_without_sdk: [Acoustic Campaign REST API, Acoustic Campaign XML API, Acoustic Connect API]

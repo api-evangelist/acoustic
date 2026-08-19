@@ -1,0 +1,1197 @@
+
+
+
+
+
+
+
+{
+    "basePath": "https://api-campaign-us-1.goacoustic.com/rest",
+    "resourcePath": "/databases",
+    "apis": [
+          {
+            "path": "/databases/{databaseId}/contacts/{contactid}/messages",
+            "description": "Retrieves the messages for the given Contact in the given Database",
+            "operations": [
+                {
+                    "httpMethod": "GET",
+                    "summary": "CONTACT MESSAGES API:<br>Retrieves the messages for the given Contact in the given Database",
+                    "notes": "Retrieves the messages",
+                    "nickname": "databases-contacts-messages-get",
+                    "responseClass": "ContactMessage",
+                    "parameters": [
+                        {
+                            "paramType": "path",
+                            "name": "databaseId",
+                            "description": "ID of the Contact Database",
+                            "dataType": "long",
+                            "required": true,
+                            "allowMultiple": false
+                        },
+                        {
+                            "paramType": "path",
+                            "name": "contactId",
+                            "description": "ID or key specification of the Contact for which messages are required",
+                            "dataType": "long",
+                            "required": true,
+                            "allowMultiple": false
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "path": "/databases/{databaseId}/contacts",
+            "description": "Contacts in a given Database",
+            "operations": [
+                {
+                    "httpMethod": "POST",
+                    "summary": "CONTACT API:<br>Creates a Contact in a given Database",
+                    "notes": "",
+                    "nickname": "databases-contacts-post",
+                    "responseClass": "long",
+                    "parameters": [
+                        {
+                            "paramType": "path",
+                            "name": "databaseId",
+                            "description": "ID of the Database in which a Contact should be created",
+                            "dataType": "long",
+                            "required": true,
+                            "allowMultiple": false
+                        },
+                        {
+                            "paramType": "body",
+                            "name": "contactData",
+                            "description": "Contact data",
+                            "dataType": "ContactInput",
+                            "required": true,
+                            "allowMultiple": false
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "path": "/databases/{databaseId}/contacts",
+            "description": "A Contact in a given Database",
+            "operations": [
+                {
+                    "httpMethod": "GET",
+                    "summary": "CONTACT BY LOOKUP KEY API:<br>Retrieves data for Contact(s) with the given lookup key filter(s) from the Database",
+                    "notes": "Use this API to retrieve contact representation(s) from a given databaseId for the given lookup key filter(s)",
+                    "nickname": "databases-contacts-get",
+                    "responseClass": "Contact",
+                    "parameters": [
+                        {
+                            "paramType": "path",
+                            "name": "databaseId",
+                            "description": "ID of the Database from which to return a Contact",
+                            "dataType": "long",
+                            "required": true,
+                            "allowMultiple": false
+                        },
+                        {
+                            "paramType": "query",
+                            "name": "filter",
+                            "description": "Contact lookup key filter(s) (e.g., lookupkeyfields=FieldName1=value;FieldName2=value)",
+                            "dataType": "string",
+                            "required": true,
+                            "allowMultiple": false
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "path": "/databases/{databaseId}/contacts/{contactId}",
+            "description": "A Contact in a given Database",
+            "operations": [
+                {
+                    "httpMethod": "GET",
+                    "summary": "CONTACT API:<br>Retrieves the Contacts with the given ID from the Database",
+                    "notes": "Use this API retrieve a contact representation for a given databaseId and contactId",
+                    "nickname": "databases-contacts-get",
+                    "responseClass": "Contact",
+                    "parameters": [
+                        {
+                            "paramType": "path",
+                            "name": "databaseId",
+                            "description": "ID of the Database from which to return a Contact",
+                            "dataType": "long",
+                            "required": true,
+                            "allowMultiple": false
+                        },
+                        {
+                            "paramType": "path",
+                            "name": "contactId",
+                            "description": "ID or key specification of the Contact to return",
+                            "dataType": "long",
+                            "required": true,
+                            "allowMultiple": false
+                        }
+                    ]
+                },
+                {
+                    "httpMethod": "PATCH",
+                    "summary": "CONTACT API:<br>Updates the Contact with the given contactId in the Database with the given databaseId",
+                    "notes": "Use this API update a Contact with the given data",
+                    "nickname": "databases-contacts-patch",
+                    "responseClass": "void",
+                    "parameters": [
+                        {
+                            "paramType": "path",
+                            "name": "databaseId",
+                            "description": "ID of the Database containing the Contact to update",
+                            "dataType": "long",
+                            "required": true,
+                            "allowMultiple": false
+                        },
+                        {
+                            "paramType": "path",
+                            "name": "contactId",
+                            "description": "ID of the Contact to update",
+                            "dataType": "long",
+                            "required": true,
+                            "allowMultiple": false
+                        },
+                        {
+                            "paramType": "body",
+                            "name": "contactData",
+                            "description": "Contact data",
+                            "dataType": "ContactInput",
+                            "required": true,
+                            "allowMultiple": false
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "path": "/databases/{databaseId}/contactbylookupkey",
+            "description": "Upserting contact using lookup key",
+            "operations": [
+                {
+                    "httpMethod": "PATCH",
+                    "summary": "CONTACT BY LOOKUP KEY API:<br>Updates the Contact with the given contact data using lookup key pair",
+                    "notes": "Use this API to upsert a Contact with the given data",
+                    "nickname": "databases-contactbylookupkey-patch",
+                    "responseClass": "void",
+                    "parameters": [
+                        {
+                            "paramType": "path",
+                            "name": "databaseId",
+                            "description": "ID of the Database containing the Contact to update",
+                            "dataType": "long",
+                            "required": true,
+                            "allowMultiple": false
+                        },
+                        {
+                            "paramType": "body",
+                            "name": "ContactUpsertSpecification",
+                            "description": "Contact Upsert Specification data",
+                            "dataType": "ContactUpsertSpecification",
+                            "required": true,
+                            "allowMultiple": false
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "path": "/databases/{databaseId}/contactbychannel",
+            "description": "upsert a contact using channel consent data",
+            "operations": [
+                {
+                    "httpMethod": "PATCH",
+                    "summary": "CONTACT BY CHANNEL API:<br>Add or update a contact with the given channel data.",
+                    "notes": "Use this API to upsert a Contact with the given channel data",
+                    "nickname": "databases-contactbychannel-patch",
+                    "responseClass": "ContactInfo",
+                    "parameters": [
+                        {
+                            "paramType": "path",
+                            "name": "databaseId",
+                            "description": "ID for the database enabled for SMS or Push",
+                            "dataType": "long",
+                            "required": true,
+                            "allowMultiple": false
+                        },
+                        {
+                            "paramType": "body",
+                            "name": "ContactByChannelSpecification",
+                            "description": "Contact by Channel Specification data",
+                            "dataType": "contactByChannelSpecification",
+                            "required": true,
+                            "allowMultiple": false
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "path": "/databases/{databaseId}/contactbychannel/contacts/{contactId}",
+            "description": "Update a contact using channel consent and contact data",
+            "operations": [
+                {
+                    "httpMethod": "PATCH",
+                    "summary": "CONTACT BY CHANNEL UPDATE API:<br>Update a contact using the given contactId and channel data.",
+                    "notes": "Use this API to update a Contact with the given channel data and contactId",
+                    "nickname": "databases-contactbychannelupdatecontact-patch",
+                    "responseClass": "ContactInfo",
+                    "parameters": [
+                        {
+                        "paramType": "path",
+                        "name": "databaseId",
+                        "description": "ID for the database enabled for SMS or Push",
+                        "dataType": "long",
+                        "required": true,
+                        "allowMultiple": false
+                        },
+                        {
+                        "paramType": "path",
+                        "name": "contactId",
+                        "description": "ID of the Contact to update for SMS or Push",
+                        "dataType": "long",
+                        "required": true,
+                        "allowMultiple": false
+                        },
+                        {
+                        "paramType": "body",
+                        "name": "ContactByChannelSpecification",
+                        "description": "Contact by Channel Specification data",
+                        "dataType": "contactByChannelSpecification",
+                        "required": true,
+                        "allowMultiple": false
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "path": "/databases/{databaseId}/eventtypemappings",
+            "description": "Mappings of Universal Behavior Event Types to a given Database",
+            "operations": [
+                {
+                    "httpMethod": "GET",
+                    "summary": "EVENT TYPE MAPPINGS API:<br>Returns the Event Type Mappings to a given Database",
+                    "notes": "",
+                    "nickname": "databases-eventtypemappings-get",
+                    "responseClass": "DatabaseEventTypeMapping",
+                    "parameters": [
+                        {
+                            "paramType": "path",
+                            "name": "databaseId",
+                            "description": "ID of the Database for which Event Type Mappings should be returned",
+                            "dataType": "long",
+                            "required": true,
+                            "allowMultiple": false
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "path": "/databases/{databaseId}/crmcampaignmembers/",
+            "description": "Upserts contacts into a Crm Campaign",
+            "operations": [
+                {
+                    "httpMethod": "PUT",
+                    "summary": "CRM CAMPAIGN MEMBERS API:<br>Creates or updates a record in a Crm campaign for a given contact, databaseId and crmCampaignKey",
+                    "notes": "",
+                    "nickname": "databases-put",
+                    "responseClass": "long",
+                    "parameters": [
+                        {
+                            "paramType": "path",
+                            "name": "databaseId",
+                            "description": "ID of the Database that contains the contact for the crm campaign record to be upserted",
+                            "dataType": "long",
+                            "required": true,
+                            "allowMultiple": false
+                        },
+                        {
+                            "paramType": "body",
+                            "name": "crmCampaignData",
+                            "description": "Crm campaign data",
+                            "dataType": "crmCampaignMember",
+                            "required": true,
+                            "allowMultiple": false
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+
+            "path":"/databases/{databaseId}/consent/{channel}-{qualifier}/{destination}",
+            "description":"Gets the consent (opted in or opted out) for a destination - an abstraction that currently is identified by an SMS phone number or Mobile User Id|Mobile Channel Id.",
+            "operations":[
+                {
+                    "httpMethod":"GET",
+                    "summary":"CHANNEL CONSENT API:<br>Get the consent value for a given database, channel, qualifier, and destination.",
+                    "notes":"",
+                    "nickname":"consent-get",
+                    "responseClass":"consentData",
+                   "parameters":[
+                        {
+                            "paramType":"path",
+                            "name":"databaseId",
+                            "description":"ID for the database enabled for SMS or Push",
+                            "dataType":"long",
+                            "required":true,
+                            "allowMultiple":false
+                        },
+                        {
+                            "paramType":"path",
+                            "name":"channel",
+                            "description":"SMS or Push",
+                            "dataType":"String",
+                            "required":true,
+                            "allowMultiple":false
+                        },
+                        {
+                            "paramType":"path",
+                            "name":"qualifier",
+                            "description":"Text to Join Program ID for SMS; AppKey for Push",
+                            "dataType":"String",
+                            "required":true,
+                            "allowMultiple":false
+                        },
+                        {
+                            "paramType":"path",
+                            "name":"destination",
+                            "description":"SMS phone number for SMS; Mobile User ID|Mobile Channel ID for Push",
+                            "dataType":"String",
+                            "required":true,
+                            "allowMultiple":false
+                        }
+                    ]
+                },
+                {
+                    "httpMethod":"PUT",
+                    "summary":"CHANNEL CONSENT API:<br>Update the consent value for a given database, channel, qualifier, and destination.",
+                    "notes":"",
+                    "nickname":"consent-put",
+                    "responseClass":"ContactId",
+                   "parameters":[
+                        {
+                            "paramType":"path",
+                            "name":"databaseId",
+                            "description":"ID for the database enabled for SMS or Push",
+                            "dataType":"long",
+                            "required":true,
+                            "allowMultiple":false
+                        },
+                        {
+                            "paramType":"path",
+                            "name":"channel",
+                            "description":"SMS or Push",
+                            "dataType":"String",
+                            "required":true,
+                            "allowMultiple":false
+                        },
+                        {
+                            "paramType":"path",
+                            "name":"qualifier",
+                            "description":"Text to Join Program ID for SMS; AppKey for Push",
+                            "dataType":"String",
+                            "required":true,
+                            "allowMultiple":false
+                        },
+                        {
+                            "paramType":"path",
+                            "name":"destination",
+                            "description":"SMS phone number for SMS; Mobile User ID|Mobile Channel ID for Push",
+                            "dataType":"String",
+                            "required":true,
+                            "allowMultiple":false
+                        },
+                        {
+                            "paramType":"body",
+                            "name":"consentData",
+                            "description":"Consent data",
+                            "dataType":"consentDataWithAttributes",
+                            "required":true,
+                            "allowMultiple":false
+                        }
+                    ]
+                }
+            ]
+        },
+{
+
+            "path":"/databases/{databaseId}/consent/{channel}-{qualifier}/{destination}/{contactId}",
+            "description":"Gets the consent (opted in or opted out) for a destination - an abstraction that currently is identified by an SMS phone number or Mobile User Id|Mobile Channel Id.",
+            "operations":[
+            {
+                "httpMethod":"GET",
+                "summary":"CHANNEL CONSENT API:<br>Get the consent value for a given database, channel, qualifier, destination, and contact.",
+                "notes":"",
+                "nickname":"consent-get",
+                "responseClass":"consentData",
+                "parameters":[
+                        {
+                            "paramType":"path",
+                            "name":"databaseId",
+                            "description":"ID for the database enabled for SMS or Push",
+                            "dataType":"long",
+                            "required":true,
+                            "allowMultiple":false
+                        },
+                        {
+                            "paramType":"path",
+                            "name":"channel",
+                            "description":"SMS or Push",
+                            "dataType":"String",
+                            "required":true,
+                            "allowMultiple":false
+                        },
+                        {
+                            "paramType":"path",
+                            "name":"qualifier",
+                            "description":"Text to Join Program ID for SMS; AppKey for Push",
+                            "dataType":"String",
+                            "required":true,
+                            "allowMultiple":false
+                        },
+                        {
+                            "paramType":"path",
+                            "name":"destination",
+                            "description":"SMS phone number for SMS; Mobile User ID|Mobile Channel ID for Push",
+                            "dataType":"String",
+                            "required":true,
+                            "allowMultiple":false
+                        },
+                        {
+                            "paramType":"path",
+                            "name":"contactId",
+                            "description":"ID of the contact to update SMS or Push",
+                            "dataType":"long",
+                            "required":true,
+                            "allowMultiple":false
+                        }
+                    ]
+                },
+                {
+                    "httpMethod":"PUT",
+                    "summary":"CHANNEL CONSENT API:<br>Update the consent value for a given database, channel, qualifier, destination and contact.",
+                    "notes":"",
+                    "nickname":"consent-put",
+                    "responseClass":"ContactId",
+                    "parameters":[
+                        {
+                            "paramType":"path",
+                            "name":"databaseId",
+                            "description":"ID for the database enabled for SMS or Push",
+                            "dataType":"long",
+                            "required":true,
+                            "allowMultiple":false
+                        },
+                        {
+                            "paramType":"path",
+                            "name":"channel",
+                            "description":"SMS or Push",
+                            "dataType":"String",
+                            "required":true,
+                            "allowMultiple":false
+                        },
+                        {
+                            "paramType":"path",
+                            "name":"qualifier",
+                            "description":"Text to Join Program ID for SMS; AppKey for Push",
+                            "dataType":"String",
+                            "required":true,
+                            "allowMultiple":false
+                        },
+                        {
+                            "paramType":"path",
+                            "name":"destination",
+                            "description":"SMS phone number for SMS; Mobile User ID|Mobile Channel ID for Push",
+                            "dataType":"String",
+                            "required":true,
+                            "allowMultiple":false
+                        },
+                        {
+                            "paramType":"path",
+                            "name":"contactId",
+                            "description":"ID of the contact to update SMS or Push",
+                            "dataType":"long",
+                            "required":true,
+                            "allowMultiple":false
+                        },
+                        {
+                            "paramType":"body",
+                            "name":"consentData",
+                            "description":"Consent data",
+                            "dataType":"consentDataWithAttributes",
+                            "required":true,
+                            "allowMultiple":false
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "path": "/databases/{databaseId}/contactbychannel/{channel}-{qualifier}/{destination}",
+            "description": "Gets contact using channel consent data",
+            "operations": [
+                {
+                    "httpMethod": "GET",
+                    "summary": "CONTACT BY CHANNEL API:<br>Get the contact for a given database, channel, qualifier and destination.",
+                    "notes": "",
+                    "nickname": "databases-contactbychannel-get",
+                    "responseClass": "Contact",
+                    "parameters": [
+                        {
+                            "paramType": "path",
+                            "name": "databaseId",
+                            "description": "ID for the database enabled for SMS or Push",
+                            "dataType": "long",
+                            "required": true,
+                            "allowMultiple": false
+                        },
+                        {
+                            "paramType": "path",
+                            "name": "channel",
+                            "description": "SMS or Push",
+                            "dataType": "String",
+                            "required": true,
+                            "allowMultiple": false
+                        },
+                        {
+                            "paramType": "path",
+                            "name": "qualifier",
+                            "description": "Text to Join Program ID for SMS; AppKey for Push",
+                            "dataType": "String",
+                            "required": true,
+                            "allowMultiple": false
+                        },
+                        {
+                            "paramType": "path",
+                            "name": "destination",
+                            "description": "SMS phone number for SMS; Mobile User ID|Mobile Channel ID for Push",
+                            "dataType": "String",
+                            "required": true,
+                            "allowMultiple": false
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "path": "/databases/{databaseId}/establishidentity/{channel}-{qualifier}/{destination}",
+            "description": "Establishes identity of a contact by updating or merging with existing contact with matching consent.",
+            "operations": [
+                {
+                    "httpMethod": "PUT",
+                    "summary": "ESTABLISH IDENTITY API:<br>Update or merge contact with existing contact matching consent.",
+                    "notes": "",
+                    "nickname": "establishidentity-put",
+                    "responseClass": "WinnerIdentity",
+                    "parameters": [
+                        {
+                            "paramType": "path",
+                            "name": "databaseId",
+                            "description": "ID for the database enabled for SMS or Push",
+                            "dataType": "long",
+                            "required": true,
+                            "allowMultiple": false
+                        },
+                        {
+                            "paramType": "path",
+                            "name": "channel",
+                            "description": "SMS or Push",
+                            "dataType": "String",
+                            "required": true,
+                            "allowMultiple": false
+                        },
+                        {
+                            "paramType": "path",
+                            "name": "qualifier",
+                            "description": "Text to Join Program ID for SMS; AppKey for Push",
+                            "dataType": "String",
+                            "required": true,
+                            "allowMultiple": false
+                        },
+                        {
+                            "paramType": "path",
+                            "name": "destination",
+                            "description": "SMS phone number for SMS; Mobile User ID|Mobile Channel ID for Push",
+                            "dataType": "String",
+                            "required": true,
+                            "allowMultiple": false
+                        },
+                        {
+                            "paramType": "body",
+                            "name": "EstablishIdentitySpecification",
+                            "description": "Establish Identity Specification data",
+                            "dataType": "establishIdentitySpecification",
+                            "required": true,
+                            "allowMultiple": false
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "path": "/databases/{databaseId}/lookupkeys/{database field name}",
+            "description": "Create, get or delete lookup key(s) for a database.",
+            "operations": [
+                {
+                    "httpMethod": "PUT",
+                    "summary": "LOOKUP KEYS API:<br>Create a lookup key for a database field.",
+                    "notes": "The lookup key's info will be returned, if it is successfully created or already exists. The lookup key cannot be used until it reaches an ACTIVE status.",
+                    "nickname": "lookupkeys-put",
+                    "responseClass": "lookupKey",
+                    "parameters": [
+                        {
+                            "paramType": "path",
+                            "name": "databaseId",
+                            "description": "Database ID for a database with no unique identifier.",
+                            "dataType": "long",
+                            "required": true,
+                            "allowMultiple": false
+                        },
+                        {
+                            "paramType": "path",
+                            "name": "database field name",
+                            "description": "Name of the field that you want to create a lookup key for.",
+                            "dataType": "String",
+                            "required": true,
+                            "allowMultiple": false
+                        },
+                        {
+                            "paramType": "body",
+                            "name": "Request Body",
+                            "description": "No data is required in the request body. Just provide a blank json.",
+                            "dataType": "emptyBody",
+                            "required": false,
+                            "allowMultiple": false
+                        }
+                    ]
+                },
+                {
+                    "httpMethod": "GET",
+                    "summary": "LOOKUP KEYS API:<br>Get the lookup key for a database field.",
+                    "notes": "The lookup key's info will be returned, if it exists. The lookup key cannot be used until it reaches an ACTIVE status.",
+                    "nickname": "lookupkeys-get",
+                    "responseClass": "lookupKey",
+                    "parameters": [
+                        {
+                            "paramType": "path",
+                            "name": "databaseId",
+                            "description": "Database ID",
+                            "dataType": "long",
+                            "required": true,
+                            "allowMultiple": false
+                        },
+                        {
+                            "paramType": "path",
+                            "name": "database field name",
+                            "description": "Name of the database field.",
+                            "dataType": "String",
+                            "required": true,
+                            "allowMultiple": false
+                        }
+                    ]
+                },
+                {
+                    "httpMethod": "DELETE",
+                    "summary": "LOOKUP KEYS API:<br>Delete the lookup key for a database field.",
+                    "notes": "The lookup key will be deleted, if allowed.",
+                    "nickname": "lookupkeys-delete",
+                    "responseClass": "",
+                    "parameters": [
+                        {
+                            "paramType": "path",
+                            "name": "databaseId",
+                            "description": "Database ID",
+                            "dataType": "long",
+                            "required": true,
+                            "allowMultiple": false
+                        },
+                        {
+                            "paramType": "path",
+                            "name": "database field name",
+                            "description": "Name of the database field.",
+                            "dataType": "String",
+                            "required": true,
+                            "allowMultiple": false
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "path": "/databases/{databaseId}/lookupkeys",
+            "description": "View all lookup keys for this database",
+            "operations": [
+                {
+                    "httpMethod": "GET",
+                    "summary": "LOOKUP KEYS API:<br>Get all the lookup keys for this database. A lookup key cannot be used until it reaches an ACTIVE status.",
+                    "notes": "",
+                    "nickname": "lookupkeys-getall",
+                    "responseClass": "lookupKeys",
+                    "parameters": [
+                        {
+                            "paramType": "path",
+                            "name": "databaseId",
+                            "description": "Database ID",
+                            "dataType": "long",
+                            "required": true,
+                            "allowMultiple": false
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "path": "/databases/{databaseId}/gdpr_access",
+            "description": "Submit a GDPR Access job.",
+            "operations": [
+                {
+                    "httpMethod": "POST",
+                    "summary": "GDPR ACCESS API:<br>Submit a GDPR Access job and obtain the GDPR job id.",
+                    "notes": "",
+                    "nickname": "gdpr-access",
+                    "responseClass": "GdprJobSubmissionResult",
+                    "parameters": [
+                        {
+                            "paramType": "path",
+                            "name": "databaseId",
+                            "description": "Database ID",
+                            "dataType": "long",
+                            "required": true,
+                            "allowMultiple": false
+                        },
+                        {
+                            "paramType": "body",
+                            "name": "Identifier Data",
+                            "description": "Provide the identifier name and identifier value in csv format. Select \"text/csv\" option from the \"parameter content type\" drop down below.",
+                            "dataType": "text/csv",
+                            "required": true,
+                            "allowMultiple": false
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "path": "/databases/{databaseId}/gdpr_erasure",
+            "description": "Submit a GDPR Erasure job.",
+            "operations": [
+                {
+                    "httpMethod": "POST",
+                    "summary": "GDPR ERASURE API:<br>Submit a GDPR Erasure job and obtain the GDPR job id.",
+                    "notes": "",
+                    "nickname": "gdpr-erasure",
+                    "responseClass": "GdprJobSubmissionResult",
+                    "parameters": [
+                        {
+                            "paramType": "path",
+                            "name": "databaseId",
+                            "description": "Database ID",
+                            "dataType": "long",
+                            "required": true,
+                            "allowMultiple": false
+                        },
+                        {
+                            "paramType": "body",
+                            "name": "Identifier Data",
+                            "description": "Provide the identifier name and identifier value in csv format. Select \"text/csv\" option from the \"parameter content type\" drop down below.",
+                            "dataType": "text/csv",
+                            "required": true,
+                            "allowMultiple": false
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "models": {
+        "crmCampaignMember": {
+            "properties": {
+                "crmCampaignKey": {
+                    "type": "String",
+                    "description": "A Crm campaign's unique identifier"
+                },
+                "crmCampaignStatus": {
+                    "type": "String",
+                    "description": "The status of a Crm campaign"
+                },
+                "contactId": {
+                    "type": "long",
+                    "description": "The uniuqe identifier for a contact in a Crm campaign"
+                }
+            }
+        },
+        "contactByChannelSpecification": {
+            "properties": {
+                "channel": {
+                    "type": "channelData",
+                    "required": true,
+                    "description": "The channel data to identify a contact",
+                    "$ref": "channelData"
+                },
+                "contact": {
+                    "type": "ContactInput",
+                    "description": "The values to set on the new or updated contact",
+                    "$ref": "ContactInput"
+                }
+            }
+        },
+        "ContactUpsertSpecification": {
+            "properties": {
+                "lookupKeyFields": {
+                    "type": "Array",
+                    "required": true,
+                    "description": "A Custom Field/Value pair or Channel/Value pair to match a Contact by",
+                    "items": {
+                        "$ref": "LookupKeyFields"
+                    }
+                },
+                "contact": {
+                    "type": "ContactInput",
+                    "description": "The values to set on the new or updated contact",
+                    "$ref": "ContactInput"
+                }
+            }
+        },
+        "establishIdentitySpecification": {
+            "properties": {
+                "identity": {
+                    "type": "identity",
+                    "required": true,
+                    "description": "Identity database column",
+                    "$ref": "identity"
+                },
+                "useCrmContactAsWinner": {
+                    "type": "Boolean",
+                    "description": "In case true, the contact where CRM SYNC_ID is different from null will be used as the winner."
+                },
+                "mergeEvents": {
+                    "type": "Boolean",
+                    "description": "In case false, the UB, lead scoring, and email events for the contacts are not merged."
+                }
+            }
+        },
+        "emptyBody": {
+            "properties": {
+            }
+        },
+        "Contact": {
+            "properties": {
+                "email": {
+                    "type": "String",
+                    "description": "A Contact's email address"
+                },
+                "emailType": {
+                    "type": "String",
+                    "description": "The type of email to send to a contact- HTML or TEXT"
+                },
+                "leadSource": {
+                    "type": "String",
+                    "description": "The lead source for a Contact"
+                },
+                "optInDetails": {
+                    "type": "String",
+                    "description": "The Opt In Details of a Contact; can only be set on a Contact being added!"
+                },
+                "customFields": {
+                    "type": "Array",
+                    "description": "A list of Custom Field Values",
+                    "items": {
+                        "$ref": "customFieldSchema"
+                    }
+                }
+            }
+        },
+        "ContactInput": {
+            "properties": {
+                "email": {
+                    "type": "String",
+                    "description": "A Contact's email address"
+                },
+                "emailType": {
+                    "type": "String",
+                    "description": "The type of email to send to a contact- HTML or TEXT"
+                },
+                "leadSource": {
+                    "type": "String",
+                    "description": "The lead source for a Contact"
+                },
+                "optInDetails": {
+                    "type": "String",
+                    "description": "The Opt In Details of a Contact; can only be set on a Contact being added!"
+                },
+                "customFields": {
+                    "type": "Array",
+                    "description": "A list of Custom Field Values",
+                    "items": {
+                        "$ref": "customFieldSchema"
+                    }
+                },
+                "visitorKey": {
+                    "type": "String",
+                    "description": "The web visitor identifier; can be used to associate anonymous web tracking behaviors to a known Contact."
+                }
+            }
+        },
+        "LookupKeyFields": {
+            "properties": {
+                "channel": {
+                    "type": "string",
+                    "required": true,
+                    "description": "The name of the Channel, valid request using Channel is channel, value pair<br><b>OR</b>"
+                },
+                "name": {
+                    "type": "string",
+                    "required": true,
+                    "description": "The name of the Database Custom Field, valid request using a Database Custom Field is name, value pair<br><b>AND</b>"
+                },
+                "value": {
+                    "type": "string",
+                    "required": true,
+                    "description": "The Database Custom Field's value, use with either channel or name to make a valid request"
+                }
+            }
+        },
+        "DatabaseEventTypeMapping": {
+            "required": [
+                "eventType"
+            ],
+            "properties": {
+                "eventType": {
+                    "type": "EventTypeDescriptor",
+                    "description": "The mapped Event Type",
+                    "$ref": "EventTypeDescriptor"
+                }
+            }
+        },
+        "EventTypeDescriptor": {
+            "required": [
+                "name",
+                "uri",
+                "code"
+            ],
+            "properties": {
+                "name": {
+                    "type": "String",
+                    "description": "The Event Type's name"
+                },
+                "uri": {
+                    "type": "String",
+                    "description": "The Event Type's URI"
+                },
+                "code": {
+                    "type": "String",
+                    "description": "The Event Type's code"
+                }
+            }
+        },
+        "consentData": {
+            "properties": {
+                "status": {
+                    "type": "String",
+                    "required": true,
+                    "description": "Opt in status.  Acceptable values are 'OPTED-IN' and 'OPTED-OUT'."
+                },
+                "consentDate": {
+                    "type": "Date",
+                    "description": "Optional timestamp represented in a String (1970-01-01T00:00:00.000Z)"
+                },
+                "consentSource": {
+                    "type": "String",
+                    "description": "The source"
+                }
+            }
+        },
+        "consentDataWithAttributes": {
+            "properties": {
+                "status": {
+                    "type": "String",
+                    "required": true,
+                    "description": "Opt in status.  Acceptable values are 'OPTED-IN' and 'OPTED-OUT'."
+                },
+                "attributes": {
+                    "type": "attributes",
+                    "description": "Attributes for the contact: only timezoneId supported so far.",
+                    "$ref": "channelData"
+                }
+                
+            }
+        },
+        "channelData": {
+            "properties": {
+                "channelType": {
+                    "type": "String",
+                    "required": true,
+                    "description": "SMS or Push"
+                },
+                "qualifier": {
+                    "type": "String",
+                    "required": true,
+                    "description": "Text to Join Program ID for SMS; AppKey for Push"
+                },
+                "destination": {
+                    "type": "String",
+                    "required": true,
+                    "description": "SMS phone number for SMS; Mobile User ID|Mobile Channel ID for Push"
+                },
+                "status": {
+                    "type": "String",
+                    "description": "Opt in status.  Acceptable values are 'OPTED-IN' and 'OPTED-OUT'."
+                },
+                "consentDate": {
+                    "type": "Date",
+                    "description": "Optional timestamp represented in a String (1970-01-01T00:00:00.000Z)."
+                },
+                "consentSource": {
+                    "type": "String",
+                    "description": "The source"
+                },
+                "attributes": {
+                    "type": "attributes",
+                    "description": "Attributes for the contact such as timezoneId, carrier, etc..",
+                    "$ref": "channelData"
+                }
+            }
+        },
+        "identity": {
+            "properties": {
+                "name": {
+                    "type": "String",
+                    "required": true,
+                    "description": "name of the identity column."
+                },
+                "value": {
+                    "type": "String",
+                    "required": true,
+                    "description": "value of the identity column."
+                }
+            }   
+        },
+        "customFieldSchema": {
+            "properties": {
+                "name": {
+                    "type": "String",
+                    "required": true,
+                    "description": "name of the custom field."
+                },
+                "value": {
+                    "type": "String",
+                    "required": true,
+                    "description": "value of the custom field."
+                }
+            }   
+        },
+        "lookupKey": {
+            "properties": {
+                "databaseId": {
+                    "type": "int",
+                    "required": true,
+                    "description": "The id of the database"
+                },
+                "field": {
+                    "type": "String",
+                    "required": true,
+                    "description": "The name of the lookup key field"
+                },
+                "status": {
+                    "type": "String",
+                    "required": true,
+                    "description": "The status of the lookup key: ACTIVE or CREATE_PENDING"
+                }
+            }
+        },
+        "lookupKeys": {
+            "properties": {
+                "lookupKeys": {
+                    "type": "Array",
+                    "required": true,
+                    "description": "An array of lookup key fields for the database",
+                    "items": {
+                        "$ref": "lookupKey"
+                    }
+                }
+            }
+        },
+        "ContactMessage": {
+            "properties": {
+                "messageName": {
+                    "type": "String",
+                    "description": "Name of the message sent to contact"
+                },
+                "sentDate": {
+                    "type": "Date",
+                    "description": "Date on which the message was sent"
+                },
+                "channel": {
+                    "type": "String",
+                    "description": "Message Channel, like SMS or EMAIL"
+                }
+            }
+        },
+        "attributes": {
+            "properties": {
+                "timezoneId": {
+                    "type": "String",
+                    "description": "ID of the timezone"
+                }
+            }
+        },
+        "ContactId": {
+            "required": [
+                "id"
+            ],
+            "properties": {
+                "id": {
+                    "type": "long",
+                    "description": "ID of the contact"
+                }
+            }
+        },
+        "WinnerIdentity": {
+            "properties": {
+                "winnerRecipientId": {
+                    "type": "long",
+                    "required": true,
+                    "description": "The Recipient ID of the record used as base during the merge"
+                },
+                "winnerChannelIdentifier": {
+                    "type": "string",
+                    "required": true,
+                    "description": "The channel identifier of the record used as base during the merge. Can be the the Mobile User Id for Push, or the SMS Phone Number for SMS."
+                }
+            }
+        },
+        "ContactInfo": {
+            "properties": {
+                "id": {
+                    "type": "long",
+                    "required": true,
+                    "description": "Id of the contact created or updated. Returns -1 when contact creation is delayed"
+                },
+                "location": {
+                    "type": "String",
+                    "required": true,
+                    "description": "URL to retrieve the contact information"
+                }
+            }
+        },
+        "GdprJobSubmissionResult": {
+            "properties": {
+                "id": {
+                    "type": "long",
+                    "required": true,
+                    "description": "Id of the GDPR job created."
+                },
+                "location": {
+                    "type": "String",
+                    "required": true,
+                    "description": "URL to monitor the GDPR job status"
+                }
+            }
+        }
+    }
+}

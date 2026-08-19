@@ -1,0 +1,77 @@
+
+
+
+
+
+
+
+{
+  "basePath": "https://api-campaign-us-1.goacoustic.com/rest",
+  "resourcePath": "/eventtypes",
+  "apis": [
+    {
+      "path": "/eventtypes/{code}",
+      "description": "An Event Type.",
+      "operations": [
+        {
+          "httpMethod": "GET",
+          "summary": "Retrieve event type with the given code",
+          "notes": "Use this API to retrieve an Event Type.",
+          "nickname": "eventtypes-get",
+          "responseClass": "EventType",
+          "parameters": [
+            {
+              "paramType": "path",
+              "name": "code",
+              "description": "specifies which Event Type to retrieve",
+              "dataType": "int",
+              "required": true,
+              "allowMultiple": false
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "models": {
+    "EventType": {
+      "properties": {
+        "name": {
+          "type": "String",
+          "description": "The name of the Event Type"
+        },
+        "code": {
+          "type": "int",
+          "description": "The Event Type code"
+        },
+        "attributes": {
+          "type": "Array",
+          "description": "The list of attributes",
+          "items" : {
+            "$ref" : "EventAttributeDefinition"
+          }
+        }
+      }
+    },
+    "EventAttributeDefinition": {
+      "properties": {
+        "name": {
+          "type": "String",
+          "description": "The name of the attribute"
+        },
+        "valueType": {
+          "type": "String",
+          "description": "The type of the attribute"
+        },
+        "required": {
+          "type": "boolean",
+          "description": "Determines whether the attribute is required"
+        },
+        "indexed": {
+          "type": "boolean",
+          "description": "Determines whether the attribute is indexed"
+        }
+      }
+    }
+  }
+}

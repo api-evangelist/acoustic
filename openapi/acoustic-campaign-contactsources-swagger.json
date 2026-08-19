@@ -1,0 +1,118 @@
+
+
+
+
+
+
+
+{
+    "basePath":"https://api-campaign-us-1.goacoustic.com/rest",
+    "resourcePath": "/contactsources",
+    "apis":[
+        {
+            "path":"/contactsources/{id}/bccemailaddress",
+            "description":"Retrieve BCC Email Address for the Specified Contact Source.",
+            "operations":[
+                {
+                    "method":"GET",
+                    "summary":"Retrieve BCC Email Address",
+                    "notes":"Use this API to get the Contact Source's BCC Address.",
+                    "nickname":"contactsources-bccemailaddress-get",
+                    "responseClass":"BccSettings",
+                    "parameters":[
+                        {
+                            "paramType": "path",
+                            "name": "id",
+                            "description": "Contact Source id",
+                            "dataType": "long",
+                            "required": true,
+                            "allowMultiple": false
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "path":"/contactsources/{id}/bccemailaddress",
+            "description":"Set Contact Source BCC Email Address",
+            "operations":[
+                {
+                    "method":"PATCH",
+                    "summary":"Update Contact Source BCC Email Address",
+                    "notes":"Use this API to set the Contact Source BCC Address.",
+                    "nickname":"contactsources-bccemailaddress-put",
+                    "responseClass":"",
+                    "parameters":[
+                        {
+                            "paramType": "path",
+                            "name": "id",
+                            "description": "Contact Source id",
+                            "dataType": "long",
+                            "required": true,
+                            "allowMultiple": false
+                        },
+                        {
+                            "paramType": "body",
+                            "name": "email",
+                            "description": "BCC Email Address",
+                            "dataType": "EmailAddress",
+                            "required": true,
+                            "allowMultiple": false
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "path":"/contactsources/{id}",
+            "description":"Delete a contact list or query",
+            "operations":[
+                {
+                    "method":"DELETE",
+                    "summary":"Delete a contact list or query",
+                    "notes":"Use this API to delete a contact list or query, if the only associations are message templates and sent messages.",
+                    "nickname":"contactsources-delete",
+                    "responseClass":"",
+                    "parameters":[
+                        {
+                            "paramType": "path",
+                            "name": "id",
+                            "description": "Contact Source id",
+                            "dataType": "long",
+                            "required": true,
+                            "allowMultiple": false
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "models": {
+        "BccSettings": {
+            "properties": {
+            	"bccPreference" : {
+            		"type" : "String",
+            		"description" : "The preference for the Source"
+            	},
+                "email" : {
+                    "type": "String",
+                    "description" : "The Org's Bcc Email Address"
+           		},
+           		"url" :	{
+           			"type": "String",
+           			"description" : "The URL to the ORG Bcc Email Address"
+           		}           		
+
+      		}
+   		},
+   		"EmailAddress": {
+            "properties": {
+            	"email" : {
+                    "type": "String",
+                    "description" : "The Org's Bcc Email Address"
+           		}
+      		}
+   		}
+    }
+    
+}

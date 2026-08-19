@@ -1,0 +1,38 @@
+
+
+
+
+
+
+
+{
+    "basePath":"https://api-campaign-us-1.goacoustic.com/rest",
+    "resourcePath": "/webtracking",
+    "apis":[
+        {
+            "path":"/webtracking/code",
+            "description":"Retrieve script for this org.",
+            "operations":[
+                {
+                    "httpMethod":"GET",
+                    "summary":"Retrieve script",
+                    "notes":"Provides the script to be embedded in a site that wishes to implement web tracking.",
+                    "nickname":"code-get",
+                    "responseClass":"WebTrackingCode",
+                    "parameters":[
+                    ]
+                }
+            ]
+        }
+    ],
+    "models": {
+        "WebTrackingCode": {
+            "properties" : {
+                "webTrackingCode": {
+                    "type": "String",
+                    "description": "HTML script tag to implement web tracking"
+                }
+            }
+        }
+    }
+}

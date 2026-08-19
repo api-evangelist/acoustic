@@ -1,0 +1,317 @@
+
+
+
+
+
+
+
+
+
+
+{
+    "basePath":"https://api-campaign-us-1.goacoustic.com/rest",
+    "resourcePath": "/programs",
+    "apis":[
+        {
+            "path":"/programs",
+            "description":"Create program API",
+            "operations":[
+                {
+                    "httpMethod":"POST",
+                    "summary":"Create a program",
+                    "notes":"Creates a program with the provided parameters",
+                    "nickname":"programs-post",
+                    "responseClass":"long",
+                    "parameters": [
+                      {
+                          "paramType": "body",
+                          "name": "program",
+                          "description": "Basic information of the program ",
+                          "dataType": "Program",
+                          "required": true,
+                          "allowMultiple": false
+                      }
+                    ]
+                }
+            ]
+        },
+        {
+            "path":"/programs",
+            "description":"Copy program API",
+            "operations":[
+                {
+                    "httpMethod":"POST",
+                    "summary":"Copy a program",
+                    "notes":"Copy a program from provided parameters",
+                    "nickname":"programs-copy-post",
+                    "responseClass":"long",
+                    "parameters": [
+                      {
+                          "paramType": "query",
+                          "name": "copy_from_id",
+                          "description": "ID of the program to copy from",
+                          "dataType": "long",
+                          "required": true,
+                          "allowMultiple": false
+                      },
+                      {
+                          "paramType": "body",
+                          "name": "program",
+                          "description": "Basic information of the program ",
+                          "dataType": "Program",
+                          "required": true,
+                          "allowMultiple": false
+                      }
+                    ]
+                }
+            ]
+        },
+        {
+            "path": "/programs/{id}",
+              "description": "Get program API",
+              "operations": [
+                {
+                      "httpMethod": "GET",
+                      "summary": "Retrieve a program",
+                      "notes": "Use this API to retrieve a program with the given id",
+                      "nickname": "programs-get",
+                      "responseClass": "Program",
+                      "parameters": [
+                      {
+                          "paramType": "path",
+                          "name": "id",
+                          "description": "The id associated with the program",
+                          "dataType": "long",
+                          "required": true,
+                          "allowMultiple": false
+                      }
+                      ]
+                  }
+              ]
+        },
+        {
+            "path": "/programs",
+            "description": "Get program List API with optional filtering",
+            "operations": [
+            {
+                "httpMethod": "GET",
+                "summary": "Retrieve list of programs",
+                "notes": "Use this API to retrieve a list of programs",
+                "nickname": "programs-get",
+                "responseClass": "Program",
+                "parameters": [
+                {
+                    "paramType": "query",
+                    "name": "filter",
+                    "description": "Filter list by either name, databaseId, or runStatus (e.g. filter=name=programName or filter=runStatus=RUNNING).<br>Program name filter is a case insensitive like matching.<br>databaseId=0 will filter for programs without a contact source and using blank will return an empty list.<br>SCHEDULED, RUNNING, INACTIVE, COMPLETE are valid run status. Anything else will return an empty list.<br>Can specify multiple filters by separating with semi colon (e.g. filter=name=programName;databaseId=123)",
+                    "dataType": "String",
+                    "required": false,
+                    "allowMultiple": false
+                }
+                ]
+            }
+            ]
+        },
+        {
+            "path": "/programs/{id}",
+            "description": "Update program via API",
+            "operations": [
+                {
+                    "httpMethod": "PUT",
+                    "summary": "Update a program",
+                    "notes": "Use this API to update a program",
+                    "nickname": "programs-put",
+                    "responseClass": "Program",
+                    "parameters": [
+                      {
+                        "paramType": "path",
+                        "name": "id",
+                        "description": "The id associated with the program",
+                        "dataType": "long",
+                        "required": true,
+                        "allowMultiple": false
+                      },
+                      {
+                        "paramType": "body",
+                        "name": "program",
+                        "description": "Basic information of the program ",
+                        "dataType": "Program",
+                        "required": true,
+                        "allowMultiple": false
+                      }
+                    ]
+                }
+            ]
+        },
+        {
+            "path": "/programs/{id}",
+            "description": "Delete program API",
+            "operations": [
+                {
+                    "httpMethod": "DELETE",
+                    "summary": "Delete a program",
+                    "notes": "Use this API to delete a program with the given id",
+                    "nickname": "programs-delete",
+                    "responseClass": "",
+                    "parameters": [
+                        {
+                            "paramType": "path",
+                            "name": "id",
+                            "description": "The id associated with the program",
+                            "dataType": "long",
+                            "required": true,
+                            "allowMultiple": false
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "models": {
+        "Program": {
+            "required" : [
+                "name"
+            ],
+            "properties" : {
+                "name": {
+                    "type": "String",
+                    "description": "Name of the program"
+                },
+                "notes" : {
+                    "type": "String",
+                    "description": "Notes associated with the program"
+                },
+                "startDate": {
+                    "type": "Date",
+                    "description": "Program start date in program's timezone represented in a String as per ISO 8601 ('1970-01-01')"
+                },
+                "endDate": {
+                    "type": "Date",
+                    "description": "Program end date in program's time zone represented in a String as per ISO 8601 ('1970-01-01')"
+
+                },
+                "lastAllowedEntryDate": {
+                    "type": "Date",
+                    "description": "The last date in program's timezone when contacts are allowed to enter a program represented in a String as per ISO 8601 ('1970-01-01')"
+                },
+                "hasContactSource": {
+                    "type": "Boolean",
+                    "description": "Whether or not the program has been configured with a contact source"
+                },
+                "createdBy": {
+                    "description": "User who created the program",
+                    "$ref": "User"
+                },
+                "modifiedBy": {
+                    "description": "User who last modified the program",
+                    "$ref": "User"
+                },
+                "modifiedByUser": {
+                    "type": "Long",
+                    "description": "Id of the user who last modified the program"
+                },
+                "lastModifiedDate": {
+                    "type": "String",
+                    "description": "Last date the program was modified"
+                },
+                "active": {
+                    "type": "Boolean",
+                    "description": "True indicates program is active and false indicates inactive"
+                },
+                "id": {
+                    "type": "Long",
+                    "description": "Program Id"
+                },
+                "timeZone": {
+                    "type": "String",
+                    "description": "Program's Timezone"
+                },
+                "runStatus": {
+                    "type": "String",
+                    "description": "Program's status is either Scheduled, Running, Inactive, or Complete"
+                },
+                "structureType": {
+                    "type": "String",
+                    "description": "Program's structure type is either VERSION_1 (classic) or VERSION_3 (canvas)"
+                },
+                "entryType": {
+                    "type": "String",
+                    "description": "Program entry type is ONCE, RECURRING, EVENT, or MANUAL"
+                },
+                "selectedContactSource": {
+                    "description": "The selected contact source for the program, null if hasContactSource is false",
+                    "$ref": "SelectedContactSource"
+                },
+                "allowContactInsightEntry": {
+                    "type": "Boolean",
+                    "description": "Whether or not the program allows contacts to enter via contact insight"
+                },
+                "sendDaysOfWeek": {
+                    "type": "String",
+                    "description": "MON-FRI (5-day week) or SUN-SAT (7-day week, including weekends)"
+                },
+                "sendHoursOfDay": {
+                    "type": "String",
+                    "description": "StartHour(0-23)-EndHour(0-23). Examples: (0-23=12am-11pm; 0-0=12am-12am next day; 13-10=1pm-10am next day)"
+                },
+                "repeat": {
+                    "description": "Repeat Settings",
+                    "$ref": "Repeat"
+                }
+            }
+        },
+        "SelectedContactSource": {
+            "properties" : {
+                "id": {
+                    "type": "Long",
+                    "description": "Selected contact source Id"
+                },
+                "name": {
+                    "type": "String",
+                    "description": "Name of the selected contact source"
+                },
+                "type": {
+                    "type": "String",
+                    "description": "Type of the selected contact source is either LIST or QUERY"
+                },
+                "selectedOnDate": {
+                    "type": "Date",
+                    "description": "Timestamp when QUERY as contact source is selected, represented in a String as per ISO 8601 (1970-01-01T00:00:00.000Z)"
+                }
+            }
+        },
+        "Repeat": {
+            "properties" : {
+                "duration": {
+                    "type": "Long",
+                    "description": "Repeat Duration 0-999 allowed"
+                },
+                "intervalType": {
+                    "type": "String",
+                    "description": "Repeat Interval Types: NONE, DAYS, WEEKS, MONTHS"
+                }
+            }
+        },
+        "User": {
+            "properties" : {
+                "id": {
+                    "type": "Long",
+                    "description": "User Id"
+                },
+                "emailAddress": {
+                    "type": "String",
+                    "description": "User login email"
+                },
+                "firstName": {
+                    "type": "String",
+                    "description": "User first name"
+                },
+                "lastName": {
+                    "type": "String",
+                    "description": "User last name"
+                }
+            }
+        }
+    }
+    
+}

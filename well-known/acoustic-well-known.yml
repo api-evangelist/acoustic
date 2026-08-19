@@ -1,0 +1,102 @@
+generated: '2026-08-13'
+method: probed
+source: live GET of /.well-known/* on every Acoustic host in apis.yml
+note: >-
+  developer.goacoustic.com is a ReadMe-hosted single-page docs site whose catch-all
+  answers HTTP 200 with an HTML shell for ANY /.well-known/* path. Only the
+  api-catalog response is a real document (Content-Type application/linkset+json);
+  the security.txt, ai-plugin.json, agent-card.json and agent.json 200s on that host
+  are the SPA shell and are recorded here as misses, not hits.
+hosts:
+- host: https://developer.goacoustic.com
+  documents:
+  - path: /.well-known/api-catalog
+    status: 200
+    content_type: application/linkset+json
+    file: acoustic-api-catalog.json
+    hit: true
+    note: >-
+      RFC 9727 linkset advertising six Acoustic API products (connect, campaign,
+      content, exp-analytics, exchange, personalization). Each entry advertises a
+      per-product service-desc at /<product>/.well-known/api-catalog — all six of
+      those sub-catalog URLs return 404, so the catalog resolves one level only.
+  - path: /.well-known/security.txt
+    status: 200
+    content_type: text/html
+    hit: false
+    note: HTML SPA shell, not an RFC 9116 document.
+  - path: /.well-known/ai-plugin.json
+    status: 200
+    content_type: text/html
+    hit: false
+    note: HTML SPA shell.
+  - path: /.well-known/agent-card.json
+    status: 200
+    content_type: text/html
+    hit: false
+    note: HTML SPA shell — not an A2A AgentCard. No a2a/ artifact written.
+  - path: /.well-known/agent.json
+    status: 200
+    content_type: text/html
+    hit: false
+    note: HTML SPA shell — not an A2A AgentCard.
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+- host: https://login.goacoustic.com
+  documents:
+  - path: /.well-known/openid-configuration
+    status: 200
+    content_type: application/json
+    file: acoustic-openid-configuration.json
+    hit: true
+    note: >-
+      Acoustic's SSO identity host, an Okta org served on Acoustic's own domain.
+      issuer https://login.goacoustic.com; authorization/token/userinfo/jwks and
+      dynamic client registration endpoints under /oauth2/v1/.
+  - path: /.well-known/oauth-authorization-server
+    status: 200
+    content_type: application/json
+    file: acoustic-oauth-authorization-server.json
+    hit: true
+    note: >-
+      RFC 8414 metadata for the same Okta org authorization server. Its
+      scopes_supported list is Okta's own management scopes (okta.users.read,
+      okta.apps.manage, ...), NOT Acoustic product API scopes — no scopes/ artifact
+      was derived from it.
+  - path: /.well-known/security.txt
+    status: 405
+  - path: /.well-known/api-catalog
+    status: 405
+- host: https://www.acoustic.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+  - path: /.well-known/agent-card.json
+    status: 404
+  - path: /.well-known/agent.json
+    status: 404
+- host: https://content-us-1.content-cms.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/agent-card.json
+    status: 404
+  - path: /.well-known/agent.json
+    status: 404
+summary:
+  real_documents: 3
+  security_txt: false
+  agent_card: false
+  api_catalog: true

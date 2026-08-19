@@ -1,0 +1,1442 @@
+
+
+
+
+
+
+
+{
+  "basePath": "https://api-campaign-us-1.goacoustic.com/rest",
+  "resourcePath": "/channels",
+  "apis": [
+  {
+      "path":"/channels/{channel}/publishedmessages",
+      "description":"Retrieve published messages for SMS or push.",
+      "operations":[
+          {
+              "method":"GET",
+              "summary":"Retrieve published messages for sms or push.",
+              "notes":"Use this API to retrieve published messages for SMS or Push channel.",
+              "nickname":"published-messages-get",
+              "responseClass":"RestPublishedMessage",
+              "parameters": [
+                             {
+                               "paramType": "path",
+                               "name": "channel",
+                               "description": "SMS or Push",
+                               "dataType": "string",
+                               "required": true,
+                               "allowMultiple": false
+                             }
+            ]
+          }
+      ]
+  },
+  {
+      "path": "/channels/sms/sends",
+      "description": "Perform a SMS send to input contacts",
+      "operations": [
+        {
+          "httpMethod": "POST",
+          "summary": "Perform a SMS send to input contacts",
+          "notes": "Use this API to send SMS messages to contacts in your SMS Database with the option to personalize the SMS message using Database Fields or Inline Personalization. SMS Consent is required and is managed Watson Campaign Automation for this API.",
+          "nickname": "sms-to-contacts",
+          "responseClass": "TransactionalSmsStatus",
+          "parameters": [
+            {
+              "paramType": "body",
+              "name": "payload",
+              "description": "SMS to contact payload",
+              "dataType": "SmsToContact",
+              "required": true,
+              "allowMultiple": false
+            }
+          ]
+        }
+      ]
+    },
+  {
+      "path": "/channels/sms/externalconsentsends",
+      "description": "Perform a SMS send to external consent contacts",
+      "operations": [
+        {
+          "httpMethod": "POST",
+          "summary": "Perform a SMS send to external consent contacts",
+          "notes": "Use this API to send SMS messages to contacts not required to be in your SMS Database. Mobile numbers not found in your SMS Database will be added to your SMS Database for event processing. Consent management for this API is external to Watson Campaign Automation and is the responsibility of the API user.",
+          "nickname": "sms-to-contacts",
+          "responseClass": "TransactionalSmsStatus",
+          "parameters": [
+            {
+              "paramType": "body",
+              "name": "payload",
+              "description": "SMS to external consent contact payload",
+              "dataType": "SmsExternalConsentSendPayload",
+              "required": true,
+              "allowMultiple": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "path": "/channels/sms/sends/{transactionId}/status",
+      "description": "Returns a status of SMS sends job",
+      "operations": [
+        {
+          "httpMethod": "GET",
+          "summary": "Get a SMS send status",
+          "notes": "",
+          "nickname": "getSmsSendsStatus",
+          "responseClass": "String",
+          "parameters": [
+            {
+              "name": "transactionId",
+              "required": true,
+              "type": "String",
+              "description":"A transaction id returned by POST /channels/sms/sends",
+              "paramType": "path",
+              "allowMultiple": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "path": "/channels/sms/programs",
+      "description": "Use this API to retrieve a list of all active One-Way and Text-to-Join programs.",
+      "operations": [
+        {
+        "httpMethod": "GET",
+        "summary": "Get all Sms programs for an Org",
+        "notes": "Use this API to retrieve a list of all active One-Way and Text-to-Join programs.",
+        "nickname": "getSmsPrograms",
+        "responseClass": "SmsProgram",
+        "parameters": []
+        }
+      ]
+    },
+    {
+      "path": "/channels/sms/program/{programId}",
+      "description": "Returns an Sms Program",
+      "operations": [
+        {
+          "httpMethod": "GET",
+          "summary": "Get an SMS Program status",
+          "notes": "Use this API to get SMS Program status for a given SMS Program Id.",
+          "nickname": "getSmsProgramById",
+          "responseClass": "SmsProgram",
+          "parameters": [
+            {
+            "name": "programId",
+            "required": true,
+            "type": "long",
+            "description":"sms program Id",
+            "paramType": "path",
+            "allowMultiple": false
+            }
+          ]
+        }
+      ]
+    },
+   {
+      "path": "/channels/sms/program",
+      "description": "Create a new Sms Program",
+      "operations": [
+        {
+        "httpMethod": "POST",
+        "summary": "Create an SMS Program",
+        "notes": "Use this API to create an SMS program. This API is only applicable when the Org is provisioned to send SMS messages via UBX Sender.",
+        "nickname": "sms-to-contacts",
+        "responseClass": "SmsProgramStatus",
+        "parameters": [
+            {
+              "paramType": "body",
+              "name": "SmsProgramPayload",
+              "description": "create an Sms Program",
+              "dataType": "SmsProgramPayload",
+              "required": true,
+              "allowMultiple": false
+            }
+          ]
+        }
+      ]
+   },
+   {
+      "path": "/channels/sms/program/{programId}",
+      "description": "Update an SMS Program",
+      "operations": [
+      {
+        "httpMethod": "PUT",
+        "summary": "Update attribute(s) for a given SMS program",
+        "notes": "Use this API to update attribute(s) of an SMS program. This API is only applicable when the Org is provisioned to send SMS messages via UBX Sender.",
+        "nickname": "databases-put",
+        "responseClass": "void",
+        "parameters": [
+          {
+            "paramType": "path",
+            "name": "programId",
+            "description": "SMS Program Id to be updated",
+            "dataType": "long",
+            "required": true,
+            "allowMultiple": false
+          },
+          {
+            "paramType": "body",
+            "name": "SmsProgramPayload",
+            "description": "Update Payload",
+            "dataType": "SmsProgramPayload",
+            "required": true,
+            "allowMultiple": false
+          }
+        ]
+        }
+      ]
+   },
+    {
+      "path": "/channels/sms/program/{programId}",
+      "description": "Delete an SMS program",
+      "operations": [
+        {
+          "httpMethod": "DELETE",
+          "summary": "Delete an SMS Program",
+          "notes": "Use this API to delete an SMS program. This API is only applicable when the Org is provisioned to send SMS messages via UBX Sender.",
+          "nickname": "delete-sms-program",
+          "responseClass": "void",
+          "parameters": [
+              {
+              "paramType": "path",
+              "name": "programId",
+              "description": "SMS Program Id to be deleted",
+              "dataType": "long",
+              "required": true,
+              "allowMultiple": false
+              }
+          ]
+        }
+      ]
+    },
+    {
+      "path":"/channels/sms/programs/{programId}/virtualmo",
+      "description":"This API allows an external system to send mobile-originated (MO) message to an SMS Program",
+      "operations":[
+        {
+          "httpMethod":"POST",
+          "summary": "Send a mobile-originated (MO) message to an SMS Program.",
+          "notes":"This API allows an external system to send a virtual mobile-originated (MO) message to an SMS Program. A Text-for-Response or text to join program ID is required.",
+          "nickname":"programs-post",
+          "responseClass":"SmsTriggerProgram",
+          "parameters": [
+              {
+                "paramType": "path",
+                "name": "programId",
+                "description": "Text-for-Response program ID",
+                "dataType": "String",
+                "required": true,
+                "allowMultiple": false
+              },
+              {
+                "paramType": "body",
+                "name": "payload",
+                "description": "SMS phone number",
+                "dataType": "SmsTriggerProgram",
+                "required": true,
+                "allowMultiple": false
+              }
+          ]
+        }
+      ]
+   },
+   {
+      "path": "/channels/push/sends",
+      "description": "Perform a push notification send",
+      "operations": [
+        {
+          "httpMethod": "POST",
+          "summary": "Perform a push notification send to contacts",
+          "notes": "",
+          "nickname": "push-to-contacts",
+          "responseClass": "void",
+          "parameters": [
+            {
+              "paramType": "body",
+              "name": "payload",
+              "description": "Push to contact payload",
+              "dataType": "PushToContact",
+              "required": true,
+              "allowMultiple": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "path": "/channels/push/sends/useAppFrequency",
+      "description": "Perform a push notification send using app frequency",
+      "operations": [
+        {
+          "httpMethod": "POST",
+          "summary": "Perform a push notification send to contacts using app frequency",
+          "notes": "",
+          "nickname": "push-to-contacts",
+          "responseClass": "void",
+          "parameters": [
+            {
+            "paramType": "body",
+            "name": "payload",
+            "description": "Push to contact payload",
+            "dataType": "PushToContact",
+            "required": true,
+            "allowMultiple": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "path": "/channels/push/publishedmessages/{publishedMessageId}/sendjobs",
+      "description": "Send a push notification to a contact source",
+      "operations": [
+        {
+          "httpMethod": "POST",
+          "summary": "Send a push notification to a contact source",
+          "notes": "",
+          "nickname": "send-push-to-contact-source",
+          "responseClass": "void",
+          "parameters": [
+            {
+              "paramType": "path",
+              "name": "publishedMessageId",
+              "description": "Id of the published message to be sent",
+              "dataType": "string",
+              "required": true,
+              "allowMultiple": false
+            },
+            {
+              "paramType": "body",
+              "name": "sendJobSpecification",
+              "description": "Send Push to contact source specification",
+              "dataType": "SendJobSpecification",
+              "required": true,
+              "allowMultiple": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "path": "/channels/push/sendjobs",
+      "description": "Send a push notification with inline content to a contact source",
+      "operations": [{
+        "httpMethod": "POST",
+        "summary": "Send a push notification with inline content to a contact source",
+        "notes": "",
+        "nickname": "send-push-to-segment-inline-source",
+        "responseClass": "void",
+        "parameters": [{
+          "paramType": "body",
+          "name": "payload",
+          "description": "Push to contact payload",
+          "dataType": "SendJobWithInlineSpecification",
+          "required": true,
+          "allowMultiple": false
+        }]
+      }]
+    },
+    {
+      "path": "/channels/push/richcontent",
+      "operations": [
+        {
+          "httpMethod": "POST",
+          "summary": "Create Rich Content",
+          "notes": "",
+          "nickname": "createRichContentSet",
+          "responseClass": "RichContentIdResponse",
+          "parameters": [
+            {
+              "paramType": "body",
+              "name": "body",
+              "description": "",
+              "dataType": "RichContentRequest",
+              "required": false,
+              "allowMultiple": false
+            }
+          ],
+          "responseMessages": [
+            {
+              "code": 200,
+              "message": "OK"
+            },
+            {
+              "code": 400,
+              "message": "Bad Request"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "path": "/channels/push/richcontent/{richContentId}",
+      "operations": [
+        {
+          "httpMethod": "GET",
+          "summary": "Get Rich Content",
+          "notes": "",
+          "nickname": "getRichContent",
+          "responseClass": "RichContentResponse",
+          "parameters": [
+            {
+              "name": "richContentId",
+              "required": true,
+              "type": "RichContentId",
+              "paramType": "path",
+              "allowMultiple": false
+            }
+          ],
+          "responseMessages": [
+             {
+               "code": 200,
+               "message": "OK"
+             },
+             {
+               "code": 400,
+               "message": "Bad Request"
+             }
+          ]
+        }  
+      ]
+    },
+    {
+      "path": "/channels/push/inappcontent",
+      "operations": [
+        {
+          "httpMethod": "POST",
+          "summary": "Create InApp Content",
+          "notes": "",
+          "nickname": "createInAppContentSet",
+          "responseClass": "InAppContentIdResponse",
+          "parameters": [
+            {
+              "paramType": "body",
+              "name": "body",
+              "description": "",
+              "dataType": "InAppContentRequest",
+              "required": false,
+              "allowMultiple": false
+            }
+          ],
+          "responseMessages": [
+            {
+              "code": 200,
+              "message": "OK"
+            },
+            {
+              "code": 400,
+              "message": "Bad Request"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "path": "/channels/sms/publishedmessages/{publishedMessageId}/sendjobs",
+      "description": "Send a SMS message to a contact source",
+      "operations": [
+        {
+          "httpMethod": "POST",
+          "summary": "Send a SMS message to a contact source",
+          "notes": "",
+          "nickname": "send-sms-to-contact-source",
+          "responseClass": "void",
+          "parameters": [
+            {
+              "paramType": "path",
+              "name": "publishedMessageId",
+              "description": "Id of the published message to be sent",
+              "dataType": "string",
+              "required": true,
+              "allowMultiple": false
+            },
+            {
+              "paramType": "body",
+              "name": "smsSendJobSpecification",
+              "description": "Send SMS to contact source specification",
+              "dataType": "SmsSendJobSpecification",
+              "required": true,
+              "allowMultiple": false
+            }
+          ]
+        }
+      ]
+    }
+   ],
+  "models": {
+    "SendJobSpecification": {
+      "required": [
+        "messageName"
+      ],
+      "properties": {
+        "contactSourceId": {
+          "type": "long",
+          "description": "Id of a contact source, for example, a database, contact list, or query"
+        },
+        "campaignName": {
+          "type": "String",
+          "description": "campaign name"
+        },
+        "messageName": {
+        "type": "String",
+        "description": "message name"
+        },
+        "folder": {
+        "type": "String",
+        "description": "message folder location"
+        },
+        "scheduledDate": {
+          "type": "Date",
+          "description": "Date and time on which the Push Notification is to be sent. If sending at an absolute time, this is represented in a String as per RFC 3339 ('1970-01-01T00:00:00.000+00:00'), If sending relative to user's local timezone (use \"useRecipientTimeZone\":true attribute setting), this is represented as a similar string with 0 offset from GMT ('1970-01-01T00:00:00.000+00:00') or '1970-01-01T00:00:00.000Z'"
+        },
+        "preBlockingHours": {
+          "type": "int",
+          "description": "Value representing the blocking time before sending the Push Notification"
+        },
+        "useRecipientTimeZone": {
+          "type": "Boolean",
+          "description": "Whether or not to use recipient time zone for Push notification. If this attribute value is set to true, user must supply the desired user's local timezone value to scheduledDate attribute with 0 offset from GMT - please refer to scheduledDate attribute description"
+        }
+      }
+    },
+    "SmsContactLookup": {
+       "required": [
+        "name",
+        "value",
+        "channel"
+      ],
+      "properties": {
+          "name": {
+            "type": "String",
+            "description": "A contact lookup key, E.g. Mobile Number with Country Code"
+          },
+          "value": {
+            "type": "String",
+            "description": "A value pertaining to lookup key, E.g. 12015557778"
+          },
+          "channel": {
+            "type": "String",
+            "description": "A channel. E.g. SMS in this case default mobile number column will be used for lookup"
+          }
+      }
+    },
+    "SmsContact": {
+      "properties": {
+        "contactId": {
+          "type": "Long",
+          "description": "contact Id of the contact from List"
+        },
+        "contactLookup": {
+          "type": "Array",
+          "description": "Contact lookup keys",
+          "items": {
+            "$ref": "SmsContactLookup"
+          }
+        },
+        "personalization": {
+          "type": "Map",
+          "description": "Map of key value pairs for personalization.",
+          "$ref": "Personalization"
+        }
+      }
+    },
+    "SmsExternalConsentContact": {
+      "required": [
+        "phoneNumber"
+      ],
+      "properties": {
+        "phoneNumber": {
+          "type": "String",
+          "description": "Phone Number with Country Code of the Contact from List"
+        },
+        "personalization": {
+          "type": "Map",
+          "description": "Map of key value pairs for personalization.",
+          "$ref": "Personalization"
+        }
+      }
+    },
+    "SmsToContact": {
+      "required": [
+        "contacts",
+        "channelQualifier"
+      ],
+      "properties": {
+        "content": {
+          "type": "String",
+          "description": "Content for SMS. E.g. Hey %%FIRST NAME%%! Happy birthday!!"
+        },
+        "contentId": {
+          "type": "String",
+          "description": "Id of the published message to be sent; if both content and contentId are provided, contentId will override content"
+        },
+        "contacts": {
+          "type": "Array",
+          "description": "List of contacts (Phone Number must include Country Code). API accepts max 1000 contacts",
+          "items": {
+            "$ref": "SmsContact"
+          }
+        },
+        "channelQualifier": {
+            "type": "String",
+            "description": "SMS Program Id"
+        },
+        "personalizationDefaults": {
+          "type": "Map",
+          "description": "Map of key value pairs for personalization",
+          "$ref": "Personalization"
+        },
+        "source": {
+            "type": "String",
+            "description": "Attribute returned to Engage as part of the UB. E.g. transactionId=1234"
+        },
+        "characterSwapEnabled": {
+            "type": "Boolean",
+            "description": "Replace characters specified in SMS Character Mapping (only supported for SMPP)"
+        },
+        "ttlInMinutes": {
+            "type": "Long",
+            "description": "Time (in minutes) after which this message should be discarded if it has not been sent yet"
+        },
+        "campaignName": {
+          "type": "String",
+          "description": "Campaign Name associated with the transactional send"
+        }
+      }
+    },
+    "SmsExternalConsentSendPayload": {
+      "required": [
+        "contacts",
+        "channelQualifier"
+      ],
+      "properties": {
+        "content": {
+          "type": "String",
+          "description": "Content for SMS. E.g. Hey %%FIRST NAME%%! Happy birthday!!"
+        },
+        "contentId": {
+          "type": "String",
+          "description": "Id of the published message to be sent; if both content and contentId are provided, contentId will override content"
+        },
+        "contacts": {
+          "type": "Array",
+          "description": "List of contacts (Phone Number must include Country Code). API accepts max 1000 contacts",
+          "items": {
+            "$ref": "SmsExternalConsentContact"
+          }
+        },
+        "channelQualifier": {
+            "type": "String",
+            "description": "SMS Program Id"
+        },
+        "personalizationDefaults": {
+          "type": "Map",
+          "description": "Map of key value pairs for personalization",
+          "$ref": "Personalization"
+        },
+        "source": {
+            "type": "String",
+            "description": "Attribute returned to Engage as part of the UB. E.g. transactionId=1234"
+        },
+        "characterSwapEnabled": {
+          "type": "Boolean",
+          "description": "Replace characters specified in SMS Character Mapping (only supported for SMPP)"
+        },
+        "ttlInMinutes": {
+          "type": "Long",
+          "description": "Time (in minutes) after which this message should be discarded if it has not been sent yet"
+        },
+        "campaignName": {
+          "type": "String",
+          "description": "Campaign Name associated with the transactional send"
+        }
+      }
+    },
+  "SmsProgramPayload": {
+    "required": [
+      "programName",
+      "campaignName",
+      "code",
+      "status",
+      "type",
+      "country"
+    ],
+    "properties": {
+      "programName": {
+        "type": "String",
+        "description": "Name of the SMS Program. E.g. BlackFriday"
+      },
+      "campaignName": {
+        "type": "String",
+        "description": "The SMS Campaign Name. E.g. Holiday Sales"
+      },
+      "code": {
+        "type": "String",
+        "description": "SMS Program Short/Long Code. E.g., 87767"
+      },
+      "senderId": {
+        "type": "String",
+        "description": "Sender Id for the program."
+      },
+      "status": {
+        "type": "String",
+        "description": "Status of the SMS program. It must be set to ACTIVE"
+      },
+      "type": {
+        "type": "String",
+        "description": "Type of the SMS program. It must be TEXT_TO_JOIN"
+      },
+      "country": {
+        "type": "String",
+        "description": "Country represented by two alpha characters. E.g., US"
+      }
+    }
+  },
+    "PushToContact": {
+      "required": [
+        "channelQualifiers",
+        "content",
+        "contacts",
+        "campaignName"
+      ],
+      "properties": {
+        "channelQualifiers": {
+          "type": "Array",
+          "description": "List of App keys",
+          "items": {
+            "$ref": "String"
+          }
+        },
+        "content": {
+          "type": "PushContent",
+          "description": "Content for push notification"
+        },
+        "contacts": {
+          "type": "Array",
+          "description": "List of contacts",
+          "items": {
+            "$ref": "PushContact"
+          }
+        },
+        "personalizationDefaults": {
+          "type": "Map",
+          "description": "Map of key value pairs for personalization",
+          "$ref": "Personalization"
+        },
+        "campaignName": {
+          "type": "String",
+          "description": "Campaign name"
+        }
+      }
+    },
+    "SendJobWithInlineSpecification": {
+      "required": [
+        "appKeys",
+        "campaignName",
+        "messageName",
+        "content"
+      ],
+      "properties": {
+        "appKeys": {
+          "type": "Array",
+          "description": "List of App keys",
+          "items": {
+            "$ref": "String"
+          }
+        },
+        "contactSourceId": {
+          "type": "long",
+          "description": "Id of a contact source, for example, a database, contact list, or query"
+        },
+        "campaignName": {
+          "type": "String",
+          "description": "campaign name"
+        },
+        "messageName": {
+          "type": "String",
+          "description": "message name"
+        },
+        "folder": {
+          "type": "String",
+          "description": "message folder location"
+        },
+        "scheduledDate": {
+          "type": "Date",
+          "description": "Date and time on which the Push Notification is to be sent. If sending at an absolute time, this is represented in a String as per RFC 3339 ('1970-01-01T00:00:00.000+00:00'), If sending relative to user's local timezone (use \"useRecipientTimeZone\":true attribute setting), this is represented as a similar string with 0 offset from GMT ('1970-01-01T00:00:00.000+00:00') or '1970-01-01T00:00:00.000Z'"
+        },
+        "preBlockingHours": {
+          "type": "int",
+          "description": "Value representing the blocking time before sending the Push Notification"
+        },
+        "useRecipientTimeZone": {
+          "type": "Boolean",
+          "description": "Whether or not to use recipient time zone for Push notification. If this attribute value is set to true, user must supply the desired user's local timezone value to scheduledDate attribute with 0 offset from GMT - please refer to scheduledDate attribute description"
+        },
+        "content": {
+          "type": "InlinePushContent",
+          "description": "Content for push notification"
+        }
+      }
+    },
+    "PushContent": {
+      "properties": {
+        "contentId": {
+          "type": "String",
+          "description": "publishedMessageId - representing the published message to load contents for push notification"
+        },
+        "inboxMessage": {
+          "type": "InboxMessage",
+          "description": "Inbox message content",
+          "$ref": "InboxMessage"
+        },
+        "inAppMessage": {
+          "type": "InAppMessage",
+          "description": "InApp message content",
+          "$ref": "InAppMessage"
+        },
+        "simple": {
+          "type": "SimplePushContent",
+          "description": "Contents for push notification",
+          "$ref": "SimplePushContent"
+        }
+      }
+    },
+    "InlinePushContent": {
+      "properties": {
+        "inboxMessage": {
+          "type": "InboxMessage",
+          "description": "Inbox message content",
+          "$ref": "InboxMessage"
+        },
+        "inAppMessage": {
+          "type": "InAppMessage",
+          "description": "InApp message content",
+          "$ref": "InAppMessage"
+        },
+        "simple": {
+          "type": "SimplePushContent",
+          "description": "Contents for push notification",
+          "$ref": "SimplePushContent"
+        }
+      }
+    },
+    "InboxMessage": {
+        "required": [
+            "expirationDate",
+            "richContentId"
+        ],
+        "properties": {
+            "expirationDate": {
+            "type": "Date",
+            "description": "Inbox message expiration date represented in a String as per RFC 3339 ('1970-01-01T00:00:00.000+00:00')"
+        },
+        "richContentId": {
+          "type": "RichContentId",
+          "description": "Inbox message rich content id",
+          "$ref": "RichContentId"
+        }
+      }
+    },
+    "InAppMessage": {
+      "required": [
+          "expirationDate",
+          "maxViews",
+          "inAppContentId"
+      ],
+      "properties": {
+        "expirationDate": {
+          "type": "Date",
+          "description": "InApp message expiration date represented in a String as per RFC 3339 ('1970-01-01T00:00:00.000+00:00')"
+        },
+        "maxViews": {
+          "type": "Integer",
+          "description": "Maximum number of views on the InApp message"
+        },
+        "inAppContentId": {
+          "type": "InAppContentId",
+          "description": "InApp message content id",
+          "$ref": "InAppContentId"
+        }
+      }
+    },
+    "SimplePushContent": {
+      "properties": {
+        "apns": {
+          "type": "IosPushPayload",
+          "description": "Push content for iOS devices",
+          "$ref": "IosPushPayload"
+        },
+        "gcm": {
+          "type": "AndroidPushPayload",
+          "description": "Push content for Android devices",
+          "$ref": "AndroidPushPayload"
+        }
+      }
+    },
+    "IosPushPayload": {
+      "properties": {
+        "aps": {
+          "type": "APS",
+          "description": "",
+          "$ref": "APS"
+        },
+        "notification-action": {
+          "type": "Action",
+          "description": "Action to perform when notification is pressed",
+          "$ref": "Action"
+        },
+        "data": {
+          "type": "Map",
+          "description": "Map of key value pairs as data content",
+          "$ref": "DataEntry"
+        },
+        "media-attachment": {
+          "type": "String",
+          "description": "Media url sent with the notification"
+        }
+      }
+    },
+    "Action": {
+      "required": [
+        "type",
+        "value"
+      ],
+      "properties": {
+        "type": {
+          "type": "String",
+          "description": "Type of action to perform"
+        },
+        "name": {
+          "type": "String",
+          "description": "Name of action to display on notification"
+        },
+        "value": {
+          "type": "JSONnode",
+          "description": "Parameters of action"
+        }
+      }
+    },
+    "APS": {
+      "properties": {
+        "alert": {
+          "type": "String",
+          "description": "Message to show on notification with no title and subtitle"
+        },
+        "alert": {
+          "type": "IosAlertNode",
+          "description": "Message to show with title and subtitle"
+        },
+        "badge": {
+          "type": "Integer",
+          "description": "Number to show on App"
+        },
+        "interruption-level": {
+          "type": "String",
+          "description": "The importance and delivery timing of a notification. The values are: passive, active, time-sensitive, or critical"
+        },
+        "relevance-score": {
+          "type": "Number",
+          "description": "The relevance score, a number between 0 and 1"
+        }
+      }
+    },
+
+    "IosAlertNode": {
+        "properties": {
+            "title": {
+              "type": "String",
+              "description": "Title of notification"
+            },
+            "subtitle": {
+              "type": "String",
+              "description": "SubTitle of notification"
+            },
+            "body": {
+              "type": "String",
+              "description": "Message of notification"
+            }
+        }
+    },
+    "AndroidPushPayload": {
+      "properties": {
+        "alert": {
+          "type": "AndroidAlertNode",
+          "description": "Android push contents"
+        },
+        "data": {
+          "type": "Map",
+          "description": "Map of key value pairs as data content",
+          "$ref": "DataEntry"
+        }
+      }
+    },
+    "AndroidAlertNode": {
+      "properties": {
+        "subject": {
+          "type": "String",
+          "description": "Subject of notification"
+        },
+        "message": {
+          "type": "String",
+          "description": "Message of notification"
+        },
+        "notification-action": {
+          "type": "Action",
+          "description": "Action to perform when notification is pressed"
+        }
+      }
+    },
+    "InApp": {
+    "required": [
+      "rules",
+      "maxViews",
+      "content"
+      ],
+      "properties": {
+        "rules": {
+        "type": "Array",
+          "description": "List of InApp message rules",
+          "items":{
+             "$ref":"String"
+          }
+        },
+        "expirationDate": {
+          "type": "Date",
+          "description": "InApp expiration date represented in a String as per RFC 3339 ('1970-01-01T00:00:00.000+00:00')"
+        },
+        "maxViews": {
+          "type": "int",
+          "description": "Maximum number of views set for the InApp message"
+        },
+        "template": {
+          "type": "String",
+          "description": "InApp template name"
+        },
+        "content": {
+          "type": "Map",
+          "description": "Map of key value pairs as InApp message content",
+          "$ref": "ContentEntry"
+        }
+      }
+    },
+    "PushContact": {
+      "required": [
+        "lookupKeyFields",
+        "contactId"
+      ],
+      "properties": {
+        "contactId": {
+          "type": "Long",
+          "description": "Engage recipientId takes precedence over lookupKeyFields"
+        },
+        "lookupKeyFields": {
+          "type": "Array",
+          "description": "List of look up key fields to find contact",
+          "items": {
+            "$ref": "LookUpKeyField"
+          }
+        },
+        "channel": {
+          "type": "DeviceLookup",
+          "description": "Look up key fields to find a specifc device"
+        },
+        "personalization": {
+          "type": "Map",
+          "description": "Map of key value pairs for personalization",
+          "$ref": "Personalization"
+        }
+      }
+    },
+    "LookUpKeyField": {
+      "required": [
+        "channel",
+        "name",
+        "value"
+      ],
+      "properties": {
+        "channel": {
+          "type": "String",
+          "description": "Channel name"
+        },
+        "name": {
+          "type": "String",
+          "description": "Column name"
+        },
+        "value": {
+          "type": "String",
+          "description": "Column value"
+        }
+      }
+    },
+    "DeviceLookup": {
+      "required": [
+        "qualifier",
+        "destination"
+      ],
+      "properties": {
+        "qualifier": {
+          "type": "String",
+          "description": "Appkey"
+        },
+        "destination": {
+          "type": "String",
+          "description": "xtifyUserId|xtifyChannelId"
+        },
+        "appKey": {
+          "type": "String",
+          "description": "AppKey, used in place of qualifier"
+        },
+        "userId": {
+          "type": "String",
+          "description": "Xtify User Id, used in place of destination along with channelId"
+        },
+        "channelId": {
+          "type": "String",
+          "description": "Xtify Channel Id, used in place of destination along with userId"
+        }
+      }
+    },
+    "RichContentIdResponse": {
+      "properties": {
+        "richContentId": {
+          "$ref": "RichContentId"
+        }
+      }
+    },
+    "RichContentRequest": {
+      "properties": {
+        "personalizationDefaults": {
+          "type": "Map",
+          "description": "Map of key value pairs for personalization defaults",
+          "$ref": "Personalization"
+        },
+        "personalizationFormulas": {
+          "type": "Map",
+          "description": "Map of key value pairs for personalization formulas",
+          "$ref": "Personalization"
+        },
+        "payload": {
+          "$ref": "RichContentMap"
+        }
+      }
+    },
+    "RichContentResponse": {
+      "properties": {
+        "personalizationDefaults": {
+          "type": "Map",
+          "description": "Map of key value pairs for personalization defaults",
+          "$ref": "Personalization"
+        },
+        "personalizationFormulas": {
+          "type": "Map",
+          "description": "Map of key value pairs for personalization formulas",
+          "$ref": "Personalization"
+        },
+        "payload": {
+          "$ref": "RichContentMap"
+        }
+      }
+    },
+    "RichContentMap": {
+      "properties": {
+        "gcm": {
+          "$ref": "TemplateContent"
+        },
+        "apns": {
+          "$ref": "TemplateContent"
+        }
+      }
+    },
+    "InAppContentIdResponse": {
+      "properties": {
+        "inAppContentId": {
+          "$ref": "InAppContentId"
+        }
+      }
+    },
+    "InAppContentRequest": {
+      "properties": {
+        "personalizationDefaults": {
+          "type": "Map",
+          "description": "Map of key value pairs for personalization defaults",
+          "$ref": "Personalization"
+        },
+        "personalizationFormulas": {
+          "type": "Map",
+          "description": "Map of key value pairs for personalization formulas",
+          "$ref": "Personalization"
+        },
+        "payload": {
+          "$ref": "InAppContentMap"
+        }
+      }
+    },
+    "InAppContentMap": {
+      "properties": {
+        "gcm": {
+          "$ref": "InAppTemplateContent"
+        },
+        "apns": {
+          "$ref": "InAppTemplateContent"
+        }
+      }
+    },
+    "TemplateContent": {
+      "properties": {
+        "template": {
+          "type": "String",
+          "description": "Template name"
+        },
+        "content": {
+          "$ref": "Content"
+        }
+      }
+    },
+    "InAppTemplateContent": {
+      "properties": {
+        "rules": {
+          "type": "Array",
+          "description": "List of inApp message rules to apply",
+          "items": {
+            "type": "String",
+            "description": "Name of inApp message rules"
+          }
+        },
+        "template": {
+          "type": "String",
+          "description": "Template name"
+        },
+        "maxViews": {
+          "type": "Integer",
+          "description": "Maximum number of views on the InApp message"
+        },
+        "content": {
+          "$ref": "InAppContent"
+        }
+      }
+    },
+    "Content": {
+      "properties": {
+        "messagePreview": {
+          "$ref": "MessagePreview"
+        },
+        "messageDetails": {
+          "$ref": "MessageDetails"
+        }
+      }
+    },
+    "InAppContent": {
+      "properties": {
+        "mainImage": {
+          "type": "String",
+          "description": "Main image url string"
+        },
+        "title": {
+          "type": "String",
+          "description": "Title"
+        },
+        "text": {
+          "type": "String",
+          "description": "Text"
+        },
+        "color": {
+          "type": "String",
+          "description": "Color"
+        },
+        "icon": {
+          "type": "String",
+          "description": "Icon"
+        },
+        "action": {
+          "$ref": "InAppAction"
+        }
+      }
+    },
+    "InAppAction": {
+      "properties": {
+        "type": {
+          "type": "String",
+          "description": "InApp action type"
+        },
+        "value": {
+          "type": "String",
+          "description": "InApp action value if any"
+        }
+      }
+    },
+    "MessagePreview": {
+      "properties": {
+        "subject": {
+          "type": "String",
+          "description": "Subject of the message with optional personalization tags"
+        },
+        "previewContent": {
+          "type": "String",
+          "description": "Content of the preview with optional personalization tags"
+        }
+      }
+    },
+    "MessageDetails": {
+      "properties": {
+        "richContent": {
+          "type": "String",
+          "description": "Content for rich push"
+        }
+      }
+    },
+    "RestPublishedMessage": {
+        "properties" : {             
+         "id": {
+            "type": "String",
+            "description": "ID of the published message"
+         },
+        "name": {
+          "type": "String",
+          "description": "Message Name for the published message"
+         },
+         "campaignName": {
+          "type": "String",
+          "description": "Push Campaign Name (not applicable for SMS)"
+         },
+         "contactSourceId": {
+            "type": "String",
+            "description": "contact source ID"
+         },
+          "programIds": {
+            "type": "String",
+            "description": "SMS Text to Join Program ID(s), comma separated (not applicable for Push)"
+         }
+        }
+    },
+    "TransactionalSmsStatus": {
+        "required": [
+        "location",
+        "id"
+        ],
+        "properties": {
+          "location": {
+            "type": "String",
+            "description": "location of the api status"
+          },
+          "id": {
+            "type": "String",
+            "description": "transaction id for this API Call"
+          }
+        }
+    },
+    "SmsProgramStatus": {
+      "required": [
+        "location",
+        "id"
+      ],
+      "properties": {
+        "location": {
+          "type": "String",
+          "description": "Location to fetch the Sms Program"
+        },
+        "id": {
+          "type": "String",
+          "description": "SMS Program Id"
+        }
+      }
+    },
+    "SmsTriggerProgram": {
+      "required" : [
+        "phoneNumber"
+      ],
+      "properties" : {
+        "phoneNumber": {
+        "type": "String",
+        "description": "SMS phone number"
+        }
+      }
+    },
+    "SmsProgram": {
+      "required": [
+        "id",
+        "programName",
+        "campaignName",
+        "code",
+        "senderId",
+        "status",
+        "type",
+        "country"
+      ],
+      "properties": {
+        "id": {
+          "type": "long",
+          "description": "SMS Program Id"
+        },
+        "programName": {
+          "type": "String",
+          "description": "SMS Program Name"
+        },
+        "campaignName": {
+          "type": "String",
+          "description": "SMS Campaign Name"
+        },
+        "code": {
+          "type": "String",
+          "description": "SMS Program Short/Long Code"
+        },
+        "senderId": {
+          "type": "String",
+          "description": "SMS Program Sender Id"
+        },
+        "status": {
+          "type": "String",
+          "description": "SMS Program Status"
+        },
+        "type": {
+          "type": "String",
+          "description": "SMS Program Type"
+        },
+        "country": {
+          "type": "String",
+          "description": "SMS Program Country"
+        }
+      }
+    },
+    "SmsSendJobSpecification": {
+      "required": [
+    "messageName"
+      ],
+      "properties": {
+        "contactSourceId": {
+          "type": "long",
+          "description": "Id of a contact source, for example, a database, contact list, or query"
+        },
+        "externalSystemName": {
+          "type": "String",
+          "description": "Provision for the calling system to pass a Name representing the calling system"
+        },
+        "externalSystemReferenceId": {
+          "type": "String",
+          "description": "Provision for the calling system to pass a Reference Identifier"
+        },        
+        "messageName": {
+          "type": "String",
+          "description": "message name"
+        },
+        "folder": {
+        "type": "String",
+        "description": "message folder location"
+        },
+        "scheduledDate": {
+          "type": "Date",
+          "description": "Date on which the SMS is to be sent, represented in a String as per RFC 3339 ('1970-01-01T00:00:00.000+00:00')"
+        },
+    "preBlockingHours": {
+          "type": "int",
+          "description": "Value representing the blocking time before sending the SMS"
+        }
+      }
+    }
+  }
+}

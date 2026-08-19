@@ -1,0 +1,120 @@
+generated: '2026-08-13'
+method: searched
+source: https://developer.goacoustic.com/acoustic-content/reference/get-started
+docs:
+- https://developer.goacoustic.com/acoustic-content/reference/get-started
+- https://developer.goacoustic.com/acoustic-campaign/reference/getting-started-with-oauth
+- https://developer.goacoustic.com/acoustic-campaign/reference/legacy-authentication-method-jsessionid-user-sessions
+- https://developer.goacoustic.com/acoustic-connect/reference/use-connect-api
+note: >-
+  Derived mechanically first (0-working/derive-authentication.py) — it found zero
+  schemes because none of Acoustic's published contracts declare security: the
+  Acoustic Content OpenAPI 3.0.0 ships no components.securitySchemes, the Content
+  Swagger 2.0 on GitHub ships no securityDefinitions, and the Campaign service
+  descriptions are Swagger 1.1, which predates security metadata entirely. Every
+  scheme below therefore comes from the published docs, not from a spec.
+summary:
+  types: [http, apiKey, oauth2]
+  api_key_in: [header]
+  oauth2_flows: [refreshToken, clientCredentials]
+  spec_declared: false
+  spec_gap: >-
+    No Acoustic contract declares securitySchemes/securityDefinitions, so an agent
+    reading the machine-readable artifacts alone cannot learn how to authenticate.
+schemes:
+- name: ContentBasicAuth
+  api: Acoustic Content API
+  type: http
+  scheme: basic
+  source: docs
+  description: >-
+    HTTP Basic against /login/v1/basicauth using an Acoustic ID (email) and password,
+    or the literal user id "AcousticAPIKey" with an API key value as the password.
+  login_endpoint: https://{DomainName}/api/login/v1/basicauth
+  docs: https://developer.goacoustic.com/acoustic-content/reference/get-started
+- name: ContentSessionCookie
+  api: Acoustic Content API
+  type: apiKey
+  in: cookie
+  parameter: x-ibm-dx-user-auth
+  source: docs
+  description: >-
+    The login call returns a Set-Cookie carrying x-ibm-dx-user-auth. Subsequent
+    authoring calls are authenticated with that token, sent either as the cookie or
+    as an x-ibm-dx-user-auth header.
+  related_headers:
+  - x-ibm-dx-tenant-id
+  - x-cms-tenant-id
+  - x-ibm-dx-tenant-base-url
+  docs: https://developer.goacoustic.com/acoustic-content/reference/get-started
+- name: ContentAnonymousDelivery
+  api: Acoustic Content API
+  type: none
+  source: docs
+  description: >-
+    The /delivery/v1/* read surface (content, search, resources, sites, pages,
+    rendering) is documented as callable anonymously; /mydelivery/v1/* is the
+    authenticated twin that additionally returns restricted items.
+- name: CampaignOAuth2
+  api: Acoustic Campaign REST API / XML API
+  type: oauth2
+  flow: refreshToken
+  source: docs
+  token_url: https://api-campaign-us-1.goacoustic.com/oauth/token
+  parameters: [grant_type=refresh_token, client_id, client_secret, refresh_token]
+  bearer: 'Authorization: Bearer {access_token}'
+  token_ttl: 4 hours
+  scopes_documented: false
+  description: >-
+    Client id, client secret and refresh token are issued per Organization in the Org
+    Admin section of Acoustic Campaign and are bound to the issuing Organization
+    only. The token endpoint lives on the same regional pod host as the API. No OAuth
+    scopes are documented — the token carries the organization's full API grant.
+  docs: https://developer.goacoustic.com/acoustic-campaign/reference/getting-started-with-oauth
+- name: CampaignLegacySession
+  api: Acoustic Campaign XML API
+  type: apiKey
+  in: cookie
+  parameter: jsessionid
+  status: legacy
+  source: docs
+  description: >-
+    Legacy Login/Logout XML session model. Acoustic documents a hard cap of 20 active
+    login sessions per Organization and strongly encourages OAuth 2.0 instead.
+  docs: https://developer.goacoustic.com/acoustic-campaign/reference/legacy-authentication-method-jsessionid-user-sessions
+- name: ConnectApiKey
+  api: Acoustic Connect API
+  type: apiKey
+  in: header
+  parameter: X-API-Key
+  source: docs
+  description: >-
+    A single API key generated in Connect under Administration > General settings >
+    API keys, sent on every GraphQL POST. Verified live: an anonymous POST of
+    {__schema{queryType{name}}} to https://connect-gql-us-1.goacoustic.com/ returns
+    HTTP 200 with {"errors":[{"message":"Unauthorized","extensions":{"code":"401",
+    "status":"UNAUTHORIZED"}}]}, so introspection is key-gated.
+  docs: https://developer.goacoustic.com/acoustic-connect/reference/use-connect-api
+- name: AcousticSSO
+  api: platform sign-in (not an API credential)
+  type: openIdConnect
+  source: probed
+  issuer: https://login.goacoustic.com
+  openid_configuration: well-known/acoustic-openid-configuration.json
+  authorization_endpoint: https://login.goacoustic.com/oauth2/v1/authorize
+  token_endpoint: https://login.goacoustic.com/oauth2/v1/token
+  jwks_uri: https://login.goacoustic.com/oauth2/v1/keys
+  description: >-
+    OIDC discovery is served on Acoustic's own login host (an Okta org). This is the
+    human sign-in path for the Acoustic UI. None of the product APIs above document
+    accepting tokens from this issuer, so it is recorded as identity infrastructure
+    rather than an API authentication scheme.
+x-evidence:
+- url: https://connect-gql-us-1.goacoustic.com/
+  method: POST
+  http_status: 200
+  body: '{"errors":[{"message":"Unauthorized","extensions":{"code":"401","status":"UNAUTHORIZED"}}]}'
+- url: https://login.goacoustic.com/.well-known/openid-configuration
+  http_status: 200
+- url: https://developer.goacoustic.com/acoustic-content/reference/get-started.md
+  http_status: 200

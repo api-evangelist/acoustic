@@ -1,0 +1,65 @@
+generated: '2026-08-13'
+method: searched
+source: https://developer.goacoustic.com/acoustic-connect/changelog
+note: >-
+  Acoustic runs exactly one dated developer changelog, and it belongs to Acoustic
+  Connect. /acoustic-campaign/changelog and /acoustic-content/changelog both 404,
+  and Acoustic Content's "What's new" doc page returns 403 to an anonymous client, so
+  the two oldest API estates have no reachable public release history. Acoustic
+  Personalization publishes a "What's new" doc page and a library version-history
+  page instead of a changelog feed.
+changelogs:
+- api: Acoustic Connect API
+  url: https://developer.goacoustic.com/acoustic-connect/changelog
+  scheme: dated-entries
+  format: ReadMe changelog
+  current_version: null
+  version_scheme_note: >-
+    The Connect GraphQL API is unversioned in its URL — a single endpoint per region,
+    with change communicated through release notes.
+  entries:
+  - title: Connect API release notes
+    date: '2025-09-02'
+    breaking: unknown
+  - title: Connect Web SDK release notes
+    date: '2025-02-17'
+    breaking: unknown
+  - title: Release notes for mobile Connect SDKs
+    date: '2024-11-22'
+    breaking: unknown
+  - title: Announcing Connect API and SDKs
+    date: '2024-11-18'
+    breaking: false
+    highlights: [Initial public announcement of the Connect API and its SDKs]
+  latest_entry: '2025-09-02'
+- api: Acoustic Personalization
+  url: https://developer.goacoustic.com/acoustic-personalization/docs/whats-new
+  scheme: whats-new-page
+  entries: []
+  note: >-
+    A narrative "What's new" page plus a library version-history page
+    (personalization-library-all-versions-history); neither carries dated release
+    entries in a form that can be structured without guessing.
+- api: Acoustic Content API
+  url: null
+  scheme: none
+  entries: []
+  note: >-
+    /acoustic-content/changelog returns 404 and /acoustic-content/docs/whats-new
+    returns 403 anonymously. The only public version signal is info.version in the
+    contract itself — 1.0.142, unchanged between the Swagger 2.0 copy on GitHub
+    (copyright 2023) and the OpenAPI 3.0.0 copy on the developer portal.
+- api: Acoustic Campaign REST API / XML API
+  url: null
+  scheme: none
+  entries: []
+  note: /acoustic-campaign/changelog returns 404. No public dated release history.
+x-evidence:
+- url: https://developer.goacoustic.com/acoustic-connect/changelog
+  http_status: 200
+- url: https://developer.goacoustic.com/acoustic-campaign/changelog
+  http_status: 404
+- url: https://developer.goacoustic.com/acoustic-content/changelog
+  http_status: 404
+- url: https://developer.goacoustic.com/acoustic-content/docs/whats-new
+  http_status: 403

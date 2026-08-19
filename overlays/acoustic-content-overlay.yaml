@@ -1,0 +1,104 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for Acoustic Content API
+  version: 1.0.0
+extends: openapi/acoustic-content-openapi-original.json
+x-generated: '2026-08-13'
+x-method: generated
+x-source: >-
+  Derived from the harvested contract plus the published Acoustic Content reference.
+  Everything here is an addition the original omits — the original file is never
+  mutated. The three biggest omissions this overlay repairs are servers[],
+  components.securitySchemes and operationIds; the first two are supplied from
+  Acoustic's own get-started page, the third cannot be supplied at all without
+  inventing identifiers, so it is recorded as a documented gap rather than filled.
+actions:
+- target: $.info
+  update:
+    x-apievangelist-provenance: >-
+      Extracted verbatim from the ReadMe-embedded API definition
+      (/branches/1.0/apis/acoustic-content-api.json) served on Acoustic's own
+      developer portal at developer.goacoustic.com/acoustic-content.
+    x-apievangelist-sibling-contract: openapi/acoustic-content-swagger2-original.yaml
+    x-apievangelist-contract-gaps:
+    - No servers[] block
+    - No components.securitySchemes
+    - No operationId on any of the 178 operations
+    - No security requirement on any operation, despite most requiring authentication
+- target: $
+  update:
+    servers:
+    - url: https://{domainName}/api/{contentHubId}
+      description: >-
+        Tenant API URL. Read from the Acoustic Content UI (About > Hub information)
+        or from the x-ibm-dx-tenant-base-url response header returned by the login
+        service.
+      variables:
+        domainName:
+          default: content-us-1.content-cms.com
+          description: >-
+            Regional Content Hub domain, e.g. content-us-1.content-cms.com or
+            content-eu-4.content-cms.com.
+        contentHubId:
+          default: 00000000-0000-0000-0000-000000000000
+          description: The tenant's Content Hub ID (a UUID).
+- target: $.components
+  update:
+    securitySchemes:
+      basicAuth:
+        type: http
+        scheme: basic
+        description: >-
+          Acoustic ID (email + password) or the literal user id AcousticAPIKey with an
+          API key value as the password, presented to /login/v1/basicauth.
+      userAuthToken:
+        type: apiKey
+        in: header
+        name: x-ibm-dx-user-auth
+        description: >-
+          Authentication token returned as a Set-Cookie by the login service and
+          replayed on subsequent authoring calls.
+- target: $.info
+  update:
+    x-apievangelist-conventions: conventions/acoustic-conventions.yml
+    x-apievangelist-errors: errors/acoustic-problem-types.yml
+    x-apievangelist-data-model: data-model/acoustic-data-model.yml
+    x-apievangelist-webhooks: asyncapi/acoustic-webhooks.yml
+    x-apievangelist-skills: skills/_index.yml
+    x-apievangelist-idempotency:
+      supported: false
+      note: >-
+        No idempotency key exists on this API. Optimistic concurrency is expressed
+        through the rev / currentRev pair, and a stale rev returns error 20000
+        (mismatched.revs). Clients must re-read state before retrying a write.
+    x-apievangelist-rate-limits:
+      published: false
+      headers: []
+      note: rate-limits/acoustic-rate-limits.yml — no limits published for Acoustic Content.
+- target: $.paths['/authoring/v1/changes/status/ready'].post
+  update:
+    x-apievangelist-note: >-
+      Returns 204 with no body on full success. Any other response carries the
+      outcome arrays (successful, skipped, userErrors, genericErrors, missing) plus a
+      messages object keyed by item uid — the status code alone is not sufficient to
+      determine what happened.
+    x-apievangelist-error-catalog: errors/acoustic-problem-types.yml
+- target: $.paths['/delivery/v1/content/bulk_retrieve'].post
+  update:
+    x-apievangelist-note: >-
+      Hard cap of 25 ids per request. Ids beyond the 25th are silently ignored rather
+      than rejected, so a client that sends 100 ids receives a successful response
+      describing 25 of them.
+- target: $.paths['/delivery/v1/rendering/context/{id}'].get
+  update:
+    x-apievangelist-note: >-
+      Resolves reference elements recursively. Cyclic references are terminated with a
+      "$$CYCLE" marker property whose value is the cycling content ID; consumers must
+      treat that key as terminal and resolve it against the parent hierarchy.
+- target: $.paths['/webhook/v1/profile'].put
+  update:
+    x-apievangelist-note: >-
+      Overwrites the entire tenant webhook profile — there is no partial update and no
+      per-event subscription. The event payload shape is documented only as a prose
+      example ({event, timestamp, doc}); no schema is published. See
+      asyncapi/acoustic-webhooks.yml.

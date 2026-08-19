@@ -1,0 +1,70 @@
+generated: '2026-08-13'
+method: searched
+source: https://developer.goacoustic.com/acoustic-personalization/docs/library-overview
+docs:
+- https://developer.goacoustic.com/acoustic-personalization/docs/configure-library
+- https://developer.goacoustic.com/acoustic-personalization/docs/content-rendering-display-the-personalized-content
+- https://developer.goacoustic.com/acoustic-content/docs/custom-user-interfaces
+- https://developer.goacoustic.com/acoustic-content/docs/using-the-acoustic-content-palette-in-delivery-mode
+note: >-
+  Acoustic's client-side surface is browser libraries and embeddable authoring UI,
+  not a hosted element library. None of it is distributed from a public CDN with a
+  pinned URL, so no version can be read from a distribution URL — the MPA build is
+  deployed through Exchange Capture tag management and the SPA build comes from
+  Acoustic's private Artifactory.
+families:
+- name: Personalization library (PZN)
+  api: Acoustic Personalization
+  kind: browser-library
+  channels: [MPA, Angular SPA, React SPA]
+  distribution:
+  - channel: MPA
+    method: deployed as a tag through Exchange Capture
+    url: null
+    version: null
+    note: >-
+      Unpinned by design: the library is injected by Acoustic's own tag manager, so a
+      site owner cannot state which build their visitors receive. Docs prose refers to
+      "Personalization library version 2.3" as the current supported line.
+  - channel: Angular SPA / React SPA
+    method: npm package from Acoustic Artifactory (login required)
+    url: https://artifactory.acoustic.co/ui/login/
+    version: null
+    note: Gated registry; no public metadata endpoint to read a version or date from.
+  responsibilities:
+  - Match personalization rules and visitor behaviour data to select content for a zone
+  - Cache rulesData and caricatureData in browser LocalStorage on a one-hour refresh
+  - Hand selected content to the channel's rendering mechanism
+  - Capture click and custom events
+  - Resolve product recommendations from the product catalog
+  companion_libraries:
+  - name: Analytics library
+    role: Collects and integrates behavioural data into Exchange
+    docs: https://developer.goacoustic.com/acoustic-personalization/docs/analytics-library-collect-and-integrate-behavioral-data
+  - name: Exchange / Exchange Capture
+    role: Event pipeline and tag deployment that feeds Personalization endpoints
+    docs: https://developer.goacoustic.com/acoustic-personalization/docs/exchange-connect-customer-data-with-personalization
+  tooling:
+    docs: https://developer.goacoustic.com/acoustic-personalization/docs/personalization-library-tools
+    response_codes: https://developer.goacoustic.com/acoustic-personalization/docs/personalization-library-response-codes
+    version_history: https://developer.goacoustic.com/acoustic-personalization/docs/personalization-library-all-versions-history
+- name: Acoustic Content embeddable authoring UI
+  api: Acoustic Content API
+  kind: embedded-ui
+  surfaces:
+  - name: Content palette (delivery mode)
+    summary: An embeddable asset/content picker that can be surfaced inside a customer's own web application.
+    docs: https://developer.goacoustic.com/acoustic-content/docs/using-the-acoustic-content-palette-in-delivery-mode
+  - name: Custom user interfaces
+    summary: Custom element UIs registered against a content type, rendered inside the Content authoring experience.
+    docs: https://developer.goacoustic.com/acoustic-content/docs/custom-user-interfaces
+  - name: Iframe component
+    summary: An iframe-hosted custom component embedded in the authoring UI.
+    docs: https://developer.goacoustic.com/acoustic-content/docs/creating-an-iframe-component
+  samples:
+  - https://github.com/acoustic-content-samples/sample-custom-element-ui
+  - https://github.com/acoustic-content-samples/sample-web-components
+  - https://github.com/acoustic-content-samples/sample-active-site-components
+summary:
+  family_count: 2
+  publicly_pinned_distribution: false

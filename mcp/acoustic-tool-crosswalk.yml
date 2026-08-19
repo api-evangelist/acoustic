@@ -1,0 +1,114 @@
+generated: '2026-08-13'
+method: derived
+source: mcp/acoustic-mcp.yml + openapi/ + probed GraphQL endpoint
+note: >-
+  Emitted because Acoustic has both a GraphQL surface (Acoustic Connect) and OpenAPI
+  (Acoustic Content), but the finding this crosswalk records is a DISJOINT estate,
+  not an overlap. Acoustic's surfaces are not three projections of one data core —
+  they are three separate products with separate data, separate hosts, separate
+  credentials and no shared identifier. There is no contact in the Content API and no
+  content item in the Connect API. crosswalk[] is therefore empty by fact rather than
+  by omission, and that is the useful result: an agent cannot move between Acoustic's
+  APIs, it has to be told which product it is talking to and hold a different
+  credential for each.
+surfaces:
+  openapi:
+  - file: openapi/acoustic-content-openapi-original.json
+    api: Acoustic Content API
+    format: OpenAPI 3.0.0
+    operations: 178
+    operation_ids: 0
+    gated: false
+    note: Harvested from the ReadMe-embedded API definition on the developer portal.
+  - file: openapi/acoustic-content-swagger2-original.yaml
+    api: Acoustic Content API
+    format: Swagger 2.0
+    operations: 187
+    operation_ids: 0
+    gated: false
+    note: First-party copy published by Acoustic at github.com/acoustic-content-samples/wch-openapi-documentation.
+  - file: openapi/acoustic-campaign-rest-swagger-index.json
+    api: Acoustic Campaign REST API
+    format: Swagger 1.1
+    operations: 64
+    resources: 11
+    gated: false
+    note: Served live and unauthenticated from every Campaign pod at /restdoc.
+  graphql:
+    api: Acoustic Connect API
+    endpoint: https://connect-gql-us-1.goacoustic.com/
+    regions:
+    - us-east-1 connect-gql-us-1.goacoustic.com
+    - ap-southeast-2 connect-gql-ap-3.goacoustic.com
+    - eu-central-1 connect-gql-eu-1.goacoustic.com
+    introspection: gated
+    gate: 'X-API-Key required; anonymous introspection returns {"message":"Unauthorized","code":"401"}'
+    schema_captured: false
+  mcp:
+    url: null
+    gated: null
+    note: No MCP server exists.
+crosswalk: []
+mcp_only: []
+graphql_only:
+- field: createContacts
+  reason: >-
+    Contact creation exists only in Connect's GraphQL API. No Acoustic REST contract
+    exposes a contact-create operation — the Campaign REST surface stops at contact
+    databases and relational tables, and the XML API (AddRecipient) is not described
+    by any machine-readable contract.
+  documented_at: https://developer.goacoustic.com/acoustic-connect/reference/add-a-contact
+- field: updateContacts / deleteContacts
+  reason: Connect-only contact lifecycle; no REST equivalent in any published Acoustic contract.
+- field: dataSets
+  reason: Audience/dataset listing is Connect-only.
+- field: consent queries and updateConsentPreferences
+  reason: >-
+    Connect owns the consent model. Campaign has a separate shared-channel-consent
+    surface documented in prose but not in the Swagger 1.1 description.
+- field: product catalog and product performance queries
+  reason: Connect-only; the Campaign REST contract has no product catalog resource.
+- field: reference sets
+  reason: Connect-only entity with no REST analogue.
+- field: signals (real-time import, export)
+  reason: >-
+    Connect's signal surface overlaps conceptually with Campaign's Universal
+    Behaviors (openapi/acoustic-campaign-events-swagger.json) but they are different
+    products with different ingestion contracts — this is a semantic neighbour, not a
+    binding, so it is recorded here rather than in crosswalk[].
+  confidence: low
+rest_only:
+- capability: Content authoring (assets, resources, renditions, content, types, element definitions, categories, layouts, layout mappings, libraries, sites, pages, comments, reviews, versions)
+  contract: openapi/acoustic-content-openapi-original.json
+  operations: 138
+  reason: Acoustic Content has no GraphQL surface and no MCP tools.
+- capability: Content delivery and rendering (delivery, mydelivery, contextual search, rendering contexts)
+  contract: openapi/acoustic-content-openapi-original.json
+  operations: 24
+- capability: Content publishing, tenant registry, users, webhook profile, login
+  contract: openapi/acoustic-content-openapi-original.json
+  operations: 16
+- capability: Campaign contact databases and relational tables
+  contract: openapi/acoustic-campaign-databases-swagger.json, openapi/acoustic-campaign-relationaltables-swagger.json
+  operations: 24
+- capability: Campaign channels (push, SMS, in-app, rich content)
+  contract: openapi/acoustic-campaign-channels-swagger.json
+  operations: 18
+- capability: Campaign programs, orgs, contact sources, messages, web tracking, event types, GDPR jobs
+  contract: openapi/acoustic-campaign-*-swagger.json
+  operations: 20
+coverage:
+  tools_named: 0
+  tools_bound: 0
+  mcp_only: 0
+  graphql_only_documented: 6
+  rest_ops_total: 242
+  rest_ops_with_a_tool: 0
+  note: >-
+    242 = 178 Content operations (OpenAPI 3.0.0 copy) + 64 Campaign REST operations.
+    None of them is reachable by an agent through a published tool.
+blockers:
+- No MCP server on any product.
+- Connect's GraphQL schema is API-key gated, so its fields cannot be enumerated without credentials.
+- Zero operationIds in the Content contract, so any tool binding must be made on method+path.
+- No securitySchemes in any contract, so a tool generator cannot emit auth from the spec.

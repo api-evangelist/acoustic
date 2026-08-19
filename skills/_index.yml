@@ -1,0 +1,57 @@
+generated: '2026-08-13'
+method: generated
+source: openapi/ + https://developer.goacoustic.com
+note: >-
+  Three skills covering the two Acoustic products that publish a machine-readable
+  contract. No skill was written for Acoustic Connect: its GraphQL schema is
+  API-key gated, so every operation would have to be copied out of prose, and a skill
+  that names fields nobody could verify is worse than no skill. Every step in every
+  skill below is bound to a METHOD /path that appears verbatim in a harvested
+  contract, because Acoustic ships zero operationIds.
+skills:
+- file: acoustic-content-publish-an-article.md
+  name: Publish an article in Acoustic Content
+  api: openapi/acoustic-content-openapi-original.json
+  operations:
+  - 'POST /login/v1/basicauth'
+  - 'POST /authoring/v1/resources'
+  - 'POST /authoring/v1/assets'
+  - 'GET /authoring/v1/types/{id}/new-content'
+  - 'POST /authoring/v1/content'
+  - 'POST /authoring/v1/types/{id}/validate'
+  - 'GET /authoring/v1/references/outgoing/{classification}/{id}'
+  - 'POST /authoring/v1/changes/status/ready'
+  - 'POST /publishing/v1/jobs'
+  - 'GET /publishing/v1/jobs/current-job/status'
+- file: acoustic-content-deliver-personalized-content.md
+  name: Read and render Acoustic Content on the delivery surface
+  api: openapi/acoustic-content-openapi-original.json
+  operations:
+  - 'GET /delivery/v1/search'
+  - 'GET /delivery/v1/contextualsearch'
+  - 'GET /delivery/v1/content/{id}'
+  - 'POST /delivery/v1/content/bulk_retrieve'
+  - 'GET /delivery/v1/rendering/context/{id}'
+  - 'GET /delivery/v1/rendering/search'
+  - 'GET /delivery/v1/sites/{siteId}/pages/{pageId}'
+  - 'GET /delivery/v1/resources/{fileIdentifier}'
+- file: acoustic-campaign-consent-and-messaging.md
+  name: Manage consent and send a channel message in Acoustic Campaign
+  api: openapi/acoustic-campaign-rest-swagger-index.json
+  operations:
+  - 'POST /oauth/token'
+  - 'PUT /databases/{databaseId}/establishidentity/{channel}-{qualifier}/{destination}'
+  - 'GET /databases/{databaseId}/consent/{channel}-{qualifier}/{destination}'
+  - 'PUT /databases/{databaseId}/consent/{channel}-{qualifier}/{destination}'
+  - 'POST /channels/sms/sends'
+  - 'GET /channels/sms/sends/{transactionId}/status'
+  - 'POST /channels/push/sends'
+  - 'POST /databases/{databaseId}/gdpr_erasure'
+  - 'GET /gdpr_jobs/{gdprJobId}/status'
+skipped:
+- api: Acoustic Connect API
+  reason: GraphQL schema is API-key gated; no verifiable operation set.
+- api: Acoustic Personalization
+  reason: Client-side library, not a callable API surface.
+- api: Acoustic Experience Analytics
+  reason: Advertised in the api-catalog but its reference URL returns 404.

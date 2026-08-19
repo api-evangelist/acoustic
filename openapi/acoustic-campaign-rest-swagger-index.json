@@ -1,0 +1,52 @@
+
+{
+    "apiVersion":"1.0",
+    "swaggerVersion":"1.1",
+    "basePath":"https://api-campaign-us-1.goacoustic.com:443/restdoc",
+    "apis":[
+       {
+            "path":"/messages",
+            "description":"Operations related to Messages"
+        },
+        {
+            "path":"/events",
+            "description":"Operations related to Universal Behaviors"
+        },
+        {
+            "path":"/eventtypes",
+            "description":"Operations related to Event Types"
+        },
+        {
+            "path":"/databases",
+            "description":"Operations related to Contact Databases"
+        },
+        {
+        	"path":"/relationaltables",
+        	"description":"Operations related to Relational Tables"
+        },
+        {
+            "path":"/webtracking",
+            "description":"Operations related to Web Tracking"
+        },
+        {
+            "path":"/channels",
+            "description":"Operations related to Channels"
+        },
+        {
+            "path":"/programs",
+            "description":"Operations related to Programs"
+        },
+        {
+            "path":"/orgs",
+            "description":"Operations related to Organization Settings"
+        },
+        {
+            "path":"/contactsources",
+            "description":"Operations related to Contact Sources"
+        },
+        {
+            "path":"/gdpr_jobs",
+            "description":"Operations related to GDPR job status and response"
+        }
+    ]
+}

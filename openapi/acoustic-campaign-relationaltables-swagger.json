@@ -1,0 +1,138 @@
+
+
+
+
+
+
+
+{
+    "swaggerVersion": "1.2",
+    "basePath":"https://api-campaign-us-1.goacoustic.com/rest",
+    "resourcePath": "/databases",
+    "apis":[
+        {
+            "path":"/databases/{databaseId}/relationaltables/{relationalTableId}/rows",
+            "description":"Operations with relational table",
+            "operations":[
+                {
+                    "method":"POST",
+                    "summary":"Associated Relational Table Data API",
+                    "notes":"Use this API to load the data from your relational table.<br>Accepted date format: MM/dd/yyyy",
+                    "nickname":"relationaltables-getrows-put",
+                    "responseClass":"",
+                    "parameters":[
+                        {
+                            "paramType": "path",
+                            "name": "databaseId",
+                            "description": "ID of the parent database",
+                            "dataType": "int",
+                            "required": true,
+                            "allowMultiple": false
+                        },
+                        {
+                            "paramType": "path",
+                            "name": "relationalTableId",
+                            "description": "ID of the relational table",
+                            "dataType": "int",
+                            "required": true,
+                            "allowMultiple": false
+                        },
+                        {
+                            "paramType": "body",
+                            "name": "RelationalTableRowsEnvelope",
+                            "description": "Provide the values of the joined fields of the relational table. And define which fields of data you want.",
+                            "dataType": "RelationalTableRowsEnvelope",
+                            "required": true,
+                            "allowMultiple": false
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "path":"/relationaltables/{relationalTableId}/columns",
+            "description":"Columns in a relational table",
+            "operations":[
+                {
+                    "method":"POST",
+                    "summary":"Add new column to an existing relational table.",
+                    "notes":"",
+                    "nickname":"relationaltables-addcolumns-post",
+                    "responseClass":"",
+                    "parameters":[
+                        {
+                            "paramType": "path",
+                            "name": "relationalTableId",
+                            "description": "ID of the relational table",
+                            "dataType": "int",
+                            "required": true,
+                            "allowMultiple": false
+                        },
+                        {
+                            "paramType": "body",
+                            "name": "RelationalTableColumn",
+                            "description": "Provide the data for the new column to add to the relational table.",
+                            "dataType": "RelationalTableColumn",
+                            "required": true,
+                            "allowMultiple": false
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "models": {
+   		"RelationalTableRowsEnvelope": {
+   		    "required": ["joinedFields", "fields"],
+            "properties": {
+            	"joinedFields" : {
+                    "type": "Array",
+                    "description" : "Name-Value pair of the joined fields of the relational table and its parent database",
+                    "items": {
+                        "$ref": "joinedField"
+                    }
+           		},
+           		"fields" : {
+           			"type": "Array",
+           			"description" : "Only the data of these requested fields will be returned",
+           			"items": {
+                        "type": "String"
+                    }
+           		}
+      		}
+   		},
+        "RelationalTableColumn": {
+            "required": ["columnName", "columnType"],
+            "properties": {
+                "columnName": {
+                    "type": "string",
+                    "description": "The name of the new column"
+                },
+                "columnType": {
+                    "type": "string",
+                    "description": "The type of the new column",
+                    "enum": ["Email", "Text", "Numeric", "YesNo", "Date", "Time", "Timestamp", "PhoneNumber"]
+                },
+                "required": {
+                    "type": "boolean",
+                    "description": "Set to true only if the new column must include data for each new record (default value is false)",
+                    "default": false,
+                    "defaultValue": false
+                }
+            }
+        },
+        "joinedField" : {
+   		    "required": ["name", "value"],
+            "properties": {
+            	"name": {
+            		"type": "String",
+            		"description": "Name of the joined field"
+            	},
+            	"value": {
+            		"type": "String",
+            	    "description": "Value of the joined field"
+            	}
+   		    }
+        }
+    }
+}

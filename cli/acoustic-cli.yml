@@ -1,0 +1,67 @@
+generated: '2026-08-13'
+method: searched
+source: https://github.com/acoustic-content-samples/wchtools-cli
+docs: https://github.com/acoustic-content-samples/wchtools-cli#readme
+note: >-
+  wchtools is the only first-party Acoustic CLI on a public registry, and it targets
+  Acoustic Content only. It is a content-as-code tool: it pushes and pulls the
+  tenant's Content artifacts (types, content, assets, layouts, sites, pages,
+  taxonomies) between a local working directory and the tenant's API URL, so a
+  team can version their Content Hub in git. Acoustic Campaign, Acoustic Connect and
+  Acoustic Experience Analytics have no CLI.
+cli:
+  name: wchtools
+  api: Acoustic Content API
+  package: wchtools-cli
+  version: 4.5.6
+  released: '2021-03-17'
+  repository: https://github.com/acoustic-content-samples/wchtools-cli
+  install:
+  - method: npm
+    command: npm install -g wchtools-cli
+  authentication:
+    described_in: authentication/acoustic-authentication.yml
+    flags: [--user, --password, --url]
+    note: >-
+      Authenticates with an Acoustic ID or with the "AcousticAPIKey" user id plus an
+      API key value, against the tenant's API URL (--url https://{DomainName}/api/{ContentHubId}).
+  commands:
+  - name: init
+    summary: Store the user id, working directory and tenant API URL for later commands.
+  - name: push
+    summary: Push local artifacts to the tenant, optionally tagging, setting a library or triggering the next publish.
+    key_flags: [-A, -a, -w, -t, -c, -p, --dir, --path, --publish-next, --set-tag, --set-library-id, --manifest]
+  - name: pull
+    summary: Pull tenant artifacts into the local working directory, including deletions and by-type filtering.
+    key_flags: [-A, -a, -w, --dir, --path, --deletions, --by-type-name, --manifest, --quiet]
+  - name: list
+    summary: List local or server-side artifacts, including pages and modified items.
+    key_flags: [-A, --server, --pages, --modified]
+  - name: delete
+    summary: Delete artifacts by path, recursively, by page, or from a deletions manifest.
+    key_flags: [-a, -w, -p, --path, --recursive, --site-context, --manifest]
+  - name: compare
+    summary: Diff two working directories, two tenants, or a directory against a tenant, and write the difference as a manifest that push/delete can then replay.
+    key_flags: [--source, --target, --write-manifest, --write-deletions-manifest, --manifest]
+  - name: publish
+    summary: Trigger a publishing job on the tenant.
+  - name: clear
+    summary: Clear cached credentials/settings.
+  artifact_types:
+    flags:
+      -A: all artifact types
+      -a: assets
+      -w: web assets
+      -t: types
+      -c: content
+      -l: layouts
+      -m: layout mappings
+      -p: pages
+      -s: sites
+      -C: categories
+    note: Flag set is taken from the published README; exact per-version coverage should be confirmed with `wchtools --help`.
+  flows:
+  - name: Version a Content Hub in git
+    steps: [wchtools init, wchtools pull -A --dir ./content, git commit, wchtools push -A --dir ./content --url <target-tenant>]
+  - name: Promote between tenants
+    steps: [wchtools compare -A --source <source-url> --target <target-url> --write-manifest diffs, wchtools push --url <target-url> --manifest diffs]

@@ -1,0 +1,68 @@
+generated: '2026-08-13'
+method: searched
+source: https://www.acoustic.com/pricing
+note: >-
+  Acoustic publishes a named three-tier plan ladder with a full feature-comparison
+  matrix, but no price, no currency, no billing period and no quota numbers. Every
+  tier's call to action is "Get a demo". Acoustic's own framing is that packaging is
+  based on messaging volume, data depth and personalization ambition rather than
+  audience size — none of those dimensions is given a published number. There is no
+  developer-facing or self-serve plan for any of the APIs.
+currency: null
+billing_period: null
+self_serve: false
+free_tier: false
+trial: false
+plans:
+- name: Professional
+  price: null
+  currency: null
+  billing_period: null
+  positioning: Smaller teams building their lifecycle marketing foundation.
+  included_quota: null
+  overage: null
+  cta: Get a demo
+  limits:
+  - Limited signals
+  - Limited behavioral insights
+  - Limited behavior-attribute message personalization
+  - Limited dynamic content personalization
+  - Segment by cart abandonment only
+- name: Premium
+  price: null
+  currency: null
+  billing_period: null
+  positioning: Teams scaling personalization with deeper behavioral intelligence.
+  included_quota: null
+  overage: null
+  cta: Get a demo
+  limits:
+  - Unlimited signals and behavior attributes
+  - Adds audience engagement and audience health dashboards
+- name: Ultimate
+  price: null
+  currency: null
+  billing_period: null
+  positioning: Brands running complex, high-volume customer journeys at scale.
+  included_quota: null
+  overage: null
+  cta: Get a demo
+  limits:
+  - Unlimited intent-driven attributes
+  - Adds predictive product and category interest
+add_ons:
+- name: AI-powered content generation
+  available_on: [Professional, Premium, Ultimate]
+  price: null
+plan_count: 3
+api_pricing:
+  metered: false
+  published: false
+  note: >-
+    No API-specific pricing, call allowance or overage rate is published for Acoustic
+    Content, Acoustic Campaign, Acoustic Connect or Acoustic Personalization. API
+    access is a property of the platform subscription, and the concurrency cap in
+    rate-limits/acoustic-rate-limits.yml is the only published API allowance.
+x-evidence:
+- url: https://www.acoustic.com/pricing
+  http_status: 200

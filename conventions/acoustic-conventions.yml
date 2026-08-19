@@ -1,18 +1,40 @@
-generated: '2026-07-17'
+generated: '2026-08-13'
 method: searched
-source: https://developer.goacoustic.com/acoustic-content/
-api: Acoustic Content
-# Cross-cutting API semantics captured from the published Acoustic Content
-# developer documentation. Multi-tenant SaaS: the REST base host is
-# tenant-specific; relative resource paths (e.g. /authoring/v1/assets) are stable.
+source: https://developer.goacoustic.com/acoustic-content/reference/get-started
+docs:
+- https://developer.goacoustic.com/acoustic-content/reference
+- https://developer.goacoustic.com/acoustic-campaign/reference/basics
+- https://developer.goacoustic.com/acoustic-campaign/reference/rest-api-overview
+- https://developer.goacoustic.com/acoustic-connect/reference/use-connect-api
+# Cross-cutting semantics for the whole Acoustic estate. The 2026-07-17 round of this
+# file covered Acoustic Content only; it now covers the four callable products, because
+# their conventions differ sharply and an agent needs to know which one it is talking to.
+apis:
+- Acoustic Content API
+- Acoustic Campaign REST API
+- Acoustic Campaign XML API
+- Acoustic Connect API
+estate_shape:
+  summary: >-
+    Four APIs from four eras, sharing a brand and nothing else. Acoustic Content is a
+    2016-era IBM Watson Content Hub REST API; Acoustic Campaign is a Silverpop Engage
+    XML API with a REST layer bolted on; Acoustic Connect is a modern GraphQL API; the
+    Personalization surface is a browser library. There is no shared identifier, no
+    shared credential and no shared base host between them.
+  implication: >-
+    A client cannot be written once against "the Acoustic API". Every convention below
+    has to be selected per product.
 authentication:
+  see: authentication/acoustic-authentication.yml
   styles:
-  - basic-auth
-  - api-key
+    Acoustic Content API: [basic-auth, api-key-as-basic-password, session-cookie x-ibm-dx-user-auth, anonymous on /delivery]
+    Acoustic Campaign REST API: [oauth2-refresh-token]
+    Acoustic Campaign XML API: [oauth2-refresh-token, legacy jsessionid session]
+    Acoustic Connect API: [api-key header X-API-Key]
+  spec_declared: false
   notes: >-
-    Content APIs support both unauthenticated (delivery/read) and authenticated
-    (authoring) calls. Authoring calls require Basic authentication or an API key.
-  see: llms/acoustic-llms.txt
+    No Acoustic contract declares securitySchemes or securityDefinitions, so auth is
+    documentation-only across the entire estate.
 authorization:
   model: role-based
   roles:
@@ -20,14 +42,83 @@ authorization:
   - manager
   - editor
   - viewer
-  notes: Each operation documents the user roles permitted (admin, manager, editor, viewer).
+  - authenticatedVisitor
+  - anonymous
+  notes: >-
+    Acoustic Content documents the permitted roles on every operation in the reference.
+    Acoustic Campaign has no scope or role model on the API — an OAuth token carries
+    the issuing Organization's full grant.
+base_urls:
+  Acoustic Content API: https://{DomainName}/api/{ContentHubId}
+  Acoustic Campaign REST API: https://api-campaign-{pod}.goacoustic.com/rest
+  Acoustic Campaign XML API: https://api-campaign-{pod}.goacoustic.com/XMLAPI
+  Acoustic Connect API: https://connect-gql-{region}.goacoustic.com/
+  notes: >-
+    Every product is regionally sharded and the region is part of the host name, not a
+    header or a path segment. There is no global host and no cross-pod redirect. The
+    Content base additionally carries the tenant's Content Hub ID in the path.
+versioning:
+  Acoustic Content API:
+    scheme: uri-path
+    current: v1, with v2 on /authoring/v2/categories and /delivery/v2/sites/{siteId}
+    contract_version: 1.0.142
+  Acoustic Campaign REST API:
+    scheme: none
+    note: Unversioned under /rest.
+  Acoustic Connect API:
+    scheme: none
+    note: Single unversioned GraphQL endpoint; change communicated through the changelog.
+  see: lifecycle/acoustic-lifecycle.yml
+idempotency:
+  documented: false
+  header: null
+  supported: false
+  notes: >-
+    No idempotency-key header or parameter is documented on any Acoustic product, and
+    none appears in any harvested contract. This is asserted as ABSENT, not unknown —
+    checked across the Content OpenAPI 3.0.0 (178 operations), the Content Swagger 2.0
+    (187 operations) and all 11 Campaign Swagger 1.1 resource declarations (64
+    operations). No Idempotency pointer is wired into apis.yml.
+  substitute: >-
+    Acoustic Content uses optimistic concurrency instead: items carry rev / currentRev,
+    and a write with a stale rev fails with code 20000 (mismatched.revs) rather than
+    duplicating. That protects against lost updates but not against duplicate creates,
+    and Campaign and Connect have no equivalent at all.
 conditional_requests:
   supported: true
+  scope: Acoustic Content API
   notes: >-
-    GET operations on assets and categories support conditional requests
+    GET operations on assets, content and categories support conditional requests
     (ETag / If-None-Match style caching semantics per the reference).
+pagination:
+  Acoustic Content API:
+    style: offset
+    params: [rows, start, sort]
+    note: >-
+      Solr-derived search parameters on /authoring/v1/search, /delivery/v1/search and
+      the contextual search endpoints — q, fq, fl, rows, sort. Collection endpoints
+      expose by-modified and by-name views for incremental reads.
+  Acoustic Content API bulk cap:
+    limit: 25
+    endpoints: [POST /delivery/v1/content/bulk_retrieve, POST /mydelivery/v1/content/bulk_retrieve]
+    note: Ids past the 25th are silently dropped rather than rejected.
+  Acoustic Connect API:
+    style: graphql-connections
+    fields: [nodes, filter]
+    note: Observed in the published query examples; not verifiable without a key.
+field_selection:
+  Acoustic Content API:
+    params: [fl, fields]
+    note: >-
+      fl on search selects returned fields; the bulk_retrieve body takes a fields
+      array. A requested field that does not exist is omitted rather than erroring.
+request_tracing:
+  header: null
+  documented: false
+  notes: No request-id or correlation header is documented on any Acoustic product.
 workflow_states:
   supported: true
+  scope: Acoustic Content API
   applies_to:
   - content
   - asset
@@ -36,16 +127,21 @@ workflow_states:
   - ready
   - retired
   notes: >-
-    Assets and content move through draft -> ready -> retired workflow states via
-    the /changes/status endpoints (single and bulk).
+    Assets and content move through draft -> ready -> retired via the /changes/status
+    endpoints (single and bulk). Unmanaged developer assets are excluded from workflow
+    (error 20005).
 identifiers:
   scheme: uid
-  format: "{classification}:{id}"
+  format: '{classification}:{id}'
+  scope: Acoustic Content API
   notes: >-
     Items are addressable by a classification+id "uid" (e.g. content:579c...,
-    asset:448e...) that is unique across all content hub items.
+    asset:448e...) that is unique across all content hub items. Bulk endpoints accept
+    either the combined uid or a {id, classification} pair.
+  see: data-model/acoustic-data-model.yml
 bulk_operations:
   supported: true
+  scope: Acoustic Content API
   endpoints:
   - /authoring/v1/changes/status/ready
   - /authoring/v1/changes/status/retire
@@ -57,16 +153,53 @@ bulk_operations:
   - userErrors
   - genericErrors
   - missing
+  notes: >-
+    Partial success is the normal case and is NOT signalled by the status code alone —
+    204 means everything succeeded, anything else must be parsed. The delete and
+    set-library variants additionally return a top-level status of success | partial |
+    failure.
+dependency_graph:
+  supported: true
+  scope: Acoustic Content API
+  endpoints:
+  - /authoring/v1/references/outgoing/{classification}/{id}
+  - /authoring/v1/references/incoming/{classification}/{id}
+  notes: >-
+    Items cannot leave draft while they depend on draft items. Read the reference graph
+    first, then submit the whole graph in one bulk call, or expect
+    missing.dependencies.20200.
 error_envelope:
-  format: acoustic-content-error
-  see: errors/acoustic-problem-types.yml
-  fields:
-  - uid
-  - id
-  - classification
-  - key
-  - code
-  - parameters
-idempotency:
-  documented: false
-  notes: No explicit idempotency-key header is documented; not asserted.
+  Acoustic Content API:
+    format: acoustic-content-error
+    see: errors/acoustic-problem-types.yml
+    fields: [uid, id, classification, key, code, parameters]
+  Acoustic Campaign XML API:
+    format: acoustic-campaign-fault
+    see: errors/acoustic-campaign-error-codes.yml
+    fields: [FaultCode, FaultString]
+  Acoustic Campaign REST API:
+    format: http-status + field errors
+    statuses: [400, 404, 422, 500]
+    note: >-
+      422 returns one message per offending column, in the form
+      "{columnName}: {columnValue} is not a valid ...".
+  Acoustic Connect API:
+    format: graphql-errors
+    example: '{"errors":[{"message":"Unauthorized","extensions":{"code":"401","status":"UNAUTHORIZED"}}]}'
+  rfc9457: false
+rate_limit_signaling:
+  headers: []
+  status_code: null
+  documented_limits: true
+  see: rate-limits/acoustic-rate-limits.yml
+  notes: >-
+    Acoustic Campaign publishes a hard cap of 10 concurrent authenticated requests per
+    organization and 20 legacy sessions per organization, but returns no header and no
+    documented status code when you hit it. The limit is knowable in advance and
+    invisible at runtime.
+content_types:
+  request: [application/json, multipart/form-data, application/xml]
+  response: [application/json, application/xml, text/html]
+  notes: >-
+    Acoustic Content accepts multipart/form-data for simultaneous asset+resource
+    creation. The Campaign XML API is application/xml end to end.

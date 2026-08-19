@@ -1,0 +1,58 @@
+
+
+
+
+
+
+
+{
+    "basePath":"https://api-campaign-us-1.goacoustic.com/rest",
+    "resourcePath": "/gdpr_jobs",
+    "apis":[
+        {
+            "path":"/gdpr_jobs/{gdprJobId}/status",
+            "description":"Retrieve GDPR Job status.",
+            "operations":[
+                {
+                    "method":"GET",
+                    "summary":"Retrieve GDPR Job status",
+                    "notes":"Swagger would automatically follow the redirect and show you the actual response when the job status is SUCCESS and HTTP response code is 303",
+                    "nickname":"gdpr-status-get",
+                    "responseClass":"void",
+                    "parameters":[
+                        {
+                            "paramType":"path",
+                            "name":"gdprJobId",
+                            "description":"GDPR job id returned on submission of GDPR access or erasure job.",
+                            "dataType":"long",
+                            "required":true,
+                            "allowMultiple":false
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "path":"/gdpr_jobs/{gdprJobId}/response",
+            "description":"Retrieve GDPR Job response.",
+            "operations":[
+                {
+                    "method":"GET",
+                    "summary":"Retrieve GDPR Job response",
+                    "notes":"",
+                    "nickname":"gdpr-response-get",
+                    "responseClass":"void",
+                    "parameters":[
+                        {
+                            "paramType":"path",
+                            "name":"gdprJobId",
+                            "description":"GDPR job id returned on submission of GDPR access or erasure job",
+                            "dataType":"long",
+                            "required":true
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

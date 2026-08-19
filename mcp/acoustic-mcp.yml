@@ -1,0 +1,104 @@
+generated: '2026-08-13'
+method: derived
+status: candidate
+source: openapi/acoustic-content-openapi-original.json
+note: >-
+  Acoustic publishes no MCP server. Searched the developer portal (all six products),
+  the acoustic-content-samples GitHub org (55 repos), npm under @acoustic*, and the
+  public MCP registries — nothing. The tools below are a CANDIDATE set derived from
+  the Acoustic Content contract to show what an MCP server over this API would look
+  like; they are not shipped by Acoustic and no MCPServer pointer is wired into
+  apis.yml, because that pointer would assert an agent surface that does not exist.
+deployment:
+  mode: none
+  endpoint: null
+  install: null
+  package: null
+  auth: unknown
+  verified: searched
+  note: >-
+    Nobody ships a server — neither a remote endpoint nor a stdio package. If Acoustic
+    were to build one, the Content API is the natural first target: it is the only
+    Acoustic product with a complete machine-readable contract.
+server:
+  name: acoustic-content
+  transport: null
+  url: null
+tool_derivation:
+  basis: method + path
+  caveat: >-
+    The Acoustic Content contract carries zero operationIds across all 178 operations,
+    so every candidate tool below is bound to a method+path pair rather than to a
+    stable operation identifier. That is a real defect in the contract, not a gap in
+    this artifact: any tool generator, SDK generator or agent binding against this API
+    has to invent its own identifiers, and two generators will not agree.
+tools:
+- name: search_content
+  description: Search published content items with a Solr-style query.
+  source_operation: 'openapi/acoustic-content-openapi-original.json#GET /delivery/v1/search'
+  auth: none
+- name: get_content_item
+  description: Retrieve a published content item by id.
+  source_operation: 'openapi/acoustic-content-openapi-original.json#GET /delivery/v1/content/{id}'
+  auth: none
+- name: bulk_retrieve_content
+  description: Retrieve up to 25 published content items by id, optionally filtered to named fields.
+  source_operation: 'openapi/acoustic-content-openapi-original.json#POST /delivery/v1/content/bulk_retrieve'
+  auth: none
+- name: get_rendering_context
+  description: Retrieve the delivery rendering context for a content id with references resolved recursively.
+  source_operation: 'openapi/acoustic-content-openapi-original.json#GET /delivery/v1/rendering/context/{id}'
+  auth: none
+- name: contextual_search
+  description: Search delivery content with proximity, accept-language or similar-item filters.
+  source_operation: 'openapi/acoustic-content-openapi-original.json#GET /delivery/v1/contextualsearch'
+  auth: none
+- name: list_assets
+  description: List authoring assets.
+  source_operation: 'openapi/acoustic-content-openapi-original.json#GET /authoring/v1/assets'
+  auth: basic-or-api-key
+- name: create_asset
+  description: Create an asset, either from an existing resource id or with the binary inline as multipart.
+  source_operation: 'openapi/acoustic-content-openapi-original.json#POST /authoring/v1/assets'
+  auth: basic-or-api-key
+- name: create_content
+  description: Create a content item against a content type.
+  source_operation: 'openapi/acoustic-content-openapi-original.json#POST /authoring/v1/content'
+  auth: basic-or-api-key
+- name: validate_content
+  description: Validate a content item against its type before promoting it.
+  source_operation: 'openapi/acoustic-content-openapi-original.json#POST /authoring/v1/types/{id}/validate'
+  auth: basic-or-api-key
+- name: mark_items_ready
+  description: Promote a set of interdependent items from draft to ready in one call.
+  source_operation: 'openapi/acoustic-content-openapi-original.json#POST /authoring/v1/changes/status/ready'
+  auth: basic-or-api-key
+- name: retire_items
+  description: Retire a set of items in bulk.
+  source_operation: 'openapi/acoustic-content-openapi-original.json#POST /authoring/v1/changes/status/retire'
+  auth: basic-or-api-key
+- name: get_item_references
+  description: Read the incoming or outgoing reference graph for an item before changing its state.
+  source_operation: 'openapi/acoustic-content-openapi-original.json#GET /authoring/v1/references/outgoing/{classification}/{id}'
+  auth: basic-or-api-key
+- name: publish
+  description: Start a publishing job and read its status.
+  source_operation: 'openapi/acoustic-content-openapi-original.json#POST /publishing/v1/jobs'
+  auth: basic-or-api-key
+other_surfaces:
+  graphql:
+    api: Acoustic Connect API
+    endpoint: https://connect-gql-us-1.goacoustic.com/
+    introspection: gated
+    note: >-
+      Connect's GraphQL API is the surface an agent would most want — contacts,
+      consent, audiences, product catalog, signals — but its schema requires an
+      X-API-Key, so no candidate tools were derived from it. Deriving them from the
+      prose reference would be invention.
+  campaign_rest:
+    contract: openapi/acoustic-campaign-rest-swagger-index.json
+    format: Swagger 1.1
+    note: >-
+      64 operations across 11 resources are described, but Swagger 1.1 has no
+      securitySchemes and its parameter model does not carry JSON Schema, so a tool
+      inputSchema derived from it would be lossy.

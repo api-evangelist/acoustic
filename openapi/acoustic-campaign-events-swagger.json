@@ -1,0 +1,132 @@
+
+
+
+
+
+
+
+{
+    "basePath":"https://api-campaign-us-1.goacoustic.com/rest",
+    "resourcePath": "/events",
+    "apis":[
+        {
+            "path":"/events/errors",
+            "description":"Retrieve event submission errors.",
+            "operations":[
+                {
+                    "method":"GET",
+                    "summary":"Retrieve event submission errors",
+                    "notes":"Use this API to periodically check to see if any of your event submissions have failed validation.<BR/>This is <b>testing<b/> markup.",
+                    "nickname":"event-errors-get",
+                    "responseClass":"void",
+                    "parameters":[
+                        {
+                            "paramType":"query",
+                            "name":"filter",
+                            "description":"optional filter parameter. <a href='/moreinfo'>learn more about filters here</a>",
+                            "dataType":"String",
+                            "required":false,
+                            "allowMultiple":false,
+                            "default":"errorId=0"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "path":"/events/submission",
+            "description":"Submit new behavioral events",
+            "operations":[
+                {
+                    "method":"POST",
+                    "summary":"Submit new behavioral events",
+                    "notes":"",
+                    "nickname":"event-submission-post",
+                    "responseClass":"void",
+                    "parameters":[
+                        {
+                            "paramType":"body",
+                            "description":"List of event objects. Of the three fields 'contactId', 'encodeContactId', and 'channel' only one is needed. If more than one is provided the priority is as follows: 1. contactId 2. encodeContactId 3. channel",
+                            "dataType":"RawEventEnvelope",
+                            "required":true
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "models": {
+        "RawEvent": {
+            "properties" : {
+                "eventTypeCode": {
+                    "type": "int",
+                    "description": "Code representing the type of event"
+                },
+                "eventTimestamp": {
+                    "type": "Date",
+                    "description": "Event timestamp represented in a String as per RFC 3339 ('1970-01-01T00:00:00.000+00:00')"
+                },
+                "contactId": {
+                    "type": "long",
+                    "description": "Optional identifier of a contact that is used to match to a contact"
+                },
+                "encodeContactId": {
+                    "type": "string",
+                    "description": "Optional encoded identifier of a contact that is used to match to a contact"
+                },
+                "attributes": {
+                    "type": "Array",
+                    "description": "List of the attributes describing the event",
+                    "items":{
+                       "$ref":"RawAttributeValue"
+                    }
+                },
+                "channel": {
+                    "type": "channel",
+                    "description": "Consent data from a consent record",
+                    "$ref":"channel"
+                }
+
+            }
+        },
+        "channel": {
+            "properties" : {             
+             "channelType": {
+             	"type": "String",
+             	"description": "channel type for consent record"
+             },
+             "qualifier": {
+             	"type": "String",
+             	"description": "qualifier for consent record"
+             },
+             "destination": {
+             	"type": "String",
+             	"description": "destination value for consent record"
+             }
+            }
+        },
+        "RawAttributeValue": {
+            "properties" : {
+                "name": {
+                    "type": "string",
+                    "description": "Name of the attribute"
+                },
+                "value": {
+                    "type": "string",
+                    "description": "The attribute's value"
+                }
+            }
+        },
+        "RawEventEnvelope": {
+            "properties" : {
+                "events":{
+                        "type":"Array",
+                        "description":"events that you want to submit",
+                        "items":{
+                           "$ref":"RawEvent"
+                        }
+                }
+            }
+        }
+    }
+}

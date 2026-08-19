@@ -1,0 +1,73 @@
+generated: '2026-08-13'
+method: searched
+source: https://status.goacoustic.com
+note: >-
+  Acoustic runs a full Atlassian Statuspage with a public JSON API and 178 tracked
+  components — the strongest operational-transparency signal in this profile. What it
+  does not run is a deprecation policy: no Sunset/Deprecation header support, no
+  version-retirement schedule and no API lifecycle page was found on any of the six
+  products, even though the Campaign estate openly carries a "legacy authentication
+  method" and Beta-labelled Content endpoints.
+status_page:
+  url: https://status.goacoustic.com
+  provider: Atlassian Statuspage
+  page_id: rx9084q34820
+  api: https://status.goacoustic.com/api/v2/summary.json
+  components: 178
+  mirror: https://acoustic.statuspage.io
+  note: >-
+    Components are grouped per product and per region (API, Data Ingest, APAC, ...),
+    so a consumer can subscribe to the specific pod their organization is on.
+versioning:
+  schemes:
+  - api: Acoustic Content API
+    scheme: uri-path
+    current: v1 (with v2 on two endpoints — /authoring/v2/categories, /delivery/v2/sites/{siteId})
+    contract_version: 1.0.142
+    docs: https://developer.goacoustic.com/acoustic-content/reference
+  - api: Acoustic Campaign REST API
+    scheme: none
+    current: unversioned path under /rest
+    contract_version: '1.0 (Swagger 1.1 apiVersion)'
+    docs: https://developer.goacoustic.com/acoustic-campaign/reference/rest-api-overview
+  - api: Acoustic Campaign XML API
+    scheme: none
+    current: unversioned single endpoint /XMLAPI
+  - api: Acoustic Connect API
+    scheme: none
+    current: unversioned GraphQL endpoint per region
+    docs: https://developer.goacoustic.com/acoustic-connect/changelog
+deprecation:
+  policy_url: null
+  sunset_header: false
+  deprecation_header: false
+  documented: false
+  note: >-
+    No deprecation or sunset policy published for any of the six products. The only
+    lifecycle language found in the docs is per-feature, not per-API: Acoustic
+    Campaign labels its jsessionid session model "legacy authentication method" and
+    "strongly encourages" OAuth 2.0 without naming a removal date, and Acoustic
+    Content marks three bulk endpoints Beta ("subject to change").
+beta_operations:
+- openapi/acoustic-content-openapi-original.json#POST /authoring/v1/changes/delete
+- openapi/acoustic-content-openapi-original.json#POST /authoring/v1/changes/set-library
+legacy_surfaces:
+- surface: Acoustic Campaign XML API jsessionid login sessions
+  status: legacy
+  replacement: OAuth 2.0 refresh-token grant
+  retirement_date: null
+  docs: https://developer.goacoustic.com/acoustic-campaign/reference/legacy-authentication-method-jsessionid-user-sessions
+deprecated_operations: []
+sla:
+  url: null
+  uptime_target: null
+  note: No public SLA or uptime commitment found; terms at https://www.acoustic.com/terms-conditions.
+support:
+  url: https://www.acoustic.com/support
+  help_center: https://help.goacoustic.com
+  help_center_note: help.goacoustic.com returns HTTP 403 to an anonymous client.
+x-evidence:
+- url: https://status.goacoustic.com/api/v2/summary.json
+  http_status: 200
+- url: https://help.goacoustic.com
+  http_status: 403

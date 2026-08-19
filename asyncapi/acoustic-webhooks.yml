@@ -1,0 +1,97 @@
+generated: '2026-08-13'
+method: searched
+source: https://developer.goacoustic.com/acoustic-content/reference/put_webhook-v1-profile
+spec_type: none
+note: >-
+  Acoustic publishes no AsyncAPI document for any of its six products — probed
+  /asyncapi.yaml and /asyncapi.json on the developer host (both answer 200 with the
+  ReadMe SPA's HTML shell, which is a miss, not a document) and enumerated all 55
+  repositories in the acoustic-content-samples GitHub org; nothing. It does ship a real event surface in
+  two shapes, captured here as a webhook catalogue: an outbound change-notification
+  webhook in Acoustic Content, and an inbound behavioural event ingest ("Universal
+  Behaviors" / "signals") in Acoustic Campaign and Acoustic Connect. The Content
+  webhook is the only one with a published payload shape, and it is documented in
+  prose inside an operation description rather than as a schema.
+surfaces:
+- name: Acoustic Content webhook profile
+  api: Acoustic Content API
+  direction: outbound
+  kind: webhook
+  configuration:
+    style: single profile per tenant, managed over the API
+    operations:
+    - GET /webhook/v1/profile
+    - PUT /webhook/v1/profile
+    - DELETE /webhook/v1/profile
+    roles: [admin]
+    note: >-
+      PUT overwrites any existing profile — there is no partial update and no
+      per-endpoint subscription list, so a tenant has exactly one webhook
+      configuration at a time.
+  delivery:
+    transport: HTTP POST to the URLs named in the profile
+    signing: not documented
+    retries: not documented
+    ordering: not documented
+  payload:
+    documented: prose
+    example: |
+      {
+         "event":"created",
+         "timestamp": "2018-09-03T01:48:15.921Z",
+         "doc" : {
+            ...
+         }
+      }
+    fields:
+      event: change verb (documented example value "created")
+      timestamp: ISO 8601 instant
+      doc: the changed document
+    schema: null
+    note: >-
+      The full set of event values is not enumerated in the published reference — only
+      "created" appears in the example. The doc member is shown elided. An AsyncAPI or
+      even a JSON Schema here would be the single highest-value artifact Acoustic could
+      add to this surface.
+  docs: https://developer.goacoustic.com/acoustic-content/reference/put_webhook-v1-profile
+- name: Universal Behaviors (event ingest)
+  api: Acoustic Campaign REST API
+  direction: inbound
+  kind: event-ingest
+  contract: openapi/acoustic-campaign-events-swagger.json
+  companion: openapi/acoustic-campaign-eventtypes-swagger.json
+  summary: >-
+    Post behavioural events into Acoustic Campaign against a registered event type,
+    and read back the event-type mappings for a contact database.
+  docs: https://developer.goacoustic.com/acoustic-campaign/reference/use-case-rest-api-to-map-universal-behaviors
+- name: Connect signals
+  api: Acoustic Connect API
+  direction: inbound
+  kind: event-ingest
+  summary: >-
+    Real-time signal import and signal export over the Connect GraphQL API; signals
+    are the behavioural events that drive triggers, segmentation and personalization.
+  operations_documented:
+  - real-time-signal-import
+  - export-all-signals-from-connect
+  - how-signals-update-data-in-your-connect-subscription
+  schema: null
+  note: The GraphQL schema is introspection-gated, so the signal payload shape could not be captured.
+  docs: https://developer.goacoustic.com/acoustic-connect/reference/real-time-signal-import
+- name: Exchange behavioural capture
+  api: Acoustic Personalization
+  direction: inbound
+  kind: browser-events
+  summary: >-
+    Click, custom and CartPurchaseItem events captured by the analytics library and
+    delivered through Exchange / Exchange Capture into Personalization.
+  schema: null
+  docs: https://developer.goacoustic.com/acoustic-personalization/docs/capture-click-events-1
+summary:
+  asyncapi_documents: 0
+  webhook_surfaces: 1
+  event_ingest_surfaces: 3
+  payload_schemas_published: 0
+x-evidence:
+- url: https://developer.goacoustic.com/acoustic-content/reference/put_webhook-v1-profile.md
+  http_status: 200

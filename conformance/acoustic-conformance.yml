@@ -1,0 +1,170 @@
+generated: '2026-08-13'
+method: derived
+source: openapi/ + well-known/ + https://trust.acoustic.com
+note: >-
+  Standards posture derived from the harvested contracts and the probed discovery
+  documents, with the compliance programme read from Acoustic's SafeBase trust
+  centre. The headline finding is a split: Acoustic's *identity* surface is modern
+  and standards-conformant (OIDC discovery, RFC 8414, RFC 9727 api-catalog), while
+  its *API* surfaces are not — no securitySchemes in any contract, no RFC 9457
+  errors, no RFC 8594 sunset headers, no standard rate-limit headers, and a Swagger
+  1.1 description that predates OpenAPI itself.
+standards:
+- id: openapi-3
+  conforms: true
+  evidence: >-
+    openapi/acoustic-content-openapi-original.json declares openapi 3.0.0 with 136
+    paths, 178 operations and 294 component schemas.
+  scope: Acoustic Content API
+- id: swagger-2
+  conforms: true
+  evidence: >-
+    openapi/acoustic-content-swagger2-original.yaml declares swagger 2.0 (142 paths,
+    187 operations, 300 definitions), published by Acoustic on its own GitHub org.
+  scope: Acoustic Content API
+- id: swagger-1.1
+  conforms: true
+  evidence: >-
+    openapi/acoustic-campaign-rest-swagger-index.json declares swaggerVersion 1.1 and
+    is served live and unauthenticated from every Campaign pod at /restdoc.
+  scope: Acoustic Campaign REST API
+  note: >-
+    Real and machine-readable, but a 2011-era format. Nothing in the Campaign estate
+    has been re-expressed as OpenAPI 3.
+- id: operationid-uniqueness
+  conforms: false
+  evidence: >-
+    Zero of the 178 operations in the Content OpenAPI carry an operationId, and the
+    Swagger 2.0 copy has none either. Every agent-facing binding has to be made on
+    method+path.
+- id: openapi-security-schemes
+  conforms: false
+  evidence: >-
+    No components.securitySchemes in the OpenAPI 3.0.0 copy and no
+    securityDefinitions in the Swagger 2.0 copy, despite the docs describing basic
+    auth, an API-key login, a session cookie and OAuth 2.
+- id: graphql
+  conforms: true
+  evidence: >-
+    POST https://connect-gql-us-1.goacoustic.com/ returns a GraphQL error envelope
+    ({"errors":[{"message":"Unauthorized","extensions":{"code":"401"}}]}).
+  scope: Acoustic Connect API
+  note: Introspection is API-key gated, so no SDL could be captured.
+- id: graphql-introspection-public
+  conforms: false
+  evidence: Anonymous introspection returns Unauthorized.
+- id: oauth2
+  conforms: true
+  evidence: >-
+    Acoustic Campaign documents an OAuth 2.0 refresh-token grant against
+    /oauth/token on each pod host, with 4-hour access tokens.
+  scope: Acoustic Campaign REST API / XML API
+- id: oauth2-scopes
+  conforms: false
+  evidence: No scopes are documented for the Campaign OAuth grant; the token carries the organization's full API access.
+- id: oidc-discovery
+  conforms: true
+  evidence: >-
+    https://login.goacoustic.com/.well-known/openid-configuration returns 200 with
+    issuer, authorization/token/userinfo/jwks endpoints and RS256 id-token signing.
+  scope: platform sign-in
+  artifact: well-known/acoustic-openid-configuration.json
+- id: rfc8414-oauth-authorization-server-metadata
+  conforms: true
+  evidence: https://login.goacoustic.com/.well-known/oauth-authorization-server returns 200.
+  artifact: well-known/acoustic-oauth-authorization-server.json
+- id: rfc7591-dynamic-client-registration
+  conforms: true
+  evidence: registration_endpoint https://login.goacoustic.com/oauth2/v1/clients is advertised in both discovery documents.
+- id: rfc9727-api-catalog
+  conforms: true
+  evidence: >-
+    https://developer.goacoustic.com/.well-known/api-catalog returns 200
+    application/linkset+json advertising six API products.
+  artifact: well-known/acoustic-api-catalog.json
+  note: >-
+    Partially conformant in practice — every per-product service-desc URL the linkset
+    advertises returns 404, so the catalog cannot be traversed to a machine-readable
+    description of any product.
+- id: rfc9116-security-txt
+  conforms: false
+  evidence: /.well-known/security.txt is 404 on www.acoustic.com and an HTML SPA shell on developer.goacoustic.com.
+- id: rfc9457-problem-details
+  conforms: false
+  evidence: >-
+    Acoustic Content returns a provider-specific envelope keyed by item uid
+    (errors/acoustic-problem-types.yml); Acoustic Campaign returns a numeric Fault
+    registry (errors/acoustic-campaign-error-codes.yml). Neither uses
+    application/problem+json.
+- id: rfc8594-sunset-header
+  conforms: false
+  evidence: No Sunset or Deprecation header support documented; no deprecation policy published.
+- id: rfc9110-conditional-requests
+  conforms: true
+  evidence: >-
+    The Content reference states that GET on assets, content and categories supports
+    conditional requests; revisions (rev/currentRev) act as the concurrency token and
+    a stale value returns error 20000.
+  scope: Acoustic Content API
+- id: ratelimit-headers
+  conforms: false
+  evidence: >-
+    Limits are published as a per-organization concurrency cap of 10 with no headers,
+    no status code and no Retry-After (rate-limits/acoustic-rate-limits.yml).
+- id: idempotency-key
+  conforms: false
+  evidence: No idempotency-key header or parameter is documented or present in any contract.
+- id: json-schema
+  conforms: true
+  evidence: >-
+    GET /authoring/v1/types/{id}/schema returns the JSON Schema for a content type,
+    which clients are told to use to validate content items.
+  scope: Acoustic Content API
+- id: gdpr
+  conforms: true
+  evidence: >-
+    Acoustic Campaign ships a dedicated GDPR job surface
+    (openapi/acoustic-campaign-gdpr_jobs-swagger.json) and the trust centre documents
+    GDPR and CCPA posture.
+- id: soc2
+  conforms: true
+  evidence: https://trust.acoustic.com (SafeBase) publishes SOC 2.
+  artifact: security/acoustic-trust-center.yml
+- id: iso-27001
+  conforms: true
+  evidence: https://trust.acoustic.com publishes ISO/IEC 27001.
+  artifact: security/acoustic-trust-center.yml
+- id: iso-27017
+  conforms: true
+  evidence: https://trust.acoustic.com publishes ISO/IEC 27017.
+- id: iso-27018
+  conforms: true
+  evidence: https://trust.acoustic.com publishes ISO/IEC 27018.
+- id: pci-dss
+  conforms: false
+  evidence: Not listed on the trust centre.
+- id: hipaa
+  conforms: false
+  evidence: Not listed on the trust centre.
+- id: fedramp
+  conforms: false
+  evidence: Not listed on the trust centre.
+- id: mcp
+  conforms: false
+  evidence: No MCP server published; see mcp/acoustic-mcp.yml.
+- id: a2a
+  conforms: false
+  evidence: >-
+    /.well-known/agent-card.json and /.well-known/agent.json miss on every Acoustic
+    host (the developer host's 200 is an HTML SPA shell). No a2a/ artifact written.
+- id: llmstxt
+  conforms: true
+  evidence: >-
+    https://developer.goacoustic.com/acoustic-content/llms.txt and
+    /acoustic-personalization/llms.txt both return 200 text/plain. The other four
+    products return 404.
+  artifact: llms/acoustic-llms.txt
+summary:
+  conforms: 15
+  does_not_conform: 12
+  compliance_program_published: true

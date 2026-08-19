@@ -1,0 +1,76 @@
+generated: '2026-08-13'
+method: searched
+source: https://developer.goacoustic.com/acoustic-campaign/reference/basics
+note: >-
+  Acoustic Campaign publishes real, specific limits — but they are concurrency and
+  session caps, not a requests-per-window budget, and Acoustic documents no response
+  headers or status code for exhaustion. An agent therefore cannot detect throttling
+  at runtime; it can only be told in advance not to exceed ten threads. Acoustic
+  Content, Acoustic Connect and Acoustic Personalization publish no limits at all.
+limits:
+- api: Acoustic Campaign REST API / XML API
+  scope: per-organization
+  kind: concurrency
+  limit: 10
+  unit: concurrent authenticated requests
+  window: instantaneous
+  applies_to: OAuth 2.0 authenticated requests
+  behaviour_on_exhaustion: >-
+    The 11th concurrent request is rejected outright. Acoustic states it does not
+    hold or queue the request and will not retry when a thread frees up.
+  status_code: null
+  headers: []
+  docs: https://developer.goacoustic.com/acoustic-campaign/reference/basics
+  quote: >-
+    "By default, up to 10 concurrent requests are allowed to our API servers at any
+    given time when using the OAuth method for authentication. ... This concurrency
+    limit is per organization, not user, list, API request type, etc."
+- api: Acoustic Campaign XML API
+  scope: per-organization
+  kind: sessions
+  limit: 20
+  unit: active login sessions
+  window: concurrent
+  applies_to: legacy jsessionid authentication
+  behaviour_on_exhaustion: >-
+    New sessions cannot be created until existing ones are released with the Logout
+    API; abandoned sessions can linger for several minutes.
+  status_code: null
+  headers: []
+  docs: https://developer.goacoustic.com/acoustic-campaign/reference/legacy-authentication-method-jsessionid-user-sessions
+- api: Acoustic Campaign REST API / XML API
+  scope: per-organization
+  kind: token-lifetime
+  limit: 4
+  unit: hours
+  window: token validity
+  note: >-
+    OAuth access tokens are valid for 4 hours and are meant to be reused; Acoustic
+    recommends refreshing every 3 hours. Not a rate limit, but it is the only runtime
+    budget signal the API returns.
+  docs: https://developer.goacoustic.com/acoustic-campaign/reference/getting-started-with-oauth
+- api: Acoustic Content API
+  scope: per-request
+  kind: payload-cap
+  limit: 25
+  unit: content items per bulk retrieve
+  window: per request
+  behaviour_on_exhaustion: >-
+    Only the first 25 ids in the request are returned; the excess is silently
+    dropped rather than rejected.
+  status_code: null
+  headers: []
+  docs: https://developer.goacoustic.com/acoustic-content/reference/post_delivery-v1-content-bulk-retrieve
+response_headers:
+  documented: false
+  observed: []
+  note: >-
+    No X-RateLimit-*, RateLimit-* or Retry-After header is documented on any Acoustic
+    API, and none was observed on the unauthenticated responses probed
+    (api-campaign-us-1.goacoustic.com/restdoc/*, connect-gql-us-1.goacoustic.com/).
+    No documented status code for exhaustion.
+limit_count: 4
+apis_without_published_limits:
+- Acoustic Connect API
+- Acoustic Personalization
+- Acoustic Experience Analytics
