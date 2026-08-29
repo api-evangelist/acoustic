@@ -1,0 +1,47 @@
+slug: acoustic
+provider: Acoustic
+generated_by: planning/capability-mapping/scripts/classify_capabilities.py
+model: claude-opus-5
+frame:
+- Telecommunications
+min_confidence: 0.7
+capability_model:
+  source: https://github.com/vincentmakes/turbo-ea-capabilities
+  license: CC-BY-4.0
+  attribution: Turbo EA Capabilities by Vincent Verdet — Turbo EA, https://github.com/vincentmakes/turbo-ea-capabilities,
+    CC BY 4.0
+  notice: NOTICE
+edge_count: 3
+edges:
+- tag: Authoring content
+  spec_file: acoustic-authoring-content-api-openapi.yml
+  capability_id: BC-400.70
+  capability_id_l1: BC-400
+  capability_name: Content Marketing Management
+  confidence: 0.8
+  evidence: POST /authoring/v1/content  Create content items. / POST /authoring/v1/content/{id}/create-draft  Create
+    a draft version of an existing content item. / POST /authoring/v1/content/{id}/unpublish  Unpublish
+    a published item.
+  reason: 'Core content authoring: create, draft, validate, publish/unpublish content items in a marketing
+    content platform — editorial content production and distribution.'
+- tag: Authoring assets
+  spec_file: acoustic-authoring-assets-api-openapi.yml
+  capability_id: BC-400.70
+  capability_id_l1: BC-400
+  capability_name: Content Marketing Management
+  confidence: 0.7
+  evidence: POST /authoring/v1/assets  Create an asset. / POST /authoring/v1/assets/{id}/create-draft  Create
+    a draft of existing asset.
+  reason: Acoustic Content is the marketing content repository; asset CRUD plus draft creation and AI
+    analysis is digital asset/content production, which sits under Content Marketing Management. Some
+    ambiguity as it could be read as generic DAM.
+- tag: Delivery content
+  spec_file: acoustic-delivery-content-api-openapi.yml
+  capability_id: BC-400.70
+  capability_id_l1: BC-400
+  capability_name: Content Marketing Management
+  confidence: 0.7
+  evidence: GET /delivery/v1/content/{id} — Get content item; POST /delivery/v1/content/bulk_retrieve
+    — Retrieve filtered content by id in bulk
+  reason: Read-side delivery of published content items from Acoustic's content platform to channels —
+    content distribution, the delivery half of Content Marketing Management.

@@ -1326,6 +1326,9 @@ maintainers:
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: CapabilityMap
+  url: capabilities/acoustic-capability-edges.yml
+  name: Acoustic Business Capability Map
 - type: AgenticAccess
   url: agentic-access/acoustic-agentic-access.yml
 - type: TrustCenter
