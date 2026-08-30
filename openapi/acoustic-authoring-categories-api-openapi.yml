@@ -1,0 +1,2103 @@
+openapi: 3.2.0
+info:
+  title: Acoustic Authoring categories API
+  version: 1.0.142
+  x-ibm-name: ibm-watson-content-hub-api
+  description: 'Operations tagged Authoring categories across 2 of this provider''s published API definitions: acoustic-content-openapi-original.json, acoustic-content-swagger2-original.yaml. Each path carries the servers of the definition it was published in.'
+tags:
+- name: Authoring categories
+  description: Use the Acoustic Content category authoring data service Rest APIs to work with category and taxonomy items.
+paths:
+  /authoring/v1/categories:
+    get:
+      tags:
+      - Authoring categories
+      summary: Retrieve all the taxonomies.
+      description: 'Retrieve all the taxonomies (root categories).<br />User roles: admin, manager, editor, viewer'
+      parameters:
+      - name: offset
+        in: query
+        description: Use the offset parameter to specify the number of content items to skip from the beginning of the list and return the rest.
+        required: false
+        schema:
+          type: number
+          format: integer
+      - name: limit
+        in: query
+        description: Set the limit for the maximum number of content items to return in a single result. The default value is 50.
+        required: false
+        schema:
+          type: number
+          format: integer
+      responses:
+        '200':
+          description: The taxonomies were successfully retrieved.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  limit:
+                    type: integer
+                    description: The page size.
+                    example: 50
+                  offset:
+                    type: integer
+                    description: The number of items to skip from the beginning of the list.
+                    example: 0
+                  href:
+                    type: string
+                    description: A link to the current page.
+                    example: /authoring/v1/categories?offset=50&limit=50
+                  next:
+                    type: string
+                    description: A link to the next page. Only shown if a next page exists.
+                    example: /authoring/v1/categories?offset=100&limit=50
+                  previous:
+                    type: string
+                    description: A link to the previous page. Only shown if a previous page exists.
+                    example: /authoring/v1/categories?offset=0&limit=50
+                  items:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          description: The ID of category.
+                        rev:
+                          type: string
+                          description: The revision of category.
+                        name:
+                          type: string
+                          description: The name of the category.
+                        classification:
+                          type: string
+                          description: Either a Taxonomy or category.
+                        description:
+                          type: string
+                          description: A written representation of the category.
+                        creatorId:
+                          type: string
+                          description: The uuid of the user who created the category.
+                        permanent:
+                          type: boolean
+                          description: Used to identify system categories, if true the category can not be deleted.
+                        hidden:
+                          type: boolean
+                          description: If true the category is hidden in the Shell, value is not returned if false.  Default is false.
+                        firstClassFor:
+                          type: string
+                          description: Array of item classifications to which this taxonomy is enabled.  Acceptable values "" and "imagesAndVideos", default "".  By default the taxonomy is only shown where generic selection of any category in any taxonomy is allowed.
+                        parent:
+                          type: string
+                          description: The ID of the parent category. This is only required if the classification is a CATEGORY.
+                        ancestorIds:
+                          type: array
+                          description: An array of IDs for each of the category's ancestor categories. The ID of this category is not included.
+                          items:
+                            type: string
+                        namePath:
+                          type: array
+                          description: An array of names for each of the category's ancestor categories, in addition to the name of this category.
+                          minItems: 1
+                          items:
+                            type: string
+                        tags:
+                          type: array
+                          items:
+                            type: string
+                          uniqueItems: true
+                          description: Array of tags. This field is applicable only for taxonomy.
+                        links:
+                          type: object
+                          description: A set of links to related documents.
+                          properties:
+                            self:
+                              type: object
+                              properties:
+                                href:
+                                  type: string
+                            taxonomy:
+                              type: object
+                              description: A link to this category's taxonomy. This will only be included if this category is not a taxonomy.
+                              properties:
+                                href:
+                                  type: string
+                            parent:
+                              type: object
+                              description: A link to this category's parent. This will only be included if this category is not a taxonomy.
+                              properties:
+                                href:
+                                  type: string
+                        lastModified:
+                          type: string
+                          format: date
+                          description: When the category was last modified in ISO 8601 format.
+                        created:
+                          type: string
+                          format: date
+                          description: When the category was created in ISO 8601 format.
+                      required:
+                      - id
+                      - rev
+                      - name
+                      - classification
+                      - namePath
+                      - links
+                      - created
+                      - lastModified
+        '429':
+          description: Too Many Requests, the server has reached a limit, the request must be sent again at a later time.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      x-ibm-dx-security-user-roles:
+      - admin
+      - manager
+      - editor
+      - viewer
+    post:
+      tags:
+      - Authoring categories
+      summary: Create a new category.
+      description: 'Create a category with the contents of the JSON body.<br />User roles: admin, manager'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: The name of the category. It can contain any character except for a forward slash (/).
+                parent:
+                  type: string
+                  description: The ID of the parent category. A taxonomy will be created if this is omitted.
+                description:
+                  type: string
+                  description: The description of the category.
+                permanent:
+                  type: boolean
+                  description: Used to identify system categories, if true the category can not be deleted.
+                hidden:
+                  type: boolean
+                  description: If true the category is hidden in the Shell, value is not returned if false.  Default is false.
+                firstClassFor:
+                  type: string
+                  description: Array of item classifications to which this taxonomy is enabled.  Acceptable values "" and "imagesAndVideos", default "".  By default the taxonomy is only shown where generic selection of any category in any taxonomy is allowed.
+                tags:
+                  type: array
+                  items:
+                    type: string
+                  uniqueItems: true
+                  description: Array of tags. This field is applicable only for taxonomy.
+              required:
+              - name
+        description: The JSON data that is used to create the category.
+        required: true
+      responses:
+        '201':
+          description: The category was successfully created.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    description: The ID of category.
+                  rev:
+                    type: string
+                    description: The revision of category.
+                  name:
+                    type: string
+                    description: The name of the category.
+                  classification:
+                    type: string
+                    description: Either a Taxonomy or category.
+                  description:
+                    type: string
+                    description: A written representation of the category.
+                  creatorId:
+                    type: string
+                    description: The uuid of the user who created the category.
+                  permanent:
+                    type: boolean
+                    description: Used to identify system categories, if true the category can not be deleted.
+                  hidden:
+                    type: boolean
+                    description: If true the category is hidden in the Shell, value is not returned if false.  Default is false.
+                  firstClassFor:
+                    type: string
+                    description: Array of item classifications to which this taxonomy is enabled.  Acceptable values "" and "imagesAndVideos", default "".  By default the taxonomy is only shown where generic selection of any category in any taxonomy is allowed.
+                  parent:
+                    type: string
+                    description: The ID of the parent category. This is only required if the classification is a CATEGORY.
+                  ancestorIds:
+                    type: array
+                    description: An array of IDs for each of the category's ancestor categories. The ID of this category is not included.
+                    items:
+                      type: string
+                  namePath:
+                    type: array
+                    description: An array of names for each of the category's ancestor categories, in addition to the name of this category.
+                    minItems: 1
+                    items:
+                      type: string
+                  tags:
+                    type: array
+                    items:
+                      type: string
+                    uniqueItems: true
+                    description: Array of tags. This field is applicable only for taxonomy.
+                  links:
+                    type: object
+                    description: A set of links to related documents.
+                    properties:
+                      self:
+                        type: object
+                        properties:
+                          href:
+                            type: string
+                      taxonomy:
+                        type: object
+                        description: A link to this category's taxonomy. This will only be included if this category is not a taxonomy.
+                        properties:
+                          href:
+                            type: string
+                      parent:
+                        type: object
+                        description: A link to this category's parent. This will only be included if this category is not a taxonomy.
+                        properties:
+                          href:
+                            type: string
+                  lastModified:
+                    type: string
+                    format: date
+                    description: When the category was last modified in ISO 8601 format.
+                  created:
+                    type: string
+                    format: date
+                    description: When the category was created in ISO 8601 format.
+                required:
+                - id
+                - rev
+                - name
+                - classification
+                - namePath
+                - links
+                - created
+                - lastModified
+        '400':
+          description: The JSON body is either missing fields, or contains invalid fields.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: an error response.
+                properties:
+                  requestId:
+                    type: string
+                    description: The current request ID
+                  service:
+                    type: string
+                    description: The name of the service that produced the error
+                  requestMethod:
+                    type: string
+                    description: The Http method type of the current request
+                  requestUri:
+                    type: string
+                    description: The request uri
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code
+                        key:
+                          type: string
+                          description: The message key
+                        message:
+                          type: string
+                          description: The error message
+                        description:
+                          type: string
+                          description: Optional detailed error message
+                        more_info:
+                          type: string
+                          description: Optional additional information for the message
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end user
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        field:
+                          type: string
+                          description: Only present on field validation errors, indicates the field in error.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                      required:
+                      - code
+                      - key
+                      - message
+                      - description
+                      - more_info
+                      - category
+                      - level
+                      - parameters
+                      - field
+                      - locale
+                required:
+                - requestId
+                - service
+                - requestMethod
+                - requestUri
+                - errors
+        '409':
+          description: A category with the same path exists.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: an error response.
+                properties:
+                  requestId:
+                    type: string
+                    description: The current request ID
+                  service:
+                    type: string
+                    description: The name of the service that produced the error
+                  requestMethod:
+                    type: string
+                    description: The Http method type of the current request
+                  requestUri:
+                    type: string
+                    description: The request uri
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code
+                        key:
+                          type: string
+                          description: The message key
+                        message:
+                          type: string
+                          description: The error message
+                        description:
+                          type: string
+                          description: Optional detailed error message
+                        more_info:
+                          type: string
+                          description: Optional additional information for the message
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end user
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        field:
+                          type: string
+                          description: Only present on field validation errors, indicates the field in error.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                      required:
+                      - code
+                      - key
+                      - message
+                      - description
+                      - more_info
+                      - category
+                      - level
+                      - parameters
+                      - field
+                      - locale
+                required:
+                - requestId
+                - service
+                - requestMethod
+                - requestUri
+                - errors
+        '429':
+          description: Too Many Requests, the server has reached a limit, the request must be sent again at a later time.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      x-ibm-dx-security-user-roles:
+      - admin
+      - manager
+  /authoring/v1/categories/{id}:
+    get:
+      tags:
+      - Authoring categories
+      summary: Retrieve an existing category item.
+      description: 'Retrieve the category with ID {id}.<br />User roles: admin, manager, editor, viewer'
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: The ID of the category to retrieve.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: The category was successfully retrieved.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    description: The ID of category.
+                  rev:
+                    type: string
+                    description: The revision of category.
+                  name:
+                    type: string
+                    description: The name of the category.
+                  classification:
+                    type: string
+                    description: Either a Taxonomy or category.
+                  description:
+                    type: string
+                    description: A written representation of the category.
+                  creatorId:
+                    type: string
+                    description: The uuid of the user who created the category.
+                  permanent:
+                    type: boolean
+                    description: Used to identify system categories, if true the category can not be deleted.
+                  hidden:
+                    type: boolean
+                    description: If true the category is hidden in the Shell, value is not returned if false.  Default is false.
+                  firstClassFor:
+                    type: string
+                    description: Array of item classifications to which this taxonomy is enabled.  Acceptable values "" and "imagesAndVideos", default "".  By default the taxonomy is only shown where generic selection of any category in any taxonomy is allowed.
+                  parent:
+                    type: string
+                    description: The ID of the parent category. This is only required if the classification is a CATEGORY.
+                  ancestorIds:
+                    type: array
+                    description: An array of IDs for each of the category's ancestor categories. The ID of this category is not included.
+                    items:
+                      type: string
+                  namePath:
+                    type: array
+                    description: An array of names for each of the category's ancestor categories, in addition to the name of this category.
+                    minItems: 1
+                    items:
+                      type: string
+                  tags:
+                    type: array
+                    items:
+                      type: string
+                    uniqueItems: true
+                    description: Array of tags. This field is applicable only for taxonomy.
+                  links:
+                    type: object
+                    description: A set of links to related documents.
+                    properties:
+                      self:
+                        type: object
+                        properties:
+                          href:
+                            type: string
+                      taxonomy:
+                        type: object
+                        description: A link to this category's taxonomy. This will only be included if this category is not a taxonomy.
+                        properties:
+                          href:
+                            type: string
+                      parent:
+                        type: object
+                        description: A link to this category's parent. This will only be included if this category is not a taxonomy.
+                        properties:
+                          href:
+                            type: string
+                  lastModified:
+                    type: string
+                    format: date
+                    description: When the category was last modified in ISO 8601 format.
+                  created:
+                    type: string
+                    format: date
+                    description: When the category was created in ISO 8601 format.
+                required:
+                - id
+                - rev
+                - name
+                - classification
+                - namePath
+                - links
+                - created
+                - lastModified
+        '404':
+          description: The category with ID {id} was not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: an error response.
+                properties:
+                  requestId:
+                    type: string
+                    description: The current request ID
+                  service:
+                    type: string
+                    description: The name of the service that produced the error
+                  requestMethod:
+                    type: string
+                    description: The Http method type of the current request
+                  requestUri:
+                    type: string
+                    description: The request uri
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code
+                        key:
+                          type: string
+                          description: The message key
+                        message:
+                          type: string
+                          description: The error message
+                        description:
+                          type: string
+                          description: Optional detailed error message
+                        more_info:
+                          type: string
+                          description: Optional additional information for the message
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end user
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        field:
+                          type: string
+                          description: Only present on field validation errors, indicates the field in error.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                      required:
+                      - code
+                      - key
+                      - message
+                      - description
+                      - more_info
+                      - category
+                      - level
+                      - parameters
+                      - field
+                      - locale
+                required:
+                - requestId
+                - service
+                - requestMethod
+                - requestUri
+                - errors
+        '429':
+          description: Too Many Requests, the server has reached a limit, the request must be sent again at a later time.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      x-ibm-dx-security-user-roles:
+      - admin
+      - manager
+      - editor
+      - viewer
+    put:
+      tags:
+      - Authoring categories
+      summary: Update an existing category item.
+      description: 'Update the category with ID {id}.<br />User roles: admin, manager'
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: The ID of the category to update.
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: The name of the category. It can contain any character except for a forward slash (/).
+                parent:
+                  type: string
+                  description: The ID of the parent category. A taxonomy will be created if this is omitted.
+                description:
+                  type: string
+                  description: The description of the category.
+                permanent:
+                  type: boolean
+                  description: Used to identify system categories, if true the category can not be deleted.
+                hidden:
+                  type: boolean
+                  description: If true the category is hidden in the Shell, value is not returned if false.  Default is false.
+                firstClassFor:
+                  type: string
+                  description: Array of item classifications to which this taxonomy is enabled.  Acceptable values "" and "imagesAndVideos", default "".  By default the taxonomy is only shown where generic selection of any category in any taxonomy is allowed.
+                tags:
+                  type: array
+                  items:
+                    type: string
+                  uniqueItems: true
+                  description: Array of tags. This field is applicable only for taxonomy.
+              required:
+              - name
+      responses:
+        '200':
+          description: The category was successfully updated.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    description: The ID of category.
+                  rev:
+                    type: string
+                    description: The revision of category.
+                  name:
+                    type: string
+                    description: The name of the category.
+                  classification:
+                    type: string
+                    description: Either a Taxonomy or category.
+                  description:
+                    type: string
+                    description: A written representation of the category.
+                  creatorId:
+                    type: string
+                    description: The uuid of the user who created the category.
+                  permanent:
+                    type: boolean
+                    description: Used to identify system categories, if true the category can not be deleted.
+                  hidden:
+                    type: boolean
+                    description: If true the category is hidden in the Shell, value is not returned if false.  Default is false.
+                  firstClassFor:
+                    type: string
+                    description: Array of item classifications to which this taxonomy is enabled.  Acceptable values "" and "imagesAndVideos", default "".  By default the taxonomy is only shown where generic selection of any category in any taxonomy is allowed.
+                  parent:
+                    type: string
+                    description: The ID of the parent category. This is only required if the classification is a CATEGORY.
+                  ancestorIds:
+                    type: array
+                    description: An array of IDs for each of the category's ancestor categories. The ID of this category is not included.
+                    items:
+                      type: string
+                  namePath:
+                    type: array
+                    description: An array of names for each of the category's ancestor categories, in addition to the name of this category.
+                    minItems: 1
+                    items:
+                      type: string
+                  tags:
+                    type: array
+                    items:
+                      type: string
+                    uniqueItems: true
+                    description: Array of tags. This field is applicable only for taxonomy.
+                  links:
+                    type: object
+                    description: A set of links to related documents.
+                    properties:
+                      self:
+                        type: object
+                        properties:
+                          href:
+                            type: string
+                      taxonomy:
+                        type: object
+                        description: A link to this category's taxonomy. This will only be included if this category is not a taxonomy.
+                        properties:
+                          href:
+                            type: string
+                      parent:
+                        type: object
+                        description: A link to this category's parent. This will only be included if this category is not a taxonomy.
+                        properties:
+                          href:
+                            type: string
+                  lastModified:
+                    type: string
+                    format: date
+                    description: When the category was last modified in ISO 8601 format.
+                  created:
+                    type: string
+                    format: date
+                    description: When the category was created in ISO 8601 format.
+                required:
+                - id
+                - rev
+                - name
+                - classification
+                - namePath
+                - links
+                - created
+                - lastModified
+        '400':
+          description: Missing or invalid fields in the JSON body or an invalid revision was supplied.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: an error response.
+                properties:
+                  requestId:
+                    type: string
+                    description: The current request ID
+                  service:
+                    type: string
+                    description: The name of the service that produced the error
+                  requestMethod:
+                    type: string
+                    description: The Http method type of the current request
+                  requestUri:
+                    type: string
+                    description: The request uri
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code
+                        key:
+                          type: string
+                          description: The message key
+                        message:
+                          type: string
+                          description: The error message
+                        description:
+                          type: string
+                          description: Optional detailed error message
+                        more_info:
+                          type: string
+                          description: Optional additional information for the message
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end user
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        field:
+                          type: string
+                          description: Only present on field validation errors, indicates the field in error.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                      required:
+                      - code
+                      - key
+                      - message
+                      - description
+                      - more_info
+                      - category
+                      - level
+                      - parameters
+                      - field
+                      - locale
+                required:
+                - requestId
+                - service
+                - requestMethod
+                - requestUri
+                - errors
+        '404':
+          description: The category with ID {id} or the parent ID in the JSON body was not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: an error response.
+                properties:
+                  requestId:
+                    type: string
+                    description: The current request ID
+                  service:
+                    type: string
+                    description: The name of the service that produced the error
+                  requestMethod:
+                    type: string
+                    description: The Http method type of the current request
+                  requestUri:
+                    type: string
+                    description: The request uri
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code
+                        key:
+                          type: string
+                          description: The message key
+                        message:
+                          type: string
+                          description: The error message
+                        description:
+                          type: string
+                          description: Optional detailed error message
+                        more_info:
+                          type: string
+                          description: Optional additional information for the message
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end user
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        field:
+                          type: string
+                          description: Only present on field validation errors, indicates the field in error.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                      required:
+                      - code
+                      - key
+                      - message
+                      - description
+                      - more_info
+                      - category
+                      - level
+                      - parameters
+                      - field
+                      - locale
+                required:
+                - requestId
+                - service
+                - requestMethod
+                - requestUri
+                - errors
+        '409':
+          description: A category with the same path exists.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: an error response.
+                properties:
+                  requestId:
+                    type: string
+                    description: The current request ID
+                  service:
+                    type: string
+                    description: The name of the service that produced the error
+                  requestMethod:
+                    type: string
+                    description: The Http method type of the current request
+                  requestUri:
+                    type: string
+                    description: The request uri
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code
+                        key:
+                          type: string
+                          description: The message key
+                        message:
+                          type: string
+                          description: The error message
+                        description:
+                          type: string
+                          description: Optional detailed error message
+                        more_info:
+                          type: string
+                          description: Optional additional information for the message
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end user
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        field:
+                          type: string
+                          description: Only present on field validation errors, indicates the field in error.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                      required:
+                      - code
+                      - key
+                      - message
+                      - description
+                      - more_info
+                      - category
+                      - level
+                      - parameters
+                      - field
+                      - locale
+                required:
+                - requestId
+                - service
+                - requestMethod
+                - requestUri
+                - errors
+        '429':
+          description: Too Many Requests, the server has reached a limit, the request must be sent again at a later time.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      x-ibm-dx-security-user-roles:
+      - admin
+      - manager
+    delete:
+      tags:
+      - Authoring categories
+      summary: Delete an existing category item.
+      description: 'Delete the category with ID {id} along with all the categories under it.<br />User roles: admin, manager'
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: The ID of the category to delete.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: The category was successfully deleted.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                      description: The ID of the deleted category.
+                    rev:
+                      type: string
+                      description: The revision of the deleted category.
+        '400':
+          description: The revision {rev} supplied was invalid.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: an error response.
+                properties:
+                  requestId:
+                    type: string
+                    description: The current request ID
+                  service:
+                    type: string
+                    description: The name of the service that produced the error
+                  requestMethod:
+                    type: string
+                    description: The Http method type of the current request
+                  requestUri:
+                    type: string
+                    description: The request uri
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code
+                        key:
+                          type: string
+                          description: The message key
+                        message:
+                          type: string
+                          description: The error message
+                        description:
+                          type: string
+                          description: Optional detailed error message
+                        more_info:
+                          type: string
+                          description: Optional additional information for the message
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end user
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        field:
+                          type: string
+                          description: Only present on field validation errors, indicates the field in error.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                      required:
+                      - code
+                      - key
+                      - message
+                      - description
+                      - more_info
+                      - category
+                      - level
+                      - parameters
+                      - field
+                      - locale
+                required:
+                - requestId
+                - service
+                - requestMethod
+                - requestUri
+                - errors
+        '404':
+          description: The category with ID {id} was not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: an error response.
+                properties:
+                  requestId:
+                    type: string
+                    description: The current request ID
+                  service:
+                    type: string
+                    description: The name of the service that produced the error
+                  requestMethod:
+                    type: string
+                    description: The Http method type of the current request
+                  requestUri:
+                    type: string
+                    description: The request uri
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code
+                        key:
+                          type: string
+                          description: The message key
+                        message:
+                          type: string
+                          description: The error message
+                        description:
+                          type: string
+                          description: Optional detailed error message
+                        more_info:
+                          type: string
+                          description: Optional additional information for the message
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end user
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        field:
+                          type: string
+                          description: Only present on field validation errors, indicates the field in error.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                      required:
+                      - code
+                      - key
+                      - message
+                      - description
+                      - more_info
+                      - category
+                      - level
+                      - parameters
+                      - field
+                      - locale
+                required:
+                - requestId
+                - service
+                - requestMethod
+                - requestUri
+                - errors
+        '429':
+          description: Too Many Requests, the server has reached a limit, the request must be sent again at a later time.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      x-ibm-dx-security-user-roles:
+      - admin
+      - manager
+  /authoring/v1/categories/views/by-modified:
+    get:
+      tags:
+      - Authoring categories
+      summary: Gets all categories modified between the start and end date.
+      description: 'This endpoint returns a paged result view of category items modified within a range specified by start and end date.<br />User roles: admin, manager, editor, viewer'
+      parameters:
+      - name: start
+        in: query
+        description: Provide the date and time of when the last modifications were made to the category items that you want returned. The category items that are modified on or after this date and time are returned. The date value must be in the ISO 8601 format YYYY-MM-DD T hh:mm:ss:sssZ.
+        required: false
+        schema:
+          type: string
+          format: date-time
+      - name: end
+        in: query
+        description: Provide the date and time of when the last modifications were made to the category items that you want returned. The category items that are modified on or before this date and time are returned. The date value must be in the ISO 8601 format YYYY-MM-DD T hh:mm:ss:sssZ.
+        required: false
+        schema:
+          type: string
+          format: date-time
+      - name: fields
+        in: query
+        description: Only the category items fields that are specified here are returned for each result. Any category item field is a valid value and can be specified as a comma-separated list. For example, to list the category item fields name and ID, provide the value ID, and name. All category item fields are returned by default.
+        required: false
+        schema:
+          type: string
+      - name: offset
+        in: query
+        description: Use the offset parameter to specify the number of category items to skip from the beginning of the list and return the rest.
+        required: false
+        schema:
+          type: number
+          format: integer
+      - name: limit
+        in: query
+        description: Set the limit for the maximum number of category items to return in a single result. The default value is 50.
+        required: false
+        schema:
+          type: number
+          format: integer
+      - name: order
+        in: query
+        description: Specify whether you want the category items to be returned in ascending or descending order. Documents are returned in descending order by default.
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: List of category items.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  limit:
+                    type: integer
+                    description: The page size.
+                    example: 50
+                  offset:
+                    type: integer
+                    description: The number of items to skip from the beginning of the list.
+                    example: 0
+                  href:
+                    type: string
+                    description: A link to the current page.
+                    example: /authoring/v1/categories?offset=50&limit=50
+                  next:
+                    type: string
+                    description: A link to the next page. Only shown if a next page exists.
+                    example: /authoring/v1/categories?offset=100&limit=50
+                  previous:
+                    type: string
+                    description: A link to the previous page. Only shown if a previous page exists.
+                    example: /authoring/v1/categories?offset=0&limit=50
+                  items:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          description: The ID of category.
+                        rev:
+                          type: string
+                          description: The revision of category.
+                        name:
+                          type: string
+                          description: The name of the category.
+                        classification:
+                          type: string
+                          description: Either a Taxonomy or category.
+                        description:
+                          type: string
+                          description: A written representation of the category.
+                        creatorId:
+                          type: string
+                          description: The uuid of the user who created the category.
+                        permanent:
+                          type: boolean
+                          description: Used to identify system categories, if true the category can not be deleted.
+                        hidden:
+                          type: boolean
+                          description: If true the category is hidden in the Shell, value is not returned if false.  Default is false.
+                        firstClassFor:
+                          type: string
+                          description: Array of item classifications to which this taxonomy is enabled.  Acceptable values "" and "imagesAndVideos", default "".  By default the taxonomy is only shown where generic selection of any category in any taxonomy is allowed.
+                        parent:
+                          type: string
+                          description: The ID of the parent category. This is only required if the classification is a CATEGORY.
+                        ancestorIds:
+                          type: array
+                          description: An array of IDs for each of the category's ancestor categories. The ID of this category is not included.
+                          items:
+                            type: string
+                        namePath:
+                          type: array
+                          description: An array of names for each of the category's ancestor categories, in addition to the name of this category.
+                          minItems: 1
+                          items:
+                            type: string
+                        tags:
+                          type: array
+                          items:
+                            type: string
+                          uniqueItems: true
+                          description: Array of tags. This field is applicable only for taxonomy.
+                        links:
+                          type: object
+                          description: A set of links to related documents.
+                          properties:
+                            self:
+                              type: object
+                              properties:
+                                href:
+                                  type: string
+                            taxonomy:
+                              type: object
+                              description: A link to this category's taxonomy. This will only be included if this category is not a taxonomy.
+                              properties:
+                                href:
+                                  type: string
+                            parent:
+                              type: object
+                              description: A link to this category's parent. This will only be included if this category is not a taxonomy.
+                              properties:
+                                href:
+                                  type: string
+                        lastModified:
+                          type: string
+                          format: date
+                          description: When the category was last modified in ISO 8601 format.
+                        created:
+                          type: string
+                          format: date
+                          description: When the category was created in ISO 8601 format.
+                      required:
+                      - id
+                      - rev
+                      - name
+                      - classification
+                      - namePath
+                      - links
+                      - created
+                      - lastModified
+        '429':
+          description: Too Many Requests, the server has reached a limit, the request must be sent again at a later time.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '503':
+          description: The service is unable to complete the request.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: an error response.
+                properties:
+                  requestId:
+                    type: string
+                    description: The current request ID
+                  service:
+                    type: string
+                    description: The name of the service that produced the error
+                  requestMethod:
+                    type: string
+                    description: The Http method type of the current request
+                  requestUri:
+                    type: string
+                    description: The request uri
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code
+                        key:
+                          type: string
+                          description: The message key
+                        message:
+                          type: string
+                          description: The error message
+                        description:
+                          type: string
+                          description: Optional detailed error message
+                        more_info:
+                          type: string
+                          description: Optional additional information for the message
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end user
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        field:
+                          type: string
+                          description: Only present on field validation errors, indicates the field in error.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                      required:
+                      - code
+                      - key
+                      - message
+                      - description
+                      - more_info
+                      - category
+                      - level
+                      - parameters
+                      - field
+                      - locale
+                required:
+                - requestId
+                - service
+                - requestMethod
+                - requestUri
+                - errors
+        default:
+          description: Unexpected error.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: an error response.
+                properties:
+                  requestId:
+                    type: string
+                    description: The current request ID
+                  service:
+                    type: string
+                    description: The name of the service that produced the error
+                  requestMethod:
+                    type: string
+                    description: The Http method type of the current request
+                  requestUri:
+                    type: string
+                    description: The request uri
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code
+                        key:
+                          type: string
+                          description: The message key
+                        message:
+                          type: string
+                          description: The error message
+                        description:
+                          type: string
+                          description: Optional detailed error message
+                        more_info:
+                          type: string
+                          description: Optional additional information for the message
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end user
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        field:
+                          type: string
+                          description: Only present on field validation errors, indicates the field in error.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                      required:
+                      - code
+                      - key
+                      - message
+                      - description
+                      - more_info
+                      - category
+                      - level
+                      - parameters
+                      - field
+                      - locale
+                required:
+                - requestId
+                - service
+                - requestMethod
+                - requestUri
+                - errors
+      x-ibm-dx-security-user-roles:
+      - admin
+      - manager
+      - editor
+      - viewer
+  /authoring/v1/categories/{id}/children:
+    get:
+      tags:
+      - Authoring categories
+      summary: Retrieve the child categories of the category with ID {id}.
+      description: 'Retrieve the child categories of the category with ID {id}.<br />User roles: admin, manager, editor, viewer'
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: The ID of the category whose children to retrieve.
+        schema:
+          type: string
+      - name: recurse
+        in: query
+        required: false
+        description: Set to true to recursively retrieve all the sub-categories of the children as well.
+        schema:
+          type: boolean
+      responses:
+        '200':
+          description: The child categories were successfully retrieved.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  limit:
+                    type: integer
+                    description: The page size.
+                    example: 50
+                  offset:
+                    type: integer
+                    description: The number of items to skip from the beginning of the list.
+                    example: 0
+                  href:
+                    type: string
+                    description: A link to the current page.
+                    example: /authoring/v1/categories?offset=50&limit=50
+                  next:
+                    type: string
+                    description: A link to the next page. Only shown if a next page exists.
+                    example: /authoring/v1/categories?offset=100&limit=50
+                  previous:
+                    type: string
+                    description: A link to the previous page. Only shown if a previous page exists.
+                    example: /authoring/v1/categories?offset=0&limit=50
+                  items:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          description: The ID of category.
+                        rev:
+                          type: string
+                          description: The revision of category.
+                        name:
+                          type: string
+                          description: The name of the category.
+                        classification:
+                          type: string
+                          description: Either a Taxonomy or category.
+                        description:
+                          type: string
+                          description: A written representation of the category.
+                        creatorId:
+                          type: string
+                          description: The uuid of the user who created the category.
+                        permanent:
+                          type: boolean
+                          description: Used to identify system categories, if true the category can not be deleted.
+                        hidden:
+                          type: boolean
+                          description: If true the category is hidden in the Shell, value is not returned if false.  Default is false.
+                        firstClassFor:
+                          type: string
+                          description: Array of item classifications to which this taxonomy is enabled.  Acceptable values "" and "imagesAndVideos", default "".  By default the taxonomy is only shown where generic selection of any category in any taxonomy is allowed.
+                        parent:
+                          type: string
+                          description: The ID of the parent category. This is only required if the classification is a CATEGORY.
+                        ancestorIds:
+                          type: array
+                          description: An array of IDs for each of the category's ancestor categories. The ID of this category is not included.
+                          items:
+                            type: string
+                        namePath:
+                          type: array
+                          description: An array of names for each of the category's ancestor categories, in addition to the name of this category.
+                          minItems: 1
+                          items:
+                            type: string
+                        tags:
+                          type: array
+                          items:
+                            type: string
+                          uniqueItems: true
+                          description: Array of tags. This field is applicable only for taxonomy.
+                        links:
+                          type: object
+                          description: A set of links to related documents.
+                          properties:
+                            self:
+                              type: object
+                              properties:
+                                href:
+                                  type: string
+                            taxonomy:
+                              type: object
+                              description: A link to this category's taxonomy. This will only be included if this category is not a taxonomy.
+                              properties:
+                                href:
+                                  type: string
+                            parent:
+                              type: object
+                              description: A link to this category's parent. This will only be included if this category is not a taxonomy.
+                              properties:
+                                href:
+                                  type: string
+                        lastModified:
+                          type: string
+                          format: date
+                          description: When the category was last modified in ISO 8601 format.
+                        created:
+                          type: string
+                          format: date
+                          description: When the category was created in ISO 8601 format.
+                      required:
+                      - id
+                      - rev
+                      - name
+                      - classification
+                      - namePath
+                      - links
+                      - created
+                      - lastModified
+        '429':
+          description: Too Many Requests, the server has reached a limit, the request must be sent again at a later time.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      x-ibm-dx-security-user-roles:
+      - admin
+      - manager
+      - editor
+      - viewer
+  /authoring/v2/categories:
+    get:
+      tags:
+      - Authoring categories
+      summary: Retrieve all the taxonomies and their children.
+      description: 'Retrieve all the taxonomies and thier children.  Optional depth query string limits the depth of the categories returned.<br />User roles: admin, manager, editor, viewer'
+      parameters:
+      - name: offset
+        in: query
+        description: Use the offset parameter to specify the number of content items to skip from the beginning of the list and return the rest.
+        required: false
+        schema:
+          type: number
+          format: integer
+      - name: limit
+        in: query
+        description: Set the limit for the maximum number of content items to return in a single result. The default value is 50.
+        required: false
+        schema:
+          type: number
+          format: integer
+      - name: depth
+        in: query
+        description: Used to specify the depth of the children to return.  1 -7 returns the given depth.  Values above 7 or no value result in all categories.
+        required: false
+        schema:
+          type: number
+          format: integer
+      responses:
+        '200':
+          description: The child categories were successfully retrieved.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  limit:
+                    type: integer
+                    description: The page size.
+                    example: 50
+                  offset:
+                    type: integer
+                    description: The number of items to skip from the beginning of the list.
+                    example: 0
+                  href:
+                    type: string
+                    description: A link to the current page.
+                    example: /authoring/v2/categories?depth=2&limit=10&offset=10
+                  next:
+                    type: string
+                    description: A link to the next page. Only shown if a next page exists.
+                    example: /authoring/v2/categories?depth=2&limit=2&offset=20
+                  previous:
+                    type: string
+                    description: A link to the previous page. Only shown if a previous page exists.
+                    example: /authoring/v2/categories?depth=2&limit=2&offset=0
+                  items:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          description: The ID of category.
+                        rev:
+                          type: string
+                          description: The revision of category.
+                        name:
+                          type: string
+                          description: The name of the category.
+                        classification:
+                          type: string
+                          description: Either a Taxonomy or category.
+                        description:
+                          type: string
+                          description: A written representation of the category.
+                        creatorId:
+                          type: string
+                          description: The uuid of the user who created the category.
+                        permanent:
+                          type: boolean
+                          description: Used to identify system categories, if true the category can not be deleted.
+                        hidden:
+                          type: boolean
+                          description: If true the category is hidden in the Shell, value is not returned if false.  Default is false.
+                        firstClassFor:
+                          type: string
+                          description: Array of item classifications to which this taxonomy is enabled.  Acceptable values "" and "imagesAndVideos", default "".  By default the taxonomy is only shown where generic selection of any category in any taxonomy is allowed.
+                        parent:
+                          type: string
+                          description: The ID of the parent category. This is only required if the classification is a CATEGORY.
+                        ancestorIds:
+                          type: array
+                          description: An array of IDs for each of the category's ancestor categories. The ID of this category is not included.
+                          items:
+                            type: string
+                        namePath:
+                          type: array
+                          description: An array of names for each of the category's ancestor categories, in addition to the name of this category.
+                          minItems: 1
+                          items:
+                            type: string
+                        tags:
+                          type: array
+                          items:
+                            type: string
+                          uniqueItems: true
+                          description: Array of tags. This field is applicable only for taxonomy.
+                        links:
+                          type: object
+                          description: A set of links to related documents.
+                          properties:
+                            self:
+                              type: object
+                              properties:
+                                href:
+                                  type: string
+                            taxonomy:
+                              type: object
+                              description: A link to this category's taxonomy. This will only be included if this category is not a taxonomy.
+                              properties:
+                                href:
+                                  type: string
+                            parent:
+                              type: object
+                              description: A link to this category's parent. This will only be included if this category is not a taxonomy.
+                              properties:
+                                href:
+                                  type: string
+                        lastModified:
+                          type: string
+                          format: date
+                          description: When the category was last modified in ISO 8601 format.
+                        created:
+                          type: string
+                          format: date
+                          description: When the category was created in ISO 8601 format.
+                      required:
+                      - id
+                      - rev
+                      - name
+                      - classification
+                      - namePath
+                      - links
+                      - created
+                      - lastModified
+        '429':
+          description: Too Many Requests, the server has reached a limit, the request must be sent again at a later time.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      x-ibm-dx-security-user-roles:
+      - admin
+      - manager
+      - editor
+      - viewer
+  /authoring/v2/categories/{id}/children:
+    get:
+      tags:
+      - Authoring categories
+      summary: Retrieve the child categories of the category with ID {id}.
+      description: 'Retrieve the child categories of the category with ID {id}.<br />User roles: admin, manager, editor, viewer'
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: The ID of the category whose children to retrieve.
+        schema:
+          type: string
+      - name: depth
+        in: query
+        required: false
+        description: How many levels of children to get.  Defaults to 1.  -1 means to get all children.
+        schema:
+          type: integer
+          default: 1
+      - name: sort
+        in: query
+        required: false
+        description: Sort order.  Only effective when depth=1.  Default sort order is by Depth-First ordered by Name.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: The child categories were successfully retrieved.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  limit:
+                    type: integer
+                    description: The page size.
+                    example: 50
+                  offset:
+                    type: integer
+                    description: The number of items to skip from the beginning of the list.
+                    example: 0
+                  href:
+                    type: string
+                    description: A link to the current page.
+                    example: /authoring/v1/categories?offset=50&limit=50
+                  next:
+                    type: string
+                    description: A link to the next page. Only shown if a next page exists.
+                    example: /authoring/v1/categories?offset=100&limit=50
+                  previous:
+                    type: string
+                    description: A link to the previous page. Only shown if a previous page exists.
+                    example: /authoring/v1/categories?offset=0&limit=50
+                  items:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          description: The ID of category.
+                        rev:
+                          type: string
+                          description: The revision of category.
+                        name:
+                          type: string
+                          description: The name of the category.
+                        classification:
+                          type: string
+                          description: Either a Taxonomy or category.
+                        description:
+                          type: string
+                          description: A written representation of the category.
+                        creatorId:
+                          type: string
+                          description: The uuid of the user who created the category.
+                        permanent:
+                          type: boolean
+                          description: Used to identify system categories, if true the category can not be deleted.
+                        isSystem:
+                          type: boolean
+                          description: Used to identify system categories, if true the category can not be deleted or updated by users
+                        hidden:
+                          type: boolean
+                          description: If true the category is hidden in the Shell, value is not returned if false.  Default is false.
+                        firstClassFor:
+                          type: string
+                          description: Array of item classifications to which this taxonomy is enabled.  Acceptable values "" and "imagesAndVideos", default "".  By default the taxonomy is only shown where generic selection of any category in any taxonomy is allowed.
+                        parent:
+                          type: string
+                          description: The ID of the parent category. This is only required if the classification is a CATEGORY.
+                        ancestorIds:
+                          type: array
+                          description: An array of IDs for each of the category's ancestor categories. The ID of this category is not included.
+                          items:
+                            type: string
+                        namePath:
+                          type: array
+                          description: An array of names for each of the category's ancestor categories, in addition to the name of this category.
+                          minItems: 1
+                          items:
+                            type: string
+                        tags:
+                          type: array
+                          items:
+                            type: string
+                          uniqueItems: true
+                          description: Array of tags. This field is applicable only for taxonomy.
+                        kind:
+                          type: array
+                          items:
+                            type: string
+                          uniqueItems: true
+                          description: Array of kinds for the taxonomy/category
+                        links:
+                          type: object
+                          description: A set of links to related documents.
+                          properties:
+                            self:
+                              type: object
+                              properties:
+                                href:
+                                  type: string
+                            taxonomy:
+                              type: object
+                              description: A link to this category's taxonomy. This will only be included if this category is not a taxonomy.
+                              properties:
+                                href:
+                                  type: string
+                            parent:
+                              type: object
+                              description: A link to this category's parent. This will only be included if this category is not a taxonomy.
+                              properties:
+                                href:
+                                  type: string
+                        lastModified:
+                          type: string
+                          format: date
+                          description: When the category was last modified in ISO 8601 format.
+                        created:
+                          type: string
+                          format: date
+                          description: When the category was created in ISO 8601 format.
+                      required:
+                      - id
+                      - rev
+                      - name
+                      - classification
+                      - namePath
+                      - links
+                      - created
+                      - lastModified
+        '429':
+          description: Too Many Requests, the server has reached a limit, the request must be sent again at a later time.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      x-ibm-dx-security-user-roles:
+      - admin
+      - manager
+      - editor
+      - viewer
+components:
+  schemas:
+    ErrorResponse:
+      description: This JSON record represents an error condition.
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            description: This JSON record represents an individual error or warning contained in an error message.
+            type: object
+            properties:
+              code:
+                type: integer
+                description: An error code
+              message:
+                type: string
+                description: A message describing what went wrong.
+              description:
+                type: string
+                description: Further explanation of the error condition and potential next steps to resolve the problem.
+              more_info:
+                type: string
+                description: A URL pointing to a web site that provides more information on the given error condition.
+              level:
+                type: string
+                enum:
+                - ERROR
+                - WARNING
+                description: The severity level of the message. Default is error.
+              parameters:
+                type: object
+                description: Additional properties reflecting the dynamic parts of the error condition.
+              cause:
+                type: object
+                description: This property can be used to transport causing error message records produced by a down stream service calls.
+              locale:
+                type: string
+                description: This property represents the locale of the text contained in properties 'message', and 'description'. This property is mandatory if message and description contain translated text.
+            required:
+            - code
+            - message
+        requestId:
+          type: string
+          description: The ID of the failing request.
+        service:
+          type: string
+          description: The name of the service serving the error message.
+      required:
+      - errors
+      - requestId
+x-refined-from:
+- acoustic-content-openapi-original.json
+- acoustic-content-swagger2-original.yaml
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

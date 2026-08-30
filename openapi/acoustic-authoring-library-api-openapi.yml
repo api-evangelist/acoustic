@@ -1,0 +1,1777 @@
+openapi: 3.2.0
+info:
+  version: 1.0.142
+  x-ibm-name: ibm-watson-content-hub-api
+  title: Acoustic Content Authoring library API
+  description: Copyright © Acoustic, L.P. 2023
+tags:
+- name: Authoring library
+  description: Use the Content library Rest APIs to work with libraries. Libraries currently support having content and asset items added to them.
+paths:
+  /authoring/v1/libraries/{id}:
+    get:
+      summary: Get an existing library
+      description: 'Use this endpoint to retrieve an existing library.<br />User roles: admin, manager, editor, viewer'
+      tags:
+      - Authoring library
+      parameters:
+      - name: id
+        in: path
+        description: The ID of the library that you want to retrieve.
+        required: true
+        schema:
+          type: string
+      - name: If-None-Match
+        in: header
+        description: Provide the double-quoted revision of the library. If this value matches the newest version, a 304 Not Modified response will be returned.
+        required: false
+        schema:
+          type: string
+      - name: include
+        in: query
+        description: Additional library fields that are specified here are returned. Field that can be included is metadata. Fields are to be provided as a comma-separated list.
+        required: false
+        style: form
+        explode: false
+        schema:
+          type: array
+          items:
+            type: string
+      responses:
+        '200':
+          description: Successfully retrieved the library.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: A library representation.
+                properties:
+                  id:
+                    type: string
+                    description: The ID of the library.
+                    example: 918e7c31-a662-487b-9a71-5b8665211d5a
+                  rev:
+                    type: string
+                    description: The revision of the library.
+                    readOnly: true
+                    example: 2-c839bbb8844549c2e298275c4b2adcb8
+                  name:
+                    type: string
+                    description: The name of the library.
+                    example: Sample Library
+                  description:
+                    type: string
+                    description: The description of the library.
+                    example: An example description of the sample library.
+                  creatorId:
+                    type: string
+                    readOnly: true
+                    description: The ID of the user that created the library.
+                    example: e98c185a-cafb-4c32-ad94-dd4ffaa28a7e
+                  created:
+                    type: string
+                    format: date-time
+                    readOnly: true
+                    description: The date and time the library was created.
+                  creator:
+                    type: string
+                    readOnly: true
+                    description: The name of the user who originally created the library.
+                  lastModifierId:
+                    type: string
+                    readOnly: true
+                    description: The ID of the user that last modified the library.
+                    example: e98c185a-cafb-4c32-ad94-dd4ffaa28a7e
+                  lastModified:
+                    type: string
+                    format: date-time
+                    readOnly: true
+                    description: The date and time the library was last modified.
+                  lastModifier:
+                    type: string
+                    readOnly: true
+                    description: The name of the user who last modified the library.
+                  systemModified:
+                    type: string
+                    format: date-time
+                    readOnly: true
+                    description: The date and time the library was last modified by the system.
+                  isSystem:
+                    type: boolean
+                    description: Indicates whether this item is a 'system item' or not. 'System item' means that this is an item managed internally by Acoustic.
+                    default: false
+                  access:
+                    type: string
+                    description: The access level of the library.
+                    enum:
+                    - public
+                    - private
+                    - protected
+                    example: private
+                  owners:
+                    type: array
+                    description: A list of owners that are able to approve items inside libraries when managed approvals is on.
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          description: The ID of the user that has owner access.
+                          example: e98c185a-cafb-4c32-ad94-dd4ffaa28a7e
+                        displayName:
+                          type: string
+                          readOnly: true
+                          description: The name of the user that has owner access.
+                  contributors:
+                    type: array
+                    description: A list of contributors that are able to contribute to the library when it is not public.
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          description: The ID of the user that has contributor access.
+                          example: e98c185a-cafb-4c32-ad94-dd4ffaa28a7e
+                        displayName:
+                          type: string
+                          readOnly: true
+                          description: The name of the user that has contributor access.
+                  tags:
+                    type: array
+                    description: The tags describing the library.
+                    items:
+                      type: string
+                    uniqueItems: true
+                    example:
+                    - news
+                    - movies
+                required:
+                - id
+                - name
+                - rev
+        '429':
+          description: Too Many Requests, the server has reached a limit, the request must be sent again at a later time.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        default:
+          description: Unexpected error.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: An error response.
+                properties:
+                  requestId:
+                    type: string
+                    description: The current request ID
+                  service:
+                    type: string
+                    description: The name of the service that produced the error
+                  requestMethod:
+                    type: string
+                    description: The HTTP method type of the current request
+                  requestUri:
+                    type: string
+                    description: The request URI
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code
+                        key:
+                          type: string
+                          description: The message key
+                        message:
+                          type: string
+                          description: The error message
+                        description:
+                          type: string
+                          description: Optional detailed error message
+                        more_info:
+                          type: string
+                          description: Optional additional information for the message
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end-user
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        field:
+                          type: string
+                          description: Only present on field validation errors, indicates the field in error.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                      required:
+                      - code
+                      - key
+                      - message
+                      - description
+                      - more_info
+                      - category
+                      - level
+                      - parameters
+                      - field
+                      - locale
+                required:
+                - requestId
+                - service
+                - requestMethod
+                - requestUri
+                - errors
+      x-ibm-dx-security-user-roles:
+      - admin
+      - manager
+      - editor
+      - viewer
+    put:
+      summary: Update an existing library
+      description: 'Use this endpoint to update an existing library.<br />User roles: admin, manager, editor'
+      parameters:
+      - name: id
+        in: path
+        description: The ID of the library that you want to update.
+        required: true
+        schema:
+          type: string
+      - name: ignoreUsers
+        in: query
+        required: false
+        description: Set to true to update the library without changing its owners or contributors, used for importing to and from other subscriptions with different sets of users. False by default.
+        schema:
+          type: boolean
+      tags:
+      - Authoring library
+      responses:
+        '200':
+          description: Successfully updated the library.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: A library representation.
+                properties:
+                  id:
+                    type: string
+                    description: The ID of the library.
+                    example: 918e7c31-a662-487b-9a71-5b8665211d5a
+                  rev:
+                    type: string
+                    description: The revision of the library.
+                    readOnly: true
+                    example: 2-c839bbb8844549c2e298275c4b2adcb8
+                  name:
+                    type: string
+                    description: The name of the library.
+                    example: Sample Library
+                  description:
+                    type: string
+                    description: The description of the library.
+                    example: An example description of the sample library.
+                  creatorId:
+                    type: string
+                    readOnly: true
+                    description: The ID of the user that created the library.
+                    example: e98c185a-cafb-4c32-ad94-dd4ffaa28a7e
+                  created:
+                    type: string
+                    format: date-time
+                    readOnly: true
+                    description: The date and time the library was created.
+                  creator:
+                    type: string
+                    readOnly: true
+                    description: The name of the user who originally created the library.
+                  lastModifierId:
+                    type: string
+                    readOnly: true
+                    description: The ID of the user that last modified the library.
+                    example: e98c185a-cafb-4c32-ad94-dd4ffaa28a7e
+                  lastModified:
+                    type: string
+                    format: date-time
+                    readOnly: true
+                    description: The date and time the library was last modified.
+                  lastModifier:
+                    type: string
+                    readOnly: true
+                    description: The name of the user who last modified the library.
+                  systemModified:
+                    type: string
+                    format: date-time
+                    readOnly: true
+                    description: The date and time the library was last modified by the system.
+                  isSystem:
+                    type: boolean
+                    description: Indicates whether this item is a 'system item' or not. 'System item' means that this is an item managed internally by Acoustic.
+                    default: false
+                  access:
+                    type: string
+                    description: The access level of the library.
+                    enum:
+                    - public
+                    - private
+                    - protected
+                    example: private
+                  owners:
+                    type: array
+                    description: A list of owners that are able to approve items inside libraries when managed approvals is on.
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          description: The ID of the user that has owner access.
+                          example: e98c185a-cafb-4c32-ad94-dd4ffaa28a7e
+                        displayName:
+                          type: string
+                          readOnly: true
+                          description: The name of the user that has owner access.
+                  contributors:
+                    type: array
+                    description: A list of contributors that are able to contribute to the library when it is not public.
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          description: The ID of the user that has contributor access.
+                          example: e98c185a-cafb-4c32-ad94-dd4ffaa28a7e
+                        displayName:
+                          type: string
+                          readOnly: true
+                          description: The name of the user that has contributor access.
+                  tags:
+                    type: array
+                    description: The tags describing the library.
+                    items:
+                      type: string
+                    uniqueItems: true
+                    example:
+                    - news
+                    - movies
+                required:
+                - id
+                - name
+                - rev
+        '429':
+          description: Too Many Requests, the server has reached a limit, the request must be sent again at a later time.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        default:
+          description: Unexpected error.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: An error response.
+                properties:
+                  requestId:
+                    type: string
+                    description: The current request ID
+                  service:
+                    type: string
+                    description: The name of the service that produced the error
+                  requestMethod:
+                    type: string
+                    description: The HTTP method type of the current request
+                  requestUri:
+                    type: string
+                    description: The request URI
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code
+                        key:
+                          type: string
+                          description: The message key
+                        message:
+                          type: string
+                          description: The error message
+                        description:
+                          type: string
+                          description: Optional detailed error message
+                        more_info:
+                          type: string
+                          description: Optional additional information for the message
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end-user
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        field:
+                          type: string
+                          description: Only present on field validation errors, indicates the field in error.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                      required:
+                      - code
+                      - key
+                      - message
+                      - description
+                      - more_info
+                      - category
+                      - level
+                      - parameters
+                      - field
+                      - locale
+                required:
+                - requestId
+                - service
+                - requestMethod
+                - requestUri
+                - errors
+      x-ibm-dx-security-user-roles:
+      - admin
+      - manager
+      - editor
+    delete:
+      summary: Delete an existing library
+      description: 'Use this endpoint to delete an existing library.<br />User roles: admin, manager, editor'
+      parameters:
+      - name: id
+        in: path
+        description: The ID of the library that you want to delete.
+        required: true
+        schema:
+          type: string
+      tags:
+      - Authoring library
+      responses:
+        '204':
+          description: Successfully deleted the library.
+        '429':
+          description: Too Many Requests, the server has reached a limit, the request must be sent again at a later time.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        default:
+          description: Unexpected error.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: An error response.
+                properties:
+                  requestId:
+                    type: string
+                    description: The current request ID
+                  service:
+                    type: string
+                    description: The name of the service that produced the error
+                  requestMethod:
+                    type: string
+                    description: The HTTP method type of the current request
+                  requestUri:
+                    type: string
+                    description: The request URI
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code
+                        key:
+                          type: string
+                          description: The message key
+                        message:
+                          type: string
+                          description: The error message
+                        description:
+                          type: string
+                          description: Optional detailed error message
+                        more_info:
+                          type: string
+                          description: Optional additional information for the message
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end-user
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        field:
+                          type: string
+                          description: Only present on field validation errors, indicates the field in error.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                      required:
+                      - code
+                      - key
+                      - message
+                      - description
+                      - more_info
+                      - category
+                      - level
+                      - parameters
+                      - field
+                      - locale
+                required:
+                - requestId
+                - service
+                - requestMethod
+                - requestUri
+                - errors
+      x-ibm-dx-security-user-roles:
+      - admin
+      - manager
+      - editor
+  /authoring/v1/libraries:
+    get:
+      summary: Get all the libraries
+      description: 'Use this endpoint to retrieve all libraries.<br />User roles: admin, manager, editor, viewer'
+      parameters:
+      - name: start
+        in: query
+        required: false
+        description: 'Provide the date and time of when the last modifications were made to the libraries that you want returned. The libraries that are modified on or after this date and time are returned. The date value must be in the ISO 8601 format YYYY-MM-DD T hh:mm:ss:sssZ. Note: when reversing the order you do not switch start and end.'
+        schema:
+          type: string
+          format: date-time
+      - name: end
+        in: query
+        required: false
+        description: 'Provide the date and time of when the last modifications were made to the libraries that you want returned. The libraries that are modified on or before this date and time are returned. The date value must be in the ISO 8601 format YYYY-MM-DD T hh:mm:ss:sssZ. Note: when reversing the order you do not switch start and end.'
+        schema:
+          type: string
+          format: date-time
+      - name: offset
+        in: query
+        description: Use the offset parameter to specify the number of libraries to skip from the beginning of the list and return the rest.
+        required: false
+        schema:
+          type: integer
+          default: 0
+      - name: limit
+        in: query
+        description: Set the limit for the maximum number of libraries to return in a single result.
+        required: false
+        schema:
+          type: integer
+          default: 50
+      - name: order
+        in: query
+        description: Specify whether you want the libraries to be returned in ascending or descending order. Libraries are returned in descending order by default.
+        required: false
+        schema:
+          type: string
+          enum:
+          - descending
+          - ascending
+          default: descending
+      - name: fields
+        in: query
+        description: Only the library fields that are specified here are returned for each result. Any library field is a valid value and these can be specified in a comma-separated list. For example, to list the library fields name and ID, provide the value ID, and name. All library fields are returned by default.
+        required: false
+        allowEmptyValue: true
+        style: form
+        explode: false
+        schema:
+          type: array
+          items:
+            type: string
+      tags:
+      - Authoring library
+      responses:
+        '200':
+          description: Successfully lists a paged result view of all libraries that were modified within the date range specified.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  limit:
+                    type: integer
+                    description: The page size.
+                    example: 50
+                  offset:
+                    type: integer
+                    description: The number of libraries to skip from the beginning of the list.
+                    example: 0
+                  href:
+                    type: string
+                    description: A link to the current page.
+                    example: /authoring/v1/libraries?offset=50&limit=50
+                  next:
+                    type: string
+                    description: A link to the next page. Only shown if a next page exists.
+                    example: /authoring/v1/libraries?offset=100&limit=50
+                  previous:
+                    type: string
+                    description: A link to the previous page. Only shown if a previous page exists.
+                    example: /authoring/v1/libraries?offset=0&limit=50
+                  items:
+                    type: array
+                    items:
+                      type: object
+                      description: A library representation.
+                      properties:
+                        id:
+                          type: string
+                          description: The ID of the library.
+                          example: 918e7c31-a662-487b-9a71-5b8665211d5a
+                        rev:
+                          type: string
+                          description: The revision of the library.
+                          readOnly: true
+                          example: 2-c839bbb8844549c2e298275c4b2adcb8
+                        name:
+                          type: string
+                          description: The name of the library.
+                          example: Sample Library
+                        description:
+                          type: string
+                          description: The description of the library.
+                          example: An example description of the sample library.
+                        creatorId:
+                          type: string
+                          readOnly: true
+                          description: The ID of the user that created the library.
+                          example: e98c185a-cafb-4c32-ad94-dd4ffaa28a7e
+                        created:
+                          type: string
+                          format: date-time
+                          readOnly: true
+                          description: The date and time the library was created.
+                        creator:
+                          type: string
+                          readOnly: true
+                          description: The name of the user who originally created the library.
+                        lastModifierId:
+                          type: string
+                          readOnly: true
+                          description: The ID of the user that last modified the library.
+                          example: e98c185a-cafb-4c32-ad94-dd4ffaa28a7e
+                        lastModified:
+                          type: string
+                          format: date-time
+                          readOnly: true
+                          description: The date and time the library was last modified.
+                        lastModifier:
+                          type: string
+                          readOnly: true
+                          description: The name of the user who last modified the library.
+                        systemModified:
+                          type: string
+                          format: date-time
+                          readOnly: true
+                          description: The date and time the library was last modified by the system.
+                        isSystem:
+                          type: boolean
+                          description: Indicates whether this item is a 'system item' or not. 'System item' means that this is an item managed internally by Acoustic.
+                          default: false
+                        access:
+                          type: string
+                          description: The access level of the library.
+                          enum:
+                          - public
+                          - private
+                          - protected
+                          example: private
+                        owners:
+                          type: array
+                          description: A list of owners that are able to approve items inside libraries when managed approvals is on.
+                          items:
+                            type: object
+                            properties:
+                              id:
+                                type: string
+                                description: The ID of the user that has owner access.
+                                example: e98c185a-cafb-4c32-ad94-dd4ffaa28a7e
+                              displayName:
+                                type: string
+                                readOnly: true
+                                description: The name of the user that has owner access.
+                        contributors:
+                          type: array
+                          description: A list of contributors that are able to contribute to the library when it is not public.
+                          items:
+                            type: object
+                            properties:
+                              id:
+                                type: string
+                                description: The ID of the user that has contributor access.
+                                example: e98c185a-cafb-4c32-ad94-dd4ffaa28a7e
+                              displayName:
+                                type: string
+                                readOnly: true
+                                description: The name of the user that has contributor access.
+                        tags:
+                          type: array
+                          description: The tags describing the library.
+                          items:
+                            type: string
+                          uniqueItems: true
+                          example:
+                          - news
+                          - movies
+                      required:
+                      - id
+                      - name
+                      - rev
+        '401':
+          description: You do not have authorization to retrieve the libraries from the database.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: An error response.
+                properties:
+                  requestId:
+                    type: string
+                    description: The current request ID
+                  service:
+                    type: string
+                    description: The name of the service that produced the error
+                  requestMethod:
+                    type: string
+                    description: The HTTP method type of the current request
+                  requestUri:
+                    type: string
+                    description: The request URI
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code
+                        key:
+                          type: string
+                          description: The message key
+                        message:
+                          type: string
+                          description: The error message
+                        description:
+                          type: string
+                          description: Optional detailed error message
+                        more_info:
+                          type: string
+                          description: Optional additional information for the message
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end-user
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        field:
+                          type: string
+                          description: Only present on field validation errors, indicates the field in error.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                      required:
+                      - code
+                      - key
+                      - message
+                      - description
+                      - more_info
+                      - category
+                      - level
+                      - parameters
+                      - field
+                      - locale
+                required:
+                - requestId
+                - service
+                - requestMethod
+                - requestUri
+                - errors
+        '429':
+          description: Too Many Requests, the server has reached a limit, the request must be sent again at a later time.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '503':
+          description: Unable to list the libraries in the database as the service is unavailable. Try again later.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: An error response.
+                properties:
+                  requestId:
+                    type: string
+                    description: The current request ID
+                  service:
+                    type: string
+                    description: The name of the service that produced the error
+                  requestMethod:
+                    type: string
+                    description: The HTTP method type of the current request
+                  requestUri:
+                    type: string
+                    description: The request URI
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code
+                        key:
+                          type: string
+                          description: The message key
+                        message:
+                          type: string
+                          description: The error message
+                        description:
+                          type: string
+                          description: Optional detailed error message
+                        more_info:
+                          type: string
+                          description: Optional additional information for the message
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end-user
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        field:
+                          type: string
+                          description: Only present on field validation errors, indicates the field in error.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                      required:
+                      - code
+                      - key
+                      - message
+                      - description
+                      - more_info
+                      - category
+                      - level
+                      - parameters
+                      - field
+                      - locale
+                required:
+                - requestId
+                - service
+                - requestMethod
+                - requestUri
+                - errors
+        default:
+          description: Unexpected error.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: An error response.
+                properties:
+                  requestId:
+                    type: string
+                    description: The current request ID
+                  service:
+                    type: string
+                    description: The name of the service that produced the error
+                  requestMethod:
+                    type: string
+                    description: The HTTP method type of the current request
+                  requestUri:
+                    type: string
+                    description: The request URI
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code
+                        key:
+                          type: string
+                          description: The message key
+                        message:
+                          type: string
+                          description: The error message
+                        description:
+                          type: string
+                          description: Optional detailed error message
+                        more_info:
+                          type: string
+                          description: Optional additional information for the message
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end-user
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        field:
+                          type: string
+                          description: Only present on field validation errors, indicates the field in error.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                      required:
+                      - code
+                      - key
+                      - message
+                      - description
+                      - more_info
+                      - category
+                      - level
+                      - parameters
+                      - field
+                      - locale
+                required:
+                - requestId
+                - service
+                - requestMethod
+                - requestUri
+                - errors
+      x-ibm-dx-security-user-roles:
+      - admin
+      - manager
+      - editor
+      - viewer
+    post:
+      summary: Create a new library
+      description: 'Use this endpoint to create a new library.<br />User roles: admin, manager'
+      parameters:
+      - name: ignoreUsers
+        in: query
+        required: false
+        description: Set to true to create a library with no owners or contributors, used for importing to and from other subscriptions with different sets of users. False by default.
+        schema:
+          type: boolean
+      tags:
+      - Authoring library
+      responses:
+        '201':
+          description: Indicates successful creation of the library.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    description: The name of the library.
+                    example: Sample Library
+                  description:
+                    type: string
+                    description: The description of the library.
+                    example: An example description of the sample library.
+                  access:
+                    type: string
+                    description: The access level of the library.
+                    enum:
+                    - public
+                    - private
+                    - protected
+                    example: private
+                  owners:
+                    type: array
+                    description: A list of owners that are able to approve items inside libraries when managed approvals is on.
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          description: The ID of the user that has owner access.
+                          example: e98c185a-cafb-4c32-ad94-dd4ffaa28a7e
+                  contributors:
+                    type: array
+                    description: A list of contributors that are able to contribute to the library when it is not public.
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          description: The ID of the user that has contributor access.
+                          example: e98c185a-cafb-4c32-ad94-dd4ffaa28a7e
+                  tags:
+                    type: array
+                    description: The tags describing the library.
+                    items:
+                      type: string
+                    uniqueItems: true
+                    example:
+                    - news
+                    - movies
+                  isSystem:
+                    type: boolean
+                    description: Indicates whether this item is a 'system item' or not. 'System item' means that this is an item managed internally by Acoustic.
+                    default: false
+                required:
+                - name
+        '429':
+          description: Too Many Requests, the server has reached a limit, the request must be sent again at a later time.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        default:
+          description: Unexpected error.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: An error response.
+                properties:
+                  requestId:
+                    type: string
+                    description: The current request ID
+                  service:
+                    type: string
+                    description: The name of the service that produced the error
+                  requestMethod:
+                    type: string
+                    description: The HTTP method type of the current request
+                  requestUri:
+                    type: string
+                    description: The request URI
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code
+                        key:
+                          type: string
+                          description: The message key
+                        message:
+                          type: string
+                          description: The error message
+                        description:
+                          type: string
+                          description: Optional detailed error message
+                        more_info:
+                          type: string
+                          description: Optional additional information for the message
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end-user
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        field:
+                          type: string
+                          description: Only present on field validation errors, indicates the field in error.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                      required:
+                      - code
+                      - key
+                      - message
+                      - description
+                      - more_info
+                      - category
+                      - level
+                      - parameters
+                      - field
+                      - locale
+                required:
+                - requestId
+                - service
+                - requestMethod
+                - requestUri
+                - errors
+      x-ibm-dx-security-user-roles:
+      - admin
+      - manager
+  /authoring/v1/libraries/views/by-modified:
+    get:
+      summary: Retrieve all libraries modified within the specified date.
+      description: 'Use the /libraries/views/by-modified endpoint to retrieve all libraries that were modified within the date range specified.<br />User roles: admin, manager, editor, viewer'
+      parameters:
+      - name: start
+        in: query
+        required: false
+        description: 'Provide the date and time of when the last modifications were made to the libraries that you want returned. The libraries that are modified on or after this date and time are returned. The date value must be in the ISO 8601 format YYYY-MM-DD T hh:mm:ss:sssZ. Note: when reversing the order you do not switch start and end.'
+        schema:
+          type: string
+          format: date-time
+      - name: end
+        in: query
+        required: false
+        description: 'Provide the date and time of when the last modifications were made to the libraries that you want returned. The libraries that are modified on or before this date and time are returned. The date value must be in the ISO 8601 format YYYY-MM-DD T hh:mm:ss:sssZ. Note: when reversing the order you do not switch start and end.'
+        schema:
+          type: string
+          format: date-time
+      - name: offset
+        in: query
+        description: Use the offset parameter to specify the number of libraries to skip from the beginning of the list and return the rest.
+        required: false
+        schema:
+          type: integer
+          default: 0
+      - name: limit
+        in: query
+        description: Set the limit for the maximum number of libraries to return in a single result.
+        required: false
+        schema:
+          type: integer
+          default: 50
+      - name: order
+        in: query
+        description: Specify whether you want the libraries to be returned in ascending or descending order. Libraries are returned in descending order by default.
+        required: false
+        schema:
+          type: string
+          enum:
+          - descending
+          - ascending
+          default: descending
+      - name: fields
+        in: query
+        description: Only the library fields that are specified here are returned for each result. Any library field is a valid value and these can be specified in a comma-separated list. For example, to list the library fields name and ID, provide the value ID, and name. All library fields are returned by default.
+        required: false
+        allowEmptyValue: true
+        style: form
+        explode: false
+        schema:
+          type: array
+          items:
+            type: string
+      tags:
+      - Authoring library
+      responses:
+        '200':
+          description: Successfully lists a paged result view of all libraries that were modified within the date range specified.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  limit:
+                    type: integer
+                    description: The page size.
+                    example: 50
+                  offset:
+                    type: integer
+                    description: The number of libraries to skip from the beginning of the list.
+                    example: 0
+                  href:
+                    type: string
+                    description: A link to the current page.
+                    example: /authoring/v1/libraries?offset=50&limit=50
+                  next:
+                    type: string
+                    description: A link to the next page. Only shown if a next page exists.
+                    example: /authoring/v1/libraries?offset=100&limit=50
+                  previous:
+                    type: string
+                    description: A link to the previous page. Only shown if a previous page exists.
+                    example: /authoring/v1/libraries?offset=0&limit=50
+                  items:
+                    type: array
+                    items:
+                      type: object
+                      description: A library representation.
+                      properties:
+                        id:
+                          type: string
+                          description: The ID of the library.
+                          example: 918e7c31-a662-487b-9a71-5b8665211d5a
+                        rev:
+                          type: string
+                          description: The revision of the library.
+                          readOnly: true
+                          example: 2-c839bbb8844549c2e298275c4b2adcb8
+                        name:
+                          type: string
+                          description: The name of the library.
+                          example: Sample Library
+                        description:
+                          type: string
+                          description: The description of the library.
+                          example: An example description of the sample library.
+                        creatorId:
+                          type: string
+                          readOnly: true
+                          description: The ID of the user that created the library.
+                          example: e98c185a-cafb-4c32-ad94-dd4ffaa28a7e
+                        created:
+                          type: string
+                          format: date-time
+                          readOnly: true
+                          description: The date and time the library was created.
+                        creator:
+                          type: string
+                          readOnly: true
+                          description: The name of the user who originally created the library.
+                        lastModifierId:
+                          type: string
+                          readOnly: true
+                          description: The ID of the user that last modified the library.
+                          example: e98c185a-cafb-4c32-ad94-dd4ffaa28a7e
+                        lastModified:
+                          type: string
+                          format: date-time
+                          readOnly: true
+                          description: The date and time the library was last modified.
+                        lastModifier:
+                          type: string
+                          readOnly: true
+                          description: The name of the user who last modified the library.
+                        systemModified:
+                          type: string
+                          format: date-time
+                          readOnly: true
+                          description: The date and time the library was last modified by the system.
+                        isSystem:
+                          type: boolean
+                          description: Indicates whether this item is a 'system item' or not. 'System item' means that this is an item managed internally by Acoustic.
+                          default: false
+                        access:
+                          type: string
+                          description: The access level of the library.
+                          enum:
+                          - public
+                          - private
+                          - protected
+                          example: private
+                        owners:
+                          type: array
+                          description: A list of owners that are able to approve items inside libraries when managed approvals is on.
+                          items:
+                            type: object
+                            properties:
+                              id:
+                                type: string
+                                description: The ID of the user that has owner access.
+                                example: e98c185a-cafb-4c32-ad94-dd4ffaa28a7e
+                              displayName:
+                                type: string
+                                readOnly: true
+                                description: The name of the user that has owner access.
+                        contributors:
+                          type: array
+                          description: A list of contributors that are able to contribute to the library when it is not public.
+                          items:
+                            type: object
+                            properties:
+                              id:
+                                type: string
+                                description: The ID of the user that has contributor access.
+                                example: e98c185a-cafb-4c32-ad94-dd4ffaa28a7e
+                              displayName:
+                                type: string
+                                readOnly: true
+                                description: The name of the user that has contributor access.
+                        tags:
+                          type: array
+                          description: The tags describing the library.
+                          items:
+                            type: string
+                          uniqueItems: true
+                          example:
+                          - news
+                          - movies
+                      required:
+                      - id
+                      - name
+                      - rev
+        '401':
+          description: You do not have authorization to retrieve the libraries from the database.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: An error response.
+                properties:
+                  requestId:
+                    type: string
+                    description: The current request ID
+                  service:
+                    type: string
+                    description: The name of the service that produced the error
+                  requestMethod:
+                    type: string
+                    description: The HTTP method type of the current request
+                  requestUri:
+                    type: string
+                    description: The request URI
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code
+                        key:
+                          type: string
+                          description: The message key
+                        message:
+                          type: string
+                          description: The error message
+                        description:
+                          type: string
+                          description: Optional detailed error message
+                        more_info:
+                          type: string
+                          description: Optional additional information for the message
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end-user
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        field:
+                          type: string
+                          description: Only present on field validation errors, indicates the field in error.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                      required:
+                      - code
+                      - key
+                      - message
+                      - description
+                      - more_info
+                      - category
+                      - level
+                      - parameters
+                      - field
+                      - locale
+                required:
+                - requestId
+                - service
+                - requestMethod
+                - requestUri
+                - errors
+        '429':
+          description: Too Many Requests, the server has reached a limit, the request must be sent again at a later time.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '503':
+          description: Unable to list the libraries in the database as the service is unavailable. Try again later.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: An error response.
+                properties:
+                  requestId:
+                    type: string
+                    description: The current request ID
+                  service:
+                    type: string
+                    description: The name of the service that produced the error
+                  requestMethod:
+                    type: string
+                    description: The HTTP method type of the current request
+                  requestUri:
+                    type: string
+                    description: The request URI
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code
+                        key:
+                          type: string
+                          description: The message key
+                        message:
+                          type: string
+                          description: The error message
+                        description:
+                          type: string
+                          description: Optional detailed error message
+                        more_info:
+                          type: string
+                          description: Optional additional information for the message
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end-user
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        field:
+                          type: string
+                          description: Only present on field validation errors, indicates the field in error.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                      required:
+                      - code
+                      - key
+                      - message
+                      - description
+                      - more_info
+                      - category
+                      - level
+                      - parameters
+                      - field
+                      - locale
+                required:
+                - requestId
+                - service
+                - requestMethod
+                - requestUri
+                - errors
+        default:
+          description: Unexpected error.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: An error response.
+                properties:
+                  requestId:
+                    type: string
+                    description: The current request ID
+                  service:
+                    type: string
+                    description: The name of the service that produced the error
+                  requestMethod:
+                    type: string
+                    description: The HTTP method type of the current request
+                  requestUri:
+                    type: string
+                    description: The request URI
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code
+                        key:
+                          type: string
+                          description: The message key
+                        message:
+                          type: string
+                          description: The error message
+                        description:
+                          type: string
+                          description: Optional detailed error message
+                        more_info:
+                          type: string
+                          description: Optional additional information for the message
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end-user
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        field:
+                          type: string
+                          description: Only present on field validation errors, indicates the field in error.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                      required:
+                      - code
+                      - key
+                      - message
+                      - description
+                      - more_info
+                      - category
+                      - level
+                      - parameters
+                      - field
+                      - locale
+                required:
+                - requestId
+                - service
+                - requestMethod
+                - requestUri
+                - errors
+      x-ibm-dx-security-user-roles:
+      - admin
+      - manager
+      - editor
+      - viewer
+  /authoring/v1/libraries/count:
+    get:
+      summary: Retrieve the total number of libraries in the database.
+      tags:
+      - Authoring library
+      responses:
+        '200':
+          description: Successfully returns the count of the total number of libraries in the database.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  count:
+                    type: integer
+                example:
+                  count: 348
+                required:
+                - count
+        '429':
+          description: Too Many Requests, the server has reached a limit, the request must be sent again at a later time.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        default:
+          description: Unexpected error.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: An error response.
+                properties:
+                  requestId:
+                    type: string
+                    description: The current request ID
+                  service:
+                    type: string
+                    description: The name of the service that produced the error
+                  requestMethod:
+                    type: string
+                    description: The HTTP method type of the current request
+                  requestUri:
+                    type: string
+                    description: The request URI
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code
+                        key:
+                          type: string
+                          description: The message key
+                        message:
+                          type: string
+                          description: The error message
+                        description:
+                          type: string
+                          description: Optional detailed error message
+                        more_info:
+                          type: string
+                          description: Optional additional information for the message
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end-user
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        field:
+                          type: string
+                          description: Only present on field validation errors, indicates the field in error.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                      required:
+                      - code
+                      - key
+                      - message
+                      - description
+                      - more_info
+                      - category
+                      - level
+                      - parameters
+                      - field
+                      - locale
+                required:
+                - requestId
+                - service
+                - requestMethod
+                - requestUri
+                - errors
+      x-ibm-dx-security-user-roles:
+      - admin
+      - manager
+      - editor
+      - viewer
+      description: '<br />User roles: admin, manager, editor, viewer'
+components:
+  schemas:
+    ErrorResponse:
+      description: This JSON record represents an error condition.
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            description: This JSON record represents an individual error or warning contained in an error message.
+            type: object
+            properties:
+              code:
+                type: integer
+                description: An error code
+              message:
+                type: string
+                description: A message describing what went wrong.
+              description:
+                type: string
+                description: Further explanation of the error condition and potential next steps to resolve the problem.
+              more_info:
+                type: string
+                description: A URL pointing to a web site that provides more information on the given error condition.
+              level:
+                type: string
+                enum:
+                - ERROR
+                - WARNING
+                description: The severity level of the message. Default is error.
+              parameters:
+                type: object
+                description: Additional properties reflecting the dynamic parts of the error condition.
+              cause:
+                type: object
+                description: This property can be used to transport causing error message records produced by a down stream service calls.
+              locale:
+                type: string
+                description: This property represents the locale of the text contained in properties 'message', and 'description'. This property is mandatory if message and description contain translated text.
+            required:
+            - code
+            - message
+        requestId:
+          type: string
+          description: The ID of the failing request.
+        service:
+          type: string
+          description: The name of the service serving the error message.
+      required:
+      - errors
+      - requestId

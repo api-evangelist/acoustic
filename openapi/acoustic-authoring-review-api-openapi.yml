@@ -1,0 +1,3090 @@
+openapi: 3.2.0
+info:
+  title: Acoustic Authoring review API
+  version: 1.0.142
+  x-ibm-name: ibm-watson-content-hub-api
+  description: 'Operations tagged Authoring review across 2 of this provider''s published API definitions: acoustic-content-openapi-original.json, acoustic-content-swagger2-original.yaml. Each path carries the servers of the definition it was published in.'
+tags:
+- name: Authoring review
+  description: Use the Content Review Rest APIs to review assets and content. Use reviews to receive feedback from other members of your team. You can start, update, and complete the reviews that are set up. You can approve the content and assets under review.
+paths:
+  /authoring/v1/review:
+    post:
+      summary: Start a review.
+      description: 'Use the /review endpoint to start a review. Currently, only Assets and Contents can be reviewed.
+
+        This endpoint updates the status of the items in bulk. Items with the updated status are added in the review model. Check whether the items were successfully added to the review model from the items field in the returned API representation of review model. You can identify the items that failed to update or invalid items by checking the item IDs that are listed in the response header.
+
+        <br />User roles: admin, manager, editor'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: The name of the review.
+                  example: Sample Review
+                targetDate:
+                  type: string
+                  format: date-time
+                  description: Optional. Set a target date for when the review is due and must end.
+                  example: '2018-01-22T03:00:20.945Z'
+                approvers:
+                  type: array
+                  description: Approvers' user ID for the review.
+                  items:
+                    title: User
+                    type: object
+                    description: A user object with user ID.
+                    properties:
+                      id:
+                        type: string
+                        example: 45341daf-6b42-40c9-8aea-e9e24bf83b0a
+                  uniqueItems: true
+                items:
+                  type: array
+                  description: Provide the ID of the items that you want to submit for review. The unique ID (uid) is the items classification and the ID combined to create an ID that is unique across all items in Content.
+                  items:
+                    title: Unique document ID
+                    type: object
+                    description: The unique document ID is the items classification and the ID combined to create an ID that is unique across all content hub items.
+                    properties:
+                      id:
+                        type: string
+                        example: a9e1e857-4eb3-4994-9214-3ed739a9987b
+                      classification:
+                        enum:
+                        - asset
+                        - content
+                        example: content
+                        description: The classification of the item.
+                  uniqueItems: true
+              required:
+              - name
+        description: Provide the review item fields such as name, targetDate, and items. The name field is required.
+        required: true
+      tags:
+      - Authoring review
+      responses:
+        '201':
+          description: Successfully created a review.
+          headers:
+            x-ibm-dx-failures:
+              description: This header contains the IDs of the failed items when creating a review.
+              schema:
+                type: array
+                items:
+                  type: string
+              style: simple
+          content:
+            application/json:
+              schema:
+                title: Review Schema
+                type: object
+                properties:
+                  id:
+                    type: string
+                    description: The ID of the review.
+                    example: 0d36aaf9-ddb3-4f3c-8582-5a0cea2c48b4
+                  rev:
+                    type: string
+                    description: The current revision of the review.
+                    example: 1-b79b6fe8de3e2b63c45895f733482774
+                  classification:
+                    type: string
+                    description: The review's classification.
+                    example: review
+                    readOnly: true
+                  name:
+                    type: string
+                    description: The name of the review.
+                    example: Sample Review
+                  targetDate:
+                    type: string
+                    format: date-time
+                    description: Optional. Set a target date for when the review is due and must end.
+                    example: '2018-01-22T03:00:20.945Z'
+                  status:
+                    type: string
+                    readOnly: true
+                    description: The status of a review. The initial status of a review is active, changed to complete when it is ended.
+                    enum:
+                    - active
+                    - complete
+                  approvalStatus:
+                    type: string
+                    readOnly: true
+                    description: The approval status of a review. The initial status of a review is not-approved, changed to approved when all items has been approved.
+                    enum:
+                    - approved
+                    - not-approved
+                  completed:
+                    type: string
+                    format: date-time
+                    description: The completed date of this review in ISO 8601 with the format YYYY-MM-DDTHH:mm:ss.sssZ.
+                    example: '2018-01-22T03:00:20.945Z'
+                  approvers:
+                    type: array
+                    description: Approvers' user ID for the review.
+                    items:
+                      title: User
+                      type: object
+                      description: A user object with user ID.
+                      properties:
+                        id:
+                          type: string
+                          example: 45341daf-6b42-40c9-8aea-e9e24bf83b0a
+                    uniqueItems: true
+                  approvals:
+                    type: array
+                    description: Approvals for a review.
+                    readOnly: true
+                    items:
+                      title: Approval Schema
+                      type: object
+                      properties:
+                        user:
+                          title: User
+                          type: object
+                          description: A user object with user ID.
+                          properties:
+                            id:
+                              type: string
+                              example: 45341daf-6b42-40c9-8aea-e9e24bf83b0a
+                        date:
+                          type: string
+                          format: date-time
+                          readOnly: true
+                          description: The approved date in ISO 8601 with the format YYYY-MM-DDTHH:mm:ss.sssZ.
+                          example: '2018-01-22T03:00:20.945Z'
+                        items:
+                          type: array
+                          description: The ID of the items that been approved in a approval.
+                          items:
+                            title: Unique document ID
+                            type: object
+                            description: The unique document ID is the items classification and the ID combined to create an ID that is unique across all content hub items.
+                            properties:
+                              id:
+                                type: string
+                                example: a9e1e857-4eb3-4994-9214-3ed739a9987b
+                              classification:
+                                enum:
+                                - asset
+                                - content
+                                example: content
+                                description: The classification of the item.
+                          readOnly: true
+                  rejections:
+                    type: array
+                    description: Rejections for a review.
+                    readOnly: true
+                    items:
+                      title: Rejection Schema
+                      type: object
+                      properties:
+                        user:
+                          title: User
+                          type: object
+                          description: A user object with user ID.
+                          properties:
+                            id:
+                              type: string
+                              example: 45341daf-6b42-40c9-8aea-e9e24bf83b0a
+                        date:
+                          type: string
+                          format: date-time
+                          readOnly: true
+                          description: The approved date in ISO 8601 with the format YYYY-MM-DDTHH:mm:ss.sssZ.
+                          example: '2018-01-22T03:00:20.945Z'
+                        items:
+                          type: array
+                          description: The ID of the items that been rejected in a rejection.
+                          items:
+                            title: Unique document ID
+                            type: object
+                            description: The unique document ID is the items classification and the ID combined to create an ID that is unique across all content hub items.
+                            properties:
+                              id:
+                                type: string
+                                example: a9e1e857-4eb3-4994-9214-3ed739a9987b
+                              classification:
+                                enum:
+                                - asset
+                                - content
+                                example: content
+                                description: The classification of the item.
+                          readOnly: true
+                  items:
+                    title: Unique ID list
+                    type: array
+                    description: Provide the ID of the items that you want to submit for review. The unique ID (uid) is the items classification and the ID combined to create an ID that is unique across all content hub items.
+                    items:
+                      title: Unique document ID
+                      type: object
+                      description: The unique document ID is the items classification and the ID combined to create an ID that is unique across all content hub items.
+                      properties:
+                        id:
+                          type: string
+                          example: a9e1e857-4eb3-4994-9214-3ed739a9987b
+                        classification:
+                          enum:
+                          - asset
+                          - content
+                          example: content
+                          description: The classification of the item.
+                    uniqueItems: true
+                  lastModified:
+                    type: string
+                    format: date-time
+                    readOnly: true
+                    description: The last modified date of this review in ISO 8601 with the format YYYY-MM-DDTHH:mm:ss.sssZ.
+                    example: '2018-01-22T03:00:20.945Z'
+                  lastModifierId:
+                    type: string
+                    readOnly: true
+                    description: The ID of the user that last modified the review.
+                    example: 63b800fa-51a7-4602-8cbe-ab3b9cee28b9
+                  created:
+                    type: string
+                    format: date-time
+                    readOnly: true
+                    description: The created date of this review in ISO 8601 with the format YYYY-MM-DDTHH:mm:ss.sssZ.
+                    example: '2018-01-22T03:00:20.945Z'
+                  creatorId:
+                    type: string
+                    description: The ID of the creator of the review.
+                    readOnly: true
+                    example: 8c622bbb-5f5b-45d4-89e1-fce1c054138f
+                required:
+                - id
+                - rev
+                - name
+        '400':
+          description: The body parameter is empty or has an invalid input. Provide valid input values to create a review.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: An error response.
+                properties:
+                  requestId:
+                    type: string
+                    description: The current request ID
+                    example: ee74a16b-fe23-adee-314f-7ae54b7b07a3
+                  service:
+                    type: string
+                    description: The name of the service that produced the error
+                    example: prod-authoring-review
+                  requestMethod:
+                    type: string
+                    description: The HTTP method type of the current request
+                    example: GET
+                  requestUri:
+                    type: string
+                    description: The request URI
+                    example: /authoring/v1/review
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code
+                          example: 1022
+                        key:
+                          type: string
+                          description: The message key
+                          example: error.generic.invalid.user.id.1022
+                        message:
+                          type: string
+                          description: The error message
+                          example: The id requested does not exist.
+                        description:
+                          type: string
+                          description: Optional detailed error message
+                          example: Please check the ID you provided is correct before retrying the request.
+                        more_info:
+                          type: string
+                          description: Optional additional information for the message
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end user
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        field:
+                          type: string
+                          description: Only present on field validation errors, indicates the field in error.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                          example: en
+                      required:
+                      - code
+                      - key
+                      - message
+                      - description
+                      - more_info
+                      - category
+                      - level
+                      - parameters
+                      - field
+                      - locale
+                required:
+                - requestId
+                - service
+                - requestMethod
+                - requestUri
+                - errors
+        '429':
+          description: Too Many Requests, the server has reached a limit, the request must be sent again at a later time.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '503':
+          description: Unable to create the review as the service is unavailable. Try again later.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: An error response.
+                properties:
+                  requestId:
+                    type: string
+                    description: The current request ID
+                    example: ee74a16b-fe23-adee-314f-7ae54b7b07a3
+                  service:
+                    type: string
+                    description: The name of the service that produced the error
+                    example: prod-authoring-review
+                  requestMethod:
+                    type: string
+                    description: The HTTP method type of the current request
+                    example: GET
+                  requestUri:
+                    type: string
+                    description: The request URI
+                    example: /authoring/v1/review
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code
+                          example: 1022
+                        key:
+                          type: string
+                          description: The message key
+                          example: error.generic.invalid.user.id.1022
+                        message:
+                          type: string
+                          description: The error message
+                          example: The id requested does not exist.
+                        description:
+                          type: string
+                          description: Optional detailed error message
+                          example: Please check the ID you provided is correct before retrying the request.
+                        more_info:
+                          type: string
+                          description: Optional additional information for the message
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end user
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        field:
+                          type: string
+                          description: Only present on field validation errors, indicates the field in error.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                          example: en
+                      required:
+                      - code
+                      - key
+                      - message
+                      - description
+                      - more_info
+                      - category
+                      - level
+                      - parameters
+                      - field
+                      - locale
+                required:
+                - requestId
+                - service
+                - requestMethod
+                - requestUri
+                - errors
+        default:
+          description: Unexpected error.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: An error response.
+                properties:
+                  requestId:
+                    type: string
+                    description: The current request ID
+                    example: ee74a16b-fe23-adee-314f-7ae54b7b07a3
+                  service:
+                    type: string
+                    description: The name of the service that produced the error
+                    example: prod-authoring-review
+                  requestMethod:
+                    type: string
+                    description: The HTTP method type of the current request
+                    example: GET
+                  requestUri:
+                    type: string
+                    description: The request URI
+                    example: /authoring/v1/review
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code
+                          example: 1022
+                        key:
+                          type: string
+                          description: The message key
+                          example: error.generic.invalid.user.id.1022
+                        message:
+                          type: string
+                          description: The error message
+                          example: The id requested does not exist.
+                        description:
+                          type: string
+                          description: Optional detailed error message
+                          example: Please check the ID you provided is correct before retrying the request.
+                        more_info:
+                          type: string
+                          description: Optional additional information for the message
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end user
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        field:
+                          type: string
+                          description: Only present on field validation errors, indicates the field in error.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                          example: en
+                      required:
+                      - code
+                      - key
+                      - message
+                      - description
+                      - more_info
+                      - category
+                      - level
+                      - parameters
+                      - field
+                      - locale
+                required:
+                - requestId
+                - service
+                - requestMethod
+                - requestUri
+                - errors
+      x-ibm-dx-security-user-roles:
+      - admin
+      - manager
+      - editor
+  /authoring/v1/review/{id}:
+    get:
+      summary: Retrieve an existing review.
+      description: 'Use the /review/{id} endpoint to retrieve an existing review that matches the ID that is specified from the database. This endpoint returns the API representation of the requested review.
+
+        <br />User roles: admin, manager, editor, viewer'
+      parameters:
+      - name: id
+        in: path
+        description: Provide the ID of the review that you want to retrieve.
+        required: true
+        schema:
+          type: string
+      tags:
+      - Authoring review
+      responses:
+        '200':
+          description: Successfully retrieved the API representation for the existing review that matches the ID that you provided.
+          content:
+            application/json:
+              schema:
+                title: Review Schema
+                type: object
+                properties:
+                  id:
+                    type: string
+                    description: The ID of the review.
+                    example: 0d36aaf9-ddb3-4f3c-8582-5a0cea2c48b4
+                  rev:
+                    type: string
+                    description: The current revision of the review.
+                    example: 1-b79b6fe8de3e2b63c45895f733482774
+                  classification:
+                    type: string
+                    description: The review's classification.
+                    example: review
+                    readOnly: true
+                  name:
+                    type: string
+                    description: The name of the review.
+                    example: Sample Review
+                  targetDate:
+                    type: string
+                    format: date-time
+                    description: Optional. Set a target date for when the review is due and must end.
+                    example: '2018-01-22T03:00:20.945Z'
+                  status:
+                    type: string
+                    readOnly: true
+                    description: The status of a review. The initial status of a review is active, changed to complete when it is ended.
+                    enum:
+                    - active
+                    - complete
+                  approvalStatus:
+                    type: string
+                    readOnly: true
+                    description: The approval status of a review. The initial status of a review is not-approved, changed to approved when all items has been approved.
+                    enum:
+                    - approved
+                    - not-approved
+                  completed:
+                    type: string
+                    format: date-time
+                    description: The completed date of this review in ISO 8601 with the format YYYY-MM-DDTHH:mm:ss.sssZ.
+                    example: '2018-01-22T03:00:20.945Z'
+                  approvers:
+                    type: array
+                    description: Approvers' user ID for the review.
+                    items:
+                      title: User
+                      type: object
+                      description: A user object with user ID.
+                      properties:
+                        id:
+                          type: string
+                          example: 45341daf-6b42-40c9-8aea-e9e24bf83b0a
+                    uniqueItems: true
+                  approvals:
+                    type: array
+                    description: Approvals for a review.
+                    readOnly: true
+                    items:
+                      title: Approval Schema
+                      type: object
+                      properties:
+                        user:
+                          title: User
+                          type: object
+                          description: A user object with user ID.
+                          properties:
+                            id:
+                              type: string
+                              example: 45341daf-6b42-40c9-8aea-e9e24bf83b0a
+                        date:
+                          type: string
+                          format: date-time
+                          readOnly: true
+                          description: The approved date in ISO 8601 with the format YYYY-MM-DDTHH:mm:ss.sssZ.
+                          example: '2018-01-22T03:00:20.945Z'
+                        items:
+                          type: array
+                          description: The ID of the items that been approved in a approval.
+                          items:
+                            title: Unique document ID
+                            type: object
+                            description: The unique document ID is the items classification and the ID combined to create an ID that is unique across all content hub items.
+                            properties:
+                              id:
+                                type: string
+                                example: a9e1e857-4eb3-4994-9214-3ed739a9987b
+                              classification:
+                                enum:
+                                - asset
+                                - content
+                                example: content
+                                description: The classification of the item.
+                          readOnly: true
+                  rejections:
+                    type: array
+                    description: Rejections for a review.
+                    readOnly: true
+                    items:
+                      title: Rejection Schema
+                      type: object
+                      properties:
+                        user:
+                          title: User
+                          type: object
+                          description: A user object with user ID.
+                          properties:
+                            id:
+                              type: string
+                              example: 45341daf-6b42-40c9-8aea-e9e24bf83b0a
+                        date:
+                          type: string
+                          format: date-time
+                          readOnly: true
+                          description: The approved date in ISO 8601 with the format YYYY-MM-DDTHH:mm:ss.sssZ.
+                          example: '2018-01-22T03:00:20.945Z'
+                        items:
+                          type: array
+                          description: The ID of the items that been rejected in a rejection.
+                          items:
+                            title: Unique document ID
+                            type: object
+                            description: The unique document ID is the items classification and the ID combined to create an ID that is unique across all content hub items.
+                            properties:
+                              id:
+                                type: string
+                                example: a9e1e857-4eb3-4994-9214-3ed739a9987b
+                              classification:
+                                enum:
+                                - asset
+                                - content
+                                example: content
+                                description: The classification of the item.
+                          readOnly: true
+                  items:
+                    title: Unique ID list
+                    type: array
+                    description: Provide the ID of the items that you want to submit for review. The unique ID (uid) is the items classification and the ID combined to create an ID that is unique across all content hub items.
+                    items:
+                      title: Unique document ID
+                      type: object
+                      description: The unique document ID is the items classification and the ID combined to create an ID that is unique across all content hub items.
+                      properties:
+                        id:
+                          type: string
+                          example: a9e1e857-4eb3-4994-9214-3ed739a9987b
+                        classification:
+                          enum:
+                          - asset
+                          - content
+                          example: content
+                          description: The classification of the item.
+                    uniqueItems: true
+                  lastModified:
+                    type: string
+                    format: date-time
+                    readOnly: true
+                    description: The last modified date of this review in ISO 8601 with the format YYYY-MM-DDTHH:mm:ss.sssZ.
+                    example: '2018-01-22T03:00:20.945Z'
+                  lastModifierId:
+                    type: string
+                    readOnly: true
+                    description: The ID of the user that last modified the review.
+                    example: 63b800fa-51a7-4602-8cbe-ab3b9cee28b9
+                  created:
+                    type: string
+                    format: date-time
+                    readOnly: true
+                    description: The created date of this review in ISO 8601 with the format YYYY-MM-DDTHH:mm:ss.sssZ.
+                    example: '2018-01-22T03:00:20.945Z'
+                  creatorId:
+                    type: string
+                    description: The ID of the creator of the review.
+                    readOnly: true
+                    example: 8c622bbb-5f5b-45d4-89e1-fce1c054138f
+                required:
+                - id
+                - rev
+                - name
+        '404':
+          description: The review with ID {id} was not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: An error response.
+                properties:
+                  requestId:
+                    type: string
+                    description: The current request ID
+                    example: ee74a16b-fe23-adee-314f-7ae54b7b07a3
+                  service:
+                    type: string
+                    description: The name of the service that produced the error
+                    example: prod-authoring-review
+                  requestMethod:
+                    type: string
+                    description: The HTTP method type of the current request
+                    example: GET
+                  requestUri:
+                    type: string
+                    description: The request URI
+                    example: /authoring/v1/review
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code
+                          example: 1022
+                        key:
+                          type: string
+                          description: The message key
+                          example: error.generic.invalid.user.id.1022
+                        message:
+                          type: string
+                          description: The error message
+                          example: The id requested does not exist.
+                        description:
+                          type: string
+                          description: Optional detailed error message
+                          example: Please check the ID you provided is correct before retrying the request.
+                        more_info:
+                          type: string
+                          description: Optional additional information for the message
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end user
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        field:
+                          type: string
+                          description: Only present on field validation errors, indicates the field in error.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                          example: en
+                      required:
+                      - code
+                      - key
+                      - message
+                      - description
+                      - more_info
+                      - category
+                      - level
+                      - parameters
+                      - field
+                      - locale
+                required:
+                - requestId
+                - service
+                - requestMethod
+                - requestUri
+                - errors
+        '429':
+          description: Too Many Requests, the server has reached a limit, the request must be sent again at a later time.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '503':
+          description: Unable to retrieve the review from the database as the service is unavailable. Try again later.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: An error response.
+                properties:
+                  requestId:
+                    type: string
+                    description: The current request ID
+                    example: ee74a16b-fe23-adee-314f-7ae54b7b07a3
+                  service:
+                    type: string
+                    description: The name of the service that produced the error
+                    example: prod-authoring-review
+                  requestMethod:
+                    type: string
+                    description: The HTTP method type of the current request
+                    example: GET
+                  requestUri:
+                    type: string
+                    description: The request URI
+                    example: /authoring/v1/review
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code
+                          example: 1022
+                        key:
+                          type: string
+                          description: The message key
+                          example: error.generic.invalid.user.id.1022
+                        message:
+                          type: string
+                          description: The error message
+                          example: The id requested does not exist.
+                        description:
+                          type: string
+                          description: Optional detailed error message
+                          example: Please check the ID you provided is correct before retrying the request.
+                        more_info:
+                          type: string
+                          description: Optional additional information for the message
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end user
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        field:
+                          type: string
+                          description: Only present on field validation errors, indicates the field in error.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                          example: en
+                      required:
+                      - code
+                      - key
+                      - message
+                      - description
+                      - more_info
+                      - category
+                      - level
+                      - parameters
+                      - field
+                      - locale
+                required:
+                - requestId
+                - service
+                - requestMethod
+                - requestUri
+                - errors
+        default:
+          description: Unexpected error.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: An error response.
+                properties:
+                  requestId:
+                    type: string
+                    description: The current request ID
+                    example: ee74a16b-fe23-adee-314f-7ae54b7b07a3
+                  service:
+                    type: string
+                    description: The name of the service that produced the error
+                    example: prod-authoring-review
+                  requestMethod:
+                    type: string
+                    description: The HTTP method type of the current request
+                    example: GET
+                  requestUri:
+                    type: string
+                    description: The request URI
+                    example: /authoring/v1/review
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code
+                          example: 1022
+                        key:
+                          type: string
+                          description: The message key
+                          example: error.generic.invalid.user.id.1022
+                        message:
+                          type: string
+                          description: The error message
+                          example: The id requested does not exist.
+                        description:
+                          type: string
+                          description: Optional detailed error message
+                          example: Please check the ID you provided is correct before retrying the request.
+                        more_info:
+                          type: string
+                          description: Optional additional information for the message
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end user
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        field:
+                          type: string
+                          description: Only present on field validation errors, indicates the field in error.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                          example: en
+                      required:
+                      - code
+                      - key
+                      - message
+                      - description
+                      - more_info
+                      - category
+                      - level
+                      - parameters
+                      - field
+                      - locale
+                required:
+                - requestId
+                - service
+                - requestMethod
+                - requestUri
+                - errors
+      x-ibm-dx-security-user-roles:
+      - admin
+      - manager
+      - editor
+      - viewer
+    put:
+      summary: Update an existing review.
+      description: 'Use the /review/{id} end point to update an existing review that matches the ID that is specified.
+
+        <br />User roles: admin, manager, editor'
+      parameters:
+      - name: id
+        in: path
+        description: Provide the ID of the review that you want to update.
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                rev:
+                  type: string
+                  description: The current revision of the document.
+                  example: 1-b79b6fe8de3e2b63c45895f733482774
+                name:
+                  type: string
+                  description: The name of the review.
+                  example: Sample Review
+                targetDate:
+                  type: string
+                  format: date-time
+                  description: Optional. Set a target date for when the review is due and must end.
+                  example: '2018-01-22T03:00:20.945Z'
+                approvers:
+                  type: array
+                  description: Approvers' user ID for the review.
+                  items:
+                    title: User
+                    type: object
+                    description: A user object with user ID.
+                    properties:
+                      id:
+                        type: string
+                        example: 45341daf-6b42-40c9-8aea-e9e24bf83b0a
+                  uniqueItems: true
+              required:
+              - rev
+              - name
+        description: Provide the review item fields such as name, targetDate, and items. The current revision must be provided in order to update the review.
+      tags:
+      - Authoring review
+      responses:
+        '200':
+          description: Successfully updated the review that matches the ID that you provided.
+          content:
+            application/json:
+              schema:
+                title: Review Schema
+                type: object
+                properties:
+                  id:
+                    type: string
+                    description: The ID of the review.
+                    example: 0d36aaf9-ddb3-4f3c-8582-5a0cea2c48b4
+                  rev:
+                    type: string
+                    description: The current revision of the review.
+                    example: 1-b79b6fe8de3e2b63c45895f733482774
+                  classification:
+                    type: string
+                    description: The review's classification.
+                    example: review
+                    readOnly: true
+                  name:
+                    type: string
+                    description: The name of the review.
+                    example: Sample Review
+                  targetDate:
+                    type: string
+                    format: date-time
+                    description: Optional. Set a target date for when the review is due and must end.
+                    example: '2018-01-22T03:00:20.945Z'
+                  status:
+                    type: string
+                    readOnly: true
+                    description: The status of a review. The initial status of a review is active, changed to complete when it is ended.
+                    enum:
+                    - active
+                    - complete
+                  approvalStatus:
+                    type: string
+                    readOnly: true
+                    description: The approval status of a review. The initial status of a review is not-approved, changed to approved when all items has been approved.
+                    enum:
+                    - approved
+                    - not-approved
+                  completed:
+                    type: string
+                    format: date-time
+                    description: The completed date of this review in ISO 8601 with the format YYYY-MM-DDTHH:mm:ss.sssZ.
+                    example: '2018-01-22T03:00:20.945Z'
+                  approvers:
+                    type: array
+                    description: Approvers' user ID for the review.
+                    items:
+                      title: User
+                      type: object
+                      description: A user object with user ID.
+                      properties:
+                        id:
+                          type: string
+                          example: 45341daf-6b42-40c9-8aea-e9e24bf83b0a
+                    uniqueItems: true
+                  approvals:
+                    type: array
+                    description: Approvals for a review.
+                    readOnly: true
+                    items:
+                      title: Approval Schema
+                      type: object
+                      properties:
+                        user:
+                          title: User
+                          type: object
+                          description: A user object with user ID.
+                          properties:
+                            id:
+                              type: string
+                              example: 45341daf-6b42-40c9-8aea-e9e24bf83b0a
+                        date:
+                          type: string
+                          format: date-time
+                          readOnly: true
+                          description: The approved date in ISO 8601 with the format YYYY-MM-DDTHH:mm:ss.sssZ.
+                          example: '2018-01-22T03:00:20.945Z'
+                        items:
+                          type: array
+                          description: The ID of the items that been approved in a approval.
+                          items:
+                            title: Unique document ID
+                            type: object
+                            description: The unique document ID is the items classification and the ID combined to create an ID that is unique across all content hub items.
+                            properties:
+                              id:
+                                type: string
+                                example: a9e1e857-4eb3-4994-9214-3ed739a9987b
+                              classification:
+                                enum:
+                                - asset
+                                - content
+                                example: content
+                                description: The classification of the item.
+                          readOnly: true
+                  rejections:
+                    type: array
+                    description: Rejections for a review.
+                    readOnly: true
+                    items:
+                      title: Rejection Schema
+                      type: object
+                      properties:
+                        user:
+                          title: User
+                          type: object
+                          description: A user object with user ID.
+                          properties:
+                            id:
+                              type: string
+                              example: 45341daf-6b42-40c9-8aea-e9e24bf83b0a
+                        date:
+                          type: string
+                          format: date-time
+                          readOnly: true
+                          description: The approved date in ISO 8601 with the format YYYY-MM-DDTHH:mm:ss.sssZ.
+                          example: '2018-01-22T03:00:20.945Z'
+                        items:
+                          type: array
+                          description: The ID of the items that been rejected in a rejection.
+                          items:
+                            title: Unique document ID
+                            type: object
+                            description: The unique document ID is the items classification and the ID combined to create an ID that is unique across all content hub items.
+                            properties:
+                              id:
+                                type: string
+                                example: a9e1e857-4eb3-4994-9214-3ed739a9987b
+                              classification:
+                                enum:
+                                - asset
+                                - content
+                                example: content
+                                description: The classification of the item.
+                          readOnly: true
+                  items:
+                    title: Unique ID list
+                    type: array
+                    description: Provide the ID of the items that you want to submit for review. The unique ID (uid) is the items classification and the ID combined to create an ID that is unique across all content hub items.
+                    items:
+                      title: Unique document ID
+                      type: object
+                      description: The unique document ID is the items classification and the ID combined to create an ID that is unique across all content hub items.
+                      properties:
+                        id:
+                          type: string
+                          example: a9e1e857-4eb3-4994-9214-3ed739a9987b
+                        classification:
+                          enum:
+                          - asset
+                          - content
+                          example: content
+                          description: The classification of the item.
+                    uniqueItems: true
+                  lastModified:
+                    type: string
+                    format: date-time
+                    readOnly: true
+                    description: The last modified date of this review in ISO 8601 with the format YYYY-MM-DDTHH:mm:ss.sssZ.
+                    example: '2018-01-22T03:00:20.945Z'
+                  lastModifierId:
+                    type: string
+                    readOnly: true
+                    description: The ID of the user that last modified the review.
+                    example: 63b800fa-51a7-4602-8cbe-ab3b9cee28b9
+                  created:
+                    type: string
+                    format: date-time
+                    readOnly: true
+                    description: The created date of this review in ISO 8601 with the format YYYY-MM-DDTHH:mm:ss.sssZ.
+                    example: '2018-01-22T03:00:20.945Z'
+                  creatorId:
+                    type: string
+                    description: The ID of the creator of the review.
+                    readOnly: true
+                    example: 8c622bbb-5f5b-45d4-89e1-fce1c054138f
+                required:
+                - id
+                - rev
+                - name
+        '400':
+          description: The update request is invalid or the request failed validation. Provide valid values and try again.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: An error response.
+                properties:
+                  requestId:
+                    type: string
+                    description: The current request ID
+                    example: ee74a16b-fe23-adee-314f-7ae54b7b07a3
+                  service:
+                    type: string
+                    description: The name of the service that produced the error
+                    example: prod-authoring-review
+                  requestMethod:
+                    type: string
+                    description: The HTTP method type of the current request
+                    example: GET
+                  requestUri:
+                    type: string
+                    description: The request URI
+                    example: /authoring/v1/review
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code
+                          example: 1022
+                        key:
+                          type: string
+                          description: The message key
+                          example: error.generic.invalid.user.id.1022
+                        message:
+                          type: string
+                          description: The error message
+                          example: The id requested does not exist.
+                        description:
+                          type: string
+                          description: Optional detailed error message
+                          example: Please check the ID you provided is correct before retrying the request.
+                        more_info:
+                          type: string
+                          description: Optional additional information for the message
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end user
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        field:
+                          type: string
+                          description: Only present on field validation errors, indicates the field in error.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                          example: en
+                      required:
+                      - code
+                      - key
+                      - message
+                      - description
+                      - more_info
+                      - category
+                      - level
+                      - parameters
+                      - field
+                      - locale
+                required:
+                - requestId
+                - service
+                - requestMethod
+                - requestUri
+                - errors
+        '404':
+          description: The review with ID {id} was not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: An error response.
+                properties:
+                  requestId:
+                    type: string
+                    description: The current request ID
+                    example: ee74a16b-fe23-adee-314f-7ae54b7b07a3
+                  service:
+                    type: string
+                    description: The name of the service that produced the error
+                    example: prod-authoring-review
+                  requestMethod:
+                    type: string
+                    description: The HTTP method type of the current request
+                    example: GET
+                  requestUri:
+                    type: string
+                    description: The request URI
+                    example: /authoring/v1/review
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code
+                          example: 1022
+                        key:
+                          type: string
+                          description: The message key
+                          example: error.generic.invalid.user.id.1022
+                        message:
+                          type: string
+                          description: The error message
+                          example: The id requested does not exist.
+                        description:
+                          type: string
+                          description: Optional detailed error message
+                          example: Please check the ID you provided is correct before retrying the request.
+                        more_info:
+                          type: string
+                          description: Optional additional information for the message
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end user
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        field:
+                          type: string
+                          description: Only present on field validation errors, indicates the field in error.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                          example: en
+                      required:
+                      - code
+                      - key
+                      - message
+                      - description
+                      - more_info
+                      - category
+                      - level
+                      - parameters
+                      - field
+                      - locale
+                required:
+                - requestId
+                - service
+                - requestMethod
+                - requestUri
+                - errors
+        '409':
+          description: Unable to update the review with the ID "{0}" because another user updated the review since it was last retrieved. Retrieve the review again and reapply your changes.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: An error response.
+                properties:
+                  requestId:
+                    type: string
+                    description: The current request ID
+                    example: ee74a16b-fe23-adee-314f-7ae54b7b07a3
+                  service:
+                    type: string
+                    description: The name of the service that produced the error
+                    example: prod-authoring-review
+                  requestMethod:
+                    type: string
+                    description: The HTTP method type of the current request
+                    example: GET
+                  requestUri:
+                    type: string
+                    description: The request URI
+                    example: /authoring/v1/review
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code
+                          example: 1022
+                        key:
+                          type: string
+                          description: The message key
+                          example: error.generic.invalid.user.id.1022
+                        message:
+                          type: string
+                          description: The error message
+                          example: The id requested does not exist.
+                        description:
+                          type: string
+                          description: Optional detailed error message
+                          example: Please check the ID you provided is correct before retrying the request.
+                        more_info:
+                          type: string
+                          description: Optional additional information for the message
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end user
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        field:
+                          type: string
+                          description: Only present on field validation errors, indicates the field in error.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                          example: en
+                      required:
+                      - code
+                      - key
+                      - message
+                      - description
+                      - more_info
+                      - category
+                      - level
+                      - parameters
+                      - field
+                      - locale
+                required:
+                - requestId
+                - service
+                - requestMethod
+                - requestUri
+                - errors
+        '429':
+          description: Too Many Requests, the server has reached a limit, the request must be sent again at a later time.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '503':
+          description: Unable to retrieve the review from the database as the service is unavailable. Try again later.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: An error response.
+                properties:
+                  requestId:
+                    type: string
+                    description: The current request ID
+                    example: ee74a16b-fe23-adee-314f-7ae54b7b07a3
+                  service:
+                    type: string
+                    description: The name of the service that produced the error
+                    example: prod-authoring-review
+                  requestMethod:
+                    type: string
+                    description: The HTTP method type of the current request
+                    example: GET
+                  requestUri:
+                    type: string
+                    description: The request URI
+                    example: /authoring/v1/review
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code
+                          example: 1022
+                        key:
+                          type: string
+                          description: The message key
+                          example: error.generic.invalid.user.id.1022
+                        message:
+                          type: string
+                          description: The error message
+                          example: The id requested does not exist.
+                        description:
+                          type: string
+                          description: Optional detailed error message
+                          example: Please check the ID you provided is correct before retrying the request.
+                        more_info:
+                          type: string
+                          description: Optional additional information for the message
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end user
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        field:
+                          type: string
+                          description: Only present on field validation errors, indicates the field in error.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                          example: en
+                      required:
+                      - code
+                      - key
+                      - message
+                      - description
+                      - more_info
+                      - category
+                      - level
+                      - parameters
+                      - field
+                      - locale
+                required:
+                - requestId
+                - service
+                - requestMethod
+                - requestUri
+                - errors
+        default:
+          description: Unexpected error.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: An error response.
+                properties:
+                  requestId:
+                    type: string
+                    description: The current request ID
+                    example: ee74a16b-fe23-adee-314f-7ae54b7b07a3
+                  service:
+                    type: string
+                    description: The name of the service that produced the error
+                    example: prod-authoring-review
+                  requestMethod:
+                    type: string
+                    description: The HTTP method type of the current request
+                    example: GET
+                  requestUri:
+                    type: string
+                    description: The request URI
+                    example: /authoring/v1/review
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code
+                          example: 1022
+                        key:
+                          type: string
+                          description: The message key
+                          example: error.generic.invalid.user.id.1022
+                        message:
+                          type: string
+                          description: The error message
+                          example: The id requested does not exist.
+                        description:
+                          type: string
+                          description: Optional detailed error message
+                          example: Please check the ID you provided is correct before retrying the request.
+                        more_info:
+                          type: string
+                          description: Optional additional information for the message
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end user
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        field:
+                          type: string
+                          description: Only present on field validation errors, indicates the field in error.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                          example: en
+                      required:
+                      - code
+                      - key
+                      - message
+                      - description
+                      - more_info
+                      - category
+                      - level
+                      - parameters
+                      - field
+                      - locale
+                required:
+                - requestId
+                - service
+                - requestMethod
+                - requestUri
+                - errors
+      x-ibm-dx-security-user-roles:
+      - admin
+      - manager
+      - editor
+    delete:
+      summary: Delete an existing review.
+      description: 'Use the /review/{id} endpoint to delete an existing review in the database.
+
+        <br />User roles: admin, manager, editor'
+      parameters:
+      - name: id
+        in: path
+        description: Provide the ID of the review that you want to delete.
+        required: true
+        schema:
+          type: string
+      tags:
+      - Authoring review
+      responses:
+        '200':
+          description: Successfully deleted the review that matches the ID that you provided.
+        '404':
+          description: The review with ID {id} was not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: An error response.
+                properties:
+                  requestId:
+                    type: string
+                    description: The current request ID
+                    example: ee74a16b-fe23-adee-314f-7ae54b7b07a3
+                  service:
+                    type: string
+                    description: The name of the service that produced the error
+                    example: prod-authoring-review
+                  requestMethod:
+                    type: string
+                    description: The HTTP method type of the current request
+                    example: GET
+                  requestUri:
+                    type: string
+                    description: The request URI
+                    example: /authoring/v1/review
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code
+                          example: 1022
+                        key:
+                          type: string
+                          description: The message key
+                          example: error.generic.invalid.user.id.1022
+                        message:
+                          type: string
+                          description: The error message
+                          example: The id requested does not exist.
+                        description:
+                          type: string
+                          description: Optional detailed error message
+                          example: Please check the ID you provided is correct before retrying the request.
+                        more_info:
+                          type: string
+                          description: Optional additional information for the message
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end user
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        field:
+                          type: string
+                          description: Only present on field validation errors, indicates the field in error.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                          example: en
+                      required:
+                      - code
+                      - key
+                      - message
+                      - description
+                      - more_info
+                      - category
+                      - level
+                      - parameters
+                      - field
+                      - locale
+                required:
+                - requestId
+                - service
+                - requestMethod
+                - requestUri
+                - errors
+        '409':
+          description: Unable to delete the review with the ID "{0}" because another user updated the review since it was last retrieved.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: An error response.
+                properties:
+                  requestId:
+                    type: string
+                    description: The current request ID
+                    example: ee74a16b-fe23-adee-314f-7ae54b7b07a3
+                  service:
+                    type: string
+                    description: The name of the service that produced the error
+                    example: prod-authoring-review
+                  requestMethod:
+                    type: string
+                    description: The HTTP method type of the current request
+                    example: GET
+                  requestUri:
+                    type: string
+                    description: The request URI
+                    example: /authoring/v1/review
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code
+                          example: 1022
+                        key:
+                          type: string
+                          description: The message key
+                          example: error.generic.invalid.user.id.1022
+                        message:
+                          type: string
+                          description: The error message
+                          example: The id requested does not exist.
+                        description:
+                          type: string
+                          description: Optional detailed error message
+                          example: Please check the ID you provided is correct before retrying the request.
+                        more_info:
+                          type: string
+                          description: Optional additional information for the message
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end user
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        field:
+                          type: string
+                          description: Only present on field validation errors, indicates the field in error.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                          example: en
+                      required:
+                      - code
+                      - key
+                      - message
+                      - description
+                      - more_info
+                      - category
+                      - level
+                      - parameters
+                      - field
+                      - locale
+                required:
+                - requestId
+                - service
+                - requestMethod
+                - requestUri
+                - errors
+        '429':
+          description: Too Many Requests, the server has reached a limit, the request must be sent again at a later time.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '503':
+          description: Unable to delete the review in the database as the service is unavailable. Try again later.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: An error response.
+                properties:
+                  requestId:
+                    type: string
+                    description: The current request ID
+                    example: ee74a16b-fe23-adee-314f-7ae54b7b07a3
+                  service:
+                    type: string
+                    description: The name of the service that produced the error
+                    example: prod-authoring-review
+                  requestMethod:
+                    type: string
+                    description: The HTTP method type of the current request
+                    example: GET
+                  requestUri:
+                    type: string
+                    description: The request URI
+                    example: /authoring/v1/review
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code
+                          example: 1022
+                        key:
+                          type: string
+                          description: The message key
+                          example: error.generic.invalid.user.id.1022
+                        message:
+                          type: string
+                          description: The error message
+                          example: The id requested does not exist.
+                        description:
+                          type: string
+                          description: Optional detailed error message
+                          example: Please check the ID you provided is correct before retrying the request.
+                        more_info:
+                          type: string
+                          description: Optional additional information for the message
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end user
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        field:
+                          type: string
+                          description: Only present on field validation errors, indicates the field in error.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                          example: en
+                      required:
+                      - code
+                      - key
+                      - message
+                      - description
+                      - more_info
+                      - category
+                      - level
+                      - parameters
+                      - field
+                      - locale
+                required:
+                - requestId
+                - service
+                - requestMethod
+                - requestUri
+                - errors
+        default:
+          description: Unexpected error.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: An error response.
+                properties:
+                  requestId:
+                    type: string
+                    description: The current request ID
+                    example: ee74a16b-fe23-adee-314f-7ae54b7b07a3
+                  service:
+                    type: string
+                    description: The name of the service that produced the error
+                    example: prod-authoring-review
+                  requestMethod:
+                    type: string
+                    description: The HTTP method type of the current request
+                    example: GET
+                  requestUri:
+                    type: string
+                    description: The request URI
+                    example: /authoring/v1/review
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code
+                          example: 1022
+                        key:
+                          type: string
+                          description: The message key
+                          example: error.generic.invalid.user.id.1022
+                        message:
+                          type: string
+                          description: The error message
+                          example: The id requested does not exist.
+                        description:
+                          type: string
+                          description: Optional detailed error message
+                          example: Please check the ID you provided is correct before retrying the request.
+                        more_info:
+                          type: string
+                          description: Optional additional information for the message
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end user
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        field:
+                          type: string
+                          description: Only present on field validation errors, indicates the field in error.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                          example: en
+                      required:
+                      - code
+                      - key
+                      - message
+                      - description
+                      - more_info
+                      - category
+                      - level
+                      - parameters
+                      - field
+                      - locale
+                required:
+                - requestId
+                - service
+                - requestMethod
+                - requestUri
+                - errors
+      x-ibm-dx-security-user-roles:
+      - admin
+      - manager
+      - editor
+  /authoring/v1/review/{id}/approve:
+    post:
+      summary: Approve items in a review.
+      description: "Use the /review/{id}/approve endpoint to approve items in the specified review. \nThis endpoint approves the items that you specify that were added to the specified review in bulk. For example, if Content A, Content B, and Asset C were added to a review, and you requested approval for Content A and Asset C, then only the items that you requested are approved. Check whether the items were successfully approved from the approvals field in the returned API representation of review model. You can identify the items that failed to approve by checking the item IDs that are listed in the response header. The review is automatically complete when all items that were requested for approval are approved.\n<br />User roles: admin, manager, editor"
+      parameters:
+      - name: id
+        in: path
+        description: Provide the ID of the review that you want to approve.
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ids:
+                  title: Unique ID list
+                  type: array
+                  description: Provide the ID of the items that you want to submit for review. The unique ID (uid) is the items classification and the ID combined to create an ID that is unique across all content hub items.
+                  items:
+                    title: Unique document ID
+                    type: object
+                    description: The unique document ID is the items classification and the ID combined to create an ID that is unique across all content hub items.
+                    properties:
+                      id:
+                        type: string
+                        example: a9e1e857-4eb3-4994-9214-3ed739a9987b
+                      classification:
+                        enum:
+                        - asset
+                        - content
+                        example: content
+                        description: The classification of the item.
+                  uniqueItems: true
+              required:
+              - ids
+        description: Provide the unique IDs of the items that you want to approve.
+        required: true
+      tags:
+      - Authoring review
+      responses:
+        '200':
+          description: Successfully approved the items in the specified review.
+          headers:
+            x-ibm-dx-failures:
+              description: This header contains the IDs of the failed items when approving items in a review.
+              schema:
+                type: array
+                items:
+                  type: string
+              style: simple
+        '400':
+          description: The required parameters are missing or invalid. Provide valid parameters and try again.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: An error response.
+                properties:
+                  requestId:
+                    type: string
+                    description: The current request ID
+                    example: ee74a16b-fe23-adee-314f-7ae54b7b07a3
+                  service:
+                    type: string
+                    description: The name of the service that produced the error
+                    example: prod-authoring-review
+                  requestMethod:
+                    type: string
+                    description: The HTTP method type of the current request
+                    example: GET
+                  requestUri:
+                    type: string
+                    description: The request URI
+                    example: /authoring/v1/review
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code
+                          example: 1022
+                        key:
+                          type: string
+                          description: The message key
+                          example: error.generic.invalid.user.id.1022
+                        message:
+                          type: string
+                          description: The error message
+                          example: The id requested does not exist.
+                        description:
+                          type: string
+                          description: Optional detailed error message
+                          example: Please check the ID you provided is correct before retrying the request.
+                        more_info:
+                          type: string
+                          description: Optional additional information for the message
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end user
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        field:
+                          type: string
+                          description: Only present on field validation errors, indicates the field in error.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                          example: en
+                      required:
+                      - code
+                      - key
+                      - message
+                      - description
+                      - more_info
+                      - category
+                      - level
+                      - parameters
+                      - field
+                      - locale
+                required:
+                - requestId
+                - service
+                - requestMethod
+                - requestUri
+                - errors
+        '429':
+          description: Too Many Requests, the server has reached a limit, the request must be sent again at a later time.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '503':
+          description: Unable to approve the items in the review as the service is unavailable. Try again later.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: An error response.
+                properties:
+                  requestId:
+                    type: string
+                    description: The current request ID
+                    example: ee74a16b-fe23-adee-314f-7ae54b7b07a3
+                  service:
+                    type: string
+                    description: The name of the service that produced the error
+                    example: prod-authoring-review
+                  requestMethod:
+                    type: string
+                    description: The HTTP method type of the current request
+                    example: GET
+                  requestUri:
+                    type: string
+                    description: The request URI
+                    example: /authoring/v1/review
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code
+                          example: 1022
+                        key:
+                          type: string
+                          description: The message key
+                          example: error.generic.invalid.user.id.1022
+                        message:
+                          type: string
+                          description: The error message
+                          example: The id requested does not exist.
+                        description:
+                          type: string
+                          description: Optional detailed error message
+                          example: Please check the ID you provided is correct before retrying the request.
+                        more_info:
+                          type: string
+                          description: Optional additional information for the message
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end user
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        field:
+                          type: string
+                          description: Only present on field validation errors, indicates the field in error.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                          example: en
+                      required:
+                      - code
+                      - key
+                      - message
+                      - description
+                      - more_info
+                      - category
+                      - level
+                      - parameters
+                      - field
+                      - locale
+                required:
+                - requestId
+                - service
+                - requestMethod
+                - requestUri
+                - errors
+        default:
+          description: Unexpected error.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: An error response.
+                properties:
+                  requestId:
+                    type: string
+                    description: The current request ID
+                    example: ee74a16b-fe23-adee-314f-7ae54b7b07a3
+                  service:
+                    type: string
+                    description: The name of the service that produced the error
+                    example: prod-authoring-review
+                  requestMethod:
+                    type: string
+                    description: The HTTP method type of the current request
+                    example: GET
+                  requestUri:
+                    type: string
+                    description: The request URI
+                    example: /authoring/v1/review
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code
+                          example: 1022
+                        key:
+                          type: string
+                          description: The message key
+                          example: error.generic.invalid.user.id.1022
+                        message:
+                          type: string
+                          description: The error message
+                          example: The id requested does not exist.
+                        description:
+                          type: string
+                          description: Optional detailed error message
+                          example: Please check the ID you provided is correct before retrying the request.
+                        more_info:
+                          type: string
+                          description: Optional additional information for the message
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end user
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        field:
+                          type: string
+                          description: Only present on field validation errors, indicates the field in error.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                          example: en
+                      required:
+                      - code
+                      - key
+                      - message
+                      - description
+                      - more_info
+                      - category
+                      - level
+                      - parameters
+                      - field
+                      - locale
+                required:
+                - requestId
+                - service
+                - requestMethod
+                - requestUri
+                - errors
+      x-ibm-dx-security-user-roles:
+      - admin
+      - manager
+      - editor
+  /authoring/v1/review/{id}/approve-all:
+    post:
+      summary: Approve all items in a review.
+      description: 'Use the /review/{id}/approve-all endpoint to approve all items in the specified review.
+
+        This endpoint approves all the items added to the specified review in bulk. For example, if Content A, Content B, and Asset C were added to a review, then all three items in the review are approved. Check whether the items were successfully approved from the approvals field in the returned API representation of review model. You can identify the items that failed to approve by checking the item IDs that are listed in the response header. The review is automatically complete when all items are approved.
+
+        <br />User roles: admin, manager, editor'
+      parameters:
+      - name: id
+        in: path
+        description: Provide the ID of the review that you want to approve.
+        required: true
+        schema:
+          type: string
+      tags:
+      - Authoring review
+      responses:
+        '200':
+          description: Successfully approved all the items in the specified review.
+          headers:
+            x-ibm-dx-failures:
+              description: This header contains the IDs of the failed items when approving all items in a review.
+              schema:
+                type: array
+                items:
+                  type: string
+              style: simple
+        '400':
+          description: The required parameters are missing or invalid. Provide valid parameters and try again.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: An error response.
+                properties:
+                  requestId:
+                    type: string
+                    description: The current request ID
+                    example: ee74a16b-fe23-adee-314f-7ae54b7b07a3
+                  service:
+                    type: string
+                    description: The name of the service that produced the error
+                    example: prod-authoring-review
+                  requestMethod:
+                    type: string
+                    description: The HTTP method type of the current request
+                    example: GET
+                  requestUri:
+                    type: string
+                    description: The request URI
+                    example: /authoring/v1/review
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code
+                          example: 1022
+                        key:
+                          type: string
+                          description: The message key
+                          example: error.generic.invalid.user.id.1022
+                        message:
+                          type: string
+                          description: The error message
+                          example: The id requested does not exist.
+                        description:
+                          type: string
+                          description: Optional detailed error message
+                          example: Please check the ID you provided is correct before retrying the request.
+                        more_info:
+                          type: string
+                          description: Optional additional information for the message
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end user
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        field:
+                          type: string
+                          description: Only present on field validation errors, indicates the field in error.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                          example: en
+                      required:
+                      - code
+                      - key
+                      - message
+                      - description
+                      - more_info
+                      - category
+                      - level
+                      - parameters
+                      - field
+                      - locale
+                required:
+                - requestId
+                - service
+                - requestMethod
+                - requestUri
+                - errors
+        '429':
+          description: Too Many Requests, the server has reached a limit, the request must be sent again at a later time.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '503':
+          description: Unable to approve all the items in the review as the service is unavailable. Try again later.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: An error response.
+                properties:
+                  requestId:
+                    type: string
+                    description: The current request ID
+                    example: ee74a16b-fe23-adee-314f-7ae54b7b07a3
+                  service:
+                    type: string
+                    description: The name of the service that produced the error
+                    example: prod-authoring-review
+                  requestMethod:
+                    type: string
+                    description: The HTTP method type of the current request
+                    example: GET
+                  requestUri:
+                    type: string
+                    description: The request URI
+                    example: /authoring/v1/review
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code
+                          example: 1022
+                        key:
+                          type: string
+                          description: The message key
+                          example: error.generic.invalid.user.id.1022
+                        message:
+                          type: string
+                          description: The error message
+                          example: The id requested does not exist.
+                        description:
+                          type: string
+                          description: Optional detailed error message
+                          example: Please check the ID you provided is correct before retrying the request.
+                        more_info:
+                          type: string
+                          description: Optional additional information for the message
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end user
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        field:
+                          type: string
+                          description: Only present on field validation errors, indicates the field in error.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                          example: en
+                      required:
+                      - code
+                      - key
+                      - message
+                      - description
+                      - more_info
+                      - category
+                      - level
+                      - parameters
+                      - field
+                      - locale
+                required:
+                - requestId
+                - service
+                - requestMethod
+                - requestUri
+                - errors
+        default:
+          description: Unexpected error.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: An error response.
+                properties:
+                  requestId:
+                    type: string
+                    description: The current request ID
+                    example: ee74a16b-fe23-adee-314f-7ae54b7b07a3
+                  service:
+                    type: string
+                    description: The name of the service that produced the error
+                    example: prod-authoring-review
+                  requestMethod:
+                    type: string
+                    description: The HTTP method type of the current request
+                    example: GET
+                  requestUri:
+                    type: string
+                    description: The request URI
+                    example: /authoring/v1/review
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code
+                          example: 1022
+                        key:
+                          type: string
+                          description: The message key
+                          example: error.generic.invalid.user.id.1022
+                        message:
+                          type: string
+                          description: The error message
+                          example: The id requested does not exist.
+                        description:
+                          type: string
+                          description: Optional detailed error message
+                          example: Please check the ID you provided is correct before retrying the request.
+                        more_info:
+                          type: string
+                          description: Optional additional information for the message
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end user
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        field:
+                          type: string
+                          description: Only present on field validation errors, indicates the field in error.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                          example: en
+                      required:
+                      - code
+                      - key
+                      - message
+                      - description
+                      - more_info
+                      - category
+                      - level
+                      - parameters
+                      - field
+                      - locale
+                required:
+                - requestId
+                - service
+                - requestMethod
+                - requestUri
+                - errors
+      x-ibm-dx-security-user-roles:
+      - admin
+      - manager
+      - editor
+  /authoring/v1/review/{id}/complete:
+    post:
+      summary: Complete a review.
+      description: 'Use the /review/end/{id} endpoint to end a review. This endpoint changes the review status to complete. The approved items in the review remain as approved, whereas the status of the unapproved items in the review will change to in progress status.
+
+        <br />User roles: admin, manager, editor'
+      parameters:
+      - name: id
+        in: path
+        description: Provide the ID of the review that you want to end.
+        required: true
+        schema:
+          type: string
+      tags:
+      - Authoring review
+      responses:
+        '200':
+          description: Successfully completed the review that matches the ID that you provided.
+          headers:
+            x-ibm-dx-failures:
+              description: This header contains the IDs of the failed items when completing a review.
+              schema:
+                type: array
+                items:
+                  type: string
+              style: simple
+        '404':
+          description: The review with ID {id} was not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: An error response.
+                properties:
+                  requestId:
+                    type: string
+                    description: The current request ID
+                    example: ee74a16b-fe23-adee-314f-7ae54b7b07a3
+                  service:
+                    type: string
+                    description: The name of the service that produced the error
+                    example: prod-authoring-review
+                  requestMethod:
+                    type: string
+                    description: The HTTP method type of the current request
+                    example: GET
+                  requestUri:
+                    type: string
+                    description: The request URI
+                    example: /authoring/v1/review
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code
+                          example: 1022
+                        key:
+                          type: string
+                          description: The message key
+                          example: error.generic.invalid.user.id.1022
+                        message:
+                          type: string
+                          description: The error message
+                          example: The id requested does not exist.
+                        description:
+                          type: string
+                          description: Optional detailed error message
+                          example: Please check the ID you provided is correct before retrying the request.
+                        more_info:
+                          type: string
+                          description: Optional additional information for the message
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end user
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        field:
+                          type: string
+                          description: Only present on field validation errors, indicates the field in error.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                          example: en
+                      required:
+                      - code
+                      - key
+                      - message
+                      - description
+                      - more_info
+                      - category
+                      - level
+                      - parameters
+                      - field
+                      - locale
+                required:
+                - requestId
+                - service
+                - requestMethod
+                - requestUri
+                - errors
+        '429':
+          description: Too Many Requests, the server has reached a limit, the request must be sent again at a later time.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '503':
+          description: Unable to end the specified review as the service is unavailable. Try again later.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: An error response.
+                properties:
+                  requestId:
+                    type: string
+                    description: The current request ID
+                    example: ee74a16b-fe23-adee-314f-7ae54b7b07a3
+                  service:
+                    type: string
+                    description: The name of the service that produced the error
+                    example: prod-authoring-review
+                  requestMethod:
+                    type: string
+                    description: The HTTP method type of the current request
+                    example: GET
+                  requestUri:
+                    type: string
+                    description: The request URI
+                    example: /authoring/v1/review
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code
+                          example: 1022
+                        key:
+                          type: string
+                          description: The message key
+                          example: error.generic.invalid.user.id.1022
+                        message:
+                          type: string
+                          description: The error message
+                          example: The id requested does not exist.
+                        description:
+                          type: string
+                          description: Optional detailed error message
+                          example: Please check the ID you provided is correct before retrying the request.
+                        more_info:
+                          type: string
+                          description: Optional additional information for the message
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end user
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        field:
+                          type: string
+                          description: Only present on field validation errors, indicates the field in error.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                          example: en
+                      required:
+                      - code
+                      - key
+                      - message
+                      - description
+                      - more_info
+                      - category
+                      - level
+                      - parameters
+                      - field
+                      - locale
+                required:
+                - requestId
+                - service
+                - requestMethod
+                - requestUri
+                - errors
+        default:
+          description: Unexpected error.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: An error response.
+                properties:
+                  requestId:
+                    type: string
+                    description: The current request ID
+                    example: ee74a16b-fe23-adee-314f-7ae54b7b07a3
+                  service:
+                    type: string
+                    description: The name of the service that produced the error
+                    example: prod-authoring-review
+                  requestMethod:
+                    type: string
+                    description: The HTTP method type of the current request
+                    example: GET
+                  requestUri:
+                    type: string
+                    description: The request URI
+                    example: /authoring/v1/review
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code
+                          example: 1022
+                        key:
+                          type: string
+                          description: The message key
+                          example: error.generic.invalid.user.id.1022
+                        message:
+                          type: string
+                          description: The error message
+                          example: The id requested does not exist.
+                        description:
+                          type: string
+                          description: Optional detailed error message
+                          example: Please check the ID you provided is correct before retrying the request.
+                        more_info:
+                          type: string
+                          description: Optional additional information for the message
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end user
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        field:
+                          type: string
+                          description: Only present on field validation errors, indicates the field in error.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                          example: en
+                      required:
+                      - code
+                      - key
+                      - message
+                      - description
+                      - more_info
+                      - category
+                      - level
+                      - parameters
+                      - field
+                      - locale
+                required:
+                - requestId
+                - service
+                - requestMethod
+                - requestUri
+                - errors
+      x-ibm-dx-security-user-roles:
+      - admin
+      - manager
+      - editor
+components:
+  schemas:
+    ErrorResponse:
+      description: This JSON record represents an error condition.
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            description: This JSON record represents an individual error or warning contained in an error message.
+            type: object
+            properties:
+              code:
+                type: integer
+                description: An error code
+              message:
+                type: string
+                description: A message describing what went wrong.
+              description:
+                type: string
+                description: Further explanation of the error condition and potential next steps to resolve the problem.
+              more_info:
+                type: string
+                description: A URL pointing to a web site that provides more information on the given error condition.
+              level:
+                type: string
+                enum:
+                - ERROR
+                - WARNING
+                description: The severity level of the message. Default is error.
+              parameters:
+                type: object
+                description: Additional properties reflecting the dynamic parts of the error condition.
+              cause:
+                type: object
+                description: This property can be used to transport causing error message records produced by a down stream service calls.
+              locale:
+                type: string
+                description: This property represents the locale of the text contained in properties 'message', and 'description'. This property is mandatory if message and description contain translated text.
+            required:
+            - code
+            - message
+        requestId:
+          type: string
+          description: The ID of the failing request.
+        service:
+          type: string
+          description: The name of the service serving the error message.
+      required:
+      - errors
+      - requestId
+x-refined-from:
+- acoustic-content-openapi-original.json
+- acoustic-content-swagger2-original.yaml
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

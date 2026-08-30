@@ -1,0 +1,1012 @@
+openapi: 3.2.0
+info:
+  title: Acoustic Webhook profiles API
+  version: 1.0.142
+  x-ibm-name: ibm-watson-content-hub-api
+  description: 'Operations tagged Webhook profiles across 2 of this provider''s published API definitions: acoustic-content-openapi-original.json, acoustic-content-swagger2-original.yaml. Each path carries the servers of the definition it was published in.'
+tags:
+- name: Webhook profiles
+  description: 'Use the Content webhook service Rest APIs to work with webhook profiles. You can create, retrieve and update webhook profiles in a database.
+
+
+    ### Webhook Timeouts and Retry policy
+
+    Webhooks will automatically timeout (with no retry) after 5s which means that receivers should always perform their processing in background threads. The only situation whereby webhooks will be retried/re-sent is in the event of a communication error, and in this case only a single retry will occur.
+
+    Note: Non-2xx responses from receivers are explicitly not retried
+
+    '
+paths:
+  /webhook/v1/profile:
+    get:
+      summary: Retrieves the webhook profile for the current tenant
+      description: 'Use the /profile end-point to retrieve the webhook profile from the database.<br />User roles: admin'
+      parameters:
+      - name: fields
+        in: query
+        description: Only the content type fields that are specified here are returned for each result. Any type document field is a valid value and can be specified as a comma-separated list.
+        required: false
+        schema:
+          type: string
+      - name: If-None-Match
+        in: header
+        description: Provide an Etag value from a previous request to check whether the webhook profile retrieved is the most recent version. If the webhook is the most recent version, the call returns a 304 ( Not modified) message instead of sending the webhook profile back.
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success.
+          headers:
+            Etag:
+              description: The Etag value helps identify this document in future requests.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: object
+                description: A webhook profile.
+                properties:
+                  id:
+                    type: string
+                    description: The ID of the webhook profile
+                    readOnly: true
+                  rev:
+                    type: string
+                    description: The current revision of the webhook profile.
+                    minLength: 1
+                    readOnly: true
+                  classification:
+                    enum:
+                    - webhook-profile
+                  creatorId:
+                    type: string
+                    description: The ID of the user that created the webhook profile.
+                    minLength: 1
+                    readOnly: true
+                  created:
+                    type: string
+                    description: The created date of this webhook profile in ISO 8601 with the format YYYY-MM-DDThh:mm:ss.sssZ.
+                    format: date-time
+                    minLength: 1
+                    readOnly: true
+                  lastModifierId:
+                    type: string
+                    description: The ID of the user that last modified the webhook profile.
+                    minLength: 1
+                    readOnly: true
+                  lastModified:
+                    type: string
+                    description: The last modified date of this webhook profile in ISO 8601 with the format YYYY-MM-DDThh:mm:ss.sssZ.
+                    format: date-time
+                    minLength: 1
+                    readOnly: true
+                  webhooks:
+                    type: array
+                    description: The list of registered webhooks
+                    items:
+                      type: object
+                      description: An individual webhook.
+                      properties:
+                        url:
+                          type: string
+                          description: The URL to execute when firing the webhook. Must be an absolute URL.
+                          example: http://www.my-webhook.com/myHooks
+                        secret:
+                          type: string
+                          description: 'Optional secret token to use when creating the hash signature to send in a http header.
+
+                            When a secret is specified, the webhook will be sent with an additional `X-IBM-WCH-SIGNATURE` header whose value is the `HmacSHA1` hash of the request body (using the secret as the seed). Webhook receivers can generate their own `HmacSHA1` hash of the request body and compare it to the one sent to verify that the request came from Content.
+
+                            Once the webhook has been saved, a `secretId` will be returned instead of the actual secret.
+
+                            '
+                        secretId:
+                          type: string
+                          description: 'The ID which was generated to represent your secret.
+
+                            When updating a webhook, include the `secretId` to continue using the same secret.
+
+                            You may also provide a new `secret` to change it or exclude the `secretId` to remove the secret.
+
+                            '
+                        active:
+                          type: boolean
+                          description: Optional flag to indicate whether the webhook is active.
+                        filter:
+                          type: object
+                          description: 'Optional filter rules to limit when the webhook will fire.
+
+                            When multiple rules are specified, then ALL must match for the webhook to fire
+
+                            '
+                          properties:
+                            eventType:
+                              type: array
+                              description: Optional event-types to limit the webhook to. When multiple event-types are specified, then the webhook will fire whenever ANY of the specified event-types occur.
+                              items:
+                                type: string
+                                enum:
+                                - create
+                                - update
+                                - delete
+                              example:
+                              - create
+                              - update
+                            classification:
+                              type: array
+                              description: Optional document classifications to limit the webhook to. When multiple classifications are specified, then the webhook will fire whenever changes occur to ANY of the specified classifications.
+                              items:
+                                type: string
+                                enum:
+                                - asset
+                                - category
+                                - comment
+                                - content
+                                - content-type
+                                - default-content
+                                - image-profile
+                                - layout
+                                - layout-mapping
+                                - project
+                                - review
+                                - taxonomy
+                              example:
+                              - asset
+                              - category
+                              - content
+                            status:
+                              type: array
+                              description: Optional document statuses to limit the webhook to. When multiple statuses are specified, then the webhook will fire whenever changes occur to documents in ANY of the specified statuses.
+                              items:
+                                type: string
+                                enum:
+                                - draft
+                                - ready
+                                - retired
+                              example:
+                              - draft
+                              - ready
+                            tags:
+                              type: array
+                              description: 'Optional document tags to limit the webhook to. When multiple tags are specified, then the webhook will fire whenever changes occur to documents with ANY of the specified tags.
+
+                                Note: If tags are specified, then documents without tags will automatically fail the filter
+
+                                '
+                              items:
+                                type: string
+                                uniqueItems: true
+                              example:
+                              - tag1
+                              - processMe
+                      required:
+                      - url
+        '304':
+          description: Not modified is returned when using If-None-Match header and the value matches the latest version of the item.
+        '404':
+          description: There is no existing webhook profile.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: an error response.
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code.
+                        key:
+                          type: string
+                          description: The message key.
+                        message:
+                          type: string
+                          description: The error message.
+                        description:
+                          type: string
+                          description: Optional detailed error message.
+                        more_info:
+                          type: string
+                          description: Optional additional information for the message.
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end user.
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level.
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        field:
+                          type: string
+                          description: Only present on field validation errors, indicates the field in error.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                  requestId:
+                    type: string
+                    description: The current request ID.
+                  service:
+                    type: string
+                    description: The name of the service that produced the error.
+                  requestMethod:
+                    type: string
+                    description: The Http method type of the current request.
+                  requestUri:
+                    type: string
+                    description: The current request uri.
+        '429':
+          description: Too Many Requests, the server has reached a limit, the request must be sent again at a later time.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      x-ibm-dx-security-user-roles:
+      - admin
+      tags:
+      - Webhook profiles
+    put:
+      summary: Creates or updates the webhook profile for the current tenant
+      description: "Use the /profile end-point to save the webhook profile within the database. This will overwrite any existing webhook profile.\n### Sample Webhook Payload (sent to specified URLs)\n```\n{\n   \"event\":\"created\"\n   \"timestamp\": \"2018-09-03T01:48:15.921Z\"\n   \"doc\" : {\n      ...\n   }\n}\n```\n<br />User roles: admin"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              description: A webhook profile.
+              properties:
+                id:
+                  type: string
+                  description: The ID of the webhook profile
+                  readOnly: true
+                rev:
+                  type: string
+                  description: The current revision of the webhook profile.
+                  minLength: 1
+                  readOnly: true
+                classification:
+                  enum:
+                  - webhook-profile
+                creatorId:
+                  type: string
+                  description: The ID of the user that created the webhook profile.
+                  minLength: 1
+                  readOnly: true
+                created:
+                  type: string
+                  description: The created date of this webhook profile in ISO 8601 with the format YYYY-MM-DDThh:mm:ss.sssZ.
+                  format: date-time
+                  minLength: 1
+                  readOnly: true
+                lastModifierId:
+                  type: string
+                  description: The ID of the user that last modified the webhook profile.
+                  minLength: 1
+                  readOnly: true
+                lastModified:
+                  type: string
+                  description: The last modified date of this webhook profile in ISO 8601 with the format YYYY-MM-DDThh:mm:ss.sssZ.
+                  format: date-time
+                  minLength: 1
+                  readOnly: true
+                webhooks:
+                  type: array
+                  description: The list of registered webhooks
+                  items:
+                    type: object
+                    description: An individual webhook.
+                    properties:
+                      url:
+                        type: string
+                        description: The URL to execute when firing the webhook. Must be an absolute URL.
+                        example: http://www.my-webhook.com/myHooks
+                      secret:
+                        type: string
+                        description: 'Optional secret token to use when creating the hash signature to send in a http header.
+
+                          When a secret is specified, the webhook will be sent with an additional `X-IBM-WCH-SIGNATURE` header whose value is the `HmacSHA1` hash of the request body (using the secret as the seed). Webhook receivers can generate their own `HmacSHA1` hash of the request body and compare it to the one sent to verify that the request came from Content.
+
+                          Once the webhook has been saved, a `secretId` will be returned instead of the actual secret.
+
+                          '
+                      secretId:
+                        type: string
+                        description: 'The ID which was generated to represent your secret.
+
+                          When updating a webhook, include the `secretId` to continue using the same secret.
+
+                          You may also provide a new `secret` to change it or exclude the `secretId` to remove the secret.
+
+                          '
+                      active:
+                        type: boolean
+                        description: Optional flag to indicate whether the webhook is active.
+                      filter:
+                        type: object
+                        description: 'Optional filter rules to limit when the webhook will fire.
+
+                          When multiple rules are specified, then ALL must match for the webhook to fire
+
+                          '
+                        properties:
+                          eventType:
+                            type: array
+                            description: Optional event-types to limit the webhook to. When multiple event-types are specified, then the webhook will fire whenever ANY of the specified event-types occur.
+                            items:
+                              type: string
+                              enum:
+                              - create
+                              - update
+                              - delete
+                            example:
+                            - create
+                            - update
+                          classification:
+                            type: array
+                            description: Optional document classifications to limit the webhook to. When multiple classifications are specified, then the webhook will fire whenever changes occur to ANY of the specified classifications.
+                            items:
+                              type: string
+                              enum:
+                              - asset
+                              - category
+                              - comment
+                              - content
+                              - content-type
+                              - default-content
+                              - image-profile
+                              - layout
+                              - layout-mapping
+                              - project
+                              - review
+                              - taxonomy
+                            example:
+                            - asset
+                            - category
+                            - content
+                          status:
+                            type: array
+                            description: Optional document statuses to limit the webhook to. When multiple statuses are specified, then the webhook will fire whenever changes occur to documents in ANY of the specified statuses.
+                            items:
+                              type: string
+                              enum:
+                              - draft
+                              - ready
+                              - retired
+                            example:
+                            - draft
+                            - ready
+                          tags:
+                            type: array
+                            description: 'Optional document tags to limit the webhook to. When multiple tags are specified, then the webhook will fire whenever changes occur to documents with ANY of the specified tags.
+
+                              Note: If tags are specified, then documents without tags will automatically fail the filter
+
+                              '
+                            items:
+                              type: string
+                              uniqueItems: true
+                            example:
+                            - tag1
+                            - processMe
+                    required:
+                    - url
+        description: Contains the webhook profile to save.
+        required: true
+      responses:
+        '200':
+          description: Success.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: A webhook profile.
+                properties:
+                  id:
+                    type: string
+                    description: The ID of the webhook profile
+                    readOnly: true
+                  rev:
+                    type: string
+                    description: The current revision of the webhook profile.
+                    minLength: 1
+                    readOnly: true
+                  classification:
+                    enum:
+                    - webhook-profile
+                  creatorId:
+                    type: string
+                    description: The ID of the user that created the webhook profile.
+                    minLength: 1
+                    readOnly: true
+                  created:
+                    type: string
+                    description: The created date of this webhook profile in ISO 8601 with the format YYYY-MM-DDThh:mm:ss.sssZ.
+                    format: date-time
+                    minLength: 1
+                    readOnly: true
+                  lastModifierId:
+                    type: string
+                    description: The ID of the user that last modified the webhook profile.
+                    minLength: 1
+                    readOnly: true
+                  lastModified:
+                    type: string
+                    description: The last modified date of this webhook profile in ISO 8601 with the format YYYY-MM-DDThh:mm:ss.sssZ.
+                    format: date-time
+                    minLength: 1
+                    readOnly: true
+                  webhooks:
+                    type: array
+                    description: The list of registered webhooks
+                    items:
+                      type: object
+                      description: An individual webhook.
+                      properties:
+                        url:
+                          type: string
+                          description: The URL to execute when firing the webhook. Must be an absolute URL.
+                          example: http://www.my-webhook.com/myHooks
+                        secret:
+                          type: string
+                          description: 'Optional secret token to use when creating the hash signature to send in a http header.
+
+                            When a secret is specified, the webhook will be sent with an additional `X-IBM-WCH-SIGNATURE` header whose value is the `HmacSHA1` hash of the request body (using the secret as the seed). Webhook receivers can generate their own `HmacSHA1` hash of the request body and compare it to the one sent to verify that the request came from Content.
+
+                            Once the webhook has been saved, a `secretId` will be returned instead of the actual secret.
+
+                            '
+                        secretId:
+                          type: string
+                          description: 'The ID which was generated to represent your secret.
+
+                            When updating a webhook, include the `secretId` to continue using the same secret.
+
+                            You may also provide a new `secret` to change it or exclude the `secretId` to remove the secret.
+
+                            '
+                        active:
+                          type: boolean
+                          description: Optional flag to indicate whether the webhook is active.
+                        filter:
+                          type: object
+                          description: 'Optional filter rules to limit when the webhook will fire.
+
+                            When multiple rules are specified, then ALL must match for the webhook to fire
+
+                            '
+                          properties:
+                            eventType:
+                              type: array
+                              description: Optional event-types to limit the webhook to. When multiple event-types are specified, then the webhook will fire whenever ANY of the specified event-types occur.
+                              items:
+                                type: string
+                                enum:
+                                - create
+                                - update
+                                - delete
+                              example:
+                              - create
+                              - update
+                            classification:
+                              type: array
+                              description: Optional document classifications to limit the webhook to. When multiple classifications are specified, then the webhook will fire whenever changes occur to ANY of the specified classifications.
+                              items:
+                                type: string
+                                enum:
+                                - asset
+                                - category
+                                - comment
+                                - content
+                                - content-type
+                                - default-content
+                                - image-profile
+                                - layout
+                                - layout-mapping
+                                - project
+                                - review
+                                - taxonomy
+                              example:
+                              - asset
+                              - category
+                              - content
+                            status:
+                              type: array
+                              description: Optional document statuses to limit the webhook to. When multiple statuses are specified, then the webhook will fire whenever changes occur to documents in ANY of the specified statuses.
+                              items:
+                                type: string
+                                enum:
+                                - draft
+                                - ready
+                                - retired
+                              example:
+                              - draft
+                              - ready
+                            tags:
+                              type: array
+                              description: 'Optional document tags to limit the webhook to. When multiple tags are specified, then the webhook will fire whenever changes occur to documents with ANY of the specified tags.
+
+                                Note: If tags are specified, then documents without tags will automatically fail the filter
+
+                                '
+                              items:
+                                type: string
+                                uniqueItems: true
+                              example:
+                              - tag1
+                              - processMe
+                      required:
+                      - url
+        '400':
+          description: Invalid input.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: an error response.
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code.
+                        key:
+                          type: string
+                          description: The message key.
+                        message:
+                          type: string
+                          description: The error message.
+                        description:
+                          type: string
+                          description: Optional detailed error message.
+                        more_info:
+                          type: string
+                          description: Optional additional information for the message.
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end user.
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level.
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        field:
+                          type: string
+                          description: Only present on field validation errors, indicates the field in error.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                  requestId:
+                    type: string
+                    description: The current request ID.
+                  service:
+                    type: string
+                    description: The name of the service that produced the error.
+                  requestMethod:
+                    type: string
+                    description: The Http method type of the current request.
+                  requestUri:
+                    type: string
+                    description: The current request uri.
+        '401':
+          description: The user is not authorized to run this action.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: an error response.
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code.
+                        key:
+                          type: string
+                          description: The message key.
+                        message:
+                          type: string
+                          description: The error message.
+                        description:
+                          type: string
+                          description: Optional detailed error message.
+                        more_info:
+                          type: string
+                          description: Optional additional information for the message.
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end user.
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level.
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        field:
+                          type: string
+                          description: Only present on field validation errors, indicates the field in error.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                  requestId:
+                    type: string
+                    description: The current request ID.
+                  service:
+                    type: string
+                    description: The name of the service that produced the error.
+                  requestMethod:
+                    type: string
+                    description: The Http method type of the current request.
+                  requestUri:
+                    type: string
+                    description: The current request uri.
+        '429':
+          description: Too Many Requests, the server has reached a limit, the request must be sent again at a later time.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Unexpected error.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: an error response.
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code.
+                        key:
+                          type: string
+                          description: The message key.
+                        message:
+                          type: string
+                          description: The error message.
+                        description:
+                          type: string
+                          description: Optional detailed error message.
+                        more_info:
+                          type: string
+                          description: Optional additional information for the message.
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end user.
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level.
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        field:
+                          type: string
+                          description: Only present on field validation errors, indicates the field in error.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                  requestId:
+                    type: string
+                    description: The current request ID.
+                  service:
+                    type: string
+                    description: The name of the service that produced the error.
+                  requestMethod:
+                    type: string
+                    description: The Http method type of the current request.
+                  requestUri:
+                    type: string
+                    description: The current request uri.
+      x-ibm-dx-security-user-roles:
+      - admin
+      tags:
+      - Webhook profiles
+    delete:
+      summary: Deletes the webhook profile for the current tenant.
+      description: 'Use the /profile endpoint to delete the webhook profile from the database.<br />User roles: admin'
+      responses:
+        '200':
+          description: Success.
+        '401':
+          description: The user is not authorized to run this action.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: an error response.
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code.
+                        key:
+                          type: string
+                          description: The message key.
+                        message:
+                          type: string
+                          description: The error message.
+                        description:
+                          type: string
+                          description: Optional detailed error message.
+                        more_info:
+                          type: string
+                          description: Optional additional information for the message.
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end user.
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level.
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        field:
+                          type: string
+                          description: Only present on field validation errors, indicates the field in error.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                  requestId:
+                    type: string
+                    description: The current request ID.
+                  service:
+                    type: string
+                    description: The name of the service that produced the error.
+                  requestMethod:
+                    type: string
+                    description: The Http method type of the current request.
+                  requestUri:
+                    type: string
+                    description: The current request uri.
+        '404':
+          description: There is no existing webhook profile.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: an error response.
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code.
+                        key:
+                          type: string
+                          description: The message key.
+                        message:
+                          type: string
+                          description: The error message.
+                        description:
+                          type: string
+                          description: Optional detailed error message.
+                        more_info:
+                          type: string
+                          description: Optional additional information for the message.
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end user.
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level.
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        field:
+                          type: string
+                          description: Only present on field validation errors, indicates the field in error.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                  requestId:
+                    type: string
+                    description: The current request ID.
+                  service:
+                    type: string
+                    description: The name of the service that produced the error.
+                  requestMethod:
+                    type: string
+                    description: The Http method type of the current request.
+                  requestUri:
+                    type: string
+                    description: The current request uri.
+        '429':
+          description: Too Many Requests, the server has reached a limit, the request must be sent again at a later time.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Unexpected error.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: an error response.
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code.
+                        key:
+                          type: string
+                          description: The message key.
+                        message:
+                          type: string
+                          description: The error message.
+                        description:
+                          type: string
+                          description: Optional detailed error message.
+                        more_info:
+                          type: string
+                          description: Optional additional information for the message.
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end user.
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level.
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        field:
+                          type: string
+                          description: Only present on field validation errors, indicates the field in error.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                  requestId:
+                    type: string
+                    description: The current request ID.
+                  service:
+                    type: string
+                    description: The name of the service that produced the error.
+                  requestMethod:
+                    type: string
+                    description: The Http method type of the current request.
+                  requestUri:
+                    type: string
+                    description: The current request uri.
+      x-ibm-dx-security-user-roles:
+      - admin
+      tags:
+      - Webhook profiles
+components:
+  schemas:
+    ErrorResponse:
+      description: This JSON record represents an error condition.
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            description: This JSON record represents an individual error or warning contained in an error message.
+            type: object
+            properties:
+              code:
+                type: integer
+                description: An error code
+              message:
+                type: string
+                description: A message describing what went wrong.
+              description:
+                type: string
+                description: Further explanation of the error condition and potential next steps to resolve the problem.
+              more_info:
+                type: string
+                description: A URL pointing to a web site that provides more information on the given error condition.
+              level:
+                type: string
+                enum:
+                - ERROR
+                - WARNING
+                description: The severity level of the message. Default is error.
+              parameters:
+                type: object
+                description: Additional properties reflecting the dynamic parts of the error condition.
+              cause:
+                type: object
+                description: This property can be used to transport causing error message records produced by a down stream service calls.
+              locale:
+                type: string
+                description: This property represents the locale of the text contained in properties 'message', and 'description'. This property is mandatory if message and description contain translated text.
+            required:
+            - code
+            - message
+        requestId:
+          type: string
+          description: The ID of the failing request.
+        service:
+          type: string
+          description: The name of the service serving the error message.
+      required:
+      - errors
+      - requestId
+x-refined-from:
+- acoustic-content-openapi-original.json
+- acoustic-content-swagger2-original.yaml
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

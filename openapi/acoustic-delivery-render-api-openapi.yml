@@ -1,0 +1,1356 @@
+openapi: 3.2.0
+info:
+  title: Acoustic Delivery render API
+  version: 1.0.142
+  x-ibm-name: ibm-watson-content-hub-api
+  description: 'Operations tagged Delivery render across 2 of this provider''s published API definitions: acoustic-content-openapi-original.json, acoustic-content-swagger2-original.yaml. Each path carries the servers of the definition it was published in.'
+tags:
+- name: Delivery render
+  description: 'The Content Delivery rendering REST API provides information to render content and pages in client-side applications.
+
+
+    **Client-side programming support**
+
+
+    If you want to create a client-side application with Angular 4, you can use the [Acoustic Angular SDK for Content](https://www.npmjs.com/package/@acoustic-content-sdk/ng-api). With the Angular SDK, you can retrieve and render content and pages from Content without any need to interact with the REST API directly.
+
+
+    **Conditional GET requests**
+
+
+    The API supports ETag and Last-modified [conditional GET requests](https://developer.mozilla.org/en-US/docs/Web/HTTP/Conditional_requests). It is highly recommended to use conditional GET requests with ETags to decrease the communication data between client and API. The API provides ETag and Last-modified header response information if available. The client can send conditional GET requests with ETag and Last-modified information to validate local client data. The API responds with a `304 - Not modified response` with empty content if the condition is still valid.
+
+
+    **JSONP support**
+
+
+    The API has [JSONP support](https://www.w3schools.com/js/js_json_jsonp.asp). The client can activate the JSONP support by providing the JSONP callback name query parameter.
+
+
+    **Preview support**
+
+
+    The API supports the previewing of content information as described [here](https://developer.goacoustic.com/acoustic-content/docs/preview-content).
+
+
+
+    **Usage**
+
+
+    In order to render content and the page structure in client-side applications you must to consider the following aspects&#58;
+
+
+    * Identify the addressed page that correlates to the application routing state.
+
+    * Identify the addressed content and layout information and render the content.
+
+
+    With the following steps you can achieve these aspects&#58;
+
+
+    1. Retrieve the site and page information by using the "Delivery Site By ID" API route. The response contains information to identify the page that correlates to the navigational state (route) of the application.
+
+    2. The page information has the property "contentId" that references the content of the page. Use that property to get the content ID.
+
+    3. Use the content ID in combination with the "Delivery Rendering Context By ID" API route to retrieve the rendering context information of the content item. The rendering context contains the layout information of the content item and content references, including the resolved rendering context of the referenced items.
+
+    4. Based on the provided layout information, identify the related the layout component of your application and render the content item by using the layout component. If required the layout can render nested layouts.
+
+    '
+paths:
+  /delivery/v1/rendering/render/content/{id}:
+    get:
+      summary: Applies server side rendering to the specified content item
+      description: 'Applies server side rendering to the specified content item<br />User roles: admin, manager, editor, viewer, authenticatedVisitor, anonymous'
+      parameters:
+      - in: path
+        name: id
+        description: Provide the ID of the resource. Note that IDs are always the IDs of published item, even if a draft exists with a different ID. For a site, use `@current` to indicate that the ID of the site is derived from the addressed URL via custom domain site mapping or URL path based site addressing. For further details consult the Content documentation.
+        required: true
+        schema:
+          type: string
+      - in: query
+        name: layoutId
+        description: Provide the ID of the layout to be used to pre-render the resource.
+        required: false
+        schema:
+          type: string
+      - in: query
+        name: contentType
+        description: Specifies the content type to be set on the response. Default is text/html.
+        required: false
+        schema:
+          type: string
+      - name: callback
+        description: Provide the JSONP callback name for JSONP support. The callback name must designate a javascript function that can be executed in the global scope. The argument will be the deserialized JSON object.
+        in: query
+        required: false
+        schema:
+          type: string
+      - in: query
+        name: rcParam
+        description: By specifying query parameters with arbitrary names, but start with the prefix 'rc' or 'RC' (case insensitive), e.g., 'RcParam1', 'rcMy', you can provide custom parameters that will be added to the rendering context JSON under the $context.customParameters section.
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Successfully retrieved the rendering.
+          content:
+            text/html:
+              schema:
+                type: string
+        '429':
+          description: Too Many Requests, the server has reached a limit, the request must be sent again at a later time.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server Error
+          content:
+            text/html:
+              schema:
+                type: object
+                description: This JSON object describes an error condition.
+                properties:
+                  requestId:
+                    type: string
+                    description: The unique identifier of the request that failed.
+                  service:
+                    type: string
+                    description: The name of the service that reports the error.
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: This JSON object describes a specific error of an error condition.
+                      properties:
+                        code:
+                          type: integer
+                          description: An error code that is specific to the service that reports the error.
+                        message:
+                          type: string
+                          description: A message that describes what went wrong.
+                        description:
+                          type: string
+                          description: A more detailed explanation of the error condition and recommended steps to resolve the issue.
+                        more_info:
+                          type: string
+                          description: A URL pointing to a source that provides more information on this error.
+                        level:
+                          type: string
+                          enum:
+                          - ERROR
+                          - WARNING
+                          description: The severity of this error.
+                        parameters:
+                          type: object
+                          description: Additional properties that represent dynamic parts used in the 'message'.
+                        cause:
+                          type: object
+                          description: The error message that was produced by a downstream service and represents the cause of this error.
+                        locale:
+                          type: string
+                          description: The locale information of the text provided as 'message' and as 'description' of this error.
+                      required:
+                      - code
+                      - message
+                required:
+                - requestId
+                - errors
+      x-ibm-dx-security-user-roles:
+      - admin
+      - manager
+      - editor
+      - viewer
+      - authenticatedVisitor
+      - anonymous
+      x-ibm-dx-vary: []
+      tags:
+      - Delivery render
+  /delivery/v1/rendering/sites/{id}:
+    get:
+      summary: Delivery Site By ID
+      description: 'Provides delivery site information including site metadata and pages hierarchy<br />User roles: admin, manager, editor, viewer, authenticatedVisitor, anonymous'
+      parameters:
+      - in: path
+        name: id
+        description: Provide the ID of the resource. Note that IDs are always the IDs of published item, even if a draft exists with a different ID. For a site, use `@current` to indicate that the ID of the site is derived from the addressed URL via custom domain site mapping or URL path based site addressing. For further details consult the Content documentation.
+        required: true
+        schema:
+          type: string
+      - name: callback
+        description: Provide the JSONP callback name for JSONP support. The callback name must designate a javascript function that can be executed in the global scope. The argument will be the deserialized JSON object.
+        in: query
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  title: Site Metadata
+                  description: Site Metadata
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                      description: The ID of the site.
+                    rev:
+                      type: string
+                      description: The current revision of the document.
+                    name:
+                      type: string
+                      description: The name of the site.
+                    classification:
+                      type: string
+                      description: The classification of site. This is always `site`.
+                    lastModified:
+                      type: string
+                      description: The last modified date of this site metadata in ISO 8601 with the format YYYY-MM-DDTHH:mm:ss.sssZ.
+                    lastModifierId:
+                      type: string
+                      description: This is the user ID of the user that modified the site metadata.
+                    created:
+                      type: string
+                      description: The creation date of this site metadata in ISO 8601 with the format YYYY-MM-DDTHH:mm:ss.sssZ.
+                    creatorId:
+                      type: string
+                      description: This is the user ID of the user that created the site metadata.
+                    pages:
+                      type: array
+                      items:
+                        title: Page Metadata
+                        description: Page Metadata
+                        type: object
+                        properties:
+                          id:
+                            type: string
+                            description: The ID of the page item.
+                          rev:
+                            type: string
+                            description: The current revision of the document.
+                          name:
+                            type: string
+                            description: The name of the page item.
+                          contentId:
+                            type: string
+                            description: The ID of the page content item this item represents.
+                          contentTypeId:
+                            type: string
+                            description: The ID of the page content type.
+                          position:
+                            type: string
+                            description: Position relative to sibling pages giving the order of the pages. Position is an integer value starting at 0.
+                          description:
+                            type: string
+                            description: Page description.
+                          layoutId:
+                            type: string
+                            description: Page layout template ID.
+                          segment:
+                            type: string
+                            description: Friendly URL segment.
+                          title:
+                            type: string
+                            description: Page title.
+                          parentId:
+                            type: string
+                            description: The ID of the parent page. Not present if it is the root page.
+                          classification:
+                            type: string
+                            description: The classification of the page. This is always `page`.
+                          lastModified:
+                            type: string
+                            description: The last modified date of this page in ISO 8601 with the format YYYY-MM-DDTHH:mm:ss.sssZ.
+                          lastModifierId:
+                            type: string
+                            description: This is the user ID of the user that modified the page.
+                          created:
+                            type: string
+                            description: The creation date of this page in ISO 8601 with the format YYYY-MM-DDTHH:mm:ss.sssZ.
+                          creatorId:
+                            type: string
+                            description: This is the user ID of the user that created the page.
+                          route:
+                            type: string
+                            description: This is the url path of the page.
+                          url:
+                            type: string
+                            description: This is the server relative url server relative.
+                          children:
+                            type: array
+                            items:
+                              type: object
+                            description: This is an array of the hierarchical child pages of this hierarchical page.
+                      description: The page hierarchy of the site.
+        '304':
+          description: Not modified
+        '404':
+          description: The delivery site information for the specified site ID was not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: This JSON object describes an error condition.
+                properties:
+                  requestId:
+                    type: string
+                    description: The unique identifier of the request that failed.
+                  service:
+                    type: string
+                    description: The name of the service that reports the error.
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: This JSON object describes a specific error of an error condition.
+                      properties:
+                        code:
+                          type: integer
+                          description: An error code that is specific to the service that reports the error.
+                        message:
+                          type: string
+                          description: A message that describes what went wrong.
+                        description:
+                          type: string
+                          description: A more detailed explanation of the error condition and recommended steps to resolve the issue.
+                        more_info:
+                          type: string
+                          description: A URL pointing to a source that provides more information on this error.
+                        level:
+                          type: string
+                          enum:
+                          - ERROR
+                          - WARNING
+                          description: The severity of this error.
+                        parameters:
+                          type: object
+                          description: Additional properties that represent dynamic parts used in the 'message'.
+                        cause:
+                          type: object
+                          description: The error message that was produced by a downstream service and represents the cause of this error.
+                        locale:
+                          type: string
+                          description: The locale information of the text provided as 'message' and as 'description' of this error.
+                      required:
+                      - code
+                      - message
+                required:
+                - requestId
+                - errors
+        '429':
+          description: Too Many Requests, the server has reached a limit, the request must be sent again at a later time.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                description: This JSON object describes an error condition.
+                properties:
+                  requestId:
+                    type: string
+                    description: The unique identifier of the request that failed.
+                  service:
+                    type: string
+                    description: The name of the service that reports the error.
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: This JSON object describes a specific error of an error condition.
+                      properties:
+                        code:
+                          type: integer
+                          description: An error code that is specific to the service that reports the error.
+                        message:
+                          type: string
+                          description: A message that describes what went wrong.
+                        description:
+                          type: string
+                          description: A more detailed explanation of the error condition and recommended steps to resolve the issue.
+                        more_info:
+                          type: string
+                          description: A URL pointing to a source that provides more information on this error.
+                        level:
+                          type: string
+                          enum:
+                          - ERROR
+                          - WARNING
+                          description: The severity of this error.
+                        parameters:
+                          type: object
+                          description: Additional properties that represent dynamic parts used in the 'message'.
+                        cause:
+                          type: object
+                          description: The error message that was produced by a downstream service and represents the cause of this error.
+                        locale:
+                          type: string
+                          description: The locale information of the text provided as 'message' and as 'description' of this error.
+                      required:
+                      - code
+                      - message
+                required:
+                - requestId
+                - errors
+      x-ibm-dx-security-user-roles:
+      - admin
+      - manager
+      - editor
+      - viewer
+      - authenticatedVisitor
+      - anonymous
+      x-ibm-dx-vary: []
+      tags:
+      - Delivery render
+  /delivery/v1/rendering/context/{id}:
+    get:
+      summary: Delivery Rendering Context By ID
+      description: 'Use the `rendering/context/{id}` endpoint to retrieve the rendering context for the specified content ID.
+
+
+        The response contains the delivery content structure with resolved content element references. The resolution replaces content elements of type reference with the referenced rendering context. It is resolved recursively if the resolved content structure contains content elements of type reference.
+
+
+
+        **Cycle detection**
+
+
+        Referenced content can have cycles. In a cyclic structure, references link back to itself, often through references in between. The API detects and stops cycles to serialize the content structure. If a cycle is detected, the API stops the replacements of the referenced elements and sets a cycle marker property instead. The cycle marker property has the key "$$CYCLE" and the value of the detected cycling content ID. The content ID can be used to find the referenced content structure in the parent hierarchy.
+
+        <br />User roles: admin, manager, editor, viewer, authenticatedVisitor, anonymous'
+      parameters:
+      - in: path
+        name: id
+        description: Provide the ID of the resource. Note that IDs are always the IDs of published item, even if a draft exists with a different ID. For a site, use `@current` to indicate that the ID of the site is derived from the addressed URL via custom domain site mapping or URL path based site addressing. For further details consult the Content documentation.
+        required: true
+        schema:
+          type: string
+      - name: callback
+        description: Provide the JSONP callback name for JSONP support. The callback name must designate a javascript function that can be executed in the global scope. The argument will be the deserialized JSON object.
+        in: query
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Successfully retrieved the delivery rendering context.
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  title: RenderingContext
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                      description: The ID of the content item.
+                    rev:
+                      type: string
+                      description: The current revision of the document.
+                    name:
+                      type: string
+                      description: The name of the content item.
+                    classification:
+                      type: string
+                      description: The classification defines the document type. For content items, all documents are classified as "content".
+                    typeId:
+                      type: string
+                      description: The ID of the content type this item belongs to.
+                    locale:
+                      type: string
+                      description: The locale of the document (e.g "en", or "de").
+                    lastModified:
+                      type: string
+                      format: date-time
+                      description: The last modified date of this content item in ISO 8601 with the format YYYY-MM-DDTHH:mm:ss.sssZ.
+                    lastModifierId:
+                      type: string
+                      description: The name of user for now, this property may change once user management is defined (read only).
+                    created:
+                      type: string
+                      format: date-time
+                      description: The created date of this content item in ISO 8601 with the format YYYY-MM-DDTHH:mm:ss.sssZ.
+                    creatorId:
+                      type: string
+                      description: The ID of the creator
+                    layouts:
+                      description: The layouts of the content item
+                      type: object
+                    tags:
+                      type: array
+                      items:
+                        type: string
+                      uniqueItems: true
+                      description: The tags describing the content item.
+                    elements:
+                      type: object
+                      description: Defined by the type and captured in the schema given by the type, in a real content, this property will be filled with more information.
+                    description:
+                      type: string
+                      description: The description of the content item.
+                    type:
+                      type: string
+                      description: The link to the content type document this content is based on.
+        '304':
+          description: Not modified
+        '404':
+          description: The delivery rendering context for the specified ID was not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: This JSON object describes an error condition.
+                properties:
+                  requestId:
+                    type: string
+                    description: The unique identifier of the request that failed.
+                  service:
+                    type: string
+                    description: The name of the service that reports the error.
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: This JSON object describes a specific error of an error condition.
+                      properties:
+                        code:
+                          type: integer
+                          description: An error code that is specific to the service that reports the error.
+                        message:
+                          type: string
+                          description: A message that describes what went wrong.
+                        description:
+                          type: string
+                          description: A more detailed explanation of the error condition and recommended steps to resolve the issue.
+                        more_info:
+                          type: string
+                          description: A URL pointing to a source that provides more information on this error.
+                        level:
+                          type: string
+                          enum:
+                          - ERROR
+                          - WARNING
+                          description: The severity of this error.
+                        parameters:
+                          type: object
+                          description: Additional properties that represent dynamic parts used in the 'message'.
+                        cause:
+                          type: object
+                          description: The error message that was produced by a downstream service and represents the cause of this error.
+                        locale:
+                          type: string
+                          description: The locale information of the text provided as 'message' and as 'description' of this error.
+                      required:
+                      - code
+                      - message
+                required:
+                - requestId
+                - errors
+        '429':
+          description: Too Many Requests, the server has reached a limit, the request must be sent again at a later time.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                description: This JSON object describes an error condition.
+                properties:
+                  requestId:
+                    type: string
+                    description: The unique identifier of the request that failed.
+                  service:
+                    type: string
+                    description: The name of the service that reports the error.
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: This JSON object describes a specific error of an error condition.
+                      properties:
+                        code:
+                          type: integer
+                          description: An error code that is specific to the service that reports the error.
+                        message:
+                          type: string
+                          description: A message that describes what went wrong.
+                        description:
+                          type: string
+                          description: A more detailed explanation of the error condition and recommended steps to resolve the issue.
+                        more_info:
+                          type: string
+                          description: A URL pointing to a source that provides more information on this error.
+                        level:
+                          type: string
+                          enum:
+                          - ERROR
+                          - WARNING
+                          description: The severity of this error.
+                        parameters:
+                          type: object
+                          description: Additional properties that represent dynamic parts used in the 'message'.
+                        cause:
+                          type: object
+                          description: The error message that was produced by a downstream service and represents the cause of this error.
+                        locale:
+                          type: string
+                          description: The locale information of the text provided as 'message' and as 'description' of this error.
+                      required:
+                      - code
+                      - message
+                required:
+                - requestId
+                - errors
+      x-ibm-dx-security-user-roles:
+      - admin
+      - manager
+      - editor
+      - viewer
+      - authenticatedVisitor
+      - anonymous
+      x-ibm-dx-vary: []
+      tags:
+      - Delivery render
+  /delivery/v1/rendering/type/{id}:
+    get:
+      summary: Aggregated type information by ID
+      description: 'Aggregated type information by ID<br />User roles: admin, manager, editor, viewer, authenticatedVisitor, anonymous'
+      parameters:
+      - in: path
+        name: id
+        description: Provide the ID of the resource. Note that IDs are always the IDs of published item, even if a draft exists with a different ID. For a site, use `@current` to indicate that the ID of the site is derived from the addressed URL via custom domain site mapping or URL path based site addressing. For further details consult the Content documentation.
+        required: true
+        schema:
+          type: string
+      - name: callback
+        description: Provide the JSONP callback name for JSONP support. The callback name must designate a javascript function that can be executed in the global scope. The argument will be the deserialized JSON object.
+        in: query
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Successfully retrieved the delivery type information.
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  title: RenderingContext
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                      description: The ID of the content item.
+                    rev:
+                      type: string
+                      description: The current revision of the document.
+                    name:
+                      type: string
+                      description: The name of the content item.
+                    classification:
+                      type: string
+                      description: The classification defines the document type. For content items, all documents are classified as "content".
+                    typeId:
+                      type: string
+                      description: The ID of the content type this item belongs to.
+                    locale:
+                      type: string
+                      description: The locale of the document (e.g "en", or "de").
+                    lastModified:
+                      type: string
+                      format: date-time
+                      description: The last modified date of this content item in ISO 8601 with the format YYYY-MM-DDTHH:mm:ss.sssZ.
+                    lastModifierId:
+                      type: string
+                      description: The name of user for now, this property may change once user management is defined (read only).
+                    created:
+                      type: string
+                      format: date-time
+                      description: The created date of this content item in ISO 8601 with the format YYYY-MM-DDTHH:mm:ss.sssZ.
+                    creatorId:
+                      type: string
+                      description: The ID of the creator
+                    layouts:
+                      description: The layouts of the content item
+                      type: object
+                    tags:
+                      type: array
+                      items:
+                        type: string
+                      uniqueItems: true
+                      description: The tags describing the content item.
+                    elements:
+                      type: object
+                      description: Defined by the type and captured in the schema given by the type, in a real content, this property will be filled with more information.
+                    description:
+                      type: string
+                      description: The description of the content item.
+                    type:
+                      type: string
+                      description: The link to the content type document this content is based on.
+        '304':
+          description: Not modified
+        '404':
+          description: The delivery type for the specified ID was not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: This JSON object describes an error condition.
+                properties:
+                  requestId:
+                    type: string
+                    description: The unique identifier of the request that failed.
+                  service:
+                    type: string
+                    description: The name of the service that reports the error.
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: This JSON object describes a specific error of an error condition.
+                      properties:
+                        code:
+                          type: integer
+                          description: An error code that is specific to the service that reports the error.
+                        message:
+                          type: string
+                          description: A message that describes what went wrong.
+                        description:
+                          type: string
+                          description: A more detailed explanation of the error condition and recommended steps to resolve the issue.
+                        more_info:
+                          type: string
+                          description: A URL pointing to a source that provides more information on this error.
+                        level:
+                          type: string
+                          enum:
+                          - ERROR
+                          - WARNING
+                          description: The severity of this error.
+                        parameters:
+                          type: object
+                          description: Additional properties that represent dynamic parts used in the 'message'.
+                        cause:
+                          type: object
+                          description: The error message that was produced by a downstream service and represents the cause of this error.
+                        locale:
+                          type: string
+                          description: The locale information of the text provided as 'message' and as 'description' of this error.
+                      required:
+                      - code
+                      - message
+                required:
+                - requestId
+                - errors
+        '429':
+          description: Too Many Requests, the server has reached a limit, the request must be sent again at a later time.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                description: This JSON object describes an error condition.
+                properties:
+                  requestId:
+                    type: string
+                    description: The unique identifier of the request that failed.
+                  service:
+                    type: string
+                    description: The name of the service that reports the error.
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: This JSON object describes a specific error of an error condition.
+                      properties:
+                        code:
+                          type: integer
+                          description: An error code that is specific to the service that reports the error.
+                        message:
+                          type: string
+                          description: A message that describes what went wrong.
+                        description:
+                          type: string
+                          description: A more detailed explanation of the error condition and recommended steps to resolve the issue.
+                        more_info:
+                          type: string
+                          description: A URL pointing to a source that provides more information on this error.
+                        level:
+                          type: string
+                          enum:
+                          - ERROR
+                          - WARNING
+                          description: The severity of this error.
+                        parameters:
+                          type: object
+                          description: Additional properties that represent dynamic parts used in the 'message'.
+                        cause:
+                          type: object
+                          description: The error message that was produced by a downstream service and represents the cause of this error.
+                        locale:
+                          type: string
+                          description: The locale information of the text provided as 'message' and as 'description' of this error.
+                      required:
+                      - code
+                      - message
+                required:
+                - requestId
+                - errors
+      x-ibm-dx-security-user-roles:
+      - admin
+      - manager
+      - editor
+      - viewer
+      - authenticatedVisitor
+      - anonymous
+      x-ibm-dx-vary: []
+      tags:
+      - Delivery render
+  /delivery/v1/rendering/search:
+    get:
+      summary: Delivery Rendering Contexts By Search Query
+      description: "Use the `/delivery/v1/rendering/search` endpoint to retrieve rendering contexts based on a search query. The API has the same query functionality as the delivery search API (See the delivery search API documentation for full query options), except for the following aspects:\n   - The \"fl\" (field list) query parameter is ignored.\n   - The query supports only classifiction content.\n   - The results of the query are rendering contexts (0-*) in any case.\n<br />User roles: admin, manager, editor, viewer, authenticatedVisitor, anonymous"
+      parameters:
+      - name: q
+        description: The Solr "q" parameter uses Solr/Lucene standard query syntax.
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: fq
+        description: The Solr "fq" parameter applies a filter query to the search results.
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: callback
+        description: Provide the JSONP callback name for JSONP support. The callback name must designate a javascript function that can be executed in the global scope. The argument will be the deserialized JSON object.
+        in: query
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Successfully retrieved the delivery rendering context.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  title: RenderingContextSearchEntry
+                  type: object
+                  properties:
+                    document:
+                      title: RenderingContext
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          description: The ID of the content item.
+                        rev:
+                          type: string
+                          description: The current revision of the document.
+                        name:
+                          type: string
+                          description: The name of the content item.
+                        classification:
+                          type: string
+                          description: The classification defines the document type. For content items, all documents are classified as "content".
+                        typeId:
+                          type: string
+                          description: The ID of the content type this item belongs to.
+                        locale:
+                          type: string
+                          description: The locale of the document (e.g "en", or "de").
+                        lastModified:
+                          type: string
+                          format: date-time
+                          description: The last modified date of this content item in ISO 8601 with the format YYYY-MM-DDTHH:mm:ss.sssZ.
+                        lastModifierId:
+                          type: string
+                          description: The name of user for now, this property may change once user management is defined (read only).
+                        created:
+                          type: string
+                          format: date-time
+                          description: The created date of this content item in ISO 8601 with the format YYYY-MM-DDTHH:mm:ss.sssZ.
+                        creatorId:
+                          type: string
+                          description: The ID of the creator
+                        layouts:
+                          description: The layouts of the content item
+                          type: object
+                        tags:
+                          type: array
+                          items:
+                            type: string
+                          uniqueItems: true
+                          description: The tags describing the content item.
+                        elements:
+                          type: object
+                          description: Defined by the type and captured in the schema given by the type, in a real content, this property will be filled with more information.
+                        description:
+                          type: string
+                          description: The description of the content item.
+                        type:
+                          type: string
+                          description: The link to the content type document this content is based on.
+        '304':
+          description: Not modified
+        '404':
+          description: The delivery rendering context for the specified search query was not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: This JSON object describes an error condition.
+                properties:
+                  requestId:
+                    type: string
+                    description: The unique identifier of the request that failed.
+                  service:
+                    type: string
+                    description: The name of the service that reports the error.
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: This JSON object describes a specific error of an error condition.
+                      properties:
+                        code:
+                          type: integer
+                          description: An error code that is specific to the service that reports the error.
+                        message:
+                          type: string
+                          description: A message that describes what went wrong.
+                        description:
+                          type: string
+                          description: A more detailed explanation of the error condition and recommended steps to resolve the issue.
+                        more_info:
+                          type: string
+                          description: A URL pointing to a source that provides more information on this error.
+                        level:
+                          type: string
+                          enum:
+                          - ERROR
+                          - WARNING
+                          description: The severity of this error.
+                        parameters:
+                          type: object
+                          description: Additional properties that represent dynamic parts used in the 'message'.
+                        cause:
+                          type: object
+                          description: The error message that was produced by a downstream service and represents the cause of this error.
+                        locale:
+                          type: string
+                          description: The locale information of the text provided as 'message' and as 'description' of this error.
+                      required:
+                      - code
+                      - message
+                required:
+                - requestId
+                - errors
+        '429':
+          description: Too Many Requests, the server has reached a limit, the request must be sent again at a later time.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      x-ibm-dx-security-user-roles:
+      - admin
+      - manager
+      - editor
+      - viewer
+      - authenticatedVisitor
+      - anonymous
+      x-ibm-dx-vary: []
+      tags:
+      - Delivery render
+  /mydelivery/v1/rendering/render/content/{id}:
+    get:
+      summary: Applies server side rendering to the specified content item
+      description: 'Applies server side rendering to the specified content item<br />User roles: admin, manager, editor, viewer, authenticatedVisitor'
+      parameters:
+      - in: path
+        name: id
+        description: Provide the ID of the resource. Note that IDs are always the IDs of published item, even if a draft exists with a different ID. For a site, use `@current` to indicate that the ID of the site is derived from the addressed URL via custom domain site mapping or URL path based site addressing. For further details consult the Content documentation.
+        required: true
+        schema:
+          type: string
+      - in: query
+        name: layoutId
+        description: Provide the ID of the layout to be used to pre-render the resource.
+        required: false
+        schema:
+          type: string
+      - in: query
+        name: contentType
+        description: Specifies the content type to be set on the response. Default is text/html.
+        required: false
+        schema:
+          type: string
+      - name: callback
+        description: Provide the JSONP callback name for JSONP support. The callback name must designate a javascript function that can be executed in the global scope. The argument will be the deserialized JSON object.
+        in: query
+        required: false
+        schema:
+          type: string
+      - in: query
+        name: rcParam
+        description: By specifying query parameters with arbitrary names, but start with the prefix 'rc' or 'RC' (case insensitive), e.g., 'RcParam1', 'rcMy', you can provide custom parameters that will be added to the rendering context JSON under the $context.customParameters section.
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Successfully retrieved the rendering.
+          content:
+            text/html:
+              schema:
+                type: string
+        '429':
+          description: Too Many Requests, the server has reached a limit, the request must be sent again at a later time.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server Error
+          content:
+            text/html:
+              schema:
+                type: object
+                description: This JSON object describes an error condition.
+                properties:
+                  requestId:
+                    type: string
+                    description: The unique identifier of the request that failed.
+                  service:
+                    type: string
+                    description: The name of the service that reports the error.
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: This JSON object describes a specific error of an error condition.
+                      properties:
+                        code:
+                          type: integer
+                          description: An error code that is specific to the service that reports the error.
+                        message:
+                          type: string
+                          description: A message that describes what went wrong.
+                        description:
+                          type: string
+                          description: A more detailed explanation of the error condition and recommended steps to resolve the issue.
+                        more_info:
+                          type: string
+                          description: A URL pointing to a source that provides more information on this error.
+                        level:
+                          type: string
+                          enum:
+                          - ERROR
+                          - WARNING
+                          description: The severity of this error.
+                        parameters:
+                          type: object
+                          description: Additional properties that represent dynamic parts used in the 'message'.
+                        cause:
+                          type: object
+                          description: The error message that was produced by a downstream service and represents the cause of this error.
+                        locale:
+                          type: string
+                          description: The locale information of the text provided as 'message' and as 'description' of this error.
+                      required:
+                      - code
+                      - message
+                required:
+                - requestId
+                - errors
+      x-ibm-dx-security-user-roles:
+      - admin
+      - manager
+      - editor
+      - viewer
+      - authenticatedVisitor
+      tags:
+      - Delivery render
+  /mydelivery/v1/rendering/type/{id}:
+    get:
+      summary: Aggregated type information by ID
+      description: 'Aggregated type information by ID<br />User roles: admin, manager, editor, viewer, authenticatedVisitor'
+      parameters:
+      - in: path
+        name: id
+        description: Provide the ID of the resource. Note that IDs are always the IDs of published item, even if a draft exists with a different ID. For a site, use `@current` to indicate that the ID of the site is derived from the addressed URL via custom domain site mapping or URL path based site addressing. For further details consult the Content documentation.
+        required: true
+        schema:
+          type: string
+      - name: callback
+        description: Provide the JSONP callback name for JSONP support. The callback name must designate a javascript function that can be executed in the global scope. The argument will be the deserialized JSON object.
+        in: query
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Successfully retrieved the delivery type information.
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  title: RenderingContext
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                      description: The ID of the content item.
+                    rev:
+                      type: string
+                      description: The current revision of the document.
+                    name:
+                      type: string
+                      description: The name of the content item.
+                    classification:
+                      type: string
+                      description: The classification defines the document type. For content items, all documents are classified as "content".
+                    typeId:
+                      type: string
+                      description: The ID of the content type this item belongs to.
+                    locale:
+                      type: string
+                      description: The locale of the document (e.g "en", or "de").
+                    lastModified:
+                      type: string
+                      format: date-time
+                      description: The last modified date of this content item in ISO 8601 with the format YYYY-MM-DDTHH:mm:ss.sssZ.
+                    lastModifierId:
+                      type: string
+                      description: The name of user for now, this property may change once user management is defined (read only).
+                    created:
+                      type: string
+                      format: date-time
+                      description: The created date of this content item in ISO 8601 with the format YYYY-MM-DDTHH:mm:ss.sssZ.
+                    creatorId:
+                      type: string
+                      description: The ID of the creator
+                    layouts:
+                      description: The layouts of the content item
+                      type: object
+                    tags:
+                      type: array
+                      items:
+                        type: string
+                      uniqueItems: true
+                      description: The tags describing the content item.
+                    elements:
+                      type: object
+                      description: Defined by the type and captured in the schema given by the type, in a real content, this property will be filled with more information.
+                    description:
+                      type: string
+                      description: The description of the content item.
+                    type:
+                      type: string
+                      description: The link to the content type document this content is based on.
+        '304':
+          description: Not modified
+        '404':
+          description: The delivery type for the specified ID was not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: This JSON object describes an error condition.
+                properties:
+                  requestId:
+                    type: string
+                    description: The unique identifier of the request that failed.
+                  service:
+                    type: string
+                    description: The name of the service that reports the error.
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: This JSON object describes a specific error of an error condition.
+                      properties:
+                        code:
+                          type: integer
+                          description: An error code that is specific to the service that reports the error.
+                        message:
+                          type: string
+                          description: A message that describes what went wrong.
+                        description:
+                          type: string
+                          description: A more detailed explanation of the error condition and recommended steps to resolve the issue.
+                        more_info:
+                          type: string
+                          description: A URL pointing to a source that provides more information on this error.
+                        level:
+                          type: string
+                          enum:
+                          - ERROR
+                          - WARNING
+                          description: The severity of this error.
+                        parameters:
+                          type: object
+                          description: Additional properties that represent dynamic parts used in the 'message'.
+                        cause:
+                          type: object
+                          description: The error message that was produced by a downstream service and represents the cause of this error.
+                        locale:
+                          type: string
+                          description: The locale information of the text provided as 'message' and as 'description' of this error.
+                      required:
+                      - code
+                      - message
+                required:
+                - requestId
+                - errors
+        '429':
+          description: Too Many Requests, the server has reached a limit, the request must be sent again at a later time.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                description: This JSON object describes an error condition.
+                properties:
+                  requestId:
+                    type: string
+                    description: The unique identifier of the request that failed.
+                  service:
+                    type: string
+                    description: The name of the service that reports the error.
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: This JSON object describes a specific error of an error condition.
+                      properties:
+                        code:
+                          type: integer
+                          description: An error code that is specific to the service that reports the error.
+                        message:
+                          type: string
+                          description: A message that describes what went wrong.
+                        description:
+                          type: string
+                          description: A more detailed explanation of the error condition and recommended steps to resolve the issue.
+                        more_info:
+                          type: string
+                          description: A URL pointing to a source that provides more information on this error.
+                        level:
+                          type: string
+                          enum:
+                          - ERROR
+                          - WARNING
+                          description: The severity of this error.
+                        parameters:
+                          type: object
+                          description: Additional properties that represent dynamic parts used in the 'message'.
+                        cause:
+                          type: object
+                          description: The error message that was produced by a downstream service and represents the cause of this error.
+                        locale:
+                          type: string
+                          description: The locale information of the text provided as 'message' and as 'description' of this error.
+                      required:
+                      - code
+                      - message
+                required:
+                - requestId
+                - errors
+      x-ibm-dx-security-user-roles:
+      - admin
+      - manager
+      - editor
+      - viewer
+      - authenticatedVisitor
+      tags:
+      - Delivery render
+components:
+  schemas:
+    ErrorResponse:
+      description: This JSON record represents an error condition.
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            description: This JSON record represents an individual error or warning contained in an error message.
+            type: object
+            properties:
+              code:
+                type: integer
+                description: An error code
+              message:
+                type: string
+                description: A message describing what went wrong.
+              description:
+                type: string
+                description: Further explanation of the error condition and potential next steps to resolve the problem.
+              more_info:
+                type: string
+                description: A URL pointing to a web site that provides more information on the given error condition.
+              level:
+                type: string
+                enum:
+                - ERROR
+                - WARNING
+                description: The severity level of the message. Default is error.
+              parameters:
+                type: object
+                description: Additional properties reflecting the dynamic parts of the error condition.
+              cause:
+                type: object
+                description: This property can be used to transport causing error message records produced by a down stream service calls.
+              locale:
+                type: string
+                description: This property represents the locale of the text contained in properties 'message', and 'description'. This property is mandatory if message and description contain translated text.
+            required:
+            - code
+            - message
+        requestId:
+          type: string
+          description: The ID of the failing request.
+        service:
+          type: string
+          description: The name of the service serving the error message.
+      required:
+      - errors
+      - requestId
+x-refined-from:
+- acoustic-content-openapi-original.json
+- acoustic-content-swagger2-original.yaml
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

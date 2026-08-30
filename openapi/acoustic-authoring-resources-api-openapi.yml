@@ -1,0 +1,1396 @@
+openapi: 3.2.0
+info:
+  title: Acoustic Authoring resources API
+  version: 1.0.142
+  x-ibm-name: ibm-watson-content-hub-api
+  description: 'Operations tagged Authoring resources across 2 of this provider''s published API definitions: acoustic-content-openapi-original.json, acoustic-content-swagger2-original.yaml. Each path carries the servers of the definition it was published in.'
+tags:
+- name: Authoring resources
+  description: Use the Content resources data service Rest APIs to work with resources. Resources are binary files that are stored in the CMS and used in content or site design. Resources that are not referenced by an asset or content will be cleaned up periodically.
+paths:
+  /authoring/v1/resources:
+    post:
+      tags:
+      - Authoring resources
+      summary: Create a new resource.
+      description: 'Use this endpoint to create a new resource with the binary data that is provided in the request body. If the md5 checksum parameter is provided, the uploaded resource is validated against the provided checksum.<br />User roles: admin, manager, editor'
+      responses:
+        '201':
+          description: Successfully created a new resource and the ID is returned.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                required:
+                - id
+                example:
+                  id: 2322e04f11e47edbc6505ad8294ebd70
+        '400':
+          description: The required parameters are missing or invalid, the binary size limit was exceeded, or the checksum provided was not correct. Please read the error message and alter the request accordingly.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: an error response.
+                properties:
+                  requestId:
+                    type: string
+                    description: The current request ID
+                  service:
+                    type: string
+                    description: The name of the service that produced the error
+                  requestMethod:
+                    type: string
+                    description: The Http method type of the current request
+                  requestUri:
+                    type: string
+                    description: The request uri
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code
+                        key:
+                          type: string
+                          description: The message key
+                        message:
+                          type: string
+                          description: The error message
+                        description:
+                          type: string
+                          description: Optional detailed error message
+                        more_info:
+                          type: string
+                          description: Optional additional information for the message
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end user
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        field:
+                          type: string
+                          description: Only present on field validation errors, indicates the field in error.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                      required:
+                      - code
+                      - key
+                      - message
+                      - description
+                      - more_info
+                      - category
+                      - level
+                      - parameters
+                      - locale
+                required:
+                - requestId
+                - service
+                - requestMethod
+                - requestUri
+                - errors
+        '429':
+          description: Too Many Requests, the server has reached a limit, the request must be sent again at a later time.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '503':
+          description: Connection failed to data store.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: an error response.
+                properties:
+                  requestId:
+                    type: string
+                    description: The current request ID
+                  service:
+                    type: string
+                    description: The name of the service that produced the error
+                  requestMethod:
+                    type: string
+                    description: The Http method type of the current request
+                  requestUri:
+                    type: string
+                    description: The request uri
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code
+                        key:
+                          type: string
+                          description: The message key
+                        message:
+                          type: string
+                          description: The error message
+                        description:
+                          type: string
+                          description: Optional detailed error message
+                        more_info:
+                          type: string
+                          description: Optional additional information for the message
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end user
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        field:
+                          type: string
+                          description: Only present on field validation errors, indicates the field in error.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                      required:
+                      - code
+                      - key
+                      - message
+                      - description
+                      - more_info
+                      - category
+                      - level
+                      - parameters
+                      - locale
+                required:
+                - requestId
+                - service
+                - requestMethod
+                - requestUri
+                - errors
+        default:
+          description: Unexpected error.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: an error response.
+                properties:
+                  requestId:
+                    type: string
+                    description: The current request ID
+                  service:
+                    type: string
+                    description: The name of the service that produced the error
+                  requestMethod:
+                    type: string
+                    description: The Http method type of the current request
+                  requestUri:
+                    type: string
+                    description: The request uri
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code
+                        key:
+                          type: string
+                          description: The message key
+                        message:
+                          type: string
+                          description: The error message
+                        description:
+                          type: string
+                          description: Optional detailed error message
+                        more_info:
+                          type: string
+                          description: Optional additional information for the message
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end user
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        field:
+                          type: string
+                          description: Only present on field validation errors, indicates the field in error.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                      required:
+                      - code
+                      - key
+                      - message
+                      - description
+                      - more_info
+                      - category
+                      - level
+                      - parameters
+                      - locale
+                required:
+                - requestId
+                - service
+                - requestMethod
+                - requestUri
+                - errors
+      parameters:
+      - name: Content-Type
+        in: header
+        description: Provide the media type of the binary.
+        required: true
+        schema:
+          type: string
+          default: application/octet-stream
+      - name: name
+        in: query
+        description: Provide a name for the resource that you want to create.
+        required: true
+        schema:
+          type: string
+      - name: md5
+        in: query
+        description: Provide the Base64 encoded MD5 checksum of the resource.
+        required: false
+        schema:
+          type: string
+      requestBody:
+        $ref: '#/components/requestBodies/Binary'
+      x-ibm-dx-security-user-roles:
+      - admin
+      - manager
+      - editor
+  /authoring/v1/resources/{id}:
+    get:
+      tags:
+      - Authoring resources
+      summary: Retrieve an existing resource.
+      description: 'Use this endpoint to retrieve an existing resource from the database. The media type of the binary is defined in the Content-Type header. Byte serving is supported. The Cache-Control response header is set to expire the resource in a year.<br />User roles: admin, manager, editor, viewer'
+      parameters:
+      - name: id
+        in: path
+        description: Provide the ID of the resource that you want to retrieve.
+        required: true
+        schema:
+          type: string
+      - name: mode
+        in: query
+        description: Provide the option to set the response Content-Disposition as an attachment.
+        required: false
+        schema:
+          type: string
+          enum:
+          - download
+      - name: bypass-cache
+        in: query
+        description: Force bypassing intermediate caches by providing a unique token.
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Successfully retrieved the binary of the resource that matches the ID you provided.
+          headers:
+            Content-Disposition:
+              description: Suggests whether to attempt to open the file when processing or to save it. A file name is suggested to save the file.
+              schema:
+                type: string
+          content:
+            '*/*':
+              schema:
+                format: binary
+                title: binary string
+        '206':
+          description: Successfully retrieved the request bytes of the resource that matches the ID you provided.
+          headers:
+            Content-Disposition:
+              description: Suggests whether to attempt to open the file when processing or to save it. A file name is suggested to save the file.
+              schema:
+                type: string
+          content:
+            '*/*':
+              schema:
+                format: binary
+                title: binary string
+        '404':
+          description: The resource with the provided ID was not found.
+          content:
+            '*/*':
+              schema:
+                type: object
+                description: an error response.
+                properties:
+                  requestId:
+                    type: string
+                    description: The current request ID
+                  service:
+                    type: string
+                    description: The name of the service that produced the error
+                  requestMethod:
+                    type: string
+                    description: The Http method type of the current request
+                  requestUri:
+                    type: string
+                    description: The request uri
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code
+                        key:
+                          type: string
+                          description: The message key
+                        message:
+                          type: string
+                          description: The error message
+                        description:
+                          type: string
+                          description: Optional detailed error message
+                        more_info:
+                          type: string
+                          description: Optional additional information for the message
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end user
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        field:
+                          type: string
+                          description: Only present on field validation errors, indicates the field in error.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                      required:
+                      - code
+                      - key
+                      - message
+                      - description
+                      - more_info
+                      - category
+                      - level
+                      - parameters
+                      - locale
+                required:
+                - requestId
+                - service
+                - requestMethod
+                - requestUri
+                - errors
+        '429':
+          description: Too Many Requests, the server has reached a limit, the request must be sent again at a later time.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '503':
+          description: Connection failed to data store.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: an error response.
+                properties:
+                  requestId:
+                    type: string
+                    description: The current request ID
+                  service:
+                    type: string
+                    description: The name of the service that produced the error
+                  requestMethod:
+                    type: string
+                    description: The Http method type of the current request
+                  requestUri:
+                    type: string
+                    description: The request uri
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code
+                        key:
+                          type: string
+                          description: The message key
+                        message:
+                          type: string
+                          description: The error message
+                        description:
+                          type: string
+                          description: Optional detailed error message
+                        more_info:
+                          type: string
+                          description: Optional additional information for the message
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end user
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        field:
+                          type: string
+                          description: Only present on field validation errors, indicates the field in error.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                      required:
+                      - code
+                      - key
+                      - message
+                      - description
+                      - more_info
+                      - category
+                      - level
+                      - parameters
+                      - locale
+                required:
+                - requestId
+                - service
+                - requestMethod
+                - requestUri
+                - errors
+        default:
+          description: Unexpected error.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: an error response.
+                properties:
+                  requestId:
+                    type: string
+                    description: The current request ID
+                  service:
+                    type: string
+                    description: The name of the service that produced the error
+                  requestMethod:
+                    type: string
+                    description: The Http method type of the current request
+                  requestUri:
+                    type: string
+                    description: The request uri
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code
+                        key:
+                          type: string
+                          description: The message key
+                        message:
+                          type: string
+                          description: The error message
+                        description:
+                          type: string
+                          description: Optional detailed error message
+                        more_info:
+                          type: string
+                          description: Optional additional information for the message
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end user
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        field:
+                          type: string
+                          description: Only present on field validation errors, indicates the field in error.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                      required:
+                      - code
+                      - key
+                      - message
+                      - description
+                      - more_info
+                      - category
+                      - level
+                      - parameters
+                      - locale
+                required:
+                - requestId
+                - service
+                - requestMethod
+                - requestUri
+                - errors
+      x-ibm-dx-security-user-roles:
+      - admin
+      - manager
+      - editor
+      - viewer
+    put:
+      tags:
+      - Authoring resources
+      summary: Create a resource at the given id.
+      description: 'Use this end point to create a resource at the required ID with the binary data provided in the request body. If a resource already exists with that id, then the md5 checksum is compared. If it matches, then the request will respond with a 200 OK. If it does not match, a 409 Conflict response is returned. The created resource will be validated against the checksum.<br />User roles: admin, manager, editor'
+      responses:
+        '200':
+          description: The resource provided already exists at the given ID.
+        '201':
+          description: Successfully created a resource at the given ID.
+        '400':
+          description: The required parameters are missing or invalid, the binary size limit was exceeded, or the checksum provided was not correct. Please read the error message and alter the request accordingly.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: an error response.
+                properties:
+                  requestId:
+                    type: string
+                    description: The current request ID
+                  service:
+                    type: string
+                    description: The name of the service that produced the error
+                  requestMethod:
+                    type: string
+                    description: The Http method type of the current request
+                  requestUri:
+                    type: string
+                    description: The request uri
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code
+                        key:
+                          type: string
+                          description: The message key
+                        message:
+                          type: string
+                          description: The error message
+                        description:
+                          type: string
+                          description: Optional detailed error message
+                        more_info:
+                          type: string
+                          description: Optional additional information for the message
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end user
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        field:
+                          type: string
+                          description: Only present on field validation errors, indicates the field in error.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                      required:
+                      - code
+                      - key
+                      - message
+                      - description
+                      - more_info
+                      - category
+                      - level
+                      - parameters
+                      - locale
+                required:
+                - requestId
+                - service
+                - requestMethod
+                - requestUri
+                - errors
+        '409':
+          description: A resource with a different checksum exists at the given ID.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: an error response.
+                properties:
+                  requestId:
+                    type: string
+                    description: The current request ID
+                  service:
+                    type: string
+                    description: The name of the service that produced the error
+                  requestMethod:
+                    type: string
+                    description: The Http method type of the current request
+                  requestUri:
+                    type: string
+                    description: The request uri
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code
+                        key:
+                          type: string
+                          description: The message key
+                        message:
+                          type: string
+                          description: The error message
+                        description:
+                          type: string
+                          description: Optional detailed error message
+                        more_info:
+                          type: string
+                          description: Optional additional information for the message
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end user
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        field:
+                          type: string
+                          description: Only present on field validation errors, indicates the field in error.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                      required:
+                      - code
+                      - key
+                      - message
+                      - description
+                      - more_info
+                      - category
+                      - level
+                      - parameters
+                      - locale
+                required:
+                - requestId
+                - service
+                - requestMethod
+                - requestUri
+                - errors
+        '429':
+          description: Too Many Requests, the server has reached a limit, the request must be sent again at a later time.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '503':
+          description: Connection failed to data store.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: an error response.
+                properties:
+                  requestId:
+                    type: string
+                    description: The current request ID
+                  service:
+                    type: string
+                    description: The name of the service that produced the error
+                  requestMethod:
+                    type: string
+                    description: The Http method type of the current request
+                  requestUri:
+                    type: string
+                    description: The request uri
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code
+                        key:
+                          type: string
+                          description: The message key
+                        message:
+                          type: string
+                          description: The error message
+                        description:
+                          type: string
+                          description: Optional detailed error message
+                        more_info:
+                          type: string
+                          description: Optional additional information for the message
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end user
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        field:
+                          type: string
+                          description: Only present on field validation errors, indicates the field in error.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                      required:
+                      - code
+                      - key
+                      - message
+                      - description
+                      - more_info
+                      - category
+                      - level
+                      - parameters
+                      - locale
+                required:
+                - requestId
+                - service
+                - requestMethod
+                - requestUri
+                - errors
+        default:
+          description: Unexpected error.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: an error response.
+                properties:
+                  requestId:
+                    type: string
+                    description: The current request ID
+                  service:
+                    type: string
+                    description: The name of the service that produced the error
+                  requestMethod:
+                    type: string
+                    description: The Http method type of the current request
+                  requestUri:
+                    type: string
+                    description: The request uri
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code
+                        key:
+                          type: string
+                          description: The message key
+                        message:
+                          type: string
+                          description: The error message
+                        description:
+                          type: string
+                          description: Optional detailed error message
+                        more_info:
+                          type: string
+                          description: Optional additional information for the message
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end user
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        field:
+                          type: string
+                          description: Only present on field validation errors, indicates the field in error.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                      required:
+                      - code
+                      - key
+                      - message
+                      - description
+                      - more_info
+                      - category
+                      - level
+                      - parameters
+                      - locale
+                required:
+                - requestId
+                - service
+                - requestMethod
+                - requestUri
+                - errors
+      parameters:
+      - name: Content-Type
+        in: header
+        description: Provide the media type of the binary.
+        required: true
+        schema:
+          type: string
+          default: application/octet-stream
+      - name: name
+        in: query
+        description: Provide a name for the resource that you want to create.
+        required: true
+        schema:
+          type: string
+      - name: id
+        in: path
+        description: Provide the ID of the resource that you want to create.
+        required: true
+        schema:
+          type: string
+      - name: md5
+        in: query
+        description: Provide the Base64 encoded MD5 checksum of the resource.
+        required: true
+        schema:
+          type: string
+      requestBody:
+        $ref: '#/components/requestBodies/Binary'
+      x-ibm-dx-security-user-roles:
+      - admin
+      - manager
+      - editor
+  /authoring/v1/resources/views/by-created:
+    get:
+      summary: Retrieve all resources created within the specified date range.
+      description: 'Use this endpoint to retrieve all resources that was created within the date range specified.<br />User roles: admin, manager, editor, viewer'
+      parameters:
+      - name: start
+        in: query
+        required: false
+        description: 'Provide the date and time of when the resource was created. Resources that were created on or after this date and time are returned. The date value must be in the ISO 8601 format YYYY-MM-DD T hh:mm:ss:sssZ. Note: when reversing the order you do not switch start and end.'
+        schema:
+          type: string
+          format: date-time
+      - name: end
+        in: query
+        required: false
+        description: 'Provide the date and time of when the resource was created. Resources that were created on or before this date and time are returned. The date value must be in the ISO 8601 format YYYY-MM-DD T hh:mm:ss:sssZ. Note: when reversing the order you do not switch start and end.'
+        schema:
+          type: string
+          format: date-time
+      - name: startId
+        in: query
+        required: false
+        description: 'If start does not uniquely identify the result to start from, you can specify the UUID of the result as startId. Note: when reversing the order you do not switch start and end ids.'
+        schema:
+          type: string
+      - name: endId
+        in: query
+        required: false
+        description: 'If end does not uniquely identify the result to end at, you can specify the UUID of the result as endId. Note: when reversing the order you do not switch start and end ids.'
+        schema:
+          type: string
+      - name: limit
+        in: query
+        required: false
+        description: Set the limit for the maximum number of resource items to return in a single result. The default value is 50. You can pass 0 to unset the limit and stream all available results. A streaming parser can be avoided with format=sequence.
+        schema:
+          type: number
+          format: integer
+      - name: format
+        in: query
+        required: false
+        description: "Specify the result format.\n * `feed` - (default) returns a wrapper with links\n * `array` - returns just the array of results\n * `sequence` - each result is a separate JSON document on a new line\n"
+        schema:
+          type: string
+          enum:
+          - feed
+          - array
+          - sequence
+      - name: offset
+        in: query
+        required: false
+        description: 'Use the offset parameter to specify the number of resource items to skip from the beginning of the list and return the rest. Note: large offsets perform poorly. Use start keys to index into large result sets. Also see pageMode.'
+        schema:
+          type: number
+          format: integer
+      - name: pageMode
+        in: query
+        required: false
+        description: "Specify the next and previous page link mode.\n * `offset` - (default) allows paging forward or backwards, but only a small number of times\n * `deep` - uses index keys to efficiently page through a large result set, but only in one direction\n"
+        schema:
+          type: string
+          enum:
+          - offset
+          - deep
+      - name: order
+        in: query
+        required: false
+        description: "Specify the order of the results.\n * `ascending` - (default) result keys are increasing\n * `descending` - result keys are decreasing\n\nIt is not necessary to switch the start and end keys and ids when reversing the order.\n"
+        schema:
+          type: string
+          enum:
+          - ascending
+          - descending
+      tags:
+      - Authoring resources
+      responses:
+        '200':
+          description: Successfully lists a paged result view of all resources that was created within the date range specified.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  limit:
+                    type: integer
+                    description: The page size.
+                  offset:
+                    type: integer
+                    description: The number of items to skip from the beginning of the list.
+                  href:
+                    type: string
+                    description: A link to the current page.
+                  next:
+                    type: string
+                    description: A link to the next page. Only shown if a next page exists.
+                  previous:
+                    type: string
+                    description: A link to the previous page. Only shown if a previous page exists.
+                  items:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          description: The id of the resource
+                          example: 2322e04f11e47edbc6505ad8294ebd70
+                        created:
+                          type: string
+                          format: date-time
+                          description: The date and time the resource was created.
+                      required:
+                      - id
+                      - created
+                required:
+                - limit
+                - offset
+                - href
+                - items
+        '400':
+          description: The provided parameters are invalid. Please read the error message and alter the request accordingly.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: an error response.
+                properties:
+                  requestId:
+                    type: string
+                    description: The current request ID
+                  service:
+                    type: string
+                    description: The name of the service that produced the error
+                  requestMethod:
+                    type: string
+                    description: The Http method type of the current request
+                  requestUri:
+                    type: string
+                    description: The request uri
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code
+                        key:
+                          type: string
+                          description: The message key
+                        message:
+                          type: string
+                          description: The error message
+                        description:
+                          type: string
+                          description: Optional detailed error message
+                        more_info:
+                          type: string
+                          description: Optional additional information for the message
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end user
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        field:
+                          type: string
+                          description: Only present on field validation errors, indicates the field in error.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                      required:
+                      - code
+                      - key
+                      - message
+                      - description
+                      - more_info
+                      - category
+                      - level
+                      - parameters
+                      - locale
+                required:
+                - requestId
+                - service
+                - requestMethod
+                - requestUri
+                - errors
+        '429':
+          description: Too Many Requests, the server has reached a limit, the request must be sent again at a later time.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '503':
+          description: Connection failed to data store.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: an error response.
+                properties:
+                  requestId:
+                    type: string
+                    description: The current request ID
+                  service:
+                    type: string
+                    description: The name of the service that produced the error
+                  requestMethod:
+                    type: string
+                    description: The Http method type of the current request
+                  requestUri:
+                    type: string
+                    description: The request uri
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code
+                        key:
+                          type: string
+                          description: The message key
+                        message:
+                          type: string
+                          description: The error message
+                        description:
+                          type: string
+                          description: Optional detailed error message
+                        more_info:
+                          type: string
+                          description: Optional additional information for the message
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end user
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        field:
+                          type: string
+                          description: Only present on field validation errors, indicates the field in error.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                      required:
+                      - code
+                      - key
+                      - message
+                      - description
+                      - more_info
+                      - category
+                      - level
+                      - parameters
+                      - locale
+                required:
+                - requestId
+                - service
+                - requestMethod
+                - requestUri
+                - errors
+        default:
+          description: Unexpected error.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: an error response.
+                properties:
+                  requestId:
+                    type: string
+                    description: The current request ID
+                  service:
+                    type: string
+                    description: The name of the service that produced the error
+                  requestMethod:
+                    type: string
+                    description: The Http method type of the current request
+                  requestUri:
+                    type: string
+                    description: The request uri
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code
+                        key:
+                          type: string
+                          description: The message key
+                        message:
+                          type: string
+                          description: The error message
+                        description:
+                          type: string
+                          description: Optional detailed error message
+                        more_info:
+                          type: string
+                          description: Optional additional information for the message
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end user
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        field:
+                          type: string
+                          description: Only present on field validation errors, indicates the field in error.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                      required:
+                      - code
+                      - key
+                      - message
+                      - description
+                      - more_info
+                      - category
+                      - level
+                      - parameters
+                      - locale
+                required:
+                - requestId
+                - service
+                - requestMethod
+                - requestUri
+                - errors
+      x-ibm-dx-security-user-roles:
+      - admin
+      - manager
+      - editor
+      - viewer
+components:
+  requestBodies:
+    Binary:
+      content:
+        '*/*':
+          schema:
+            type: string
+            format: binary
+      description: Provide the binary data that is required to create a resource.
+      required: true
+  schemas:
+    ErrorResponse:
+      description: This JSON record represents an error condition.
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            description: This JSON record represents an individual error or warning contained in an error message.
+            type: object
+            properties:
+              code:
+                type: integer
+                description: An error code
+              message:
+                type: string
+                description: A message describing what went wrong.
+              description:
+                type: string
+                description: Further explanation of the error condition and potential next steps to resolve the problem.
+              more_info:
+                type: string
+                description: A URL pointing to a web site that provides more information on the given error condition.
+              level:
+                type: string
+                enum:
+                - ERROR
+                - WARNING
+                description: The severity level of the message. Default is error.
+              parameters:
+                type: object
+                description: Additional properties reflecting the dynamic parts of the error condition.
+              cause:
+                type: object
+                description: This property can be used to transport causing error message records produced by a down stream service calls.
+              locale:
+                type: string
+                description: This property represents the locale of the text contained in properties 'message', and 'description'. This property is mandatory if message and description contain translated text.
+            required:
+            - code
+            - message
+        requestId:
+          type: string
+          description: The ID of the failing request.
+        service:
+          type: string
+          description: The name of the service serving the error message.
+      required:
+      - errors
+      - requestId
+x-refined-from:
+- acoustic-content-openapi-original.json
+- acoustic-content-swagger2-original.yaml
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

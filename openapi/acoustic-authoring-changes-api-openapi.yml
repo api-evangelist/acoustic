@@ -1,0 +1,2312 @@
+openapi: 3.2.0
+info:
+  title: Acoustic Authoring changes API
+  version: 1.0.142
+  x-ibm-name: ibm-watson-content-hub-api
+  description: 'Operations tagged Authoring changes across 2 of this provider''s published API definitions: acoustic-content-openapi-original.json, acoustic-content-swagger2-original.yaml. Each path carries the servers of the definition it was published in.'
+tags:
+- name: Authoring changes
+  description: Use the Content Authoring Changes Rest APIs to apply changes, including bulk actions, to multiple types of Content items.
+paths:
+  /authoring/v1/changes/status/ready:
+    post:
+      summary: Mark items as ready for publishing in bulk.
+      description: "Use the `/changes/status/ready` endpoint to change the status of multiple items to the `ready` state.\nCurrently only Assets and Content support for workflow states.\n\n\n### Example Requests: ###\n#### Change the status of a content and an asset to the ready state ####\nSpecify the items that you want to change to the ready state in the request body.\n##### Request: #####\n~~~\n   {\n     \"ids\": [\n       {\n         \"id\": \"579c2232-7398-4c8b-921d-3932bfc45d19\",\n         \"classification\": \"content\"\n       },\n       {\n         \"id\": \"448e8d63-ed15-4d59-85e5-53908a84ca93\",\n         \"classification\": \"asset\"\n       }\n     ]\n   }\n~~~\n#### Optionally provide a name for a set of changes. ####\nYou can also optionally name the set of changes.\n##### Request: #####\n~~~\n   {\n     \"name\": \"HalloweenContent\",\n     \"ids\": [\n       {\n         \"id\": \"579c2232-7398-4c8b-921d-3932bfc45d19\",\n         \"classification\": \"content\"\n       }\n     ]\n   }\n~~~\n #\n#### Request with unique IDs ####\nAlternatively you can also make requests with the content hub unique ID. The unique ID is the items classification and the ID combined to create an ID that is unique across all content hub items.\n~~~\n   {\n     \"ids\": [\n       {\n         \"id\": \"content:579c2232-7398-4c8b-921d-3932bfc45d19\"\n       },\n       {\n         \"id\": \"asset:448e8d63-ed15-4d59-85e5-53908a84ca93\"\n       }\n     ]\n   }\n~~~\n## Dealing with Errors: ##\nWhen the request succeeds for all items that was requested, then a `204` response\nis returned. However, if one or more items fail an error message is returned.\n#\n### Error Types\n#\n__Mismatched revisions__\nThe revision that is provided of the item is not the current revision. Check whether you still want to proceed based on the recent state of the item and retry with recent revision.\n~~~\n{\n   \"uid\":\"content:a\",\n   \"id\":\"a\",\n   \"classification\":\"content\",\n   \"key\":\"mismatched.revs.20000\",\n   \"code\": 20000,\n   \"parameters\":{\n       \"requestedRev\": \"a-1\",\n       \"currentRev\": \"a-2\"\n   }\n}\n~~~\n#\n__Item is not in valid state__\nDraft items are allowed to be saved with validation errors but the errors must be resolved before you can change the status from draft to ready. Resolve the validation errors and then retry the operation.\n~~~\n {\n   \"uid\":\"content:a\",\n   \"id\":\"a\",\n   \"classification\":\"content\",\n   \"key\":\"invalid.item.20001\",\n   \"code\": 20001\n }\n~~~\n#\n__Item not found__\nThe item that is specified was not found. Check whether the ID provided is correct, or if the item was deleted.\n~~~\n{\n   \"uid\":\"content:a\",\n   \"id\":\"a\",\n   \"classification\":\"content\",\n   \"key\":\"not.found.20002\",\n   \"code\": 20002\n}\n~~~\n#\n__Invalid Target State__\nThe Workflow status that this item is attempting to move to is not allowed from its current state.\n~~~\n{\n   \"uid\":\"content:a\",\n   \"id\":\"a\",\n   \"classification\":\"content\",\n   \"key\":\"invalid.target.workflow.state.20003\",\n   \"code\": 20003,\n   \"parameters\":{\n     \"target\": \"ready\",\n     \"current\": \"ready\"\n   }\n }\n~~~\n#\n__Workflow not supported for unmanaged assets__\nWorkflow actions are not supported for unmanaged developer assets. Refer to Asset documentation for clarification on managed versus unmanaged assets.\n~~~\n{\n   \"uid\":\"content:a\",\n   \"id\":\"a\",\n   \"classification\":\"content\",\n   \"key\":\"unmanaged.asset.20005\",\n   \"code\": 20005\n }\n~~~\n#\n__Dependencies Failed__\nThe status of the item cannot be changed because one or more of its dependencies failed. In this case, refer to the dependency error to find the root cause.\n~~~\n{\n   \"uid\":\"content:a\",\n   \"id\":\"a\",\n   \"classification\":\"content\",\n   \"key\":\"dependencies.failed.20100\",\n   \"code\": 20100,\n   \"parameters\":{\n      \"dependencies\": [ \"content:b\"]\n   }\n }\n~~~\n#\n__Missing dependencies__\nThe status of the item cannot be changed because one or more of its dependencies were not specified. Review whether to include the dependent items in this operation and if so repeat the bulk request with the IDs included.\n~~~\n{\n   \"uid\":\"content:a\",\n   \"id\":\"a\",\n   \"classification\":\"content\",\n   \"key\":\"missing.dependencies.20200\",\n   \"code\": 20200,\n   \"parameters\":{\n       \"missing\": [ \"asset:c\" ,\"asset:d\"]\n   }\n }\n~~~\n#\n__Generic Error__\nSomething unexpectedly went wrong trying to complete the action on this item.\n~~~\n{\n   \"uid\":\"asset:g\",\n   \"id\":\"g\",\n   \"classification\":\"asset\",\n   \"key\":\"error.generic.1000\",\n   \"code\": 1000\n }\n~~~\n\n## Example responses\nNow some full examples\n### Example 1 - Item failed due to dependency failure.\n\nRequest\n~~~\n   {\n     \"ids\": [\n       { \"id\": \"content:a\" },\n       { \"id\": \"content:b\" },\n       { \"id\": \"content:c\" }\n\n     ]\n   }\n~~~\n#\nResponse\n~~~\n{\n    \"missing\":[],\n    \"genericErrors\":[\"content:a\"],\n    \"userErrors\":[\"content:b\"],\n    \"successful\":[\"content:c\"]\n    \"messages\":{\n        \"content:a\":{\n          \"uid\":\"content:a\",\n          \"id\":\"a\",\n          \"classification\":\"content\",\n          \"key\":\"dependencies.failed.20100\",\n          \"code\": 20100,\n          \"parameters\":{\n              \"dependencies\": [\"content:b\"]\n          }\n       },\n        \"content:b\":{\n          \"uid\":\"content:b\",\n          \"id\":\"b\",\n          \"classification\":\"content\",\n          \"key\":\"invalid.item.20001\",\n          \"code\": 20001\n       }\n    }\n }\n~~~\n#\nIn the example that is shown, the goal was to change the status of the items with IDs `a`, `b`, and `c` to ready state. The item with ID `c` was successfully changed to ready state, while the item with ID `b` fails due to validation errors. Since item with ID `a` has a dependency to item with ID `b`, it also fails. ***Note:*** The response provides the IDs with the various arrays to provide context on the failure. The failure for item with ID `a` is grouped into the generic errors list since there is nothing to fix with the item `a`. Instead, the user must fix the validation errors with `b` and retry to change the status to ready for `a` and `b`.\n#\n### Example 2 - Item failed due to missing dependencies.\nRequest\n~~~\n   {\n     \"ids\": [\n       { \"id\": \"content:a\" }\n     ]\n   }\n~~~\n#\nResponse\n~~~\n{\n    \"missing\":[\"asset:c\", \"asset:d\"],\n    \"genericErrors\":[],\n    \"userErrors\":[],\n    \"successful\":[]\n    \"messages\":{\n        \"content:a\":{\n          \"uid\":\"content:a\",\n          \"id\":\"a\",\n          \"classification\":\"content\",\n          \"key\":\"missing.dependencies.20200\",\n          \"code\": 20200,\n          \"parameters\":{\n              \"missing\": [ \"asset:c\" ,\"asset:d\"]\n          }\n        }\n    }\n }\n~~~\n#\nThe status of draft items cannot be changed to ready if the draft item still has draft dependencies. In the example that is shown, content `a` has a reference to asset `c` and `d`. You can repeat the request for bulk ready with all three items included. Alternatively, you can use the Authoring reference API to check and obtain the connected items before you perform the bulk ready request.\n<br />User roles: admin, manager, editor"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ids:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        example: 579c2232-7398-4c8b-921d-3932bfc45d19
+                      classification:
+                        enum:
+                        - asset
+                        - content
+                        example: content
+                        description: The classification of the item. Only Assets and Content currently have workflow status.
+                      rev:
+                        type: string
+                        example: 2-c39187c4e3c5a69fb6a2b989aaf48330
+        description: Provide the items for which you want to change the status with bulk ready.
+        required: true
+      tags:
+      - Authoring changes
+      responses:
+        '200':
+          description: See the status field to determine whether the request was successful.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum:
+                    - success
+                    - partial
+                    - failure
+                    description: Represents the success of the request.
+                  missing:
+                    type: array
+                    description: These are dependencies of items that were requested. The operation should be repeated with these items also included. The format of the ids is the `uid` format with the classification and id combined.
+                    example:
+                    - content:a
+                    - content:b
+                    items:
+                      type: string
+                  genericErrors:
+                    type: array
+                    description: These are items that failed for system are not actionable directly by the API user. They may indicate system errors and also dependent errors i.e. where the item failed because its dependency failed. The format of the ids is the `uid` format with the classification and id combined.
+                    example:
+                    - content:c
+                    - content:d
+                    items:
+                      type: string
+                  userErrors:
+                    type: array
+                    description: These are items that failed for breaking various rules that make the operation valid. These are the actionable errors. The format of the ids is the `uid` format with the classification and id combined.
+                    example:
+                    - content:e
+                    - content:f
+                    items:
+                      type: string
+                  successful:
+                    type: array
+                    description: Even when there are failures some items can succeed, this is the list of ids that succeeded. The format of the ids is the `uid` format with the classification and id combined.
+                    example:
+                    - content:g
+                    - content:h
+                    items:
+                      type: string
+                  messages:
+                    type: object
+                    additionalProperties:
+                      type: object
+                      properties:
+                        uid:
+                          type: string
+                          description: The unique id across content hub items. It is the classification and id combined.
+                          example: content:3e5eb750-fbde-49b9-8741-844722981219
+                        id:
+                          type: string
+                          description: the id of the item.
+                          example: 3e5eb750-fbde-49b9-8741-844722981219
+                        classification:
+                          type: string
+                          description: Classification of the item
+                          example: content
+                        key:
+                          type: string
+                          description: error key
+                          example: missing.dependencies.20200
+                        code:
+                          type: integer
+                          description: error code
+                          example: 20200
+                        parameters:
+                          description: Depending on the error type additional information is added here.
+                          type: object
+        '429':
+          description: Too Many Requests, the server has reached a limit, the request must be sent again at a later time.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '503':
+          description: The service is currently unavailable. Try again later.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: an error response.
+                properties:
+                  requestId:
+                    type: string
+                    description: The current request ID
+                  service:
+                    type: string
+                    description: The name of the service that produced the error
+                  requestMethod:
+                    type: string
+                    description: The Http method type of the current request
+                  requestUri:
+                    type: string
+                    description: The request uri
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code
+                        key:
+                          type: string
+                          description: The message key
+                        message:
+                          type: string
+                          description: The error message
+                        description:
+                          type: string
+                          description: Optional detailed error message
+                        more_info:
+                          type: string
+                          description: Optional additional information for the message
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end user
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        field:
+                          type: string
+                          description: Only present on field validation errors, indicates the field in error.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                      required:
+                      - code
+                      - key
+                      - message
+                      - description
+                      - more_info
+                      - category
+                      - level
+                      - parameters
+                      - field
+                      - locale
+                required:
+                - requestId
+                - service
+                - requestMethod
+                - requestUri
+                - errors
+        default:
+          description: Unexpected error.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: an error response.
+                properties:
+                  requestId:
+                    type: string
+                    description: The current request ID
+                  service:
+                    type: string
+                    description: The name of the service that produced the error
+                  requestMethod:
+                    type: string
+                    description: The Http method type of the current request
+                  requestUri:
+                    type: string
+                    description: The request uri
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code
+                        key:
+                          type: string
+                          description: The message key
+                        message:
+                          type: string
+                          description: The error message
+                        description:
+                          type: string
+                          description: Optional detailed error message
+                        more_info:
+                          type: string
+                          description: Optional additional information for the message
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end user
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        field:
+                          type: string
+                          description: Only present on field validation errors, indicates the field in error.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                      required:
+                      - code
+                      - key
+                      - message
+                      - description
+                      - more_info
+                      - category
+                      - level
+                      - parameters
+                      - field
+                      - locale
+                required:
+                - requestId
+                - service
+                - requestMethod
+                - requestUri
+                - errors
+      x-ibm-dx-security-user-roles:
+      - admin
+      - manager
+      - editor
+  /authoring/v1/changes/status/retire:
+    post:
+      summary: Bulk retire items.
+      description: 'Use the `/changes/status/retire` endpoint to change the status of multiple items to the retired state. Currently, only Assets and Content support workflow states. For examples of request, see the documentation for `changes/status/ready` endpoint.
+
+        <br />User roles: admin, manager, editor'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ids:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        example: 579c2232-7398-4c8b-921d-3932bfc45d19
+                      classification:
+                        enum:
+                        - asset
+                        - content
+                        example: content
+                        description: The classification of the item. Only Assets and Content currently have workflow status.
+                      rev:
+                        type: string
+                        example: 2-c39187c4e3c5a69fb6a2b989aaf48330
+        description: Provide the items that you want to change to the retire state with bulk retire.
+        required: true
+      tags:
+      - Authoring changes
+      responses:
+        '200':
+          description: See the status field to determine whether the request was successful.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum:
+                    - success
+                    - partial
+                    - failure
+                    description: Represents the success of the request.
+                  missing:
+                    type: array
+                    description: These are dependencies of items that were requested. The operation should be repeated with these items also included. The format of the ids is the `uid` format with the classification and id combined.
+                    example:
+                    - content:a
+                    - content:b
+                    items:
+                      type: string
+                  genericErrors:
+                    type: array
+                    description: These are items that failed for system are not actionable directly by the API user. They may indicate system errors and also dependent errors i.e. where the item failed because its dependency failed. The format of the ids is the `uid` format with the classification and id combined.
+                    example:
+                    - content:c
+                    - content:d
+                    items:
+                      type: string
+                  userErrors:
+                    type: array
+                    description: These are items that failed for breaking various rules that make the operation valid. These are the actionable errors. The format of the ids is the `uid` format with the classification and id combined.
+                    example:
+                    - content:e
+                    - content:f
+                    items:
+                      type: string
+                  successful:
+                    type: array
+                    description: Even when there are failures some items can succeed, this is the list of ids that succeeded. The format of the ids is the `uid` format with the classification and id combined.
+                    example:
+                    - content:g
+                    - content:h
+                    items:
+                      type: string
+                  messages:
+                    type: object
+                    additionalProperties:
+                      type: object
+                      properties:
+                        uid:
+                          type: string
+                          description: The unique id across content hub items. It is the classification and id combined.
+                          example: content:3e5eb750-fbde-49b9-8741-844722981219
+                        id:
+                          type: string
+                          description: the id of the item.
+                          example: 3e5eb750-fbde-49b9-8741-844722981219
+                        classification:
+                          type: string
+                          description: Classification of the item
+                          example: content
+                        key:
+                          type: string
+                          description: error key
+                          example: missing.dependencies.20200
+                        code:
+                          type: integer
+                          description: error code
+                          example: 20200
+                        parameters:
+                          description: Depending on the error type additional information is added here.
+                          type: object
+        '429':
+          description: Too Many Requests, the server has reached a limit, the request must be sent again at a later time.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '503':
+          description: The service is currently unavailable. Try again later.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: an error response.
+                properties:
+                  requestId:
+                    type: string
+                    description: The current request ID
+                  service:
+                    type: string
+                    description: The name of the service that produced the error
+                  requestMethod:
+                    type: string
+                    description: The Http method type of the current request
+                  requestUri:
+                    type: string
+                    description: The request uri
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code
+                        key:
+                          type: string
+                          description: The message key
+                        message:
+                          type: string
+                          description: The error message
+                        description:
+                          type: string
+                          description: Optional detailed error message
+                        more_info:
+                          type: string
+                          description: Optional additional information for the message
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end user
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        field:
+                          type: string
+                          description: Only present on field validation errors, indicates the field in error.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                      required:
+                      - code
+                      - key
+                      - message
+                      - description
+                      - more_info
+                      - category
+                      - level
+                      - parameters
+                      - field
+                      - locale
+                required:
+                - requestId
+                - service
+                - requestMethod
+                - requestUri
+                - errors
+        default:
+          description: Unexpected error.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: an error response.
+                properties:
+                  requestId:
+                    type: string
+                    description: The current request ID
+                  service:
+                    type: string
+                    description: The name of the service that produced the error
+                  requestMethod:
+                    type: string
+                    description: The Http method type of the current request
+                  requestUri:
+                    type: string
+                    description: The request uri
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code
+                        key:
+                          type: string
+                          description: The message key
+                        message:
+                          type: string
+                          description: The error message
+                        description:
+                          type: string
+                          description: Optional detailed error message
+                        more_info:
+                          type: string
+                          description: Optional additional information for the message
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end user
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        field:
+                          type: string
+                          description: Only present on field validation errors, indicates the field in error.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                      required:
+                      - code
+                      - key
+                      - message
+                      - description
+                      - more_info
+                      - category
+                      - level
+                      - parameters
+                      - field
+                      - locale
+                required:
+                - requestId
+                - service
+                - requestMethod
+                - requestUri
+                - errors
+      x-ibm-dx-security-user-roles:
+      - admin
+      - manager
+      - editor
+  /authoring/v1/changes/delete:
+    post:
+      summary: Beta - Bulk delete items.
+      description: "This is a Beta API it is subject to change. Use the `/changes/delete` endpoint to delete multiple items. Currently, only assets and content are supported.\n\n## Requests\nSpecify the items that you want to delete in the request body.\n#\n~~~\n  {\n    \"ids\": [\n      {\n        \"id\": \"579c2232-7398-4c8b-921d-3932bfc45d19\",\n        \"classification\": \"content\"\n      },\n      {\n        \"id\": \"448e8d63-ed15-4d59-85e5-53908a84ca93\",\n        \"classification\": \"asset\"\n      }\n    ]\n  }\n~~~\n#\nAlternatively you can also make requests with the content hub unique ID. The unique ID is the items classification and the ID combined to create an ID that is unique across all content hub items.\n#\n~~~\n  {\n    \"ids\": [\n      { \"id\": \"content:579c2232-7398-4c8b-921d-3932bfc45d19\" },\n      { \"id\": \"asset:448e8d63-ed15-4d59-85e5-53908a84ca93\" }\n    ]\n  }\n~~~\n## Responses\nWhen the request succeeds for all items, then the `status` field will have the value `success`. If some items succeed, but others fail, the `status` field will have the value `partial`. If all items fail, the `status` field will have the value `failure`.\n  #\n\nThere are a number of arrays which are returned when items fail to delete. These help categorize the errors which you may want to action in different ways. In the case where all items succeed, only the `successful` array will be returned.\n\n- `successful` - Items that were successfully deleted.\n- `skipped` - Items which would have been deleted but were not due to other failures. Once the other failures are resolved these items should be successfully deleted.\n- `userError` - Items that cannot be deleted because they require must be either removed from the request or require some further user action before they can succeed. These include the following errors:\n    - Insufficient Permissions - Drafts may be deleted by anyone, but non-draft items may ony be deleted by a manager or administrator.\n    - Missing Dependencies - These items have other items depending on them and cannot be deleted. To delete these items, either the depency on these items must be removed, or the other items must also be deleted.\n- `missing` - Items that have a dependency on one or more of the items requested for deletion.\n- `genericErrors` - Items that the system failed to delete.\n\nThe messages object contains information on the specific failure for each individual failing item.\n## Examples\n### Success\nWhere a request to delete a content and an asset are successful.\n#\n#### Request\n~~~\n  {\n    \"ids\": [\n      { \"id\": \"content:a\" },\n      { \"id\": \"asset:b\" }\n    ]\n  }\n~~~\n#\n#### Response\n~~~\n  {\n    \"status\": \"success\"\n    \"successful\": [\"content:a\", \"content:b\"]\n  }\n~~~\n\n### Partial Failure\nIn the example that is shown, the goal was to delete items with IDs `a` and `b`. Items cannot be deleted if another item has dependency to it. In this case content `b` is referenced by asset `c`. The content item `a` is marked as skipped, where if the issue with `b` is resolved then item `a` would then be successfully deleted. Content `b` is marked as a user error and the dependant asset `c` is marked as missing.\n#\nAlternatively, you can use the authoring reference API to check and obtain the connected items before you perform the bulk delete request.\n#\n#### Request\n~~~\n  {\n    \"ids\": [\n      { \"id\": \"content:a\" },\n      { \"id\": \"content:b\" }\n    ]\n  }\n~~~\n#\n#### Response\n~~~\n  {\n    \"status\": \"partial\"\n    \"successful\": []\n    \"skipped\": [\"content:a\"],\n    \"genericErrors\": [],\n    \"userErrors\": [\"content:b\"],\n    \"missing\": [\"asset:c\"],\n    \"messages\": {\n      \"content:b\": {\n        \"uid\": \"content:b\",\n        \"id\": \"b\",\n        \"classification\": \"content\",\n        \"key\": \"missing.dependencies.details.20201\",\n        \"code\": 20201,\n        \"parameters\": {\n          \"missing\": [\n            {\n              \"uid\": \"asset:c\",\n              \"id\": \"c\",\n              \"classification\": \"asset\",\n              \"name\": \"Banner Image\"\n            }\n          ]\n        }\n      }\n    }\n  }\n~~~\n<br />User roles: admin, manager, editor"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ids:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        example: 579c2232-7398-4c8b-921d-3932bfc45d19
+                      classification:
+                        enum:
+                        - asset
+                        - content
+                        example: content
+                        description: The classification of the item.
+              required:
+              - ids
+        description: Provide the items that you want to bulk delete.
+        required: true
+      responses:
+        '200':
+          description: The request succeeded, however not all items may have been deleted. The `status` field should be checked for more information.
+        '400':
+          description: Bad request.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: an error response.
+                properties:
+                  requestId:
+                    type: string
+                    description: The current request ID
+                  service:
+                    type: string
+                    description: The name of the service that produced the error
+                  requestMethod:
+                    type: string
+                    description: The Http method type of the current request
+                  requestUri:
+                    type: string
+                    description: The request uri
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code
+                        key:
+                          type: string
+                          description: The message key
+                        message:
+                          type: string
+                          description: The error message
+                        description:
+                          type: string
+                          description: Optional detailed error message
+                        more_info:
+                          type: string
+                          description: Optional additional information for the message
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end user
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        field:
+                          type: string
+                          description: Only present on field validation errors, indicates the field in error.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                      required:
+                      - code
+                      - key
+                      - message
+                      - description
+                      - more_info
+                      - category
+                      - level
+                      - parameters
+                      - field
+                      - locale
+                required:
+                - requestId
+                - service
+                - requestMethod
+                - requestUri
+                - errors
+        '429':
+          description: Too Many Requests, the server has reached a limit, the request must be sent again at a later time.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '503':
+          description: The service is currently unavailable. Try again later.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: an error response.
+                properties:
+                  requestId:
+                    type: string
+                    description: The current request ID
+                  service:
+                    type: string
+                    description: The name of the service that produced the error
+                  requestMethod:
+                    type: string
+                    description: The Http method type of the current request
+                  requestUri:
+                    type: string
+                    description: The request uri
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code
+                        key:
+                          type: string
+                          description: The message key
+                        message:
+                          type: string
+                          description: The error message
+                        description:
+                          type: string
+                          description: Optional detailed error message
+                        more_info:
+                          type: string
+                          description: Optional additional information for the message
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end user
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        field:
+                          type: string
+                          description: Only present on field validation errors, indicates the field in error.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                      required:
+                      - code
+                      - key
+                      - message
+                      - description
+                      - more_info
+                      - category
+                      - level
+                      - parameters
+                      - field
+                      - locale
+                required:
+                - requestId
+                - service
+                - requestMethod
+                - requestUri
+                - errors
+        default:
+          description: Unexpected error.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: an error response.
+                properties:
+                  requestId:
+                    type: string
+                    description: The current request ID
+                  service:
+                    type: string
+                    description: The name of the service that produced the error
+                  requestMethod:
+                    type: string
+                    description: The Http method type of the current request
+                  requestUri:
+                    type: string
+                    description: The request uri
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code
+                        key:
+                          type: string
+                          description: The message key
+                        message:
+                          type: string
+                          description: The error message
+                        description:
+                          type: string
+                          description: Optional detailed error message
+                        more_info:
+                          type: string
+                          description: Optional additional information for the message
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end user
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        field:
+                          type: string
+                          description: Only present on field validation errors, indicates the field in error.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                      required:
+                      - code
+                      - key
+                      - message
+                      - description
+                      - more_info
+                      - category
+                      - level
+                      - parameters
+                      - field
+                      - locale
+                required:
+                - requestId
+                - service
+                - requestMethod
+                - requestUri
+                - errors
+      tags:
+      - Authoring changes
+      x-ibm-dx-security-user-roles:
+      - admin
+      - manager
+      - editor
+  /authoring/v1/changes/set-library:
+    post:
+      summary: Beta - Bulk move items to another library.
+      description: "This is a Beta API it is subject to change. Use the `/changes/set-library` endpoint to move multiple items to library. Currently, only assets and content are supported. Admin can move items between libraries without restrictions. Manager and Editor must be a contributor in both the source and destination libraries.\n\n## Requests\nSpecify the items that you want to move in the request body. Specify destination library id as well\n#\n~~~\n  {\n    \"ids\": [\n      {\n        \"id\": \"579c2232-7398-4c8b-921d-3932bfc45d19\",\n        \"classification\": \"content\"\n      },\n      {\n        \"id\": \"448e8d63-ed15-4d59-85e5-53908a84ca93\",\n        \"classification\": \"asset\"\n      }\n    ],\n    \"libraryId\": \"\"\n  }\n~~~\n#\nAlternatively you can also make requests with the content hub unique ID. The unique ID is the items classification and the ID combined to create an ID that is unique across all content hub items.\n#\n~~~\n  {\n    \"ids\": [\n      { \"id\": \"content:579c2232-7398-4c8b-921d-3932bfc45d19\" },\n      { \"id\": \"asset:448e8d63-ed15-4d59-85e5-53908a84ca93\" }\n    ],\n    \"libraryId\": \"\"\n  }\n~~~\n## Responses\nWhen the request succeeds for all items, then the `status` field will have the value `success`. If all items fail, the `status` field will have the value `failure`.\n#\n\nThere are a number of arrays which are returned when items fail to delete. These help categorize the errors which you may want to action in different ways. In the case where all items succeed, only the `successful` array will be returned.\n\n- `successful` - Items that were successfully moved.\n- `userError` - Items that cannot be moved because they require must be either removed from the request or require some further user action before they can succeed. Following error can occur:\n    - Insufficient Permissions - User must have access to remove items from old library/ies and re-create them in destination library. Exception is Admin user who can move items without restrictions.\n- `skipped` - Items which would have been moved but were not due to other failures. Once the other failures are resolved these items should be successfully moved.\n- `genericErrors` - Items that the system failed to move.\n- `missing` - Field is present in the error response but it is never used.\n\nThe messages object contains information on the specific failure for each individual failing item.\n## Examples\n### Success\nWhere a request to move a content and an asset are successful.\n#\n#### Request\n~~~\n  {\n    \"ids\": [\n      { \"id\": \"content:a\" },\n      { \"id\": \"asset:b\" }\n    ],\n    \"libraryId\": \"lib-id\"\n  }\n~~~\n#\n#### Response\n~~~\n  {\n    \"status\": \"success\"\n    \"successful\": [\"content:a\", \"content:b\"]\n  }\n~~~\n\n### Failure\nIn the example that is shown, the goal was to move items with IDs `a` and `b`. Items cannot be moved user has insufficient permissions. Both content itema `a` and `b` are marked as userError.\n#\n#### Request\n~~~\n  {\n    \"ids\": [\n      { \"id\": \"content:a\" },\n      { \"id\": \"content:b\" }\n    ],\n    \"libraryId\": \"lib-id\"\n  }\n~~~\n#\n#### Response\n~~~\n  {\n    \"status\": \"failure\",\n    \"successful\": [],\n    \"skipped\": [],\n    \"genericErrors\": [],\n    \"userErrors\": [\n      \"asset:1234\",\n      \"content:5678\"\n    ],\n    \"missing\": [],\n    \"messages\": {\n      \"asset:1234\": {\n        \"uid\": \"asset:1234\",\n        \"id\": \"1234\",\n        \"classification\": \"asset\",\n        \"key\": \"insufficient.permissions.20010\",\n        \"code\": 20010,\n        \"parameters\": {\n          \"items\": []\n        }\n      },\n      \"content:5678\": {\n        \"uid\": \"content:5678\",\n        \"id\": \"5678\",\n        \"classification\": \"content\",\n        \"key\": \"insufficient.permissions.20010\",\n        \"code\": 20010,\n        \"parameters\": {\n          \"items\": []\n        }\n      }\n    }\n  }\n~~~\n<br />User roles: admin, manager, editor"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ids:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        example: 579c2232-7398-4c8b-921d-3932bfc45d19
+                      classification:
+                        enum:
+                        - asset
+                        - content
+                        example: content
+                        description: The classification of the item.
+                libraryId:
+                  type: string
+                  example: 579c2232-7398-4c8b-921d-3932bfc45d19
+                  description: Id of the destination library.
+              required:
+              - ids
+              - libraryId
+        description: Provide the items that you want to bulk move.
+        required: true
+      responses:
+        '200':
+          description: The request succeeded, however not all items may have been deleted. The `status` field should be checked for more information.
+        '400':
+          description: Bad request.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: an error response.
+                properties:
+                  requestId:
+                    type: string
+                    description: The current request ID
+                  service:
+                    type: string
+                    description: The name of the service that produced the error
+                  requestMethod:
+                    type: string
+                    description: The Http method type of the current request
+                  requestUri:
+                    type: string
+                    description: The request uri
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code
+                        key:
+                          type: string
+                          description: The message key
+                        message:
+                          type: string
+                          description: The error message
+                        description:
+                          type: string
+                          description: Optional detailed error message
+                        more_info:
+                          type: string
+                          description: Optional additional information for the message
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end user
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        field:
+                          type: string
+                          description: Only present on field validation errors, indicates the field in error.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                      required:
+                      - code
+                      - key
+                      - message
+                      - description
+                      - more_info
+                      - category
+                      - level
+                      - parameters
+                      - field
+                      - locale
+                required:
+                - requestId
+                - service
+                - requestMethod
+                - requestUri
+                - errors
+        '429':
+          description: Too Many Requests, the server has reached a limit, the request must be sent again at a later time.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '503':
+          description: The service is currently unavailable. Try again later.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: an error response.
+                properties:
+                  requestId:
+                    type: string
+                    description: The current request ID
+                  service:
+                    type: string
+                    description: The name of the service that produced the error
+                  requestMethod:
+                    type: string
+                    description: The Http method type of the current request
+                  requestUri:
+                    type: string
+                    description: The request uri
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code
+                        key:
+                          type: string
+                          description: The message key
+                        message:
+                          type: string
+                          description: The error message
+                        description:
+                          type: string
+                          description: Optional detailed error message
+                        more_info:
+                          type: string
+                          description: Optional additional information for the message
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end user
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        field:
+                          type: string
+                          description: Only present on field validation errors, indicates the field in error.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                      required:
+                      - code
+                      - key
+                      - message
+                      - description
+                      - more_info
+                      - category
+                      - level
+                      - parameters
+                      - field
+                      - locale
+                required:
+                - requestId
+                - service
+                - requestMethod
+                - requestUri
+                - errors
+        default:
+          description: Unexpected error.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: an error response.
+                properties:
+                  requestId:
+                    type: string
+                    description: The current request ID
+                  service:
+                    type: string
+                    description: The name of the service that produced the error
+                  requestMethod:
+                    type: string
+                    description: The Http method type of the current request
+                  requestUri:
+                    type: string
+                    description: The request uri
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code
+                        key:
+                          type: string
+                          description: The message key
+                        message:
+                          type: string
+                          description: The error message
+                        description:
+                          type: string
+                          description: Optional detailed error message
+                        more_info:
+                          type: string
+                          description: Optional additional information for the message
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end user
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        field:
+                          type: string
+                          description: Only present on field validation errors, indicates the field in error.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                      required:
+                      - code
+                      - key
+                      - message
+                      - description
+                      - more_info
+                      - category
+                      - level
+                      - parameters
+                      - field
+                      - locale
+                required:
+                - requestId
+                - service
+                - requestMethod
+                - requestUri
+                - errors
+      tags:
+      - Authoring changes
+      x-ibm-dx-security-user-roles:
+      - admin
+      - manager
+      - editor
+  /authoring/v1/changes/{uid}/status/ready:
+    post:
+      summary: Mark the item with the specified unique ID as ready for publishing.
+      description: 'Use the `/changes/{uid}/status/ready` endpoint to ready a single item with the specified unique ID. The unique ID (uid) is the items classification and the ID combined to create an ID that is unique across all items in Content.
+
+        If the item is used by other draft items then you must use the Bulk ready API to mark a group of inter-dependent items as ready for publishing.
+
+        Currently, only Assets and Content support workflow.
+
+        <br />User roles: admin, manager, editor'
+      parameters:
+      - name: uid
+        in: path
+        description: Provide the unique ID of the item that you want to mark as ready for publishing.
+        required: true
+        schema:
+          type: string
+      - name: rev
+        in: query
+        description: Optional. Define the revision of item.
+        schema:
+          type: string
+      tags:
+      - Authoring changes
+      responses:
+        '200':
+          description: Item was successfully readied. The item is returned in the response body.
+        '400':
+          description: The specified item cannot be changed to ready state from its current state or the request made was invalid.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: an error response.
+                properties:
+                  requestId:
+                    type: string
+                    description: The current request ID
+                  service:
+                    type: string
+                    description: The name of the service that produced the error
+                  requestMethod:
+                    type: string
+                    description: The Http method type of the current request
+                  requestUri:
+                    type: string
+                    description: The request uri
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code
+                        key:
+                          type: string
+                          description: The message key
+                        message:
+                          type: string
+                          description: The error message
+                        description:
+                          type: string
+                          description: Optional detailed error message
+                        more_info:
+                          type: string
+                          description: Optional additional information for the message
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end user
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        field:
+                          type: string
+                          description: Only present on field validation errors, indicates the field in error.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                      required:
+                      - code
+                      - key
+                      - message
+                      - description
+                      - more_info
+                      - category
+                      - level
+                      - parameters
+                      - field
+                      - locale
+                required:
+                - requestId
+                - service
+                - requestMethod
+                - requestUri
+                - errors
+        '429':
+          description: Too Many Requests, the server has reached a limit, the request must be sent again at a later time.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '503':
+          description: The service is currently unavailable. Try again later.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: an error response.
+                properties:
+                  requestId:
+                    type: string
+                    description: The current request ID
+                  service:
+                    type: string
+                    description: The name of the service that produced the error
+                  requestMethod:
+                    type: string
+                    description: The Http method type of the current request
+                  requestUri:
+                    type: string
+                    description: The request uri
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code
+                        key:
+                          type: string
+                          description: The message key
+                        message:
+                          type: string
+                          description: The error message
+                        description:
+                          type: string
+                          description: Optional detailed error message
+                        more_info:
+                          type: string
+                          description: Optional additional information for the message
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end user
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        field:
+                          type: string
+                          description: Only present on field validation errors, indicates the field in error.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                      required:
+                      - code
+                      - key
+                      - message
+                      - description
+                      - more_info
+                      - category
+                      - level
+                      - parameters
+                      - field
+                      - locale
+                required:
+                - requestId
+                - service
+                - requestMethod
+                - requestUri
+                - errors
+        default:
+          description: Unexpected error.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: an error response.
+                properties:
+                  requestId:
+                    type: string
+                    description: The current request ID
+                  service:
+                    type: string
+                    description: The name of the service that produced the error
+                  requestMethod:
+                    type: string
+                    description: The Http method type of the current request
+                  requestUri:
+                    type: string
+                    description: The request uri
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code
+                        key:
+                          type: string
+                          description: The message key
+                        message:
+                          type: string
+                          description: The error message
+                        description:
+                          type: string
+                          description: Optional detailed error message
+                        more_info:
+                          type: string
+                          description: Optional additional information for the message
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end user
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        field:
+                          type: string
+                          description: Only present on field validation errors, indicates the field in error.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                      required:
+                      - code
+                      - key
+                      - message
+                      - description
+                      - more_info
+                      - category
+                      - level
+                      - parameters
+                      - field
+                      - locale
+                required:
+                - requestId
+                - service
+                - requestMethod
+                - requestUri
+                - errors
+      x-ibm-dx-security-user-roles:
+      - admin
+      - manager
+      - editor
+  /authoring/v1/changes/{uid}/status/retire:
+    post:
+      summary: Retire an item with the specified unique ID.
+      description: 'Use the `/changes/{uid}/status/retire` endpoint to retire a single item with the specified unique ID. The unique ID (uid) is the items classification and the ID combined to create an ID that is unique across all content hub items.
+
+        If the item has draft dependencies then you must use the Bulk retire API to retire the group of dependent items.
+
+        Currently, only Assets and Content support workflow.
+
+        <br />User roles: admin, manager, editor'
+      parameters:
+      - name: uid
+        in: path
+        description: Provide the unique ID of the item that you want to retire.
+        required: true
+        schema:
+          type: string
+      - name: rev
+        in: query
+        description: Optional.Define the revision of item.
+        schema:
+          type: string
+      tags:
+      - Authoring changes
+      responses:
+        '200':
+          description: Item was successfully retired. The item is returned in the response body.
+        '400':
+          description: Unable to retire the specified item in its current state or the request made was invalid.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: an error response.
+                properties:
+                  requestId:
+                    type: string
+                    description: The current request ID
+                  service:
+                    type: string
+                    description: The name of the service that produced the error
+                  requestMethod:
+                    type: string
+                    description: The Http method type of the current request
+                  requestUri:
+                    type: string
+                    description: The request uri
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code
+                        key:
+                          type: string
+                          description: The message key
+                        message:
+                          type: string
+                          description: The error message
+                        description:
+                          type: string
+                          description: Optional detailed error message
+                        more_info:
+                          type: string
+                          description: Optional additional information for the message
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end user
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        field:
+                          type: string
+                          description: Only present on field validation errors, indicates the field in error.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                      required:
+                      - code
+                      - key
+                      - message
+                      - description
+                      - more_info
+                      - category
+                      - level
+                      - parameters
+                      - field
+                      - locale
+                required:
+                - requestId
+                - service
+                - requestMethod
+                - requestUri
+                - errors
+        '429':
+          description: Too Many Requests, the server has reached a limit, the request must be sent again at a later time.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '503':
+          description: The service is currently unavailable. Try again later.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: an error response.
+                properties:
+                  requestId:
+                    type: string
+                    description: The current request ID
+                  service:
+                    type: string
+                    description: The name of the service that produced the error
+                  requestMethod:
+                    type: string
+                    description: The Http method type of the current request
+                  requestUri:
+                    type: string
+                    description: The request uri
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code
+                        key:
+                          type: string
+                          description: The message key
+                        message:
+                          type: string
+                          description: The error message
+                        description:
+                          type: string
+                          description: Optional detailed error message
+                        more_info:
+                          type: string
+                          description: Optional additional information for the message
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end user
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        field:
+                          type: string
+                          description: Only present on field validation errors, indicates the field in error.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                      required:
+                      - code
+                      - key
+                      - message
+                      - description
+                      - more_info
+                      - category
+                      - level
+                      - parameters
+                      - field
+                      - locale
+                required:
+                - requestId
+                - service
+                - requestMethod
+                - requestUri
+                - errors
+        default:
+          description: Unexpected error.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: an error response.
+                properties:
+                  requestId:
+                    type: string
+                    description: The current request ID
+                  service:
+                    type: string
+                    description: The name of the service that produced the error
+                  requestMethod:
+                    type: string
+                    description: The Http method type of the current request
+                  requestUri:
+                    type: string
+                    description: The request uri
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code
+                        key:
+                          type: string
+                          description: The message key
+                        message:
+                          type: string
+                          description: The error message
+                        description:
+                          type: string
+                          description: Optional detailed error message
+                        more_info:
+                          type: string
+                          description: Optional additional information for the message
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end user
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        field:
+                          type: string
+                          description: Only present on field validation errors, indicates the field in error.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                      required:
+                      - code
+                      - key
+                      - message
+                      - description
+                      - more_info
+                      - category
+                      - level
+                      - parameters
+                      - field
+                      - locale
+                required:
+                - requestId
+                - service
+                - requestMethod
+                - requestUri
+                - errors
+      x-ibm-dx-security-user-roles:
+      - admin
+      - manager
+      - editor
+  /authoring/v1/changes/{classification}/{id}/status/ready:
+    post:
+      summary: Mark an item with the specified classification and ID as ready for publishing.
+      description: 'Use the `/changes/{classification}/{id}/status/ready` endpoint to ready a single item with the specified classification and ID.
+
+        If the item is used by other draft items then you must use the Bulk ready API to mark a group of inter-dependent items as ready for publishing.
+
+        Currently, only Assets and Content support workflow.
+
+        <br />User roles: admin, manager, editor'
+      parameters:
+      - name: id
+        in: path
+        description: Provide the ID of the item that you want to mark as ready for publishing.
+        required: true
+        schema:
+          type: string
+      - name: classification
+        in: path
+        description: Provide the classification of the item that you want to mark as ready for publishing.
+        required: true
+        schema:
+          type: string
+      - name: rev
+        in: query
+        description: Optional. Define the revision of the item.
+        schema:
+          type: string
+      tags:
+      - Authoring changes
+      responses:
+        '200':
+          description: Item was succesfully readied. The item is returned in the response body.
+        '400':
+          description: The specified item cannot be changed to ready state from its current state or the request made was invalid.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: an error response.
+                properties:
+                  requestId:
+                    type: string
+                    description: The current request ID
+                  service:
+                    type: string
+                    description: The name of the service that produced the error
+                  requestMethod:
+                    type: string
+                    description: The Http method type of the current request
+                  requestUri:
+                    type: string
+                    description: The request uri
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code
+                        key:
+                          type: string
+                          description: The message key
+                        message:
+                          type: string
+                          description: The error message
+                        description:
+                          type: string
+                          description: Optional detailed error message
+                        more_info:
+                          type: string
+                          description: Optional additional information for the message
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end user
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        field:
+                          type: string
+                          description: Only present on field validation errors, indicates the field in error.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                      required:
+                      - code
+                      - key
+                      - message
+                      - description
+                      - more_info
+                      - category
+                      - level
+                      - parameters
+                      - field
+                      - locale
+                required:
+                - requestId
+                - service
+                - requestMethod
+                - requestUri
+                - errors
+        '429':
+          description: Too Many Requests, the server has reached a limit, the request must be sent again at a later time.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '503':
+          description: The service is currently unavailable. Try again later.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: an error response.
+                properties:
+                  requestId:
+                    type: string
+                    description: The current request ID
+                  service:
+                    type: string
+                    description: The name of the service that produced the error
+                  requestMethod:
+                    type: string
+                    description: The Http method type of the current request
+                  requestUri:
+                    type: string
+                    description: The request uri
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code
+                        key:
+                          type: string
+                          description: The message key
+                        message:
+                          type: string
+                          description: The error message
+                        description:
+                          type: string
+                          description: Optional detailed error message
+                        more_info:
+                          type: string
+                          description: Optional additional information for the message
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end user
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        field:
+                          type: string
+                          description: Only present on field validation errors, indicates the field in error.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                      required:
+                      - code
+                      - key
+                      - message
+                      - description
+                      - more_info
+                      - category
+                      - level
+                      - parameters
+                      - field
+                      - locale
+                required:
+                - requestId
+                - service
+                - requestMethod
+                - requestUri
+                - errors
+        default:
+          description: Unexpected error.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: an error response.
+                properties:
+                  requestId:
+                    type: string
+                    description: The current request ID
+                  service:
+                    type: string
+                    description: The name of the service that produced the error
+                  requestMethod:
+                    type: string
+                    description: The Http method type of the current request
+                  requestUri:
+                    type: string
+                    description: The request uri
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code
+                        key:
+                          type: string
+                          description: The message key
+                        message:
+                          type: string
+                          description: The error message
+                        description:
+                          type: string
+                          description: Optional detailed error message
+                        more_info:
+                          type: string
+                          description: Optional additional information for the message
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end user
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        field:
+                          type: string
+                          description: Only present on field validation errors, indicates the field in error.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                      required:
+                      - code
+                      - key
+                      - message
+                      - description
+                      - more_info
+                      - category
+                      - level
+                      - parameters
+                      - field
+                      - locale
+                required:
+                - requestId
+                - service
+                - requestMethod
+                - requestUri
+                - errors
+      x-ibm-dx-security-user-roles:
+      - admin
+      - manager
+      - editor
+  /authoring/v1/changes/{classification}/{id}/status/retire:
+    post:
+      summary: Retire an item with the specified classification and ID.
+      description: 'Use the `/changes/{classification}/{id}/status/retire` endpoint to retire a single item with the specified classification and ID.
+
+        If the item has draft dependencies then you must use the Bulk retire API to retire the group of dependent items.
+
+        Currently, only Assets and Content support workflow.
+
+        <br />User roles: admin, manager, editor'
+      parameters:
+      - name: id
+        in: path
+        description: Provide the ID of the item that you want to retire.
+        required: true
+        schema:
+          type: string
+      - name: classification
+        in: path
+        description: Provide the classificaiton of the item that you want to retire.
+        required: true
+        schema:
+          type: string
+      - name: rev
+        in: query
+        description: Optional. Define the revision of item.
+        schema:
+          type: string
+      tags:
+      - Authoring changes
+      responses:
+        '200':
+          description: Item was succesfully retired. The item is returned in the response body.
+        '400':
+          description: Unable to retire the specified item in its current state or the request made was invalid.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: an error response.
+                properties:
+                  requestId:
+                    type: string
+                    description: The current request ID
+                  service:
+                    type: string
+                    description: The name of the service that produced the error
+                  requestMethod:
+                    type: string
+                    description: The Http method type of the current request
+                  requestUri:
+                    type: string
+                    description: The request uri
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code
+                        key:
+                          type: string
+                          description: The message key
+                        message:
+                          type: string
+                          description: The error message
+                        description:
+                          type: string
+                          description: Optional detailed error message
+                        more_info:
+                          type: string
+                          description: Optional additional information for the message
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end user
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        field:
+                          type: string
+                          description: Only present on field validation errors, indicates the field in error.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                      required:
+                      - code
+                      - key
+                      - message
+                      - description
+                      - more_info
+                      - category
+                      - level
+                      - parameters
+                      - field
+                      - locale
+                required:
+                - requestId
+                - service
+                - requestMethod
+                - requestUri
+                - errors
+        '429':
+          description: Too Many Requests, the server has reached a limit, the request must be sent again at a later time.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '503':
+          description: The service is currently unavailable. Try again later.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: an error response.
+                properties:
+                  requestId:
+                    type: string
+                    description: The current request ID
+                  service:
+                    type: string
+                    description: The name of the service that produced the error
+                  requestMethod:
+                    type: string
+                    description: The Http method type of the current request
+                  requestUri:
+                    type: string
+                    description: The request uri
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code
+                        key:
+                          type: string
+                          description: The message key
+                        message:
+                          type: string
+                          description: The error message
+                        description:
+                          type: string
+                          description: Optional detailed error message
+                        more_info:
+                          type: string
+                          description: Optional additional information for the message
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end user
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        field:
+                          type: string
+                          description: Only present on field validation errors, indicates the field in error.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                      required:
+                      - code
+                      - key
+                      - message
+                      - description
+                      - more_info
+                      - category
+                      - level
+                      - parameters
+                      - field
+                      - locale
+                required:
+                - requestId
+                - service
+                - requestMethod
+                - requestUri
+                - errors
+        default:
+          description: Unexpected error.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: an error response.
+                properties:
+                  requestId:
+                    type: string
+                    description: The current request ID
+                  service:
+                    type: string
+                    description: The name of the service that produced the error
+                  requestMethod:
+                    type: string
+                    description: The Http method type of the current request
+                  requestUri:
+                    type: string
+                    description: The request uri
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code
+                        key:
+                          type: string
+                          description: The message key
+                        message:
+                          type: string
+                          description: The error message
+                        description:
+                          type: string
+                          description: Optional detailed error message
+                        more_info:
+                          type: string
+                          description: Optional additional information for the message
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end user
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        field:
+                          type: string
+                          description: Only present on field validation errors, indicates the field in error.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                      required:
+                      - code
+                      - key
+                      - message
+                      - description
+                      - more_info
+                      - category
+                      - level
+                      - parameters
+                      - field
+                      - locale
+                required:
+                - requestId
+                - service
+                - requestMethod
+                - requestUri
+                - errors
+      x-ibm-dx-security-user-roles:
+      - admin
+      - manager
+      - editor
+components:
+  schemas:
+    ErrorResponse:
+      description: This JSON record represents an error condition.
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            description: This JSON record represents an individual error or warning contained in an error message.
+            type: object
+            properties:
+              code:
+                type: integer
+                description: An error code
+              message:
+                type: string
+                description: A message describing what went wrong.
+              description:
+                type: string
+                description: Further explanation of the error condition and potential next steps to resolve the problem.
+              more_info:
+                type: string
+                description: A URL pointing to a web site that provides more information on the given error condition.
+              level:
+                type: string
+                enum:
+                - ERROR
+                - WARNING
+                description: The severity level of the message. Default is error.
+              parameters:
+                type: object
+                description: Additional properties reflecting the dynamic parts of the error condition.
+              cause:
+                type: object
+                description: This property can be used to transport causing error message records produced by a down stream service calls.
+              locale:
+                type: string
+                description: This property represents the locale of the text contained in properties 'message', and 'description'. This property is mandatory if message and description contain translated text.
+            required:
+            - code
+            - message
+        requestId:
+          type: string
+          description: The ID of the failing request.
+        service:
+          type: string
+          description: The name of the service serving the error message.
+      required:
+      - errors
+      - requestId
+x-refined-from:
+- acoustic-content-openapi-original.json
+- acoustic-content-swagger2-original.yaml
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

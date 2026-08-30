@@ -1,0 +1,2280 @@
+openapi: 3.2.0
+info:
+  title: Acoustic Authoring comments API
+  version: 1.0.142
+  x-ibm-name: ibm-watson-content-hub-api
+  description: 'Operations tagged Authoring comments across 2 of this provider''s published API definitions: acoustic-content-openapi-original.json, acoustic-content-swagger2-original.yaml. Each path carries the servers of the definition it was published in.'
+tags:
+- name: Authoring comments
+  description: Use the Content Authoring comment APIs to work with comments. Comments are a simple way to associate a message to an item in Content. Comments are associated with a single item and user (creatorId). An item can have many comments. You can create, retrieve, and delete comments from a database.
+paths:
+  /authoring/v1/comments:
+    post:
+      tags:
+      - Authoring comments
+      summary: Create a comment.
+      description: 'Use the /comments endpoint to create a comment. You must provide a message and a target to create the comment.<br />User roles: admin, manager, editor'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  description: The actual comment message.
+                  example: More images should be added to slideshow
+                target:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                      description: The id of the item that the comment is associated with.
+                      example: 6eac5498-3545-458a-962b-e17742aa7b56
+                    classification:
+                      type: string
+                      description: The classification of the item that the comment is associated with.
+                      enum:
+                      - asset
+                      - content
+                      example: content
+                  required:
+                  - id
+                  - classification
+              required:
+              - message
+              - target
+        description: Provide the comment message and target to create a comment.
+        required: true
+      responses:
+        '201':
+          description: Successfully created a comment for an item.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  creatorId:
+                    type: string
+                    description: The ID of the user that created the commment.
+                    example: f8c1344e-2296-441b-a8a6-f8d46b72a787
+                  id:
+                    type: string
+                    description: The id of the comment.
+                    example: 95927bcd-9da3-4d8a-9fbf-ffcabe80a8a4
+                  rev:
+                    type: string
+                    description: The revision of the comment.
+                    example: 2-c839bbb8844549c2e298275c4b2adcb8
+                  message:
+                    type: string
+                    description: The actual comment message.
+                    example: More images should be added to slideshow
+                  created:
+                    type: string
+                    format: date-time
+                    description: ISO-8601 formatted date.
+                    example: '2017-05-28T22:59:27.610Z'
+                  target:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        description: The id of the item that the comment is associated with.
+                        example: 6eac5498-3545-458a-962b-e17742aa7b56
+                      classification:
+                        type: string
+                        description: The classification of the item that the comment is associated with.
+                        enum:
+                        - asset
+                        - content
+                        example: content
+                    required:
+                    - id
+                    - classification
+                  threadId:
+                    type: string
+                    description: The id string of the thread that this comment belongs to.
+                    example: b3a18c87-8be0-4938-bba9-98a4cea35200
+                  classification:
+                    type: string
+                    description: The comment's classification.
+                    example: Comment
+                  kind:
+                    type: array
+                    description: The "kind" of comment that this is. By default, all comments created by users are "user" comments.
+                    default:
+                    - user
+                    items:
+                      type: string
+                      enum:
+                      - user
+                      - system
+                  creator:
+                    type: string
+                    description: Display name of the user who created this comment.
+                    example: Krista
+                  lastModifier:
+                    type: string
+                    description: The display name of the user who last edited the comment.
+                    example: Krista
+                  lastModifierId:
+                    type: string
+                    description: The ID of the user who last edited the comment.
+                    example: f8c1344e-2296-441b-a8a6-f8d46b72a787
+                  lastModified:
+                    type: string
+                    description: The ISO-8601 timestamp that the comment was last modified.
+                    example: '2017-05-28T22:59:27.610Z'
+                  resolved:
+                    type: boolean
+                    default: false
+                    description: Used for resolving comments during a review. This property is false by default and changes to true when the comment is resolved.
+                required:
+                - id
+                - rev
+                - classification
+                - created
+                - creator
+                - creatorId
+                - kind
+                - lastModified
+                - lastModifier
+                - lastModifierId
+                - message
+                - resolved
+                - target
+                - threadId
+        '400':
+          description: The required parameters are missing or invalid. Provide valid parameters to create a comment.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: An error response.
+                properties:
+                  requestId:
+                    type: string
+                    description: The current request ID
+                    example: d64dc285-0b62-aaa3-841f-de3588b64d34
+                  service:
+                    type: string
+                    description: The name of the service that produced the error
+                    example: authoring-resource
+                  requestMethod:
+                    type: string
+                    description: The Http method type of the current request
+                    example: GET
+                  requestUri:
+                    type: string
+                    description: The request uri
+                    example: /authoring/v1/comments
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code
+                        key:
+                          type: string
+                          description: The message key
+                          example: error.comments.1000
+                        message:
+                          type: string
+                          description: The error message
+                          example: The id requested does not exist.
+                        description:
+                          type: string
+                          description: Optional detailed error message
+                          example: Please check the ID you provided is correct before retrying the request.
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end user
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                          example: en
+                      required:
+                      - code
+                      - key
+                      - message
+                      - description
+                      - category
+                      - level
+                      - parameters
+                      - locale
+                required:
+                - requestId
+                - service
+                - requestMethod
+                - requestUri
+                - errors
+        '429':
+          description: Too Many Requests, the server has reached a limit, the request must be sent again at a later time.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '503':
+          description: Unable to create the comment as the service is unavailable. Try again later.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: An error response.
+                properties:
+                  requestId:
+                    type: string
+                    description: The current request ID
+                    example: d64dc285-0b62-aaa3-841f-de3588b64d34
+                  service:
+                    type: string
+                    description: The name of the service that produced the error
+                    example: authoring-resource
+                  requestMethod:
+                    type: string
+                    description: The Http method type of the current request
+                    example: GET
+                  requestUri:
+                    type: string
+                    description: The request uri
+                    example: /authoring/v1/comments
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code
+                        key:
+                          type: string
+                          description: The message key
+                          example: error.comments.1000
+                        message:
+                          type: string
+                          description: The error message
+                          example: The id requested does not exist.
+                        description:
+                          type: string
+                          description: Optional detailed error message
+                          example: Please check the ID you provided is correct before retrying the request.
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end user
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                          example: en
+                      required:
+                      - code
+                      - key
+                      - message
+                      - description
+                      - category
+                      - level
+                      - parameters
+                      - locale
+                required:
+                - requestId
+                - service
+                - requestMethod
+                - requestUri
+                - errors
+        default:
+          description: Unexpected error.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: An error response.
+                properties:
+                  requestId:
+                    type: string
+                    description: The current request ID
+                    example: d64dc285-0b62-aaa3-841f-de3588b64d34
+                  service:
+                    type: string
+                    description: The name of the service that produced the error
+                    example: authoring-resource
+                  requestMethod:
+                    type: string
+                    description: The Http method type of the current request
+                    example: GET
+                  requestUri:
+                    type: string
+                    description: The request uri
+                    example: /authoring/v1/comments
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code
+                        key:
+                          type: string
+                          description: The message key
+                          example: error.comments.1000
+                        message:
+                          type: string
+                          description: The error message
+                          example: The id requested does not exist.
+                        description:
+                          type: string
+                          description: Optional detailed error message
+                          example: Please check the ID you provided is correct before retrying the request.
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end user
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                          example: en
+                      required:
+                      - code
+                      - key
+                      - message
+                      - description
+                      - category
+                      - level
+                      - parameters
+                      - locale
+                required:
+                - requestId
+                - service
+                - requestMethod
+                - requestUri
+                - errors
+      x-ibm-dx-security-user-roles:
+      - admin
+      - manager
+      - editor
+  /authoring/v1/comments/{id}:
+    get:
+      tags:
+      - Authoring comments
+      summary: Retrieve an existing comment.
+      description: 'Use the /comments/{id} endpoint to retrieve an existing comment that matches the ID that is specified from the database.<br />User roles: admin, manager, editor, viewer'
+      parameters:
+      - name: id
+        in: path
+        description: Provide the ID of the comment that you want to retrieve.
+        required: true
+        schema:
+          type: string
+      - name: fields
+        in: query
+        description: Only the comment properties that are specified here are returned for each result. Any comment property is a valid value and can be specified in a comma-separated list. For example, to show only the comment properties message and creatorId, provide the values of message and creatorId. All comment properties are returned by default.
+        required: false
+        allowEmptyValue: true
+        style: form
+        explode: false
+        schema:
+          type: array
+          items:
+            type: string
+      responses:
+        '200':
+          description: Successfully retrieved the comment that matches the ID you specified.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  creatorId:
+                    type: string
+                    description: The ID of the user that created the commment.
+                    example: f8c1344e-2296-441b-a8a6-f8d46b72a787
+                  id:
+                    type: string
+                    description: The id of the comment.
+                    example: 95927bcd-9da3-4d8a-9fbf-ffcabe80a8a4
+                  rev:
+                    type: string
+                    description: The revision of the comment.
+                    example: 2-c839bbb8844549c2e298275c4b2adcb8
+                  message:
+                    type: string
+                    description: The actual comment message.
+                    example: More images should be added to slideshow
+                  created:
+                    type: string
+                    format: date-time
+                    description: ISO-8601 formatted date.
+                    example: '2017-05-28T22:59:27.610Z'
+                  target:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        description: The id of the item that the comment is associated with.
+                        example: 6eac5498-3545-458a-962b-e17742aa7b56
+                      classification:
+                        type: string
+                        description: The classification of the item that the comment is associated with.
+                        enum:
+                        - asset
+                        - content
+                        example: content
+                    required:
+                    - id
+                    - classification
+                  threadId:
+                    type: string
+                    description: The id string of the thread that this comment belongs to.
+                    example: b3a18c87-8be0-4938-bba9-98a4cea35200
+                  classification:
+                    type: string
+                    description: The comment's classification.
+                    example: Comment
+                  kind:
+                    type: array
+                    description: The "kind" of comment that this is. By default, all comments created by users are "user" comments.
+                    default:
+                    - user
+                    items:
+                      type: string
+                      enum:
+                      - user
+                      - system
+                  creator:
+                    type: string
+                    description: Display name of the user who created this comment.
+                    example: Krista
+                  lastModifier:
+                    type: string
+                    description: The display name of the user who last edited the comment.
+                    example: Krista
+                  lastModifierId:
+                    type: string
+                    description: The ID of the user who last edited the comment.
+                    example: f8c1344e-2296-441b-a8a6-f8d46b72a787
+                  lastModified:
+                    type: string
+                    description: The ISO-8601 timestamp that the comment was last modified.
+                    example: '2017-05-28T22:59:27.610Z'
+                  resolved:
+                    type: boolean
+                    default: false
+                    description: Used for resolving comments during a review. This property is false by default and changes to true when the comment is resolved.
+                required:
+                - id
+                - rev
+                - classification
+                - created
+                - creator
+                - creatorId
+                - kind
+                - lastModified
+                - lastModifier
+                - lastModifierId
+                - message
+                - resolved
+                - target
+                - threadId
+        '404':
+          description: A comment that matches the ID you specified was not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: An error response.
+                properties:
+                  requestId:
+                    type: string
+                    description: The current request ID
+                    example: d64dc285-0b62-aaa3-841f-de3588b64d34
+                  service:
+                    type: string
+                    description: The name of the service that produced the error
+                    example: authoring-resource
+                  requestMethod:
+                    type: string
+                    description: The Http method type of the current request
+                    example: GET
+                  requestUri:
+                    type: string
+                    description: The request uri
+                    example: /authoring/v1/comments
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code
+                        key:
+                          type: string
+                          description: The message key
+                          example: error.comments.1000
+                        message:
+                          type: string
+                          description: The error message
+                          example: The id requested does not exist.
+                        description:
+                          type: string
+                          description: Optional detailed error message
+                          example: Please check the ID you provided is correct before retrying the request.
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end user
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                          example: en
+                      required:
+                      - code
+                      - key
+                      - message
+                      - description
+                      - category
+                      - level
+                      - parameters
+                      - locale
+                required:
+                - requestId
+                - service
+                - requestMethod
+                - requestUri
+                - errors
+        '429':
+          description: Too Many Requests, the server has reached a limit, the request must be sent again at a later time.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '503':
+          description: Unable to retrieve the comment from the database as the service is unavailable. Try again later.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: An error response.
+                properties:
+                  requestId:
+                    type: string
+                    description: The current request ID
+                    example: d64dc285-0b62-aaa3-841f-de3588b64d34
+                  service:
+                    type: string
+                    description: The name of the service that produced the error
+                    example: authoring-resource
+                  requestMethod:
+                    type: string
+                    description: The Http method type of the current request
+                    example: GET
+                  requestUri:
+                    type: string
+                    description: The request uri
+                    example: /authoring/v1/comments
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code
+                        key:
+                          type: string
+                          description: The message key
+                          example: error.comments.1000
+                        message:
+                          type: string
+                          description: The error message
+                          example: The id requested does not exist.
+                        description:
+                          type: string
+                          description: Optional detailed error message
+                          example: Please check the ID you provided is correct before retrying the request.
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end user
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                          example: en
+                      required:
+                      - code
+                      - key
+                      - message
+                      - description
+                      - category
+                      - level
+                      - parameters
+                      - locale
+                required:
+                - requestId
+                - service
+                - requestMethod
+                - requestUri
+                - errors
+        default:
+          description: Unexpected error.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: An error response.
+                properties:
+                  requestId:
+                    type: string
+                    description: The current request ID
+                    example: d64dc285-0b62-aaa3-841f-de3588b64d34
+                  service:
+                    type: string
+                    description: The name of the service that produced the error
+                    example: authoring-resource
+                  requestMethod:
+                    type: string
+                    description: The Http method type of the current request
+                    example: GET
+                  requestUri:
+                    type: string
+                    description: The request uri
+                    example: /authoring/v1/comments
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code
+                        key:
+                          type: string
+                          description: The message key
+                          example: error.comments.1000
+                        message:
+                          type: string
+                          description: The error message
+                          example: The id requested does not exist.
+                        description:
+                          type: string
+                          description: Optional detailed error message
+                          example: Please check the ID you provided is correct before retrying the request.
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end user
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                          example: en
+                      required:
+                      - code
+                      - key
+                      - message
+                      - description
+                      - category
+                      - level
+                      - parameters
+                      - locale
+                required:
+                - requestId
+                - service
+                - requestMethod
+                - requestUri
+                - errors
+      x-ibm-dx-security-user-roles:
+      - admin
+      - manager
+      - editor
+      - viewer
+    put:
+      tags:
+      - Authoring comments
+      summary: Update an existing comment.
+      description: 'Use the /comments/{id} end point to update an existing comment that matches the ID that is specified.<br />User roles: admin, manager, editor'
+      parameters:
+      - name: id
+        in: path
+        description: Provide the ID of the comment that you want to update.
+        required: true
+        schema:
+          type: string
+      - name: fields
+        in: query
+        description: Only the comment properties that are specified here are returned for each result. Any comment property is a valid value and can be specified in a comma-separated list. For example, to show only the comment properties message and creatorId, provide the values of message and creatorId. All comment properties are returned by default.
+        required: false
+        allowEmptyValue: true
+        style: form
+        explode: false
+        schema:
+          type: array
+          items:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  description: The actual comment message.
+                  example: More images should be added to slideshow.
+              required:
+              - message
+        description: Provide the comment revision and message to update a comment.
+        required: true
+      responses:
+        '200':
+          description: Successfully updated the comment that matches the ID specified.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  creatorId:
+                    type: string
+                    description: The ID of the user that created the commment.
+                    example: f8c1344e-2296-441b-a8a6-f8d46b72a787
+                  id:
+                    type: string
+                    description: The id of the comment.
+                    example: 95927bcd-9da3-4d8a-9fbf-ffcabe80a8a4
+                  rev:
+                    type: string
+                    description: The revision of the comment.
+                    example: 2-c839bbb8844549c2e298275c4b2adcb8
+                  message:
+                    type: string
+                    description: The actual comment message.
+                    example: More images should be added to slideshow
+                  created:
+                    type: string
+                    format: date-time
+                    description: ISO-8601 formatted date.
+                    example: '2017-05-28T22:59:27.610Z'
+                  target:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        description: The id of the item that the comment is associated with.
+                        example: 6eac5498-3545-458a-962b-e17742aa7b56
+                      classification:
+                        type: string
+                        description: The classification of the item that the comment is associated with.
+                        enum:
+                        - asset
+                        - content
+                        example: content
+                    required:
+                    - id
+                    - classification
+                  threadId:
+                    type: string
+                    description: The id string of the thread that this comment belongs to.
+                    example: b3a18c87-8be0-4938-bba9-98a4cea35200
+                  classification:
+                    type: string
+                    description: The comment's classification.
+                    example: Comment
+                  kind:
+                    type: array
+                    description: The "kind" of comment that this is. By default, all comments created by users are "user" comments.
+                    default:
+                    - user
+                    items:
+                      type: string
+                      enum:
+                      - user
+                      - system
+                  creator:
+                    type: string
+                    description: Display name of the user who created this comment.
+                    example: Krista
+                  lastModifier:
+                    type: string
+                    description: The display name of the user who last edited the comment.
+                    example: Krista
+                  lastModifierId:
+                    type: string
+                    description: The ID of the user who last edited the comment.
+                    example: f8c1344e-2296-441b-a8a6-f8d46b72a787
+                  lastModified:
+                    type: string
+                    description: The ISO-8601 timestamp that the comment was last modified.
+                    example: '2017-05-28T22:59:27.610Z'
+                  resolved:
+                    type: boolean
+                    default: false
+                    description: Used for resolving comments during a review. This property is false by default and changes to true when the comment is resolved.
+                required:
+                - id
+                - rev
+                - classification
+                - created
+                - creator
+                - creatorId
+                - kind
+                - lastModified
+                - lastModifier
+                - lastModifierId
+                - message
+                - resolved
+                - target
+                - threadId
+        '400':
+          description: The required parameters are missing or invalid. Provide valid parameters to update the comment.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: An error response.
+                properties:
+                  requestId:
+                    type: string
+                    description: The current request ID
+                    example: d64dc285-0b62-aaa3-841f-de3588b64d34
+                  service:
+                    type: string
+                    description: The name of the service that produced the error
+                    example: authoring-resource
+                  requestMethod:
+                    type: string
+                    description: The Http method type of the current request
+                    example: GET
+                  requestUri:
+                    type: string
+                    description: The request uri
+                    example: /authoring/v1/comments
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code
+                        key:
+                          type: string
+                          description: The message key
+                          example: error.comments.1000
+                        message:
+                          type: string
+                          description: The error message
+                          example: The id requested does not exist.
+                        description:
+                          type: string
+                          description: Optional detailed error message
+                          example: Please check the ID you provided is correct before retrying the request.
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end user
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                          example: en
+                      required:
+                      - code
+                      - key
+                      - message
+                      - description
+                      - category
+                      - level
+                      - parameters
+                      - locale
+                required:
+                - requestId
+                - service
+                - requestMethod
+                - requestUri
+                - errors
+        '404':
+          description: A comment that matches the ID specified was not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: An error response.
+                properties:
+                  requestId:
+                    type: string
+                    description: The current request ID
+                    example: d64dc285-0b62-aaa3-841f-de3588b64d34
+                  service:
+                    type: string
+                    description: The name of the service that produced the error
+                    example: authoring-resource
+                  requestMethod:
+                    type: string
+                    description: The Http method type of the current request
+                    example: GET
+                  requestUri:
+                    type: string
+                    description: The request uri
+                    example: /authoring/v1/comments
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code
+                        key:
+                          type: string
+                          description: The message key
+                          example: error.comments.1000
+                        message:
+                          type: string
+                          description: The error message
+                          example: The id requested does not exist.
+                        description:
+                          type: string
+                          description: Optional detailed error message
+                          example: Please check the ID you provided is correct before retrying the request.
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end user
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                          example: en
+                      required:
+                      - code
+                      - key
+                      - message
+                      - description
+                      - category
+                      - level
+                      - parameters
+                      - locale
+                required:
+                - requestId
+                - service
+                - requestMethod
+                - requestUri
+                - errors
+        '409':
+          description: The comment was updated by another user while you tried to update it. Review the recent version before retrying.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: An error response.
+                properties:
+                  requestId:
+                    type: string
+                    description: The current request ID
+                    example: d64dc285-0b62-aaa3-841f-de3588b64d34
+                  service:
+                    type: string
+                    description: The name of the service that produced the error
+                    example: authoring-resource
+                  requestMethod:
+                    type: string
+                    description: The Http method type of the current request
+                    example: GET
+                  requestUri:
+                    type: string
+                    description: The request uri
+                    example: /authoring/v1/comments
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code
+                        key:
+                          type: string
+                          description: The message key
+                          example: error.comments.1000
+                        message:
+                          type: string
+                          description: The error message
+                          example: The id requested does not exist.
+                        description:
+                          type: string
+                          description: Optional detailed error message
+                          example: Please check the ID you provided is correct before retrying the request.
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end user
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                          example: en
+                      required:
+                      - code
+                      - key
+                      - message
+                      - description
+                      - category
+                      - level
+                      - parameters
+                      - locale
+                required:
+                - requestId
+                - service
+                - requestMethod
+                - requestUri
+                - errors
+        '429':
+          description: Too Many Requests, the server has reached a limit, the request must be sent again at a later time.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '503':
+          description: Unable to retrieve the comment from the database as the service is unavailable. Try again later.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: An error response.
+                properties:
+                  requestId:
+                    type: string
+                    description: The current request ID
+                    example: d64dc285-0b62-aaa3-841f-de3588b64d34
+                  service:
+                    type: string
+                    description: The name of the service that produced the error
+                    example: authoring-resource
+                  requestMethod:
+                    type: string
+                    description: The Http method type of the current request
+                    example: GET
+                  requestUri:
+                    type: string
+                    description: The request uri
+                    example: /authoring/v1/comments
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code
+                        key:
+                          type: string
+                          description: The message key
+                          example: error.comments.1000
+                        message:
+                          type: string
+                          description: The error message
+                          example: The id requested does not exist.
+                        description:
+                          type: string
+                          description: Optional detailed error message
+                          example: Please check the ID you provided is correct before retrying the request.
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end user
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                          example: en
+                      required:
+                      - code
+                      - key
+                      - message
+                      - description
+                      - category
+                      - level
+                      - parameters
+                      - locale
+                required:
+                - requestId
+                - service
+                - requestMethod
+                - requestUri
+                - errors
+        default:
+          description: Unexpected error.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: An error response.
+                properties:
+                  requestId:
+                    type: string
+                    description: The current request ID
+                    example: d64dc285-0b62-aaa3-841f-de3588b64d34
+                  service:
+                    type: string
+                    description: The name of the service that produced the error
+                    example: authoring-resource
+                  requestMethod:
+                    type: string
+                    description: The Http method type of the current request
+                    example: GET
+                  requestUri:
+                    type: string
+                    description: The request uri
+                    example: /authoring/v1/comments
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code
+                        key:
+                          type: string
+                          description: The message key
+                          example: error.comments.1000
+                        message:
+                          type: string
+                          description: The error message
+                          example: The id requested does not exist.
+                        description:
+                          type: string
+                          description: Optional detailed error message
+                          example: Please check the ID you provided is correct before retrying the request.
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end user
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                          example: en
+                      required:
+                      - code
+                      - key
+                      - message
+                      - description
+                      - category
+                      - level
+                      - parameters
+                      - locale
+                required:
+                - requestId
+                - service
+                - requestMethod
+                - requestUri
+                - errors
+      x-ibm-dx-security-user-roles:
+      - admin
+      - manager
+      - editor
+    delete:
+      tags:
+      - Authoring comments
+      summary: Delete an existing comment.
+      description: 'Use the /comments/{id} endpoint to delete an existing comment from the database.<br />User roles: admin, manager, editor'
+      parameters:
+      - name: id
+        in: path
+        description: Provide the ID of the comment that you want to delete.
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: The comment was deleted succesfully.
+        '404':
+          description: A comment that matches the ID specified was not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: An error response.
+                properties:
+                  requestId:
+                    type: string
+                    description: The current request ID
+                    example: d64dc285-0b62-aaa3-841f-de3588b64d34
+                  service:
+                    type: string
+                    description: The name of the service that produced the error
+                    example: authoring-resource
+                  requestMethod:
+                    type: string
+                    description: The Http method type of the current request
+                    example: GET
+                  requestUri:
+                    type: string
+                    description: The request uri
+                    example: /authoring/v1/comments
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code
+                        key:
+                          type: string
+                          description: The message key
+                          example: error.comments.1000
+                        message:
+                          type: string
+                          description: The error message
+                          example: The id requested does not exist.
+                        description:
+                          type: string
+                          description: Optional detailed error message
+                          example: Please check the ID you provided is correct before retrying the request.
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end user
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                          example: en
+                      required:
+                      - code
+                      - key
+                      - message
+                      - description
+                      - category
+                      - level
+                      - parameters
+                      - locale
+                required:
+                - requestId
+                - service
+                - requestMethod
+                - requestUri
+                - errors
+        '429':
+          description: Too Many Requests, the server has reached a limit, the request must be sent again at a later time.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        default:
+          description: Unexpected error.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: An error response.
+                properties:
+                  requestId:
+                    type: string
+                    description: The current request ID
+                    example: d64dc285-0b62-aaa3-841f-de3588b64d34
+                  service:
+                    type: string
+                    description: The name of the service that produced the error
+                    example: authoring-resource
+                  requestMethod:
+                    type: string
+                    description: The Http method type of the current request
+                    example: GET
+                  requestUri:
+                    type: string
+                    description: The request uri
+                    example: /authoring/v1/comments
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code
+                        key:
+                          type: string
+                          description: The message key
+                          example: error.comments.1000
+                        message:
+                          type: string
+                          description: The error message
+                          example: The id requested does not exist.
+                        description:
+                          type: string
+                          description: Optional detailed error message
+                          example: Please check the ID you provided is correct before retrying the request.
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end user
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                          example: en
+                      required:
+                      - code
+                      - key
+                      - message
+                      - description
+                      - category
+                      - level
+                      - parameters
+                      - locale
+                required:
+                - requestId
+                - service
+                - requestMethod
+                - requestUri
+                - errors
+      x-ibm-dx-security-user-roles:
+      - admin
+      - manager
+      - editor
+  /authoring/v1/comments/by-item/{classification}/{id}:
+    get:
+      summary: Retrieve all comments for a specific item.
+      description: 'Use the /comments/by-item/{classification}/{id} endpoint to fetch all comments that are associated to a specific item. Use the query parameter ''since'' to fetch comments since a specific date. Conditional requests are supported.<br />User roles: admin, manager, editor, viewer'
+      parameters:
+      - name: classification
+        in: path
+        description: Provide the classification of the item for which you want to retrieve the comments.
+        required: true
+        schema:
+          type: string
+          format: string
+      - name: id
+        in: path
+        description: Provide ID of the item for which you want to retrieve the comments.
+        required: true
+        schema:
+          type: string
+          format: string
+      - name: since
+        in: query
+        description: Provide the date from when to retrieve comments. Only comments that were added after this date are retrieved. The date value must be in the ISO 8601 format YYYY-MM-DD T hh:mm:ss:sssZ.
+        required: false
+        schema:
+          type: string
+          format: date-time
+      - name: offset
+        in: query
+        description: Use the offset parameter to specify the number of comments to skip from the beginning of the list and return the rest.
+        required: false
+        schema:
+          type: integer
+          default: 0
+      - name: limit
+        in: query
+        description: Set the limit for the maximum number of comments to return in a single result. The maximum number of comments that are returned by default is 50.
+        required: false
+        schema:
+          type: integer
+          default: 50
+      - name: order
+        in: query
+        description: Specify whether you want the comments to be returned in ascending or descending order. Comments are returned in descending order by default.
+        required: false
+        schema:
+          type: string
+          enum:
+          - descending
+          - ascending
+          default: descending
+      - name: fields
+        in: query
+        description: Only the comment properties that are specified here are returned for each result. Any comment property is a valid value and can be specified in a comma-separated list. For example, to show only the comment properties message and creatorId, provide the values of message and creatorId. All comment properties are returned by default.
+        required: false
+        allowEmptyValue: true
+        style: form
+        explode: false
+        schema:
+          type: array
+          items:
+            type: string
+      tags:
+      - Authoring comments
+      responses:
+        '200':
+          description: Successfully lists a paged result view of all comments for the given item, optionally filtered by date.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  limit:
+                    type: integer
+                    description: The page size.
+                    example: 50
+                  offset:
+                    type: integer
+                    description: The number of items to skip from the beginning of the list.
+                    example: 0
+                  href:
+                    type: string
+                    description: A link to the current page.
+                    example: /comments?offset=50&limit=50
+                  next:
+                    type: string
+                    description: A link to the next page. Only shown if a next page exists.
+                    example: /comments?offset=100&limit=50
+                  previous:
+                    type: string
+                    description: A link to the previous page. Only shown if a previous page exists.
+                    example: /comments?offset=0&limit=50
+                  items:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        creatorId:
+                          type: string
+                          description: The ID of the user that created the commment.
+                          example: f8c1344e-2296-441b-a8a6-f8d46b72a787
+                        id:
+                          type: string
+                          description: The id of the comment.
+                          example: 95927bcd-9da3-4d8a-9fbf-ffcabe80a8a4
+                        rev:
+                          type: string
+                          description: The revision of the comment.
+                          example: 2-c839bbb8844549c2e298275c4b2adcb8
+                        message:
+                          type: string
+                          description: The actual comment message.
+                          example: More images should be added to slideshow
+                        created:
+                          type: string
+                          format: date-time
+                          description: ISO-8601 formatted date.
+                          example: '2017-05-28T22:59:27.610Z'
+                        target:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                              description: The id of the item that the comment is associated with.
+                              example: 6eac5498-3545-458a-962b-e17742aa7b56
+                            classification:
+                              type: string
+                              description: The classification of the item that the comment is associated with.
+                              enum:
+                              - asset
+                              - content
+                              example: content
+                          required:
+                          - id
+                          - classification
+                        threadId:
+                          type: string
+                          description: The id string of the thread that this comment belongs to.
+                          example: b3a18c87-8be0-4938-bba9-98a4cea35200
+                        classification:
+                          type: string
+                          description: The comment's classification.
+                          example: Comment
+                        kind:
+                          type: array
+                          description: The "kind" of comment that this is. By default, all comments created by users are "user" comments.
+                          default:
+                          - user
+                          items:
+                            type: string
+                            enum:
+                            - user
+                            - system
+                        creator:
+                          type: string
+                          description: Display name of the user who created this comment.
+                          example: Krista
+                        lastModifier:
+                          type: string
+                          description: The display name of the user who last edited the comment.
+                          example: Krista
+                        lastModifierId:
+                          type: string
+                          description: The ID of the user who last edited the comment.
+                          example: f8c1344e-2296-441b-a8a6-f8d46b72a787
+                        lastModified:
+                          type: string
+                          description: The ISO-8601 timestamp that the comment was last modified.
+                          example: '2017-05-28T22:59:27.610Z'
+                        resolved:
+                          type: boolean
+                          default: false
+                          description: Used for resolving comments during a review. This property is false by default and changes to true when the comment is resolved.
+                      required:
+                      - id
+                      - rev
+                      - classification
+                      - created
+                      - creator
+                      - creatorId
+                      - kind
+                      - lastModified
+                      - lastModifier
+                      - lastModifierId
+                      - message
+                      - resolved
+                      - target
+                      - threadId
+                required:
+                - limit
+                - offset
+                - href
+                - items
+        '304':
+          description: The Etag value that is provided in the If-None-Match header corresponds to the recent version.
+        '429':
+          description: Too Many Requests, the server has reached a limit, the request must be sent again at a later time.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '503':
+          description: Unable to list the comments in the database as the service is unavailable. Try again later.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: An error response.
+                properties:
+                  requestId:
+                    type: string
+                    description: The current request ID
+                    example: d64dc285-0b62-aaa3-841f-de3588b64d34
+                  service:
+                    type: string
+                    description: The name of the service that produced the error
+                    example: authoring-resource
+                  requestMethod:
+                    type: string
+                    description: The Http method type of the current request
+                    example: GET
+                  requestUri:
+                    type: string
+                    description: The request uri
+                    example: /authoring/v1/comments
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code
+                        key:
+                          type: string
+                          description: The message key
+                          example: error.comments.1000
+                        message:
+                          type: string
+                          description: The error message
+                          example: The id requested does not exist.
+                        description:
+                          type: string
+                          description: Optional detailed error message
+                          example: Please check the ID you provided is correct before retrying the request.
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end user
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                          example: en
+                      required:
+                      - code
+                      - key
+                      - message
+                      - description
+                      - category
+                      - level
+                      - parameters
+                      - locale
+                required:
+                - requestId
+                - service
+                - requestMethod
+                - requestUri
+                - errors
+        default:
+          description: Unexpected error.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: An error response.
+                properties:
+                  requestId:
+                    type: string
+                    description: The current request ID
+                    example: d64dc285-0b62-aaa3-841f-de3588b64d34
+                  service:
+                    type: string
+                    description: The name of the service that produced the error
+                    example: authoring-resource
+                  requestMethod:
+                    type: string
+                    description: The Http method type of the current request
+                    example: GET
+                  requestUri:
+                    type: string
+                    description: The request uri
+                    example: /authoring/v1/comments
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code
+                        key:
+                          type: string
+                          description: The message key
+                          example: error.comments.1000
+                        message:
+                          type: string
+                          description: The error message
+                          example: The id requested does not exist.
+                        description:
+                          type: string
+                          description: Optional detailed error message
+                          example: Please check the ID you provided is correct before retrying the request.
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end user
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                          example: en
+                      required:
+                      - code
+                      - key
+                      - message
+                      - description
+                      - category
+                      - level
+                      - parameters
+                      - locale
+                required:
+                - requestId
+                - service
+                - requestMethod
+                - requestUri
+                - errors
+      x-ibm-dx-security-user-roles:
+      - admin
+      - manager
+      - editor
+      - viewer
+  /authoring/v1/comments/by-user/{userId}:
+    get:
+      summary: Retrieve all comments that were created by a user.
+      description: 'Use the /comments/by-user/{userId} endpoint to fetch all comments that were created by the specified user. Optionally, the query parameter since can be used to fetch comments only ''since'' a specific date.<br />User roles: admin, manager, editor, viewer'
+      parameters:
+      - name: userId
+        in: path
+        description: Provide the ID of the user that created the comment.
+        required: true
+        schema:
+          type: string
+          format: string
+      - name: since
+        in: query
+        description: Retrieve only comments newer than this date. The date value must be in the ISO 8601 format YYYY-MM-DD T hh:mm:ss:sssZ.
+        required: false
+        schema:
+          type: string
+          format: date-time
+      - name: offset
+        in: query
+        description: Use the offset parameter to specify the number of comments to skip from the beginning of the list and return the rest.
+        required: false
+        schema:
+          type: integer
+          default: 0
+      - name: limit
+        in: query
+        description: Set the limit for the maximum number of comments to return in a single result. The maximum number of comments that are returned by default is 50.
+        required: false
+        schema:
+          type: integer
+          default: 50
+      - name: order
+        in: query
+        description: Specify whether you want the comments to be returned in ascending or descending order. Comments are returned in descending order by default.
+        required: false
+        schema:
+          type: string
+          enum:
+          - descending
+          - ascending
+          default: descending
+      - name: fields
+        in: query
+        description: Only the comment properties that are specified here are returned for each result. Any comment property is a valid value and can be specified in a comma-separated list. For example, to show only the comment properties message and creatorId, provide the values of message and creatorId. All comment properties are returned by default.
+        required: false
+        allowEmptyValue: true
+        style: form
+        explode: false
+        schema:
+          type: array
+          items:
+            type: string
+      tags:
+      - Authoring comments
+      responses:
+        '200':
+          description: Successfully lists a paged result view of all comments for the specified userId, optionally filtered by date.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  limit:
+                    type: integer
+                    description: The page size.
+                    example: 50
+                  offset:
+                    type: integer
+                    description: The number of items to skip from the beginning of the list.
+                    example: 0
+                  href:
+                    type: string
+                    description: A link to the current page.
+                    example: /comments?offset=50&limit=50
+                  next:
+                    type: string
+                    description: A link to the next page. Only shown if a next page exists.
+                    example: /comments?offset=100&limit=50
+                  previous:
+                    type: string
+                    description: A link to the previous page. Only shown if a previous page exists.
+                    example: /comments?offset=0&limit=50
+                  items:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        creatorId:
+                          type: string
+                          description: The ID of the user that created the commment.
+                          example: f8c1344e-2296-441b-a8a6-f8d46b72a787
+                        id:
+                          type: string
+                          description: The id of the comment.
+                          example: 95927bcd-9da3-4d8a-9fbf-ffcabe80a8a4
+                        rev:
+                          type: string
+                          description: The revision of the comment.
+                          example: 2-c839bbb8844549c2e298275c4b2adcb8
+                        message:
+                          type: string
+                          description: The actual comment message.
+                          example: More images should be added to slideshow
+                        created:
+                          type: string
+                          format: date-time
+                          description: ISO-8601 formatted date.
+                          example: '2017-05-28T22:59:27.610Z'
+                        target:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                              description: The id of the item that the comment is associated with.
+                              example: 6eac5498-3545-458a-962b-e17742aa7b56
+                            classification:
+                              type: string
+                              description: The classification of the item that the comment is associated with.
+                              enum:
+                              - asset
+                              - content
+                              example: content
+                          required:
+                          - id
+                          - classification
+                        threadId:
+                          type: string
+                          description: The id string of the thread that this comment belongs to.
+                          example: b3a18c87-8be0-4938-bba9-98a4cea35200
+                        classification:
+                          type: string
+                          description: The comment's classification.
+                          example: Comment
+                        kind:
+                          type: array
+                          description: The "kind" of comment that this is. By default, all comments created by users are "user" comments.
+                          default:
+                          - user
+                          items:
+                            type: string
+                            enum:
+                            - user
+                            - system
+                        creator:
+                          type: string
+                          description: Display name of the user who created this comment.
+                          example: Krista
+                        lastModifier:
+                          type: string
+                          description: The display name of the user who last edited the comment.
+                          example: Krista
+                        lastModifierId:
+                          type: string
+                          description: The ID of the user who last edited the comment.
+                          example: f8c1344e-2296-441b-a8a6-f8d46b72a787
+                        lastModified:
+                          type: string
+                          description: The ISO-8601 timestamp that the comment was last modified.
+                          example: '2017-05-28T22:59:27.610Z'
+                        resolved:
+                          type: boolean
+                          default: false
+                          description: Used for resolving comments during a review. This property is false by default and changes to true when the comment is resolved.
+                      required:
+                      - id
+                      - rev
+                      - classification
+                      - created
+                      - creator
+                      - creatorId
+                      - kind
+                      - lastModified
+                      - lastModifier
+                      - lastModifierId
+                      - message
+                      - resolved
+                      - target
+                      - threadId
+                required:
+                - limit
+                - offset
+                - href
+                - items
+        '429':
+          description: Too Many Requests, the server has reached a limit, the request must be sent again at a later time.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '503':
+          description: Unable to list the comments in the database as the service is unavailable. Try again later.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: An error response.
+                properties:
+                  requestId:
+                    type: string
+                    description: The current request ID
+                    example: d64dc285-0b62-aaa3-841f-de3588b64d34
+                  service:
+                    type: string
+                    description: The name of the service that produced the error
+                    example: authoring-resource
+                  requestMethod:
+                    type: string
+                    description: The Http method type of the current request
+                    example: GET
+                  requestUri:
+                    type: string
+                    description: The request uri
+                    example: /authoring/v1/comments
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code
+                        key:
+                          type: string
+                          description: The message key
+                          example: error.comments.1000
+                        message:
+                          type: string
+                          description: The error message
+                          example: The id requested does not exist.
+                        description:
+                          type: string
+                          description: Optional detailed error message
+                          example: Please check the ID you provided is correct before retrying the request.
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end user
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                          example: en
+                      required:
+                      - code
+                      - key
+                      - message
+                      - description
+                      - category
+                      - level
+                      - parameters
+                      - locale
+                required:
+                - requestId
+                - service
+                - requestMethod
+                - requestUri
+                - errors
+        default:
+          description: Unexpected error.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: An error response.
+                properties:
+                  requestId:
+                    type: string
+                    description: The current request ID
+                    example: d64dc285-0b62-aaa3-841f-de3588b64d34
+                  service:
+                    type: string
+                    description: The name of the service that produced the error
+                    example: authoring-resource
+                  requestMethod:
+                    type: string
+                    description: The Http method type of the current request
+                    example: GET
+                  requestUri:
+                    type: string
+                    description: The request uri
+                    example: /authoring/v1/comments
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code
+                        key:
+                          type: string
+                          description: The message key
+                          example: error.comments.1000
+                        message:
+                          type: string
+                          description: The error message
+                          example: The id requested does not exist.
+                        description:
+                          type: string
+                          description: Optional detailed error message
+                          example: Please check the ID you provided is correct before retrying the request.
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end user
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                          example: en
+                      required:
+                      - code
+                      - key
+                      - message
+                      - description
+                      - category
+                      - level
+                      - parameters
+                      - locale
+                required:
+                - requestId
+                - service
+                - requestMethod
+                - requestUri
+                - errors
+      x-ibm-dx-security-user-roles:
+      - admin
+      - manager
+      - editor
+      - viewer
+components:
+  schemas:
+    ErrorResponse:
+      description: This JSON record represents an error condition.
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            description: This JSON record represents an individual error or warning contained in an error message.
+            type: object
+            properties:
+              code:
+                type: integer
+                description: An error code
+              message:
+                type: string
+                description: A message describing what went wrong.
+              description:
+                type: string
+                description: Further explanation of the error condition and potential next steps to resolve the problem.
+              more_info:
+                type: string
+                description: A URL pointing to a web site that provides more information on the given error condition.
+              level:
+                type: string
+                enum:
+                - ERROR
+                - WARNING
+                description: The severity level of the message. Default is error.
+              parameters:
+                type: object
+                description: Additional properties reflecting the dynamic parts of the error condition.
+              cause:
+                type: object
+                description: This property can be used to transport causing error message records produced by a down stream service calls.
+              locale:
+                type: string
+                description: This property represents the locale of the text contained in properties 'message', and 'description'. This property is mandatory if message and description contain translated text.
+            required:
+            - code
+            - message
+        requestId:
+          type: string
+          description: The ID of the failing request.
+        service:
+          type: string
+          description: The name of the service serving the error message.
+      required:
+      - errors
+      - requestId
+x-refined-from:
+- acoustic-content-openapi-original.json
+- acoustic-content-swagger2-original.yaml
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

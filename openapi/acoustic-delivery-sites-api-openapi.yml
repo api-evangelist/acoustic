@@ -1,0 +1,2163 @@
+openapi: 3.2.0
+info:
+  title: Acoustic Delivery sites API
+  version: 1.0.142
+  x-ibm-name: ibm-watson-content-hub-api
+  description: 'Operations tagged Delivery sites across 2 of this provider''s published API definitions: acoustic-content-openapi-original.json, acoustic-content-swagger2-original.yaml. Each path carries the servers of the definition it was published in.'
+tags:
+- name: Delivery sites
+  description: 'Use the Content delivery sites service Rest APIs to retrieve published site artefacts.
+
+    '
+paths:
+  /delivery/v1/sites/{siteId}:
+    get:
+      x-ibm-dx-security-user-roles:
+      - admin
+      - manager
+      - editor
+      - viewer
+      - authenticatedVisitor
+      - anonymous
+      x-ibm-dx-vary: []
+      summary: Get the site descriptor of a public site
+      description: 'Returns the site descriptor of the site specified by *siteId*.
+
+        <br />User roles: admin, manager, editor, viewer, authenticatedVisitor, anonymous'
+      parameters:
+      - name: siteId
+        in: path
+        description: The ID of the site item, or `@current` to indicate that the ID of the site is derived from the addressed URL via custom domain site mapping or URL path based site addressing. For further details consult the Content documentation.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: fields
+        in: query
+        description: Reduce the returned content down to just the specified fields. Fields specified by a comma seperated list of field names and should only be used once in query string. To only retrieve `id` and `name` this parameter should look like `id,name`. Undefined fields are ignored.
+        required: false
+        style: form
+        explode: false
+        schema:
+          type: string
+          items:
+            type: string
+      - name: If-None-Match
+        in: header
+        description: The Etag value from a previous request to check whether a content item has been updated since, if so, a 304 (Not Modified) response code is returned instead of the content item.
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          headers:
+            Etag:
+              description: The etag value identifies this site item for future requests.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                title: Site
+                type: object
+                properties:
+                  id:
+                    type: string
+                    description: The ID of the site item.
+                  name:
+                    type: string
+                    description: The site item name.
+                  routingMode:
+                    type: string
+                    description: The routing mode. can be "path" or "anchor"
+                  classification:
+                    type: string
+                    description: The classification defines the document type. For site items, all documents are classified as "site".
+                  lastModified:
+                    type: string
+                    description: The last modified date of this site item in ISO 8601 with the format YYYY-MM-DDTHH:mm:ss.sssZ.
+                  lastModifierId:
+                    type: string
+                    description: The id of the user which applied the last modification of this item.
+                  created:
+                    type: string
+                    description: The created date of this site item in ISO 8601 with the format YYYY-MM-DDTHH:mm:ss.sssZ.
+                  creatorId:
+                    type: string
+                    description: The id of the user that created this item.
+                example:
+                  name: Example site
+                  routingMode: path
+                  classification: site
+                  lastModified: '2018-01-22T09:11:53.100Z'
+                  lastModifierId: 52fb9c98-822f-4d6b-99ed-a8b5e04f3782
+                  creatorId: 00000000-0000-0000-0000-000000000009
+                  created: '2018-01-10T12:01:57.188Z'
+                  id: 949c298a-03c9-21b5-9386-b8ea3c3e0ee3
+        '304':
+          description: The "Not modified" message is returned when the If-None-Match header is used and the Etag value matches the most recent version of the content item.
+        '400':
+          description: "Bad request. \n This error status is returned if a parameter value is invalid.\n"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  service:
+                    type: string
+                    description: The name of the microservice that detected the error.
+                  requestId:
+                    type: string
+                    description: The ID of the request in which this error happened.
+                  errors:
+                    type: object
+                    description: This JSON object describes a specific error of an error condition.
+                    properties:
+                      code:
+                        type: integer
+                        description: An error code that is specific to the service that reports the error.
+                      message:
+                        type: string
+                        description: A brief error message.
+                      level:
+                        type: string
+                        enum:
+                        - WARNING
+                        - ERROR
+                        description: The error severity.
+                      description:
+                        type: string
+                        description: A detailed description that describes what caused the eror, and how to proceed.
+                      cause:
+                        type: object
+                        description: The causing error.
+                      locale:
+                        type: string
+                        description: The locale setting of the message and description text.
+              examples:
+                response:
+                  value:
+                    service: prod-delivery-sites
+                    requestId: c39d3e05-22f7-4d7c-8d7b-21ba6a2db508
+                    errors:
+                      code: 7001
+                      message: Missing or invalid value for 'fields' query parameter.
+                      level: ERROR
+                      description: Check that the 'fields' parameter is not blank, does not contain spaces or empty values, e.g. 'fields=rev,,last-modified' is considered invalid.
+                      locale: en
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  service:
+                    type: string
+                    description: The name of the microservice that detected the error.
+                  requestId:
+                    type: string
+                    description: The ID of the request in which this error happened.
+                  errors:
+                    type: object
+                    description: This JSON object describes a specific error of an error condition.
+                    properties:
+                      code:
+                        type: integer
+                        description: An error code that is specific to the service that reports the error.
+                      message:
+                        type: string
+                        description: A brief error message.
+                      level:
+                        type: string
+                        enum:
+                        - WARNING
+                        - ERROR
+                        description: The error severity.
+                      description:
+                        type: string
+                        description: A detailed description that describes what caused the eror, and how to proceed.
+                      cause:
+                        type: object
+                        description: The causing error.
+                      locale:
+                        type: string
+                        description: The locale setting of the message and description text.
+              examples:
+                response:
+                  value:
+                    service: prod-delivery-sites
+                    requestId: c39d3e05-22f7-4d7c-8d7b-21ba6a2db508
+                    errors:
+                      code: 7003
+                      message: 'Site not found for id : f54e763a-fd53-424b-8ad9-7cc690cca2dc.'
+                      level: ERROR
+                      description: A site item with the specified id was not found in the system.
+                      locale: en
+        '429':
+          description: Too Many Requests, the server has reached a limit, the request must be sent again at a later time.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        default:
+          description: "Unexpected error \n  An internal error has occurred. For example, a dependant service is not running.\n"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  service:
+                    type: string
+                    description: The name of the microservice that detected the error.
+                  requestId:
+                    type: string
+                    description: The ID of the request in which this error happened.
+                  errors:
+                    type: object
+                    description: This JSON object describes a specific error of an error condition.
+                    properties:
+                      code:
+                        type: integer
+                        description: An error code that is specific to the service that reports the error.
+                      message:
+                        type: string
+                        description: A brief error message.
+                      level:
+                        type: string
+                        enum:
+                        - WARNING
+                        - ERROR
+                        description: The error severity.
+                      description:
+                        type: string
+                        description: A detailed description that describes what caused the eror, and how to proceed.
+                      cause:
+                        type: object
+                        description: The causing error.
+                      locale:
+                        type: string
+                        description: The locale setting of the message and description text.
+              examples:
+                response:
+                  value:
+                    service: prod-delivery-sites
+                    requestId: c39d3e05-22f7-4d7c-8d7b-21ba6a2db508
+                    errors:
+                      code: 1014
+                      message: Unexpected error occurred.
+                      level: ERROR
+                      description: Unable to complete the request due to an unexpected error. Try again or contact Acoustic support if problem persists.
+                      locale: en
+      tags:
+      - Delivery sites
+  /mydelivery/v1/sites/{siteId}:
+    get:
+      x-ibm-dx-security-user-roles:
+      - admin
+      - manager
+      - editor
+      - viewer
+      - authenticatedVisitor
+      summary: Get the site descriptor of a public or protected site.
+      description: 'Returns the site descriptor of the site specified by *siteId*.
+
+        <br />User roles: admin, manager, editor, viewer, authenticatedVisitor'
+      parameters:
+      - name: siteId
+        in: path
+        description: The ID of the site item, or `@current` to indicate that the ID of the site is derived from the addressed URL via custom domain site mapping or URL path based site addressing. For further details consult the Content documentation.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: fields
+        in: query
+        description: Reduce the returned content down to just the specified fields. Fields specified by a comma seperated list of field names and should only be used once in query string. To only retrieve `id` and `name` this parameter should look like `id,name`. Undefined fields are ignored.
+        required: false
+        style: form
+        explode: false
+        schema:
+          type: string
+          items:
+            type: string
+      - name: If-None-Match
+        in: header
+        description: The Etag value from a previous request to check whether a content item has been updated since, if so, a 304 (Not Modified) response code is returned instead of the content item.
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          headers:
+            Etag:
+              description: The etag value identifies this site item for future requests.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                title: Site
+                type: object
+                properties:
+                  id:
+                    type: string
+                    description: The ID of the site item.
+                  name:
+                    type: string
+                    description: The site item name.
+                  routingMode:
+                    type: string
+                    description: The routing mode. can be "path" or "anchor"
+                  classification:
+                    type: string
+                    description: The classification defines the document type. For site items, all documents are classified as "site".
+                  lastModified:
+                    type: string
+                    description: The last modified date of this site item in ISO 8601 with the format YYYY-MM-DDTHH:mm:ss.sssZ.
+                  lastModifierId:
+                    type: string
+                    description: The id of the user which applied the last modification of this item.
+                  created:
+                    type: string
+                    description: The created date of this site item in ISO 8601 with the format YYYY-MM-DDTHH:mm:ss.sssZ.
+                  creatorId:
+                    type: string
+                    description: The id of the user that created this item.
+                example:
+                  name: Example site
+                  routingMode: path
+                  classification: site
+                  lastModified: '2018-01-22T09:11:53.100Z'
+                  lastModifierId: 52fb9c98-822f-4d6b-99ed-a8b5e04f3782
+                  creatorId: 00000000-0000-0000-0000-000000000009
+                  created: '2018-01-10T12:01:57.188Z'
+                  id: 949c298a-03c9-21b5-9386-b8ea3c3e0ee3
+        '304':
+          description: The "Not modified" message is returned when the If-None-Match header is used and the Etag value matches the most recent version of the content item.
+        '400':
+          description: "Bad request. \n This error status is returned if a parameter value is invalid.\n"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  service:
+                    type: string
+                    description: The name of the microservice that detected the error.
+                  requestId:
+                    type: string
+                    description: The ID of the request in which this error happened.
+                  errors:
+                    type: object
+                    description: This JSON object describes a specific error of an error condition.
+                    properties:
+                      code:
+                        type: integer
+                        description: An error code that is specific to the service that reports the error.
+                      message:
+                        type: string
+                        description: A brief error message.
+                      level:
+                        type: string
+                        enum:
+                        - WARNING
+                        - ERROR
+                        description: The error severity.
+                      description:
+                        type: string
+                        description: A detailed description that describes what caused the eror, and how to proceed.
+                      cause:
+                        type: object
+                        description: The causing error.
+                      locale:
+                        type: string
+                        description: The locale setting of the message and description text.
+              examples:
+                response:
+                  value:
+                    service: prod-delivery-sites
+                    requestId: c39d3e05-22f7-4d7c-8d7b-21ba6a2db508
+                    errors:
+                      code: 7001
+                      message: Missing or invalid value for 'fields' query parameter.
+                      level: ERROR
+                      description: Check that the 'fields' parameter is not blank, does not contain spaces or empty values, e.g. 'fields=rev,,last-modified' is considered invalid.
+                      locale: en
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  service:
+                    type: string
+                    description: The name of the microservice that detected the error.
+                  requestId:
+                    type: string
+                    description: The ID of the request in which this error happened.
+                  errors:
+                    type: object
+                    description: This JSON object describes a specific error of an error condition.
+                    properties:
+                      code:
+                        type: integer
+                        description: An error code that is specific to the service that reports the error.
+                      message:
+                        type: string
+                        description: A brief error message.
+                      level:
+                        type: string
+                        enum:
+                        - WARNING
+                        - ERROR
+                        description: The error severity.
+                      description:
+                        type: string
+                        description: A detailed description that describes what caused the eror, and how to proceed.
+                      cause:
+                        type: object
+                        description: The causing error.
+                      locale:
+                        type: string
+                        description: The locale setting of the message and description text.
+              examples:
+                response:
+                  value:
+                    service: prod-delivery-sites
+                    requestId: c39d3e05-22f7-4d7c-8d7b-21ba6a2db508
+                    errors:
+                      code: 7003
+                      message: 'Site not found for id : f54e763a-fd53-424b-8ad9-7cc690cca2dc.'
+                      level: ERROR
+                      description: A site item with the specified id was not found in the system.
+                      locale: en
+        '429':
+          description: Too Many Requests, the server has reached a limit, the request must be sent again at a later time.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        default:
+          description: "Unexpected error \n  An internal error has occurred. For example, a dependant service is not running.\n"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  service:
+                    type: string
+                    description: The name of the microservice that detected the error.
+                  requestId:
+                    type: string
+                    description: The ID of the request in which this error happened.
+                  errors:
+                    type: object
+                    description: This JSON object describes a specific error of an error condition.
+                    properties:
+                      code:
+                        type: integer
+                        description: An error code that is specific to the service that reports the error.
+                      message:
+                        type: string
+                        description: A brief error message.
+                      level:
+                        type: string
+                        enum:
+                        - WARNING
+                        - ERROR
+                        description: The error severity.
+                      description:
+                        type: string
+                        description: A detailed description that describes what caused the eror, and how to proceed.
+                      cause:
+                        type: object
+                        description: The causing error.
+                      locale:
+                        type: string
+                        description: The locale setting of the message and description text.
+              examples:
+                response:
+                  value:
+                    service: prod-delivery-sites
+                    requestId: c39d3e05-22f7-4d7c-8d7b-21ba6a2db508
+                    errors:
+                      code: 1014
+                      message: Unexpected error occurred.
+                      level: ERROR
+                      description: Unable to complete the request due to an unexpected error. Try again or contact Acoustic support if problem persists.
+                      locale: en
+      tags:
+      - Delivery sites
+  /delivery/v2/sites/{siteId}:
+    get:
+      x-ibm-dx-security-user-roles:
+      - admin
+      - manager
+      - editor
+      - viewer
+      - authenticatedVisitor
+      - anonymous
+      x-ibm-dx-vary: []
+      summary: Get the site descriptor of a public site
+      description: 'Returns the site descriptor of the site specified by *siteId*.
+
+        <br />User roles: admin, manager, editor, viewer, authenticatedVisitor, anonymous'
+      parameters:
+      - name: siteId
+        in: path
+        description: The ID of the site item, or `@current` to indicate that the ID of the site is derived from the addressed URL via custom domain site mapping or URL path based site addressing. For further details consult the Content documentation.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: fields
+        in: query
+        description: Reduce the returned content down to just the specified fields. Fields specified by a comma seperated list of field names and should only be used once in query string. To only retrieve `id` and `name` this parameter should look like `id,name`. Undefined fields are ignored.
+        required: false
+        style: form
+        explode: false
+        schema:
+          type: string
+          items:
+            type: string
+      - name: If-None-Match
+        in: header
+        description: The Etag value from a previous request to check whether a content item has been updated since, if so, a 304 (Not Modified) response code is returned instead of the content item.
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          headers:
+            Etag:
+              description: The etag value identifies this site item for future requests.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                title: Content
+                type: object
+                properties:
+                  id:
+                    type: string
+                    description: The ID of the content item.
+                  name:
+                    type: string
+                    description: The name of the content item.
+                  description:
+                    type: string
+                    description: The description text for this content item.
+                  classification:
+                    type: string
+                    description: The classification defines the document type. For site items, all documents are classified as "content".
+                  typeId:
+                    type: string
+                    description: The ID of the content type this item belongs to.
+                  locale:
+                    type: string
+                    description: locale of the document (e.g "en", or "de").
+                  lastModified:
+                    type: string
+                    format: date-time
+                    description: The last modified date of this content item in ISO 8601 with the format YYYY-MM-DDTHH:mm:ss.sssZ.
+                  lastModifierId:
+                    type: string
+                    description: name of user for now, this property may change once user management is defined.
+                  created:
+                    type: string
+                    format: date-time
+                    description: The created date of this content item in ISO 8601 with the format YYYY-MM-DDTHH:mm:ss.sssZ.
+                  creatorId:
+                    type: string
+                    description: The Id of the user that created this content item.
+                  kind:
+                    type: array
+                    items:
+                      type: string
+                      uniqueItems: true
+                      description: The kind of content. At least, one item kind element should be "site".
+                  tags:
+                    type: array
+                    items:
+                      type: string
+                    uniqueItems: true
+                    description: The tags which has been set for this content item.
+                  elements:
+                    type: object
+                    description: Defined by the type and capture in the schema given by the type, in a real content, this property will be filled with more information.
+                  type:
+                    type: string
+                    description: this is the Id of the content type document this content is based on.
+        '304':
+          description: The "Not modified" message is returned when the If-None-Match header is used and the Etag value matches the most recent version of the content item.
+        '400':
+          description: "Bad request.\n This error status is returned if a parameter value is invalid.\n"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  service:
+                    type: string
+                    description: The name of the microservice that detected the error.
+                  requestId:
+                    type: string
+                    description: The ID of the request in which this error happened.
+                  errors:
+                    type: object
+                    description: This JSON object describes a specific error of an error condition.
+                    properties:
+                      code:
+                        type: integer
+                        description: An error code that is specific to the service that reports the error.
+                      message:
+                        type: string
+                        description: A brief error message.
+                      level:
+                        type: string
+                        enum:
+                        - WARNING
+                        - ERROR
+                        description: The error severity.
+                      description:
+                        type: string
+                        description: A detailed description that describes what caused the eror, and how to proceed.
+                      cause:
+                        type: object
+                        description: The causing error.
+                      locale:
+                        type: string
+                        description: The locale setting of the message and description text.
+              examples:
+                response:
+                  value:
+                    service: prod-delivery-sites
+                    requestId: c39d3e05-22f7-4d7c-8d7b-21ba6a2db508
+                    errors:
+                      code: 7001
+                      message: Missing or invalid value for 'fields' query parameter.
+                      level: ERROR
+                      description: Check that the 'fields' parameter is not blank, does not contain spaces or empty values, e.g. 'fields=rev,,last-modified' is considered invalid.
+                      locale: en
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  service:
+                    type: string
+                    description: The name of the microservice that detected the error.
+                  requestId:
+                    type: string
+                    description: The ID of the request in which this error happened.
+                  errors:
+                    type: object
+                    description: This JSON object describes a specific error of an error condition.
+                    properties:
+                      code:
+                        type: integer
+                        description: An error code that is specific to the service that reports the error.
+                      message:
+                        type: string
+                        description: A brief error message.
+                      level:
+                        type: string
+                        enum:
+                        - WARNING
+                        - ERROR
+                        description: The error severity.
+                      description:
+                        type: string
+                        description: A detailed description that describes what caused the eror, and how to proceed.
+                      cause:
+                        type: object
+                        description: The causing error.
+                      locale:
+                        type: string
+                        description: The locale setting of the message and description text.
+              examples:
+                response:
+                  value:
+                    service: prod-delivery-sites
+                    requestId: c39d3e05-22f7-4d7c-8d7b-21ba6a2db508
+                    errors:
+                      code: 7003
+                      message: 'Site not found for id : f54e763a-fd53-424b-8ad9-7cc690cca2dc.'
+                      level: ERROR
+                      description: A site item with the specified id was not found in the system.
+                      locale: en
+        '429':
+          description: Too Many Requests, the server has reached a limit, the request must be sent again at a later time.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        default:
+          description: "Unexpected error\n  An internal error has occurred. For example, a dependant service is not running.\n"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  service:
+                    type: string
+                    description: The name of the microservice that detected the error.
+                  requestId:
+                    type: string
+                    description: The ID of the request in which this error happened.
+                  errors:
+                    type: object
+                    description: This JSON object describes a specific error of an error condition.
+                    properties:
+                      code:
+                        type: integer
+                        description: An error code that is specific to the service that reports the error.
+                      message:
+                        type: string
+                        description: A brief error message.
+                      level:
+                        type: string
+                        enum:
+                        - WARNING
+                        - ERROR
+                        description: The error severity.
+                      description:
+                        type: string
+                        description: A detailed description that describes what caused the eror, and how to proceed.
+                      cause:
+                        type: object
+                        description: The causing error.
+                      locale:
+                        type: string
+                        description: The locale setting of the message and description text.
+              examples:
+                response:
+                  value:
+                    service: prod-delivery-sites
+                    requestId: c39d3e05-22f7-4d7c-8d7b-21ba6a2db508
+                    errors:
+                      code: 1014
+                      message: Unexpected error occurred.
+                      level: ERROR
+                      description: Unable to complete the request due to an unexpected error. Try again or contact Acoustic support if problem persists.
+                      locale: en
+      tags:
+      - Delivery sites
+  /mydelivery/v2/sites/{siteId}:
+    get:
+      x-ibm-dx-security-user-roles:
+      - admin
+      - manager
+      - editor
+      - viewer
+      - authenticatedVisitor
+      summary: Get the site descriptor of a public or protected site.
+      description: 'Returns the site descriptor of the site specified by *siteId*.
+
+        <br />User roles: admin, manager, editor, viewer, authenticatedVisitor'
+      parameters:
+      - name: siteId
+        in: path
+        description: The ID of the site item, or `@current` to indicate that the ID of the site is derived from the addressed URL via custom domain site mapping or URL path based site addressing. For further details consult the Content documentation.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: fields
+        in: query
+        description: Reduce the returned content down to just the specified fields. Fields specified by a comma seperated list of field names and should only be used once in query string. To only retrieve `id` and `name` this parameter should look like `id,name`. Undefined fields are ignored.
+        required: false
+        style: form
+        explode: false
+        schema:
+          type: string
+          items:
+            type: string
+      - name: If-None-Match
+        in: header
+        description: The Etag value from a previous request to check whether a content item has been updated since, if so, a 304 (Not Modified) response code is returned instead of the content item.
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          headers:
+            Etag:
+              description: The etag value identifies this site item for future requests.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                title: Content
+                type: object
+                properties:
+                  id:
+                    type: string
+                    description: The ID of the content item.
+                  name:
+                    type: string
+                    description: The name of the content item.
+                  description:
+                    type: string
+                    description: The description text for this content item.
+                  classification:
+                    type: string
+                    description: The classification defines the document type. For site items, all documents are classified as "content".
+                  typeId:
+                    type: string
+                    description: The ID of the content type this item belongs to.
+                  locale:
+                    type: string
+                    description: locale of the document (e.g "en", or "de").
+                  lastModified:
+                    type: string
+                    format: date-time
+                    description: The last modified date of this content item in ISO 8601 with the format YYYY-MM-DDTHH:mm:ss.sssZ.
+                  lastModifierId:
+                    type: string
+                    description: name of user for now, this property may change once user management is defined.
+                  created:
+                    type: string
+                    format: date-time
+                    description: The created date of this content item in ISO 8601 with the format YYYY-MM-DDTHH:mm:ss.sssZ.
+                  creatorId:
+                    type: string
+                    description: The Id of the user that created this content item.
+                  kind:
+                    type: array
+                    items:
+                      type: string
+                      uniqueItems: true
+                      description: The kind of content. At least, one item kind element should be "site".
+                  tags:
+                    type: array
+                    items:
+                      type: string
+                    uniqueItems: true
+                    description: The tags which has been set for this content item.
+                  elements:
+                    type: object
+                    description: Defined by the type and capture in the schema given by the type, in a real content, this property will be filled with more information.
+                  type:
+                    type: string
+                    description: this is the Id of the content type document this content is based on.
+        '304':
+          description: The "Not modified" message is returned when the If-None-Match header is used and the Etag value matches the most recent version of the content item.
+        '400':
+          description: "Bad request.\n This error status is returned if a parameter value is invalid.\n"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  service:
+                    type: string
+                    description: The name of the microservice that detected the error.
+                  requestId:
+                    type: string
+                    description: The ID of the request in which this error happened.
+                  errors:
+                    type: object
+                    description: This JSON object describes a specific error of an error condition.
+                    properties:
+                      code:
+                        type: integer
+                        description: An error code that is specific to the service that reports the error.
+                      message:
+                        type: string
+                        description: A brief error message.
+                      level:
+                        type: string
+                        enum:
+                        - WARNING
+                        - ERROR
+                        description: The error severity.
+                      description:
+                        type: string
+                        description: A detailed description that describes what caused the eror, and how to proceed.
+                      cause:
+                        type: object
+                        description: The causing error.
+                      locale:
+                        type: string
+                        description: The locale setting of the message and description text.
+              examples:
+                response:
+                  value:
+                    service: prod-delivery-sites
+                    requestId: c39d3e05-22f7-4d7c-8d7b-21ba6a2db508
+                    errors:
+                      code: 7001
+                      message: Missing or invalid value for 'fields' query parameter.
+                      level: ERROR
+                      description: Check that the 'fields' parameter is not blank, does not contain spaces or empty values, e.g. 'fields=rev,,last-modified' is considered invalid.
+                      locale: en
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  service:
+                    type: string
+                    description: The name of the microservice that detected the error.
+                  requestId:
+                    type: string
+                    description: The ID of the request in which this error happened.
+                  errors:
+                    type: object
+                    description: This JSON object describes a specific error of an error condition.
+                    properties:
+                      code:
+                        type: integer
+                        description: An error code that is specific to the service that reports the error.
+                      message:
+                        type: string
+                        description: A brief error message.
+                      level:
+                        type: string
+                        enum:
+                        - WARNING
+                        - ERROR
+                        description: The error severity.
+                      description:
+                        type: string
+                        description: A detailed description that describes what caused the eror, and how to proceed.
+                      cause:
+                        type: object
+                        description: The causing error.
+                      locale:
+                        type: string
+                        description: The locale setting of the message and description text.
+              examples:
+                response:
+                  value:
+                    service: prod-delivery-sites
+                    requestId: c39d3e05-22f7-4d7c-8d7b-21ba6a2db508
+                    errors:
+                      code: 7003
+                      message: 'Site not found for id : f54e763a-fd53-424b-8ad9-7cc690cca2dc.'
+                      level: ERROR
+                      description: A site item with the specified id was not found in the system.
+                      locale: en
+        '429':
+          description: Too Many Requests, the server has reached a limit, the request must be sent again at a later time.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        default:
+          description: "Unexpected error\n  An internal error has occurred. For example, a dependant service is not running.\n"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  service:
+                    type: string
+                    description: The name of the microservice that detected the error.
+                  requestId:
+                    type: string
+                    description: The ID of the request in which this error happened.
+                  errors:
+                    type: object
+                    description: This JSON object describes a specific error of an error condition.
+                    properties:
+                      code:
+                        type: integer
+                        description: An error code that is specific to the service that reports the error.
+                      message:
+                        type: string
+                        description: A brief error message.
+                      level:
+                        type: string
+                        enum:
+                        - WARNING
+                        - ERROR
+                        description: The error severity.
+                      description:
+                        type: string
+                        description: A detailed description that describes what caused the eror, and how to proceed.
+                      cause:
+                        type: object
+                        description: The causing error.
+                      locale:
+                        type: string
+                        description: The locale setting of the message and description text.
+              examples:
+                response:
+                  value:
+                    service: prod-delivery-sites
+                    requestId: c39d3e05-22f7-4d7c-8d7b-21ba6a2db508
+                    errors:
+                      code: 1014
+                      message: Unexpected error occurred.
+                      level: ERROR
+                      description: Unable to complete the request due to an unexpected error. Try again or contact Acoustic support if problem persists.
+                      locale: en
+      tags:
+      - Delivery sites
+  /delivery/v1/sites/{siteId}/pages/{pageId}:
+    get:
+      x-ibm-dx-security-user-roles:
+      - admin
+      - manager
+      - editor
+      - viewer
+      - authenticatedVisitor
+      - anonymous
+      x-ibm-dx-vary: []
+      summary: Get the descriptor of a public page from a site.
+      description: 'Returns the descriptor of the page item specified by *pageId*. The page is contained in a site that is contained in *siteId*
+
+        <br />User roles: admin, manager, editor, viewer, authenticatedVisitor, anonymous'
+      parameters:
+      - name: pageId
+        in: path
+        description: The ID of the page item.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: siteId
+        in: path
+        description: The ID of the site item, or `@current` to indicate that the ID of the site is derived from the addressed URL via custom domain site mapping or URL path based site addressing. For further details consult the Content documentation.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: fields
+        in: query
+        description: Reduce the returned content down to just the specified fields. Fields specified by a comma seperated list of field names and should only be used once in query string. To only retrieve `id` and `name` this parameter should look like `id,name`. Undefined fields are ignored.
+        required: false
+        style: form
+        explode: false
+        schema:
+          type: string
+          items:
+            type: string
+      - name: If-None-Match
+        in: header
+        description: The Etag value from a previous request to check whether a content item has been updated since, if so, a 304 (Not Modified) response code is returned instead of the content item.
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          headers:
+            Etag:
+              description: The etag value identifies this site item for future requests.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                title: Page
+                type: object
+                properties:
+                  id:
+                    type: string
+                    description: The ID of the page item.
+                  name:
+                    type: string
+                    description: The page item name.
+                  segment:
+                    type: string
+                    description: The page segment name.
+                  title:
+                    type: string
+                    description: The page title.
+                  description:
+                    type: string
+                    description: The description text for this page item.
+                  route:
+                    type: string
+                    description: The route of this page item.
+                  hideFromNavigation:
+                    type: boolean
+                    description: Indicates whether the page is hidden in the navigation view or not.
+                  layoutId:
+                    type: string
+                    description: The name of the layoutitem for this page.
+                  contentId:
+                    type: string
+                    description: The id of the content item which is associated with this page item.
+                  contentTypeId:
+                    type: string
+                    description: The id of the content type of the page content.
+                  contentStatus:
+                    type: string
+                    description: The status of the content of this page. "ready" means that the content is in ready state.
+                  url:
+                    type: string
+                    description: A relative url which locates this page item.
+                  position:
+                    type: number
+                    description: an ordinal value which determines the position of this page items in the order of page siblings
+                  classification:
+                    type: string
+                    description: The classification defines the document type. For page items, all documents are classified as "page".
+                  lastModified:
+                    type: string
+                    description: The last modified date of this page item in ISO 8601 with the format YYYY-MM-DDTHH:mm:ss.sssZ.
+                  lastModifierId:
+                    type: string
+                    description: The id of the user which applied the last modification of this item.
+                  created:
+                    type: string
+                    description: The created date of this page item in ISO 8601 with the format YYYY-MM-DDTHH:mm:ss.sssZ.
+                  creatorId:
+                    type: string
+                    description: The id of the user that created this item.
+                example:
+                  contentId: 980c6e51-1bf7-4fff-9386-b8e96aebf475
+                  contentTypeId: 2f313485-dccd-4b3c-ab9b-d049841b1e45
+                  description: ''
+                  hideFromNavigation: true
+                  layoutId: category-page-layout
+                  name: CategoryDefaultPage
+                  segment: categorydefaultpage
+                  title: ''
+                  classification: page
+                  lastModified: '2018-01-22T09:11:56.499Z'
+                  lastModifierId: 52fb9c98-822f-4d6b-99ed-a8b5e04f3782
+                  contentStatus: ready
+                  created: '2018-01-11T15:07:46.153Z'
+                  creatorId: 52fb9c98-822f-4d6b-99ed-a8b5e04f3782
+                  position: 10
+                  route: /categorydefaultpage
+                  id: 288c1fc1-48b5-48b9-8254-f8d596a3a64e
+                  url: /664052ba-bdb9-49bf-8d33-dbe4a79b6520/categorydefaultpage
+        '304':
+          description: The "Not modified" message is returned when the If-None-Match header is used and the Etag value matches the most recent version of the content item.
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  service:
+                    type: string
+                    description: The name of the microservice that detected the error.
+                  requestId:
+                    type: string
+                    description: The ID of the request in which this error happened.
+                  errors:
+                    type: object
+                    description: This JSON object describes a specific error of an error condition.
+                    properties:
+                      code:
+                        type: integer
+                        description: An error code that is specific to the service that reports the error.
+                      message:
+                        type: string
+                        description: A brief error message.
+                      level:
+                        type: string
+                        enum:
+                        - WARNING
+                        - ERROR
+                        description: The error severity.
+                      description:
+                        type: string
+                        description: A detailed description that describes what caused the eror, and how to proceed.
+                      cause:
+                        type: object
+                        description: The causing error.
+                      locale:
+                        type: string
+                        description: The locale setting of the message and description text.
+              examples:
+                response:
+                  value:
+                    service: prod-delivery-sites
+                    requestId: c39d3e05-22f7-4d7c-8d7b-21ba6a2db508
+                    errors:
+                      code: 7001
+                      message: Missing or invalid value for 'fields' query parameter.
+                      level: ERROR
+                      description: Check that the 'fields' parameter is not blank, does not contain spaces or empty values, e.g. 'fields=rev,,last-modified' is considered invalid.
+                      locale: en
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  service:
+                    type: string
+                    description: The name of the microservice that detected the error.
+                  requestId:
+                    type: string
+                    description: The ID of the request in which this error happened.
+                  errors:
+                    type: object
+                    description: This JSON object describes a specific error of an error condition.
+                    properties:
+                      code:
+                        type: integer
+                        description: An error code that is specific to the service that reports the error.
+                      message:
+                        type: string
+                        description: A brief error message.
+                      level:
+                        type: string
+                        enum:
+                        - WARNING
+                        - ERROR
+                        description: The error severity.
+                      description:
+                        type: string
+                        description: A detailed description that describes what caused the eror, and how to proceed.
+                      cause:
+                        type: object
+                        description: The causing error.
+                      locale:
+                        type: string
+                        description: The locale setting of the message and description text.
+              examples:
+                response:
+                  value:
+                    service: prod-delivery-sites
+                    requestId: c39d3e05-22f7-4d7c-8d7b-21ba6a2db508
+                    errors:
+                      code: 7003
+                      message: 'Site not found for id : f54e763a-fd53-424b-8ad9-7cc690cca2dc.'
+                      level: ERROR
+                      description: A site item with the specified id was not found in the system.
+                      locale: en
+        '429':
+          description: Too Many Requests, the server has reached a limit, the request must be sent again at a later time.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  service:
+                    type: string
+                    description: The name of the microservice that detected the error.
+                  requestId:
+                    type: string
+                    description: The ID of the request in which this error happened.
+                  errors:
+                    type: object
+                    description: This JSON object describes a specific error of an error condition.
+                    properties:
+                      code:
+                        type: integer
+                        description: An error code that is specific to the service that reports the error.
+                      message:
+                        type: string
+                        description: A brief error message.
+                      level:
+                        type: string
+                        enum:
+                        - WARNING
+                        - ERROR
+                        description: The error severity.
+                      description:
+                        type: string
+                        description: A detailed description that describes what caused the eror, and how to proceed.
+                      cause:
+                        type: object
+                        description: The causing error.
+                      locale:
+                        type: string
+                        description: The locale setting of the message and description text.
+              examples:
+                response:
+                  value:
+                    service: prod-delivery-sites
+                    requestId: c39d3e05-22f7-4d7c-8d7b-21ba6a2db508
+                    errors:
+                      code: 1014
+                      message: Unexpected error occurred.
+                      level: ERROR
+                      description: Unable to complete the request due to an unexpected error. Try again or contact Acoustic support if problem persists.
+                      locale: en
+      tags:
+      - Delivery sites
+  /mydelivery/v1/sites/{siteId}/pages/{pageId}:
+    get:
+      x-ibm-dx-security-user-roles:
+      - admin
+      - manager
+      - editor
+      - viewer
+      - authenticatedVisitor
+      summary: Get the descriptor of a public or protected page from a site.
+      description: 'Returns the descriptor of the page item specified by *pageId*. The page is contained in a site that is contained in *siteId*
+
+        <br />User roles: admin, manager, editor, viewer, authenticatedVisitor'
+      parameters:
+      - name: pageId
+        in: path
+        description: The ID of the page item.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: siteId
+        in: path
+        description: The ID of the site item, or `@current` to indicate that the ID of the site is derived from the addressed URL via custom domain site mapping or URL path based site addressing. For further details consult the Content documentation.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: fields
+        in: query
+        description: Reduce the returned content down to just the specified fields. Fields specified by a comma seperated list of field names and should only be used once in query string. To only retrieve `id` and `name` this parameter should look like `id,name`. Undefined fields are ignored.
+        required: false
+        style: form
+        explode: false
+        schema:
+          type: string
+          items:
+            type: string
+      - name: If-None-Match
+        in: header
+        description: The Etag value from a previous request to check whether a content item has been updated since, if so, a 304 (Not Modified) response code is returned instead of the content item.
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          headers:
+            Etag:
+              description: The etag value identifies this site item for future requests.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                title: Page
+                type: object
+                properties:
+                  id:
+                    type: string
+                    description: The ID of the page item.
+                  name:
+                    type: string
+                    description: The page item name.
+                  segment:
+                    type: string
+                    description: The page segment name.
+                  title:
+                    type: string
+                    description: The page title.
+                  description:
+                    type: string
+                    description: The description text for this page item.
+                  route:
+                    type: string
+                    description: The route of this page item.
+                  hideFromNavigation:
+                    type: boolean
+                    description: Indicates whether the page is hidden in the navigation view or not.
+                  layoutId:
+                    type: string
+                    description: The name of the layoutitem for this page.
+                  contentId:
+                    type: string
+                    description: The id of the content item which is associated with this page item.
+                  contentTypeId:
+                    type: string
+                    description: The id of the content type of the page content.
+                  contentStatus:
+                    type: string
+                    description: The status of the content of this page. "ready" means that the content is in ready state.
+                  url:
+                    type: string
+                    description: A relative url which locates this page item.
+                  position:
+                    type: number
+                    description: an ordinal value which determines the position of this page items in the order of page siblings
+                  classification:
+                    type: string
+                    description: The classification defines the document type. For page items, all documents are classified as "page".
+                  lastModified:
+                    type: string
+                    description: The last modified date of this page item in ISO 8601 with the format YYYY-MM-DDTHH:mm:ss.sssZ.
+                  lastModifierId:
+                    type: string
+                    description: The id of the user which applied the last modification of this item.
+                  created:
+                    type: string
+                    description: The created date of this page item in ISO 8601 with the format YYYY-MM-DDTHH:mm:ss.sssZ.
+                  creatorId:
+                    type: string
+                    description: The id of the user that created this item.
+                example:
+                  contentId: 980c6e51-1bf7-4fff-9386-b8e96aebf475
+                  contentTypeId: 2f313485-dccd-4b3c-ab9b-d049841b1e45
+                  description: ''
+                  hideFromNavigation: true
+                  layoutId: category-page-layout
+                  name: CategoryDefaultPage
+                  segment: categorydefaultpage
+                  title: ''
+                  classification: page
+                  lastModified: '2018-01-22T09:11:56.499Z'
+                  lastModifierId: 52fb9c98-822f-4d6b-99ed-a8b5e04f3782
+                  contentStatus: ready
+                  created: '2018-01-11T15:07:46.153Z'
+                  creatorId: 52fb9c98-822f-4d6b-99ed-a8b5e04f3782
+                  position: 10
+                  route: /categorydefaultpage
+                  id: 288c1fc1-48b5-48b9-8254-f8d596a3a64e
+                  url: /664052ba-bdb9-49bf-8d33-dbe4a79b6520/categorydefaultpage
+        '304':
+          description: The "Not modified" message is returned when the If-None-Match header is used and the Etag value matches the most recent version of the content item.
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  service:
+                    type: string
+                    description: The name of the microservice that detected the error.
+                  requestId:
+                    type: string
+                    description: The ID of the request in which this error happened.
+                  errors:
+                    type: object
+                    description: This JSON object describes a specific error of an error condition.
+                    properties:
+                      code:
+                        type: integer
+                        description: An error code that is specific to the service that reports the error.
+                      message:
+                        type: string
+                        description: A brief error message.
+                      level:
+                        type: string
+                        enum:
+                        - WARNING
+                        - ERROR
+                        description: The error severity.
+                      description:
+                        type: string
+                        description: A detailed description that describes what caused the eror, and how to proceed.
+                      cause:
+                        type: object
+                        description: The causing error.
+                      locale:
+                        type: string
+                        description: The locale setting of the message and description text.
+              examples:
+                response:
+                  value:
+                    service: prod-delivery-sites
+                    requestId: c39d3e05-22f7-4d7c-8d7b-21ba6a2db508
+                    errors:
+                      code: 7001
+                      message: Missing or invalid value for 'fields' query parameter.
+                      level: ERROR
+                      description: Check that the 'fields' parameter is not blank, does not contain spaces or empty values, e.g. 'fields=rev,,last-modified' is considered invalid.
+                      locale: en
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  service:
+                    type: string
+                    description: The name of the microservice that detected the error.
+                  requestId:
+                    type: string
+                    description: The ID of the request in which this error happened.
+                  errors:
+                    type: object
+                    description: This JSON object describes a specific error of an error condition.
+                    properties:
+                      code:
+                        type: integer
+                        description: An error code that is specific to the service that reports the error.
+                      message:
+                        type: string
+                        description: A brief error message.
+                      level:
+                        type: string
+                        enum:
+                        - WARNING
+                        - ERROR
+                        description: The error severity.
+                      description:
+                        type: string
+                        description: A detailed description that describes what caused the eror, and how to proceed.
+                      cause:
+                        type: object
+                        description: The causing error.
+                      locale:
+                        type: string
+                        description: The locale setting of the message and description text.
+              examples:
+                response:
+                  value:
+                    service: prod-delivery-sites
+                    requestId: c39d3e05-22f7-4d7c-8d7b-21ba6a2db508
+                    errors:
+                      code: 7003
+                      message: 'Site not found for id : f54e763a-fd53-424b-8ad9-7cc690cca2dc.'
+                      level: ERROR
+                      description: A site item with the specified id was not found in the system.
+                      locale: en
+        '429':
+          description: Too Many Requests, the server has reached a limit, the request must be sent again at a later time.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  service:
+                    type: string
+                    description: The name of the microservice that detected the error.
+                  requestId:
+                    type: string
+                    description: The ID of the request in which this error happened.
+                  errors:
+                    type: object
+                    description: This JSON object describes a specific error of an error condition.
+                    properties:
+                      code:
+                        type: integer
+                        description: An error code that is specific to the service that reports the error.
+                      message:
+                        type: string
+                        description: A brief error message.
+                      level:
+                        type: string
+                        enum:
+                        - WARNING
+                        - ERROR
+                        description: The error severity.
+                      description:
+                        type: string
+                        description: A detailed description that describes what caused the eror, and how to proceed.
+                      cause:
+                        type: object
+                        description: The causing error.
+                      locale:
+                        type: string
+                        description: The locale setting of the message and description text.
+              examples:
+                response:
+                  value:
+                    service: prod-delivery-sites
+                    requestId: c39d3e05-22f7-4d7c-8d7b-21ba6a2db508
+                    errors:
+                      code: 1014
+                      message: Unexpected error occurred.
+                      level: ERROR
+                      description: Unable to complete the request due to an unexpected error. Try again or contact Acoustic support if problem persists.
+                      locale: en
+      tags:
+      - Delivery sites
+  /delivery/v1/sites/{siteId}/pages/by-parent/{parentPageId}:
+    get:
+      x-ibm-dx-security-user-roles:
+      - admin
+      - manager
+      - editor
+      - viewer
+      - authenticatedVisitor
+      - anonymous
+      x-ibm-dx-vary: []
+      summary: Get all public child pages of a specified parent page
+      description: 'Returns the descriptors of all public child pages which are  direct children of the parent page that is specified by *parentPageId*. The page is a member of the site that is specified in *siteId*.
+
+        If the value of *parentPageId* is ***@top***, then the descriptors of the top-level pages are returned.
+
+        <br />User roles: admin, manager, editor, viewer, authenticatedVisitor, anonymous'
+      parameters:
+      - name: parentPageId
+        in: path
+        description: The ID of the parent page item, or *@top* to retrieve the top-level pages.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: siteId
+        in: path
+        description: The ID of the site item, or `@current` to indicate that the ID of the site is derived from the addressed URL via custom domain site mapping or URL path based site addressing. For further details consult the Content documentation.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: fields
+        in: query
+        description: Reduce the returned content down to just the specified fields. Fields specified by a comma seperated list of field names and should only be used once in query string. To only retrieve `id` and `name` this parameter should look like `id,name`. Undefined fields are ignored.
+        required: false
+        style: form
+        explode: false
+        schema:
+          type: string
+          items:
+            type: string
+      - name: count
+        in: query
+        description: specifies the maximum number of items that should be returned in this request. If this parameter is not specified, up to 100 page items are returned.
+        required: false
+        schema:
+          type: number
+      - name: start
+        in: query
+        description: specifies the starting offset of the result set being returned. For example, if the value of this paramter is 5, the first 5 items in the result set are ignored. If this parameter is not specified, the starting offset of the result set is 0.
+        required: false
+        schema:
+          type: number
+      - name: If-None-Match
+        in: header
+        description: The Etag value from a previous request to check whether a content item has been updated since, if so, a 304 (Not Modified) response code is returned instead of the content item.
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          headers:
+            Etag:
+              description: The etag value identifies this site item for future requests.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                title: MultiPages
+                type: object
+                properties:
+                  items:
+                    type: array
+                    description: An array of JSON objects that contain the requested page items.
+                    items:
+                      title: Page
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          description: The ID of the page item.
+                        name:
+                          type: string
+                          description: The page item name.
+                        segment:
+                          type: string
+                          description: The page segment name.
+                        title:
+                          type: string
+                          description: The page title.
+                        description:
+                          type: string
+                          description: The description text for this page item.
+                        route:
+                          type: string
+                          description: The route of this page item.
+                        hideFromNavigation:
+                          type: boolean
+                          description: Indicates whether the page is hidden in the navigation view or not.
+                        layoutId:
+                          type: string
+                          description: The name of the layoutitem for this page.
+                        contentId:
+                          type: string
+                          description: The id of the content item which is associated with this page item.
+                        contentTypeId:
+                          type: string
+                          description: The id of the content type of the page content.
+                        contentStatus:
+                          type: string
+                          description: The status of the content of this page. "ready" means that the content is in ready state.
+                        url:
+                          type: string
+                          description: A relative url which locates this page item.
+                        position:
+                          type: number
+                          description: an ordinal value which determines the position of this page items in the order of page siblings
+                        classification:
+                          type: string
+                          description: The classification defines the document type. For page items, all documents are classified as "page".
+                        lastModified:
+                          type: string
+                          description: The last modified date of this page item in ISO 8601 with the format YYYY-MM-DDTHH:mm:ss.sssZ.
+                        lastModifierId:
+                          type: string
+                          description: The id of the user which applied the last modification of this item.
+                        created:
+                          type: string
+                          description: The created date of this page item in ISO 8601 with the format YYYY-MM-DDTHH:mm:ss.sssZ.
+                        creatorId:
+                          type: string
+                          description: The id of the user that created this item.
+                      example:
+                        contentId: 980c6e51-1bf7-4fff-9386-b8e96aebf475
+                        contentTypeId: 2f313485-dccd-4b3c-ab9b-d049841b1e45
+                        description: ''
+                        hideFromNavigation: true
+                        layoutId: category-page-layout
+                        name: CategoryDefaultPage
+                        segment: categorydefaultpage
+                        title: ''
+                        classification: page
+                        lastModified: '2018-01-22T09:11:56.499Z'
+                        lastModifierId: 52fb9c98-822f-4d6b-99ed-a8b5e04f3782
+                        contentStatus: ready
+                        created: '2018-01-11T15:07:46.153Z'
+                        creatorId: 52fb9c98-822f-4d6b-99ed-a8b5e04f3782
+                        position: 10
+                        route: /categorydefaultpage
+                        id: 288c1fc1-48b5-48b9-8254-f8d596a3a64e
+                        url: /664052ba-bdb9-49bf-8d33-dbe4a79b6520/categorydefaultpage
+        '304':
+          description: The "Not modified" message is returned when the If-None-Match header is used and the Etag value matches the most recent version of the content item.
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  service:
+                    type: string
+                    description: The name of the microservice that detected the error.
+                  requestId:
+                    type: string
+                    description: The ID of the request in which this error happened.
+                  errors:
+                    type: object
+                    description: This JSON object describes a specific error of an error condition.
+                    properties:
+                      code:
+                        type: integer
+                        description: An error code that is specific to the service that reports the error.
+                      message:
+                        type: string
+                        description: A brief error message.
+                      level:
+                        type: string
+                        enum:
+                        - WARNING
+                        - ERROR
+                        description: The error severity.
+                      description:
+                        type: string
+                        description: A detailed description that describes what caused the eror, and how to proceed.
+                      cause:
+                        type: object
+                        description: The causing error.
+                      locale:
+                        type: string
+                        description: The locale setting of the message and description text.
+              examples:
+                response:
+                  value:
+                    service: prod-delivery-sites
+                    requestId: c39d3e05-22f7-4d7c-8d7b-21ba6a2db508
+                    errors:
+                      code: 7001
+                      message: Missing or invalid value for 'fields' query parameter.
+                      level: ERROR
+                      description: Check that the 'fields' parameter is not blank, does not contain spaces or empty values, e.g. 'fields=rev,,last-modified' is considered invalid.
+                      locale: en
+        '429':
+          description: Too Many Requests, the server has reached a limit, the request must be sent again at a later time.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  service:
+                    type: string
+                    description: The name of the microservice that detected the error.
+                  requestId:
+                    type: string
+                    description: The ID of the request in which this error happened.
+                  errors:
+                    type: object
+                    description: This JSON object describes a specific error of an error condition.
+                    properties:
+                      code:
+                        type: integer
+                        description: An error code that is specific to the service that reports the error.
+                      message:
+                        type: string
+                        description: A brief error message.
+                      level:
+                        type: string
+                        enum:
+                        - WARNING
+                        - ERROR
+                        description: The error severity.
+                      description:
+                        type: string
+                        description: A detailed description that describes what caused the eror, and how to proceed.
+                      cause:
+                        type: object
+                        description: The causing error.
+                      locale:
+                        type: string
+                        description: The locale setting of the message and description text.
+              examples:
+                response:
+                  value:
+                    service: prod-delivery-sites
+                    requestId: c39d3e05-22f7-4d7c-8d7b-21ba6a2db508
+                    errors:
+                      code: 1014
+                      message: Unexpected error occurred.
+                      level: ERROR
+                      description: Unable to complete the request due to an unexpected error. Try again or contact Acoustic support if problem persists.
+                      locale: en
+      tags:
+      - Delivery sites
+  /mydelivery/v1/sites/{siteId}/pages/by-parent/{parentPageId}:
+    get:
+      x-ibm-dx-security-user-roles:
+      - admin
+      - manager
+      - editor
+      - viewer
+      - authenticatedVisitor
+      summary: Get all public or protected child pages of a specified parent page
+      description: 'Returns the descriptors of all public or protected child pages which are  direct children of the parent page that is specified by *parentPageId*. The page is a member of the site that is specified in *siteId*.
+
+        If the value of *parentPageId* is ***@top***, then the descriptors of the top-level pages are returned.
+
+        <br />User roles: admin, manager, editor, viewer, authenticatedVisitor'
+      parameters:
+      - name: parentPageId
+        in: path
+        description: The ID of the parent page item, or *top* to retrieve the top-level pages.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: siteId
+        in: path
+        description: The ID of the site item, or `@current` to indicate that the ID of the site is derived from the addressed URL via custom domain site mapping or URL path based site addressing. For further details consult the Content documentation.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: fields
+        in: query
+        description: Reduce the returned content down to just the specified fields. Fields specified by a comma seperated list of field names and should only be used once in query string. To only retrieve `id` and `name` this parameter should look like `id,name`. Undefined fields are ignored.
+        required: false
+        style: form
+        explode: false
+        schema:
+          type: string
+          items:
+            type: string
+      - name: count
+        in: query
+        description: specifies the maximum number of items that should be returned in this request. If this parameter is not specified, up to 100 page items are returned.
+        required: false
+        schema:
+          type: number
+      - name: start
+        in: query
+        description: specifies the starting offset of the result set being returned. For example, if the value of this paramter is 5, the first 5 items in the result set are ignored. If this parameter is not specified, the starting offset of the result set is 0.
+        required: false
+        schema:
+          type: number
+      - name: If-None-Match
+        in: header
+        description: The Etag value from a previous request to check whether a content item has been updated since, if so, a 304 (Not Modified) response code is returned instead of the content item.
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          headers:
+            Etag:
+              description: The etag value identifies this site item for future requests.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                title: MultiPages
+                type: object
+                properties:
+                  items:
+                    type: array
+                    description: An array of JSON objects that contain the requested page items.
+                    items:
+                      title: Page
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          description: The ID of the page item.
+                        name:
+                          type: string
+                          description: The page item name.
+                        segment:
+                          type: string
+                          description: The page segment name.
+                        title:
+                          type: string
+                          description: The page title.
+                        description:
+                          type: string
+                          description: The description text for this page item.
+                        route:
+                          type: string
+                          description: The route of this page item.
+                        hideFromNavigation:
+                          type: boolean
+                          description: Indicates whether the page is hidden in the navigation view or not.
+                        layoutId:
+                          type: string
+                          description: The name of the layoutitem for this page.
+                        contentId:
+                          type: string
+                          description: The id of the content item which is associated with this page item.
+                        contentTypeId:
+                          type: string
+                          description: The id of the content type of the page content.
+                        contentStatus:
+                          type: string
+                          description: The status of the content of this page. "ready" means that the content is in ready state.
+                        url:
+                          type: string
+                          description: A relative url which locates this page item.
+                        position:
+                          type: number
+                          description: an ordinal value which determines the position of this page items in the order of page siblings
+                        classification:
+                          type: string
+                          description: The classification defines the document type. For page items, all documents are classified as "page".
+                        lastModified:
+                          type: string
+                          description: The last modified date of this page item in ISO 8601 with the format YYYY-MM-DDTHH:mm:ss.sssZ.
+                        lastModifierId:
+                          type: string
+                          description: The id of the user which applied the last modification of this item.
+                        created:
+                          type: string
+                          description: The created date of this page item in ISO 8601 with the format YYYY-MM-DDTHH:mm:ss.sssZ.
+                        creatorId:
+                          type: string
+                          description: The id of the user that created this item.
+                      example:
+                        contentId: 980c6e51-1bf7-4fff-9386-b8e96aebf475
+                        contentTypeId: 2f313485-dccd-4b3c-ab9b-d049841b1e45
+                        description: ''
+                        hideFromNavigation: true
+                        layoutId: category-page-layout
+                        name: CategoryDefaultPage
+                        segment: categorydefaultpage
+                        title: ''
+                        classification: page
+                        lastModified: '2018-01-22T09:11:56.499Z'
+                        lastModifierId: 52fb9c98-822f-4d6b-99ed-a8b5e04f3782
+                        contentStatus: ready
+                        created: '2018-01-11T15:07:46.153Z'
+                        creatorId: 52fb9c98-822f-4d6b-99ed-a8b5e04f3782
+                        position: 10
+                        route: /categorydefaultpage
+                        id: 288c1fc1-48b5-48b9-8254-f8d596a3a64e
+                        url: /664052ba-bdb9-49bf-8d33-dbe4a79b6520/categorydefaultpage
+        '304':
+          description: The "Not modified" message is returned when the If-None-Match header is used and the Etag value matches the most recent version of the content item.
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  service:
+                    type: string
+                    description: The name of the microservice that detected the error.
+                  requestId:
+                    type: string
+                    description: The ID of the request in which this error happened.
+                  errors:
+                    type: object
+                    description: This JSON object describes a specific error of an error condition.
+                    properties:
+                      code:
+                        type: integer
+                        description: An error code that is specific to the service that reports the error.
+                      message:
+                        type: string
+                        description: A brief error message.
+                      level:
+                        type: string
+                        enum:
+                        - WARNING
+                        - ERROR
+                        description: The error severity.
+                      description:
+                        type: string
+                        description: A detailed description that describes what caused the eror, and how to proceed.
+                      cause:
+                        type: object
+                        description: The causing error.
+                      locale:
+                        type: string
+                        description: The locale setting of the message and description text.
+              examples:
+                response:
+                  value:
+                    service: prod-delivery-sites
+                    requestId: c39d3e05-22f7-4d7c-8d7b-21ba6a2db508
+                    errors:
+                      code: 7001
+                      message: Missing or invalid value for 'fields' query parameter.
+                      level: ERROR
+                      description: Check that the 'fields' parameter is not blank, does not contain spaces or empty values, e.g. 'fields=rev,,last-modified' is considered invalid.
+                      locale: en
+        '429':
+          description: Too Many Requests, the server has reached a limit, the request must be sent again at a later time.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  service:
+                    type: string
+                    description: The name of the microservice that detected the error.
+                  requestId:
+                    type: string
+                    description: The ID of the request in which this error happened.
+                  errors:
+                    type: object
+                    description: This JSON object describes a specific error of an error condition.
+                    properties:
+                      code:
+                        type: integer
+                        description: An error code that is specific to the service that reports the error.
+                      message:
+                        type: string
+                        description: A brief error message.
+                      level:
+                        type: string
+                        enum:
+                        - WARNING
+                        - ERROR
+                        description: The error severity.
+                      description:
+                        type: string
+                        description: A detailed description that describes what caused the eror, and how to proceed.
+                      cause:
+                        type: object
+                        description: The causing error.
+                      locale:
+                        type: string
+                        description: The locale setting of the message and description text.
+              examples:
+                response:
+                  value:
+                    service: prod-delivery-sites
+                    requestId: c39d3e05-22f7-4d7c-8d7b-21ba6a2db508
+                    errors:
+                      code: 1014
+                      message: Unexpected error occurred.
+                      level: ERROR
+                      description: Unable to complete the request due to an unexpected error. Try again or contact Acoustic support if problem persists.
+                      locale: en
+      tags:
+      - Delivery sites
+components:
+  schemas:
+    ErrorResponse:
+      description: This JSON record represents an error condition.
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            description: This JSON record represents an individual error or warning contained in an error message.
+            type: object
+            properties:
+              code:
+                type: integer
+                description: An error code
+              message:
+                type: string
+                description: A message describing what went wrong.
+              description:
+                type: string
+                description: Further explanation of the error condition and potential next steps to resolve the problem.
+              more_info:
+                type: string
+                description: A URL pointing to a web site that provides more information on the given error condition.
+              level:
+                type: string
+                enum:
+                - ERROR
+                - WARNING
+                description: The severity level of the message. Default is error.
+              parameters:
+                type: object
+                description: Additional properties reflecting the dynamic parts of the error condition.
+              cause:
+                type: object
+                description: This property can be used to transport causing error message records produced by a down stream service calls.
+              locale:
+                type: string
+                description: This property represents the locale of the text contained in properties 'message', and 'description'. This property is mandatory if message and description contain translated text.
+            required:
+            - code
+            - message
+        requestId:
+          type: string
+          description: The ID of the failing request.
+        service:
+          type: string
+          description: The name of the service serving the error message.
+      required:
+      - errors
+      - requestId
+x-refined-from:
+- acoustic-content-openapi-original.json
+- acoustic-content-swagger2-original.yaml
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

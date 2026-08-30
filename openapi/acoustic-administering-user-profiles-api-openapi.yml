@@ -1,0 +1,1523 @@
+openapi: 3.2.0
+info:
+  title: Acoustic Administering user profiles API
+  version: 1.0.142
+  x-ibm-name: ibm-watson-content-hub-api
+  description: 'Operations tagged Administering user profiles across 2 of this provider''s published API definitions: acoustic-content-openapi-original.json, acoustic-content-swagger2-original.yaml. Each path carries the servers of the definition it was published in.'
+tags:
+- name: Administering user profiles
+paths:
+  /user-profile/v1/users/currentuser:
+    get:
+      tags:
+      - Administering user profiles
+      x-ibm-dx-security-user-roles:
+      - admin
+      - manager
+      - editor
+      - viewer
+      - authenticatedVisitor
+      - anonymous
+      summary: Find the current user
+      description: 'Returns the current user<br />User roles: admin, manager, editor, viewer, authenticatedVisitor, anonymous'
+      parameters:
+      - x-ibm-dx-user-auth: private
+        in: header
+        name: x-ibm-dx-user-auth
+        description: JWT encrypted user context set by login process
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Returns the current user
+          content:
+            application/json:
+              schema:
+                description: The user object that might be returned.
+                type: object
+                required:
+                - externalId
+                - id
+                - roles
+                properties:
+                  id:
+                    type: string
+                    pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+                    description: The unique internal identifier of the user
+                  externalId:
+                    type: string
+                    pattern: ^[0-9A-Z]{10}$|^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$,
+                    description: The unique external identifier of the user (e.g. BlueID). Although, this field can store email addresses, other types of unique identifiers may be stored too. Do not use this field as a replacement for the user attribute email address.
+                    maxLength: 512
+                  firstName:
+                    type: string
+                    description: The first name of the user
+                    maxLength: 512
+                  lastName:
+                    type: string
+                    description: The last name of the user
+                    maxLength: 512
+                  uid:
+                    type: string
+                    description: Acoustic Id of the user, if not present during POST call an Acoustic Id will be created for the user
+                    maxLength: 30
+                  displayName:
+                    type: string
+                    description: The name of the user that can be displayed in the UI
+                    maxLength: 512
+                  email:
+                    type: string
+                    description: The email of the user that can be displayed in the UI
+                    format: email
+                    maxLength: 512
+                  roles:
+                    type: array
+                    items:
+                      type: string
+                      enum:
+                      - authenticatedVisitor
+                      - viewer
+                      - editor
+                      - manager
+                      - admin
+                    minItems: 0
+                    description: The roles of the user that will be used for access control (empty for the anonymous user)
+                  links:
+                    type: object
+                    required:
+                    - self
+                    properties:
+                      self:
+                        description: URI pointing to this document
+                        type: object
+                        required:
+                        - href
+                        - methods
+                        properties:
+                          href:
+                            type: string
+                          methods:
+                            type: array
+                            items:
+                              type: string
+                              description: The supported HTTP methods
+                              enum:
+                              - GET
+                              - POST
+                              - PUT
+                              - DELETE
+                          name:
+                            description: Single value object where key is the locale and value is the display name
+                            type: object
+                  lastLogin:
+                    type: string
+                    format: date-time
+                    description: Date when this user logged in for the last time before current session
+                  created:
+                    type: string
+                    format: date-time
+                    description: Date when this item was created
+                  creator:
+                    description: URI pointing to the User who has created the item
+                    type: object
+                    required:
+                    - id
+                    properties:
+                      id:
+                        type: string
+                        pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+                  lastModified:
+                    type: string
+                    format: date-time
+                    description: Date when this item was modified for the last time
+                  lastModifier:
+                    description: URI pointing to the User who has modified the item
+                    type: object
+                    required:
+                    - id
+                    properties:
+                      id:
+                        type: string
+                        pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+                  privacyNotice:
+                    description: The privacy notice that the user has accepted
+                    type: object
+                    required:
+                    - acceptRequired
+                    properties:
+                      version:
+                        type: string
+                        minLength: 1
+                        maxLength: 20
+                        description: The version of the privacy notice.
+                      accepted:
+                        type: string
+                        format: date-time
+                        description: The date when the user accepted this version of the privacy notice.
+                      locale:
+                        type: string
+                        minLength: 1
+                        maxLength: 20
+                        description: The language in which the accepted privacy notice is written.
+                      acceptRequired:
+                        type: boolean
+                        description: Defines if an acceptance of the latest privacy notice is required.
+                    additionalProperties: false
+                additionalProperties: false
+        '400':
+          description: Response indicating a client error
+          content:
+            application/json:
+              schema:
+                description: This JSON record represents an error condition.
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      description: This JSON record represents an individual error or warning contained in an error message.
+                      type: object
+                      properties:
+                        code:
+                          type: integer
+                          description: An error code defined by the User Profile service.
+                        message:
+                          type: string
+                          description: A message describing what went wrong.
+                        description:
+                          type: string
+                          description: Further explanation of the error condition and potential next steps to resolve the problem.
+                        more_info:
+                          type: string
+                          description: A URL pointing to a web site that provides more information on the given error condition.
+                        level:
+                          type: string
+                          enum:
+                          - ERROR
+                          - WARNING
+                          description: The severity level of the message.
+                        parameters:
+                          type: object
+                          description: Additional properties reflecting the dynamic parts of the error condition.
+                        cause:
+                          type: object
+                          description: This property can be used to transport causing error message records produced by a down stream service call.
+                        locale:
+                          type: string
+                          description: This property represents the locale of the text contained in properties 'message', and 'description'. This property is mandatory if message and description contain translated text.
+                      required:
+                      - code
+                      - message
+                  requestId:
+                    type: string
+                    description: The ID of the failing request.
+                  service:
+                    type: string
+                    description: The name of the service serving the error message.
+                required:
+                - errors
+                - requestId
+        '429':
+          description: Too Many Requests, the server has reached a limit, the request must be sent again at a later time.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /user-profile/v1/users:
+    parameters: []
+    get:
+      tags:
+      - Administering user profiles
+      x-ibm-dx-security-user-roles:
+      - admin
+      summary: Find all users.
+      description: 'Returns an array containing all users matching the query.<br />User roles: admin'
+      parameters:
+      - in: query
+        name: external-id
+        description: The unique external identifier of the user (e.g. BlueID).
+        required: false
+        schema:
+          type: string
+          format: email
+          maxLength: 512
+      - name: privacy-notice
+        in: query
+        description: Parameter which must be set if the users privacy notice should be returned
+        required: false
+        schema:
+          type: string
+          default: false
+      - name: offset
+        in: query
+        description: The index of the first item to be included in the response
+        required: false
+        schema:
+          type: string
+          format: int32
+          minimum: 0
+          default: 0
+      - name: limit
+        in: query
+        description: The maximum number of items to be included in the response
+        required: false
+        schema:
+          type: string
+          format: int32
+          minimum: 1
+          maximum: 10000
+          default: 10
+      - name: include
+        in: query
+        description: Include additional information sections
+        required: false
+        style: form
+        explode: false
+        schema:
+          type: string
+          items:
+            type: string
+            enum:
+            - links
+            - none
+      responses:
+        '200':
+          description: Returns a (sub-)list of all available users. At most [limit] items are returned.
+          content:
+            application/json:
+              schema:
+                type: object
+                allOf:
+                - type: object
+                  required:
+                  - offset
+                  - limit
+                  properties:
+                    links:
+                      type: object
+                      required:
+                      - self
+                      - first
+                      properties:
+                        self:
+                          description: URI pointing to this document
+                          type: object
+                          required:
+                          - href
+                          - methods
+                          properties:
+                            href:
+                              type: string
+                            methods:
+                              type: array
+                              items:
+                                type: string
+                                description: The supported HTTP methods
+                                enum:
+                                - GET
+                                - POST
+                                - PUT
+                                - DELETE
+                            name:
+                              description: Single value object where key is the locale and value is the display name
+                              type: object
+                        first:
+                          description: URI pointing to the first sublist of items of the complete list
+                          type: object
+                          required:
+                          - href
+                          properties:
+                            href:
+                              type: string
+                        prev:
+                          description: URI pointing to the previous sublist of items of the complete list
+                          type: object
+                          required:
+                          - href
+                          properties:
+                            href:
+                              type: string
+                        next:
+                          description: URI pointing to the next sublist of items of the complete list
+                          type: object
+                          required:
+                          - href
+                          properties:
+                            href:
+                              type: string
+                    offset:
+                      type: integer
+                      description: Number of skipped items, the first item in this sublist list will be (offset)
+                    limit:
+                      type: integer
+                      description: Maximum number of items in the current sublist
+                required:
+                - items
+                properties:
+                  items:
+                    type: array
+                    items:
+                      description: The user object that might be returned.
+                      type: object
+                      required:
+                      - externalId
+                      - id
+                      - roles
+                      properties:
+                        id:
+                          type: string
+                          pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+                          description: The unique internal identifier of the user
+                        externalId:
+                          type: string
+                          pattern: ^[0-9A-Z]{10}$|^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$,
+                          description: The unique external identifier of the user (e.g. BlueID). Although, this field can store email addresses, other types of unique identifiers may be stored too. Do not use this field as a replacement for the user attribute email address.
+                          maxLength: 512
+                        firstName:
+                          type: string
+                          description: The first name of the user
+                          maxLength: 512
+                        lastName:
+                          type: string
+                          description: The last name of the user
+                          maxLength: 512
+                        uid:
+                          type: string
+                          description: Acoustic Id of the user, if not present during POST call an Acoustic Id will be created for the user
+                          maxLength: 30
+                        displayName:
+                          type: string
+                          description: The name of the user that can be displayed in the UI
+                          maxLength: 512
+                        email:
+                          type: string
+                          description: The email of the user that can be displayed in the UI
+                          format: email
+                          maxLength: 512
+                        roles:
+                          type: array
+                          items:
+                            type: string
+                            enum:
+                            - authenticatedVisitor
+                            - viewer
+                            - editor
+                            - manager
+                            - admin
+                          minItems: 0
+                          description: The roles of the user that will be used for access control (empty for the anonymous user)
+                        links:
+                          type: object
+                          required:
+                          - self
+                          properties:
+                            self:
+                              description: URI pointing to this document
+                              type: object
+                              required:
+                              - href
+                              - methods
+                              properties:
+                                href:
+                                  type: string
+                                methods:
+                                  type: array
+                                  items:
+                                    type: string
+                                    description: The supported HTTP methods
+                                    enum:
+                                    - GET
+                                    - POST
+                                    - PUT
+                                    - DELETE
+                                name:
+                                  description: Single value object where key is the locale and value is the display name
+                                  type: object
+                        lastLogin:
+                          type: string
+                          format: date-time
+                          description: Date when this user logged in for the last time before current session
+                        created:
+                          type: string
+                          format: date-time
+                          description: Date when this item was created
+                        creator:
+                          description: URI pointing to the User who has created the item
+                          type: object
+                          required:
+                          - id
+                          properties:
+                            id:
+                              type: string
+                              pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+                        lastModified:
+                          type: string
+                          format: date-time
+                          description: Date when this item was modified for the last time
+                        lastModifier:
+                          description: URI pointing to the User who has modified the item
+                          type: object
+                          required:
+                          - id
+                          properties:
+                            id:
+                              type: string
+                              pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+                        privacyNotice:
+                          description: The privacy notice that the user has accepted
+                          type: object
+                          required:
+                          - acceptRequired
+                          properties:
+                            version:
+                              type: string
+                              minLength: 1
+                              maxLength: 20
+                              description: The version of the privacy notice.
+                            accepted:
+                              type: string
+                              format: date-time
+                              description: The date when the user accepted this version of the privacy notice.
+                            locale:
+                              type: string
+                              minLength: 1
+                              maxLength: 20
+                              description: The language in which the accepted privacy notice is written.
+                            acceptRequired:
+                              type: boolean
+                              description: Defines if an acceptance of the latest privacy notice is required.
+                          additionalProperties: false
+                      additionalProperties: false
+        '400':
+          description: Response indicating a client error.
+          content:
+            application/json:
+              schema:
+                description: This JSON record represents an error condition.
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      description: This JSON record represents an individual error or warning contained in an error message.
+                      type: object
+                      properties:
+                        code:
+                          type: integer
+                          description: An error code defined by the User Profile service.
+                        message:
+                          type: string
+                          description: A message describing what went wrong.
+                        description:
+                          type: string
+                          description: Further explanation of the error condition and potential next steps to resolve the problem.
+                        more_info:
+                          type: string
+                          description: A URL pointing to a web site that provides more information on the given error condition.
+                        level:
+                          type: string
+                          enum:
+                          - ERROR
+                          - WARNING
+                          description: The severity level of the message.
+                        parameters:
+                          type: object
+                          description: Additional properties reflecting the dynamic parts of the error condition.
+                        cause:
+                          type: object
+                          description: This property can be used to transport causing error message records produced by a down stream service call.
+                        locale:
+                          type: string
+                          description: This property represents the locale of the text contained in properties 'message', and 'description'. This property is mandatory if message and description contain translated text.
+                      required:
+                      - code
+                      - message
+                  requestId:
+                    type: string
+                    description: The ID of the failing request.
+                  service:
+                    type: string
+                    description: The name of the service serving the error message.
+                required:
+                - errors
+                - requestId
+        '429':
+          description: Too Many Requests, the server has reached a limit, the request must be sent again at a later time.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    post:
+      tags:
+      - Administering user profiles
+      x-ibm-dx-security-user-roles:
+      - admin
+      summary: Add a new user.
+      description: 'Adds a new user and returns the user object.<br />User roles: admin'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              description: The user object that might be sent for user creation.
+              type: object
+              required:
+              - externalId
+              - roles
+              properties:
+                externalId:
+                  type: string
+                  pattern: ^[0-9A-Z]{10}$|^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$,
+                  description: The unique external identifier of the user (e.g. BlueID). Although, this field can store email addresses, other types of unique identifiers may be stored too. Do not use this field as a replacement for the user attribute email address.
+                  maxLength: 512
+                firstName:
+                  type: string
+                  description: The first name of the user
+                  maxLength: 512
+                lastName:
+                  type: string
+                  description: The last name of the user
+                  maxLength: 512
+                uid:
+                  type: string
+                  description: Acoustic Id of the user, if not present during POST call an Acoustic Id will be created for the user
+                  maxLength: 30
+                displayName:
+                  type: string
+                  description: The name of the user that can be displayed in the UI
+                  maxLength: 512
+                email:
+                  type: string
+                  description: The email of the user that can be displayed in the UI
+                  format: email
+                  maxLength: 512
+                roles:
+                  type: array
+                  items:
+                    type: string
+                    enum:
+                    - authenticatedVisitor
+                    - viewer
+                    - editor
+                    - manager
+                    - admin
+                  minItems: 1
+                  maxItems: 1
+                  uniqueItems: true
+                  description: The roles of the user that will be used for access control
+              additionalProperties: false
+        description: User object that needs to be added.
+        required: true
+      responses:
+        '201':
+          description: User was created successfully.
+          content:
+            application/json:
+              schema:
+                description: The user object that might be returned.
+                type: object
+                required:
+                - externalId
+                - id
+                - roles
+                properties:
+                  id:
+                    type: string
+                    pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+                    description: The unique internal identifier of the user
+                  externalId:
+                    type: string
+                    pattern: ^[0-9A-Z]{10}$|^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$,
+                    description: The unique external identifier of the user (e.g. BlueID). Although, this field can store email addresses, other types of unique identifiers may be stored too. Do not use this field as a replacement for the user attribute email address.
+                    maxLength: 512
+                  firstName:
+                    type: string
+                    description: The first name of the user
+                    maxLength: 512
+                  lastName:
+                    type: string
+                    description: The last name of the user
+                    maxLength: 512
+                  uid:
+                    type: string
+                    description: Acoustic Id of the user, if not present during POST call an Acoustic Id will be created for the user
+                    maxLength: 30
+                  displayName:
+                    type: string
+                    description: The name of the user that can be displayed in the UI
+                    maxLength: 512
+                  email:
+                    type: string
+                    description: The email of the user that can be displayed in the UI
+                    format: email
+                    maxLength: 512
+                  roles:
+                    type: array
+                    items:
+                      type: string
+                      enum:
+                      - authenticatedVisitor
+                      - viewer
+                      - editor
+                      - manager
+                      - admin
+                    minItems: 0
+                    description: The roles of the user that will be used for access control (empty for the anonymous user)
+                  links:
+                    type: object
+                    required:
+                    - self
+                    properties:
+                      self:
+                        description: URI pointing to this document
+                        type: object
+                        required:
+                        - href
+                        - methods
+                        properties:
+                          href:
+                            type: string
+                          methods:
+                            type: array
+                            items:
+                              type: string
+                              description: The supported HTTP methods
+                              enum:
+                              - GET
+                              - POST
+                              - PUT
+                              - DELETE
+                          name:
+                            description: Single value object where key is the locale and value is the display name
+                            type: object
+                  lastLogin:
+                    type: string
+                    format: date-time
+                    description: Date when this user logged in for the last time before current session
+                  created:
+                    type: string
+                    format: date-time
+                    description: Date when this item was created
+                  creator:
+                    description: URI pointing to the User who has created the item
+                    type: object
+                    required:
+                    - id
+                    properties:
+                      id:
+                        type: string
+                        pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+                  lastModified:
+                    type: string
+                    format: date-time
+                    description: Date when this item was modified for the last time
+                  lastModifier:
+                    description: URI pointing to the User who has modified the item
+                    type: object
+                    required:
+                    - id
+                    properties:
+                      id:
+                        type: string
+                        pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+                  privacyNotice:
+                    description: The privacy notice that the user has accepted
+                    type: object
+                    required:
+                    - acceptRequired
+                    properties:
+                      version:
+                        type: string
+                        minLength: 1
+                        maxLength: 20
+                        description: The version of the privacy notice.
+                      accepted:
+                        type: string
+                        format: date-time
+                        description: The date when the user accepted this version of the privacy notice.
+                      locale:
+                        type: string
+                        minLength: 1
+                        maxLength: 20
+                        description: The language in which the accepted privacy notice is written.
+                      acceptRequired:
+                        type: boolean
+                        description: Defines if an acceptance of the latest privacy notice is required.
+                    additionalProperties: false
+                additionalProperties: false
+        '400':
+          description: Response indicating a client error.
+          content:
+            application/json:
+              schema:
+                description: This JSON record represents an error condition.
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      description: This JSON record represents an individual error or warning contained in an error message.
+                      type: object
+                      properties:
+                        code:
+                          type: integer
+                          description: An error code defined by the User Profile service.
+                        message:
+                          type: string
+                          description: A message describing what went wrong.
+                        description:
+                          type: string
+                          description: Further explanation of the error condition and potential next steps to resolve the problem.
+                        more_info:
+                          type: string
+                          description: A URL pointing to a web site that provides more information on the given error condition.
+                        level:
+                          type: string
+                          enum:
+                          - ERROR
+                          - WARNING
+                          description: The severity level of the message.
+                        parameters:
+                          type: object
+                          description: Additional properties reflecting the dynamic parts of the error condition.
+                        cause:
+                          type: object
+                          description: This property can be used to transport causing error message records produced by a down stream service call.
+                        locale:
+                          type: string
+                          description: This property represents the locale of the text contained in properties 'message', and 'description'. This property is mandatory if message and description contain translated text.
+                      required:
+                      - code
+                      - message
+                  requestId:
+                    type: string
+                    description: The ID of the failing request.
+                  service:
+                    type: string
+                    description: The name of the service serving the error message.
+                required:
+                - errors
+                - requestId
+        '409':
+          description: A user with same externalID does already exist.
+          content:
+            application/json:
+              schema:
+                description: This JSON record represents an error condition.
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      description: This JSON record represents an individual error or warning contained in an error message.
+                      type: object
+                      properties:
+                        code:
+                          type: integer
+                          description: An error code defined by the User Profile service.
+                        message:
+                          type: string
+                          description: A message describing what went wrong.
+                        description:
+                          type: string
+                          description: Further explanation of the error condition and potential next steps to resolve the problem.
+                        more_info:
+                          type: string
+                          description: A URL pointing to a web site that provides more information on the given error condition.
+                        level:
+                          type: string
+                          enum:
+                          - ERROR
+                          - WARNING
+                          description: The severity level of the message.
+                        parameters:
+                          type: object
+                          description: Additional properties reflecting the dynamic parts of the error condition.
+                        cause:
+                          type: object
+                          description: This property can be used to transport causing error message records produced by a down stream service call.
+                        locale:
+                          type: string
+                          description: This property represents the locale of the text contained in properties 'message', and 'description'. This property is mandatory if message and description contain translated text.
+                      required:
+                      - code
+                      - message
+                  requestId:
+                    type: string
+                    description: The ID of the failing request.
+                  service:
+                    type: string
+                    description: The name of the service serving the error message.
+                required:
+                - errors
+                - requestId
+        '429':
+          description: Too Many Requests, the server has reached a limit, the request must be sent again at a later time.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /user-profile/v1/users/{id}:
+    parameters:
+    - in: path
+      name: id
+      description: The unique internal identifier of the entity that should be processed
+      required: true
+      schema:
+        type: string
+        pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+    get:
+      tags:
+      - Administering user profiles
+      x-ibm-dx-security-user-roles:
+      - admin
+      summary: Find user by ID.
+      description: 'Returns a single user.<br />User roles: admin'
+      parameters:
+      - in: path
+        name: id
+        description: The unique internal identifier of the entity that should be processed or the special value currentuser that uses the ID provided in the userID header.
+        required: true
+        schema:
+          type: string
+          pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$|currentuser
+      - name: privacy-notice
+        in: query
+        description: Parameter which must be set if the users privacy notice should be returned
+        required: false
+        schema:
+          type: string
+          default: false
+      - x-ibm-dx-user-auth: private
+        in: header
+        name: x-ibm-dx-user-auth
+        description: JWT encrypted user context set by login process
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Returns the user object for the given user.
+          content:
+            application/json:
+              schema:
+                description: The user object that might be returned.
+                type: object
+                required:
+                - externalId
+                - id
+                - roles
+                properties:
+                  id:
+                    type: string
+                    pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+                    description: The unique internal identifier of the user
+                  externalId:
+                    type: string
+                    pattern: ^[0-9A-Z]{10}$|^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$,
+                    description: The unique external identifier of the user (e.g. BlueID). Although, this field can store email addresses, other types of unique identifiers may be stored too. Do not use this field as a replacement for the user attribute email address.
+                    maxLength: 512
+                  firstName:
+                    type: string
+                    description: The first name of the user
+                    maxLength: 512
+                  lastName:
+                    type: string
+                    description: The last name of the user
+                    maxLength: 512
+                  displayName:
+                    type: string
+                    description: The name of the user that can be displayed in the UI
+                    maxLength: 512
+                  email:
+                    type: string
+                    description: The email of the user that can be displayed in the UI
+                    format: email
+                    maxLength: 512
+                  roles:
+                    type: array
+                    items:
+                      type: string
+                      enum:
+                      - authenticatedVisitor
+                      - viewer
+                      - editor
+                      - manager
+                      - admin
+                    minItems: 0
+                    description: The roles of the user that will be used for access control (empty for the anonymous user)
+                  links:
+                    type: object
+                    required:
+                    - self
+                    properties:
+                      self:
+                        description: URI pointing to this document
+                        type: object
+                        required:
+                        - href
+                        - methods
+                        properties:
+                          href:
+                            type: string
+                          methods:
+                            type: array
+                            items:
+                              type: string
+                              description: The supported HTTP methods
+                              enum:
+                              - GET
+                              - POST
+                              - PUT
+                              - DELETE
+                          name:
+                            description: Single value object where key is the locale and value is the display name
+                            type: object
+                  lastLogin:
+                    type: string
+                    format: date-time
+                    description: Date when this user logged in for the last time before current session
+                  created:
+                    type: string
+                    format: date-time
+                    description: Date when this item was created
+                  creator:
+                    description: URI pointing to the User who has created the item
+                    type: object
+                    required:
+                    - id
+                    properties:
+                      id:
+                        type: string
+                        pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+                  lastModified:
+                    type: string
+                    format: date-time
+                    description: Date when this item was modified for the last time
+                  lastModifier:
+                    description: URI pointing to the User who has modified the item
+                    type: object
+                    required:
+                    - id
+                    properties:
+                      id:
+                        type: string
+                        pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+                  privacyNotice:
+                    description: The privacy notice that the user has accepted
+                    type: object
+                    required:
+                    - acceptRequired
+                    properties:
+                      version:
+                        type: string
+                        minLength: 1
+                        maxLength: 20
+                        description: The version of the privacy notice.
+                      accepted:
+                        type: string
+                        format: date-time
+                        description: The date when the user accepted this version of the privacy notice.
+                      locale:
+                        type: string
+                        minLength: 1
+                        maxLength: 20
+                        description: The language in which the accepted privacy notice is written.
+                      acceptRequired:
+                        type: boolean
+                        description: Defines if an acceptance of the latest privacy notice is required.
+                    additionalProperties: false
+                additionalProperties: true
+        '400':
+          description: Response indicating a client error.
+          content:
+            application/json:
+              schema:
+                description: This JSON record represents an error condition.
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      description: This JSON record represents an individual error or warning contained in an error message.
+                      type: object
+                      properties:
+                        code:
+                          type: integer
+                          description: An error code defined by the User Profile service.
+                        message:
+                          type: string
+                          description: A message describing what went wrong.
+                        description:
+                          type: string
+                          description: Further explanation of the error condition and potential next steps to resolve the problem.
+                        more_info:
+                          type: string
+                          description: A URL pointing to a web site that provides more information on the given error condition.
+                        level:
+                          type: string
+                          enum:
+                          - ERROR
+                          - WARNING
+                          description: The severity level of the message.
+                        parameters:
+                          type: object
+                          description: Additional properties reflecting the dynamic parts of the error condition.
+                        cause:
+                          type: object
+                          description: This property can be used to transport causing error message records produced by a down stream service call.
+                        locale:
+                          type: string
+                          description: This property represents the locale of the text contained in properties 'message', and 'description'. This property is mandatory if message and description contain translated text.
+                      required:
+                      - code
+                      - message
+                  requestId:
+                    type: string
+                    description: The ID of the failing request.
+                  service:
+                    type: string
+                    description: The name of the service serving the error message.
+                required:
+                - errors
+                - requestId
+        '404':
+          description: The given ID cannot be resolved.
+        '429':
+          description: Too Many Requests, the server has reached a limit, the request must be sent again at a later time.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    put:
+      tags:
+      - Administering user profiles
+      x-ibm-dx-security-user-roles:
+      - admin
+      summary: Update an existing user.
+      description: 'Updates an existing user and returns the updated user object.<br />User roles: admin'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              description: The user object that might be sent to replace the user. The fields id, externalId, links, created, creator, lastModified, and lastModifier will be ignored.
+              type: object
+              required:
+              - id
+              properties:
+                id:
+                  type: string
+                  pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+                  description: The unique internal identifier of the user
+                externalId:
+                  type: string
+                  pattern: ^[0-9A-Z]{10}$|^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$,
+                  description: The unique external identifier of the user (e.g. BlueID). Although, this field can store email addresses, other types of unique identifiers may be stored too. Do not use this field as a replacement for the user attribute email address.
+                  maxLength: 512
+                firstName:
+                  type: string
+                  description: The first name of the user
+                  maxLength: 512
+                lastName:
+                  type: string
+                  description: The last name of the user
+                  maxLength: 512
+                uid:
+                  type: string
+                  description: Acoustic Id of the user, if not present during POST call an Acoustic Id will be created for the user
+                  maxLength: 30
+                displayName:
+                  type: string
+                  description: The name of the user that can be displayed in the UI
+                  maxLength: 512
+                email:
+                  type: string
+                  description: The email of the user that can be displayed in the UI
+                  format: email
+                  maxLength: 512
+                roles:
+                  type: array
+                  items:
+                    type: string
+                    enum:
+                    - authenticatedVisitor
+                    - viewer
+                    - editor
+                    - manager
+                    - admin
+                  minItems: 1
+                  maxItems: 1
+                  uniqueItems: true
+                  description: The roles of the user that will be used for access control
+                links:
+                  type: object
+                created:
+                  type: string
+                  format: date-time
+                  description: Date when this item was created
+                creator:
+                  description: URI pointing to the User who has created the item
+                  type: object
+                  required:
+                  - id
+                  properties:
+                    id:
+                      type: string
+                      pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+                lastModified:
+                  type: string
+                  format: date-time
+                  description: Date when this item was modified for the last time
+                lastModifier:
+                  description: URI pointing to the User who has modified the item
+                  type: object
+                  required:
+                  - id
+                  properties:
+                    id:
+                      type: string
+                      pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+              additionalProperties: false
+        description: The existing user object is replaced by the given object. Some fields will be ignored.
+        required: true
+      responses:
+        '200':
+          description: The user was updated successfully.
+          content:
+            application/json:
+              schema:
+                description: The user object that might be returned.
+                type: object
+                required:
+                - externalId
+                - id
+                - roles
+                properties:
+                  id:
+                    type: string
+                    pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+                    description: The unique internal identifier of the user
+                  externalId:
+                    type: string
+                    pattern: ^[0-9A-Z]{10}$|^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$,
+                    description: The unique external identifier of the user (e.g. BlueID). Although, this field can store email addresses, other types of unique identifiers may be stored too. Do not use this field as a replacement for the user attribute email address.
+                    maxLength: 512
+                  firstName:
+                    type: string
+                    description: The first name of the user
+                    maxLength: 512
+                  lastName:
+                    type: string
+                    description: The last name of the user
+                    maxLength: 512
+                  uid:
+                    type: string
+                    description: Acoustic Id of the user, if not present during POST call an Acoustic Id will be created for the user
+                    maxLength: 30
+                  displayName:
+                    type: string
+                    description: The name of the user that can be displayed in the UI
+                    maxLength: 512
+                  email:
+                    type: string
+                    description: The email of the user that can be displayed in the UI
+                    format: email
+                    maxLength: 512
+                  roles:
+                    type: array
+                    items:
+                      type: string
+                      enum:
+                      - authenticatedVisitor
+                      - viewer
+                      - editor
+                      - manager
+                      - admin
+                    minItems: 0
+                    description: The roles of the user that will be used for access control (empty for the anonymous user)
+                  links:
+                    type: object
+                    required:
+                    - self
+                    properties:
+                      self:
+                        description: URI pointing to this document
+                        type: object
+                        required:
+                        - href
+                        - methods
+                        properties:
+                          href:
+                            type: string
+                          methods:
+                            type: array
+                            items:
+                              type: string
+                              description: The supported HTTP methods
+                              enum:
+                              - GET
+                              - POST
+                              - PUT
+                              - DELETE
+                          name:
+                            description: Single value object where key is the locale and value is the display name
+                            type: object
+                  lastLogin:
+                    type: string
+                    format: date-time
+                    description: Date when this user logged in for the last time before current session
+                  created:
+                    type: string
+                    format: date-time
+                    description: Date when this item was created
+                  creator:
+                    description: URI pointing to the User who has created the item
+                    type: object
+                    required:
+                    - id
+                    properties:
+                      id:
+                        type: string
+                        pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+                  lastModified:
+                    type: string
+                    format: date-time
+                    description: Date when this item was modified for the last time
+                  lastModifier:
+                    description: URI pointing to the User who has modified the item
+                    type: object
+                    required:
+                    - id
+                    properties:
+                      id:
+                        type: string
+                        pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+                  privacyNotice:
+                    description: The privacy notice that the user has accepted
+                    type: object
+                    required:
+                    - acceptRequired
+                    properties:
+                      version:
+                        type: string
+                        minLength: 1
+                        maxLength: 20
+                        description: The version of the privacy notice.
+                      accepted:
+                        type: string
+                        format: date-time
+                        description: The date when the user accepted this version of the privacy notice.
+                      locale:
+                        type: string
+                        minLength: 1
+                        maxLength: 20
+                        description: The language in which the accepted privacy notice is written.
+                      acceptRequired:
+                        type: boolean
+                        description: Defines if an acceptance of the latest privacy notice is required.
+                    additionalProperties: false
+                additionalProperties: false
+        '400':
+          description: Response indicating a client error.
+          content:
+            application/json:
+              schema:
+                description: This JSON record represents an error condition.
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      description: This JSON record represents an individual error or warning contained in an error message.
+                      type: object
+                      properties:
+                        code:
+                          type: integer
+                          description: An error code defined by the User Profile service.
+                        message:
+                          type: string
+                          description: A message describing what went wrong.
+                        description:
+                          type: string
+                          description: Further explanation of the error condition and potential next steps to resolve the problem.
+                        more_info:
+                          type: string
+                          description: A URL pointing to a web site that provides more information on the given error condition.
+                        level:
+                          type: string
+                          enum:
+                          - ERROR
+                          - WARNING
+                          description: The severity level of the message.
+                        parameters:
+                          type: object
+                          description: Additional properties reflecting the dynamic parts of the error condition.
+                        cause:
+                          type: object
+                          description: This property can be used to transport causing error message records produced by a down stream service call.
+                        locale:
+                          type: string
+                          description: This property represents the locale of the text contained in properties 'message', and 'description'. This property is mandatory if message and description contain translated text.
+                      required:
+                      - code
+                      - message
+                  requestId:
+                    type: string
+                    description: The ID of the failing request.
+                  service:
+                    type: string
+                    description: The name of the service serving the error message.
+                required:
+                - errors
+                - requestId
+        '404':
+          description: The given ID cannot be resolved.
+        '429':
+          description: Too Many Requests, the server has reached a limit, the request must be sent again at a later time.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    delete:
+      tags:
+      - Administering user profiles
+      x-ibm-dx-security-user-roles:
+      - admin
+      summary: Delete an existing user.
+      description: 'Deletes an existing user.<br />User roles: admin'
+      parameters:
+      - in: path
+        name: id
+        description: The unique internal identifier of the entity that should be processed or the special value currentuser that uses the ID provided in the userID header.
+        required: true
+        schema:
+          type: string
+          pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$|currentuser
+      - name: privacy-notice
+        in: query
+        description: Parameter which must be set if the users privacy notice should be returned
+        required: false
+        schema:
+          type: string
+          default: false
+      responses:
+        '204':
+          description: User was deleted successfully.
+        '400':
+          description: Response indicating a client error.
+          content:
+            application/json:
+              schema:
+                description: This JSON record represents an error condition.
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      description: This JSON record represents an individual error or warning contained in an error message.
+                      type: object
+                      properties:
+                        code:
+                          type: integer
+                          description: An error code defined by the User Profile service.
+                        message:
+                          type: string
+                          description: A message describing what went wrong.
+                        description:
+                          type: string
+                          description: Further explanation of the error condition and potential next steps to resolve the problem.
+                        more_info:
+                          type: string
+                          description: A URL pointing to a web site that provides more information on the given error condition.
+                        level:
+                          type: string
+                          enum:
+                          - ERROR
+                          - WARNING
+                          description: The severity level of the message.
+                        parameters:
+                          type: object
+                          description: Additional properties reflecting the dynamic parts of the error condition.
+                        cause:
+                          type: object
+                          description: This property can be used to transport causing error message records produced by a down stream service call.
+                        locale:
+                          type: string
+                          description: This property represents the locale of the text contained in properties 'message', and 'description'. This property is mandatory if message and description contain translated text.
+                      required:
+                      - code
+                      - message
+                  requestId:
+                    type: string
+                    description: The ID of the failing request.
+                  service:
+                    type: string
+                    description: The name of the service serving the error message.
+                required:
+                - errors
+                - requestId
+        '404':
+          description: The given ID cannot be resolved.
+        '429':
+          description: Too Many Requests, the server has reached a limit, the request must be sent again at a later time.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+components:
+  schemas:
+    ErrorResponse:
+      description: This JSON record represents an error condition.
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            description: This JSON record represents an individual error or warning contained in an error message.
+            type: object
+            properties:
+              code:
+                type: integer
+                description: An error code
+              message:
+                type: string
+                description: A message describing what went wrong.
+              description:
+                type: string
+                description: Further explanation of the error condition and potential next steps to resolve the problem.
+              more_info:
+                type: string
+                description: A URL pointing to a web site that provides more information on the given error condition.
+              level:
+                type: string
+                enum:
+                - ERROR
+                - WARNING
+                description: The severity level of the message. Default is error.
+              parameters:
+                type: object
+                description: Additional properties reflecting the dynamic parts of the error condition.
+              cause:
+                type: object
+                description: This property can be used to transport causing error message records produced by a down stream service calls.
+              locale:
+                type: string
+                description: This property represents the locale of the text contained in properties 'message', and 'description'. This property is mandatory if message and description contain translated text.
+            required:
+            - code
+            - message
+        requestId:
+          type: string
+          description: The ID of the failing request.
+        service:
+          type: string
+          description: The name of the service serving the error message.
+      required:
+      - errors
+      - requestId
+x-refined-from:
+- acoustic-content-openapi-original.json
+- acoustic-content-swagger2-original.yaml
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

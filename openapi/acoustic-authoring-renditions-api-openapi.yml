@@ -1,0 +1,1939 @@
+openapi: 3.2.0
+info:
+  title: Acoustic Authoring renditions API
+  version: 1.0.142
+  x-ibm-name: ibm-watson-content-hub-api
+  description: 'Operations tagged Authoring renditions across 2 of this provider''s published API definitions: acoustic-content-openapi-original.json, acoustic-content-swagger2-original.yaml. Each path carries the servers of the definition it was published in.'
+tags:
+- name: Authoring renditions
+  description: Use the Content renditions data service Rest APIs to work with image renditions. A 'rendition' of an image defines how you can customize a source image such as the width and height to be shown for a particular device or context. Renditions that are not referenced by an asset or content will be cleaned up periodically.
+paths:
+  /authoring/v1/renditions:
+    get:
+      summary: Retrieve all renditions in the database.
+      description: 'Use this endpoint to list all the renditions in the database.<br />User roles: admin, manager, editor, viewer'
+      parameters:
+      - name: offset
+        in: query
+        description: Use the offset parameter to specify the number of renditions to skip from the beginning of the list and return the rest.
+        required: false
+        schema:
+          type: integer
+      - name: limit
+        in: query
+        description: Set the limit for the maximum number of renditions to return in a single result.
+        required: false
+        schema:
+          type: integer
+      - name: fields
+        in: query
+        description: Only the rendition fields that are specified here are returned for each result. Any renditions field is a valid value and these can be specified in  a comma-separated list. For example, to list the renditions fields name and ID, provide the value ID, and name. All renditions fields are returned by default.
+        required: false
+        allowEmptyValue: true
+        style: form
+        explode: false
+        schema:
+          type: array
+          items:
+            type: string
+      - name: include
+        in: query
+        description: Additional renditions fields that are specified here are returned. Currently, only the links field can be included. Fields are to be provided as a comma-separated list.
+        required: false
+        style: form
+        explode: false
+        schema:
+          type: array
+          items:
+            type: string
+      tags:
+      - Authoring renditions
+      responses:
+        '200':
+          description: Successfully lists a paged result view of all the renditions in the database.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  limit:
+                    type: integer
+                    description: The page size.
+                  offset:
+                    type: integer
+                    description: The number of items to skip from the beginning of the list.
+                  href:
+                    type: string
+                    description: A link to the current page.
+                  next:
+                    type: string
+                    description: A link to the next page. Only shown if a next page exists.
+                  previous:
+                    type: string
+                    description: A link to the previous page. Only shown if a previous page exists.
+                  items:
+                    type: array
+                    items:
+                      allOf:
+                      - type: object
+                        properties:
+                          locationX:
+                            type: integer
+                            example: 50
+                            description: Offset from the top left corner in the x dimension for where the crop will begin
+                          locationY:
+                            type: integer
+                            example: 100
+                            description: Offset from the top left corner in the y dimension for where the crop will begin
+                          width:
+                            type: integer
+                            example: 200
+                            description: Width of the crop
+                          height:
+                            type: integer
+                            example: 200
+                            description: Height of the crop
+                          scale:
+                            type: number
+                            example: 1.5
+                            description: Size image will be scaled to
+                          asset:
+                            type: object
+                            properties:
+                              id:
+                                type: string
+                                description: The id of the asset this rendition is for
+                                example: 27c621ed48921b7338b84b4f415cba6b
+                            required:
+                            - id
+                          id:
+                            type: string
+                            description: The id of the rendition to create
+                            example: 0a800487f06d71eaf4cffdfde1ab28bc
+                        required:
+                        - asset
+                      - type: object
+                        properties:
+                          id:
+                            type: string
+                            description: The id of the rendition
+                            readOnly: true
+                            example: 0a800487f06d71eaf4cffdfde1ab28bc
+                          rev:
+                            type: string
+                            description: The revision of the rendition
+                            readOnly: true
+                            example: 2-c839bbb8844549c2e298275c4b2adcb8
+                          classification:
+                            type: string
+                            readOnly: true
+                            enum:
+                            - rendition
+                            description: The classification of a rendition is always "rendition"
+                          fileName:
+                            type: string
+                            readOnly: true
+                            description: File name of the resource
+                          mediaType:
+                            type: string
+                            readOnly: true
+                            description: Media type of the resource
+                          resource:
+                            type: string
+                            description: the id of the uploaded resource this rendition is for
+                            example: 67c621ed48921b7338b84b4f415cba6b
+                          links:
+                            title: Links
+                            type: object
+                            readOnly: true
+                            properties:
+                              self:
+                                description: Relative link to the rendition
+                                example:
+                                  href: /authoring/v1/renditions/0a800487f06d71eaf4cffdfde1ab28bc
+                                type: object
+                                properties:
+                                  href:
+                                    type: string
+                                    description: Relative url
+                                    readOnly: true
+                                    example: /a/b/c/1234
+                                required:
+                                - href
+                              media:
+                                description: Relative link to the rendition applied to the resource
+                                example:
+                                  href: /authoring/v1/resources/67c621ed48921b7338b84b4f415cba6b?resize=1.5xw:1.5xh&crop=200:200;50:100
+                                type: object
+                                properties:
+                                  href:
+                                    type: string
+                                    description: Relative url
+                                    readOnly: true
+                                    example: /a/b/c/1234
+                                required:
+                                - href
+                              asset:
+                                description: Relative link to the asset
+                                example:
+                                  href: /authoring/v1/assets/27c621ed48921b7338b84b4f415cba6b
+                                type: object
+                                properties:
+                                  href:
+                                    type: string
+                                    description: Relative url
+                                    readOnly: true
+                                    example: /a/b/c/1234
+                                required:
+                                - href
+                              resource:
+                                description: Relative link to the rendition
+                                example:
+                                  href: /authoring/v1/resources/67c621ed48921b7338b84b4f415cba6b
+                                type: object
+                                properties:
+                                  href:
+                                    type: string
+                                    description: Relative url
+                                    readOnly: true
+                                    example: /a/b/c/1234
+                                required:
+                                - href
+                            required:
+                            - self
+                            - media
+                            - asset
+                            - resource
+                        required:
+                        - id
+                        - rev
+                        - classification
+                        - fileName
+                        - mediaType
+                        - resource
+                required:
+                - limit
+                - offset
+                - href
+                - items
+        '429':
+          description: Too Many Requests, the server has reached a limit, the request must be sent again at a later time.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '503':
+          description: Connection failed to datastore.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: an error response.
+                properties:
+                  requestId:
+                    type: string
+                    description: The current request ID
+                    example: d64dc285-0b62-aaa3-841f-de3588b64d34
+                  service:
+                    type: string
+                    description: The name of the service that produced the error
+                    example: authoring-rendition
+                  requestMethod:
+                    type: string
+                    description: The Http method type of the current request
+                    example: GET
+                  requestUri:
+                    type: string
+                    description: The request uri
+                    example: /authoring/v1/renditions
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code
+                        key:
+                          type: string
+                          description: The message key
+                          example: error.rendition.1
+                        message:
+                          type: string
+                          description: The error message
+                          example: The id requested does not exist.
+                        description:
+                          type: string
+                          description: Optional detailed error message
+                          example: Please check the ID you provided is correct before retrying the request.
+                        more_info:
+                          type: string
+                          description: Optional additional information for the message
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end user
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                          example: en
+                      required:
+                      - code
+                      - key
+                      - message
+                      - description
+                      - more_info
+                      - category
+                      - level
+                      - parameters
+                      - locale
+                required:
+                - requestId
+                - service
+                - requestMethod
+                - requestUri
+                - errors
+        default:
+          description: Unexpected error.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: an error response.
+                properties:
+                  requestId:
+                    type: string
+                    description: The current request ID
+                    example: d64dc285-0b62-aaa3-841f-de3588b64d34
+                  service:
+                    type: string
+                    description: The name of the service that produced the error
+                    example: authoring-rendition
+                  requestMethod:
+                    type: string
+                    description: The Http method type of the current request
+                    example: GET
+                  requestUri:
+                    type: string
+                    description: The request uri
+                    example: /authoring/v1/renditions
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code
+                        key:
+                          type: string
+                          description: The message key
+                          example: error.rendition.1
+                        message:
+                          type: string
+                          description: The error message
+                          example: The id requested does not exist.
+                        description:
+                          type: string
+                          description: Optional detailed error message
+                          example: Please check the ID you provided is correct before retrying the request.
+                        more_info:
+                          type: string
+                          description: Optional additional information for the message
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end user
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                          example: en
+                      required:
+                      - code
+                      - key
+                      - message
+                      - description
+                      - more_info
+                      - category
+                      - level
+                      - parameters
+                      - locale
+                required:
+                - requestId
+                - service
+                - requestMethod
+                - requestUri
+                - errors
+      x-ibm-dx-security-user-roles:
+      - admin
+      - manager
+      - editor
+      - viewer
+    post:
+      tags:
+      - Authoring renditions
+      summary: Create a new rendition.
+      description: 'Use this endpoint to create a new rendition. The rendition will have resizing parameters applied before the crop is conducted. The generated rendition link will depend on the parameters provided. The scale parameter is required to resize. LocationX, locationY, width and height parameters are required to crop.<br />User roles: admin, manager, editor'
+      parameters:
+      - name: fields
+        in: query
+        description: Only the rendition fields that are specified here are returned for each result. Any renditions field is a valid value and these can be specified in  a comma-separated list. For example, to list the renditions fields name and ID, provide the value ID, and name. All renditions fields are returned by default.
+        required: false
+        allowEmptyValue: true
+        style: form
+        explode: false
+        schema:
+          type: array
+          items:
+            type: string
+      - name: include
+        in: query
+        description: Additional renditions fields that are specified here are returned. Currently, only the links field can be included. Fields are to be provided as a comma-separated list.
+        required: false
+        style: form
+        explode: false
+        schema:
+          type: array
+          items:
+            type: string
+      - name: projectId
+        in: query
+        description: The id of the project that the rendition's underlying asset resides in. This property must be provided if the asset is in a project. This includes projects with id of "draft".
+        required: false
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                locationX:
+                  type: integer
+                  example: 50
+                  description: Offset from the top left corner in the x dimension for where the crop will begin
+                locationY:
+                  type: integer
+                  example: 100
+                  description: Offset from the top left corner in the y dimension for where the crop will begin
+                width:
+                  type: integer
+                  example: 200
+                  description: Width of the crop
+                height:
+                  type: integer
+                  example: 200
+                  description: Height of the crop
+                scale:
+                  type: number
+                  example: 1.5
+                  description: Size image will be scaled to
+                asset:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                      description: The id of the asset this rendition is for
+                      example: 27c621ed48921b7338b84b4f415cba6b
+                  required:
+                  - id
+                id:
+                  type: string
+                  description: The id of the rendition to create
+                  example: 0a800487f06d71eaf4cffdfde1ab28bc
+              required:
+              - asset
+        description: Provide the data to create a rendition.
+        required: true
+      responses:
+        '201':
+          description: Successfully created a new rendition.
+          content:
+            application/json:
+              schema:
+                allOf:
+                - type: object
+                  properties:
+                    locationX:
+                      type: integer
+                      example: 50
+                      description: Offset from the top left corner in the x dimension for where the crop will begin
+                    locationY:
+                      type: integer
+                      example: 100
+                      description: Offset from the top left corner in the y dimension for where the crop will begin
+                    width:
+                      type: integer
+                      example: 200
+                      description: Width of the crop
+                    height:
+                      type: integer
+                      example: 200
+                      description: Height of the crop
+                    scale:
+                      type: number
+                      example: 1.5
+                      description: Size image will be scaled to
+                    asset:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          description: The id of the asset this rendition is for
+                          example: 27c621ed48921b7338b84b4f415cba6b
+                      required:
+                      - id
+                    id:
+                      type: string
+                      description: The id of the rendition to create
+                      example: 0a800487f06d71eaf4cffdfde1ab28bc
+                  required:
+                  - asset
+                - type: object
+                  properties:
+                    id:
+                      type: string
+                      description: The id of the rendition
+                      readOnly: true
+                      example: 0a800487f06d71eaf4cffdfde1ab28bc
+                    rev:
+                      type: string
+                      description: The revision of the rendition
+                      readOnly: true
+                      example: 2-c839bbb8844549c2e298275c4b2adcb8
+                    classification:
+                      type: string
+                      readOnly: true
+                      enum:
+                      - rendition
+                      description: The classification of a rendition is always "rendition"
+                    fileName:
+                      type: string
+                      readOnly: true
+                      description: File name of the resource
+                    mediaType:
+                      type: string
+                      readOnly: true
+                      description: Media type of the resource
+                    resource:
+                      type: string
+                      description: the id of the uploaded resource this rendition is for
+                      example: 67c621ed48921b7338b84b4f415cba6b
+                    links:
+                      title: Links
+                      type: object
+                      readOnly: true
+                      properties:
+                        self:
+                          description: Relative link to the rendition
+                          example:
+                            href: /authoring/v1/renditions/0a800487f06d71eaf4cffdfde1ab28bc
+                          type: object
+                          properties:
+                            href:
+                              type: string
+                              description: Relative url
+                              readOnly: true
+                              example: /a/b/c/1234
+                          required:
+                          - href
+                        media:
+                          description: Relative link to the rendition applied to the resource
+                          example:
+                            href: /authoring/v1/resources/67c621ed48921b7338b84b4f415cba6b?resize=1.5xw:1.5xh&crop=200:200;50:100
+                          type: object
+                          properties:
+                            href:
+                              type: string
+                              description: Relative url
+                              readOnly: true
+                              example: /a/b/c/1234
+                          required:
+                          - href
+                        asset:
+                          description: Relative link to the asset
+                          example:
+                            href: /authoring/v1/assets/27c621ed48921b7338b84b4f415cba6b
+                          type: object
+                          properties:
+                            href:
+                              type: string
+                              description: Relative url
+                              readOnly: true
+                              example: /a/b/c/1234
+                          required:
+                          - href
+                        resource:
+                          description: Relative link to the rendition
+                          example:
+                            href: /authoring/v1/resources/67c621ed48921b7338b84b4f415cba6b
+                          type: object
+                          properties:
+                            href:
+                              type: string
+                              description: Relative url
+                              readOnly: true
+                              example: /a/b/c/1234
+                          required:
+                          - href
+                      required:
+                      - self
+                      - media
+                      - asset
+                      - resource
+                  required:
+                  - id
+                  - rev
+                  - classification
+                  - fileName
+                  - mediaType
+                  - resource
+        '400':
+          description: The required parameters are missing or invalid, or the number of allowed renditions have been reached. Please read the error message and alter the request accordingly.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: an error response.
+                properties:
+                  requestId:
+                    type: string
+                    description: The current request ID
+                    example: d64dc285-0b62-aaa3-841f-de3588b64d34
+                  service:
+                    type: string
+                    description: The name of the service that produced the error
+                    example: authoring-rendition
+                  requestMethod:
+                    type: string
+                    description: The Http method type of the current request
+                    example: GET
+                  requestUri:
+                    type: string
+                    description: The request uri
+                    example: /authoring/v1/renditions
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code
+                        key:
+                          type: string
+                          description: The message key
+                          example: error.rendition.1
+                        message:
+                          type: string
+                          description: The error message
+                          example: The id requested does not exist.
+                        description:
+                          type: string
+                          description: Optional detailed error message
+                          example: Please check the ID you provided is correct before retrying the request.
+                        more_info:
+                          type: string
+                          description: Optional additional information for the message
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end user
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                          example: en
+                      required:
+                      - code
+                      - key
+                      - message
+                      - description
+                      - more_info
+                      - category
+                      - level
+                      - parameters
+                      - locale
+                required:
+                - requestId
+                - service
+                - requestMethod
+                - requestUri
+                - errors
+        '409':
+          description: A rendition already exists with the given ID.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: an error response.
+                properties:
+                  requestId:
+                    type: string
+                    description: The current request ID
+                    example: d64dc285-0b62-aaa3-841f-de3588b64d34
+                  service:
+                    type: string
+                    description: The name of the service that produced the error
+                    example: authoring-rendition
+                  requestMethod:
+                    type: string
+                    description: The Http method type of the current request
+                    example: GET
+                  requestUri:
+                    type: string
+                    description: The request uri
+                    example: /authoring/v1/renditions
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code
+                        key:
+                          type: string
+                          description: The message key
+                          example: error.rendition.1
+                        message:
+                          type: string
+                          description: The error message
+                          example: The id requested does not exist.
+                        description:
+                          type: string
+                          description: Optional detailed error message
+                          example: Please check the ID you provided is correct before retrying the request.
+                        more_info:
+                          type: string
+                          description: Optional additional information for the message
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end user
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                          example: en
+                      required:
+                      - code
+                      - key
+                      - message
+                      - description
+                      - more_info
+                      - category
+                      - level
+                      - parameters
+                      - locale
+                required:
+                - requestId
+                - service
+                - requestMethod
+                - requestUri
+                - errors
+        '429':
+          description: Too Many Requests, the server has reached a limit, the request must be sent again at a later time.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '503':
+          description: Connection failed to datastore.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: an error response.
+                properties:
+                  requestId:
+                    type: string
+                    description: The current request ID
+                    example: d64dc285-0b62-aaa3-841f-de3588b64d34
+                  service:
+                    type: string
+                    description: The name of the service that produced the error
+                    example: authoring-rendition
+                  requestMethod:
+                    type: string
+                    description: The Http method type of the current request
+                    example: GET
+                  requestUri:
+                    type: string
+                    description: The request uri
+                    example: /authoring/v1/renditions
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code
+                        key:
+                          type: string
+                          description: The message key
+                          example: error.rendition.1
+                        message:
+                          type: string
+                          description: The error message
+                          example: The id requested does not exist.
+                        description:
+                          type: string
+                          description: Optional detailed error message
+                          example: Please check the ID you provided is correct before retrying the request.
+                        more_info:
+                          type: string
+                          description: Optional additional information for the message
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end user
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                          example: en
+                      required:
+                      - code
+                      - key
+                      - message
+                      - description
+                      - more_info
+                      - category
+                      - level
+                      - parameters
+                      - locale
+                required:
+                - requestId
+                - service
+                - requestMethod
+                - requestUri
+                - errors
+        default:
+          description: Unexpected error.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: an error response.
+                properties:
+                  requestId:
+                    type: string
+                    description: The current request ID
+                    example: d64dc285-0b62-aaa3-841f-de3588b64d34
+                  service:
+                    type: string
+                    description: The name of the service that produced the error
+                    example: authoring-rendition
+                  requestMethod:
+                    type: string
+                    description: The Http method type of the current request
+                    example: GET
+                  requestUri:
+                    type: string
+                    description: The request uri
+                    example: /authoring/v1/renditions
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code
+                        key:
+                          type: string
+                          description: The message key
+                          example: error.rendition.1
+                        message:
+                          type: string
+                          description: The error message
+                          example: The id requested does not exist.
+                        description:
+                          type: string
+                          description: Optional detailed error message
+                          example: Please check the ID you provided is correct before retrying the request.
+                        more_info:
+                          type: string
+                          description: Optional additional information for the message
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end user
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                          example: en
+                      required:
+                      - code
+                      - key
+                      - message
+                      - description
+                      - more_info
+                      - category
+                      - level
+                      - parameters
+                      - locale
+                required:
+                - requestId
+                - service
+                - requestMethod
+                - requestUri
+                - errors
+      x-ibm-dx-security-user-roles:
+      - admin
+      - manager
+      - editor
+  /authoring/v1/renditions/{id}:
+    get:
+      tags:
+      - Authoring renditions
+      summary: Retrieve an existing rendition.
+      description: 'Use this endpoint to retrieve an existing rendition from the database. Access the rendition applied through the media link. The generated rendition link will depend on the parameters provided. The scale parameter is required to resize. LocationX, locationY, width and height parameters are required to crop.<br />User roles: admin, manager, editor, viewer'
+      parameters:
+      - name: id
+        in: path
+        description: Provide the ID of the rendition that you want to retrieve.
+        required: true
+        schema:
+          type: string
+      - name: fields
+        in: query
+        description: Only the rendition fields that are specified here are returned for each result. Any renditions field is a valid value and these can be specified in  a comma-separated list. For example, to list the renditions fields name and ID, provide the value ID, and name. All renditions fields are returned by default.
+        required: false
+        allowEmptyValue: true
+        style: form
+        explode: false
+        schema:
+          type: array
+          items:
+            type: string
+      - name: include
+        in: query
+        description: Additional renditions fields that are specified here are returned. Currently, only the links field can be included. Fields are to be provided as a comma-separated list.
+        required: false
+        style: form
+        explode: false
+        schema:
+          type: array
+          items:
+            type: string
+      responses:
+        '200':
+          description: Successfully retrieved the rendition.
+          content:
+            application/json:
+              schema:
+                allOf:
+                - type: object
+                  properties:
+                    locationX:
+                      type: integer
+                      example: 50
+                      description: Offset from the top left corner in the x dimension for where the crop will begin
+                    locationY:
+                      type: integer
+                      example: 100
+                      description: Offset from the top left corner in the y dimension for where the crop will begin
+                    width:
+                      type: integer
+                      example: 200
+                      description: Width of the crop
+                    height:
+                      type: integer
+                      example: 200
+                      description: Height of the crop
+                    scale:
+                      type: number
+                      example: 1.5
+                      description: Size image will be scaled to
+                    asset:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          description: The id of the asset this rendition is for
+                          example: 27c621ed48921b7338b84b4f415cba6b
+                      required:
+                      - id
+                    id:
+                      type: string
+                      description: The id of the rendition to create
+                      example: 0a800487f06d71eaf4cffdfde1ab28bc
+                  required:
+                  - asset
+                - type: object
+                  properties:
+                    id:
+                      type: string
+                      description: The id of the rendition
+                      readOnly: true
+                      example: 0a800487f06d71eaf4cffdfde1ab28bc
+                    rev:
+                      type: string
+                      description: The revision of the rendition
+                      readOnly: true
+                      example: 2-c839bbb8844549c2e298275c4b2adcb8
+                    classification:
+                      type: string
+                      readOnly: true
+                      enum:
+                      - rendition
+                      description: The classification of a rendition is always "rendition"
+                    fileName:
+                      type: string
+                      readOnly: true
+                      description: File name of the resource
+                    mediaType:
+                      type: string
+                      readOnly: true
+                      description: Media type of the resource
+                    resource:
+                      type: string
+                      description: the id of the uploaded resource this rendition is for
+                      example: 67c621ed48921b7338b84b4f415cba6b
+                    links:
+                      title: Links
+                      type: object
+                      readOnly: true
+                      properties:
+                        self:
+                          description: Relative link to the rendition
+                          example:
+                            href: /authoring/v1/renditions/0a800487f06d71eaf4cffdfde1ab28bc
+                          type: object
+                          properties:
+                            href:
+                              type: string
+                              description: Relative url
+                              readOnly: true
+                              example: /a/b/c/1234
+                          required:
+                          - href
+                        media:
+                          description: Relative link to the rendition applied to the resource
+                          example:
+                            href: /authoring/v1/resources/67c621ed48921b7338b84b4f415cba6b?resize=1.5xw:1.5xh&crop=200:200;50:100
+                          type: object
+                          properties:
+                            href:
+                              type: string
+                              description: Relative url
+                              readOnly: true
+                              example: /a/b/c/1234
+                          required:
+                          - href
+                        asset:
+                          description: Relative link to the asset
+                          example:
+                            href: /authoring/v1/assets/27c621ed48921b7338b84b4f415cba6b
+                          type: object
+                          properties:
+                            href:
+                              type: string
+                              description: Relative url
+                              readOnly: true
+                              example: /a/b/c/1234
+                          required:
+                          - href
+                        resource:
+                          description: Relative link to the rendition
+                          example:
+                            href: /authoring/v1/resources/67c621ed48921b7338b84b4f415cba6b
+                          type: object
+                          properties:
+                            href:
+                              type: string
+                              description: Relative url
+                              readOnly: true
+                              example: /a/b/c/1234
+                          required:
+                          - href
+                      required:
+                      - self
+                      - media
+                      - asset
+                      - resource
+                  required:
+                  - id
+                  - rev
+                  - classification
+                  - fileName
+                  - mediaType
+                  - resource
+        '404':
+          description: The rendition with the provided ID was not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: an error response.
+                properties:
+                  requestId:
+                    type: string
+                    description: The current request ID
+                    example: d64dc285-0b62-aaa3-841f-de3588b64d34
+                  service:
+                    type: string
+                    description: The name of the service that produced the error
+                    example: authoring-rendition
+                  requestMethod:
+                    type: string
+                    description: The Http method type of the current request
+                    example: GET
+                  requestUri:
+                    type: string
+                    description: The request uri
+                    example: /authoring/v1/renditions
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code
+                        key:
+                          type: string
+                          description: The message key
+                          example: error.rendition.1
+                        message:
+                          type: string
+                          description: The error message
+                          example: The id requested does not exist.
+                        description:
+                          type: string
+                          description: Optional detailed error message
+                          example: Please check the ID you provided is correct before retrying the request.
+                        more_info:
+                          type: string
+                          description: Optional additional information for the message
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end user
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                          example: en
+                      required:
+                      - code
+                      - key
+                      - message
+                      - description
+                      - more_info
+                      - category
+                      - level
+                      - parameters
+                      - locale
+                required:
+                - requestId
+                - service
+                - requestMethod
+                - requestUri
+                - errors
+        '429':
+          description: Too Many Requests, the server has reached a limit, the request must be sent again at a later time.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '503':
+          description: Connection failed to datastore.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: an error response.
+                properties:
+                  requestId:
+                    type: string
+                    description: The current request ID
+                    example: d64dc285-0b62-aaa3-841f-de3588b64d34
+                  service:
+                    type: string
+                    description: The name of the service that produced the error
+                    example: authoring-rendition
+                  requestMethod:
+                    type: string
+                    description: The Http method type of the current request
+                    example: GET
+                  requestUri:
+                    type: string
+                    description: The request uri
+                    example: /authoring/v1/renditions
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code
+                        key:
+                          type: string
+                          description: The message key
+                          example: error.rendition.1
+                        message:
+                          type: string
+                          description: The error message
+                          example: The id requested does not exist.
+                        description:
+                          type: string
+                          description: Optional detailed error message
+                          example: Please check the ID you provided is correct before retrying the request.
+                        more_info:
+                          type: string
+                          description: Optional additional information for the message
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end user
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                          example: en
+                      required:
+                      - code
+                      - key
+                      - message
+                      - description
+                      - more_info
+                      - category
+                      - level
+                      - parameters
+                      - locale
+                required:
+                - requestId
+                - service
+                - requestMethod
+                - requestUri
+                - errors
+        default:
+          description: Unexpected error.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: an error response.
+                properties:
+                  requestId:
+                    type: string
+                    description: The current request ID
+                    example: d64dc285-0b62-aaa3-841f-de3588b64d34
+                  service:
+                    type: string
+                    description: The name of the service that produced the error
+                    example: authoring-rendition
+                  requestMethod:
+                    type: string
+                    description: The Http method type of the current request
+                    example: GET
+                  requestUri:
+                    type: string
+                    description: The request uri
+                    example: /authoring/v1/renditions
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code
+                        key:
+                          type: string
+                          description: The message key
+                          example: error.rendition.1
+                        message:
+                          type: string
+                          description: The error message
+                          example: The id requested does not exist.
+                        description:
+                          type: string
+                          description: Optional detailed error message
+                          example: Please check the ID you provided is correct before retrying the request.
+                        more_info:
+                          type: string
+                          description: Optional additional information for the message
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end user
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                          example: en
+                      required:
+                      - code
+                      - key
+                      - message
+                      - description
+                      - more_info
+                      - category
+                      - level
+                      - parameters
+                      - locale
+                required:
+                - requestId
+                - service
+                - requestMethod
+                - requestUri
+                - errors
+      x-ibm-dx-security-user-roles:
+      - admin
+      - manager
+      - editor
+      - viewer
+  /authoring/v1/renditions/views/by-created:
+    get:
+      summary: Retrieve all renditions created within the specified date range.
+      description: 'Use this endpoint to retrieve all renditions that was created within the date range specified.<br />User roles: admin, manager, editor, viewer'
+      parameters:
+      - name: start
+        in: query
+        description: Provide the date and time of when the rendition was created. Renditions that were created on or after this date and time are returned. The date value must be in the ISO 8601 format YYYY-MM-DD T hh:mm:ss:sssZ.
+        required: false
+        schema:
+          type: string
+          format: date-time
+      - name: end
+        in: query
+        description: Provide the date and time of when the rendition was created. Renditions that were created on or before this date and time are returned. The date value must be in the ISO 8601 format YYYY-MM-DD T hh:mm:ss:sssZ.
+        required: false
+        schema:
+          type: string
+          format: date-time
+      - name: fields
+        in: query
+        description: Only the rendition fields that are specified here are returned for each result. Any rendition field is a valid value and these can be specified in  a comma-separated list. For example, to list the rendition fields ID and resource, provide the value resource fields = ID, resource. All rendition fields are returned by default.
+        required: false
+        schema:
+          type: string
+      - name: offset
+        in: query
+        description: Use the offset parameter to specify the number of renditions to skip from the beginning of the list and return the rest.
+        required: false
+        schema:
+          type: integer
+      - name: limit
+        in: query
+        description: Set the limit for the maximum number of renditions to return in a single result. The default value is 50.
+        required: false
+        schema:
+          type: integer
+      - name: order
+        in: query
+        description: Specify whether you want the renditions to be returned in ascending or descending order. Documents are returned in descending order by default.
+        required: false
+        schema:
+          type: string
+          enum:
+          - ascending
+          - descending
+          default: descending
+      tags:
+      - Authoring renditions
+      responses:
+        '200':
+          description: Successfully lists a paged result view of all renditions that was created within the date range specified.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  limit:
+                    type: integer
+                    description: The page size.
+                  offset:
+                    type: integer
+                    description: The number of items to skip from the beginning of the list.
+                  href:
+                    type: string
+                    description: A link to the current page.
+                  next:
+                    type: string
+                    description: A link to the next page. Only shown if a next page exists.
+                  previous:
+                    type: string
+                    description: A link to the previous page. Only shown if a previous page exists.
+                  items:
+                    type: array
+                    items:
+                      allOf:
+                      - type: object
+                        properties:
+                          locationX:
+                            type: integer
+                            example: 50
+                            description: Offset from the top left corner in the x dimension for where the crop will begin
+                          locationY:
+                            type: integer
+                            example: 100
+                            description: Offset from the top left corner in the y dimension for where the crop will begin
+                          width:
+                            type: integer
+                            example: 200
+                            description: Width of the crop
+                          height:
+                            type: integer
+                            example: 200
+                            description: Height of the crop
+                          scale:
+                            type: number
+                            example: 1.5
+                            description: Size image will be scaled to
+                          asset:
+                            type: object
+                            properties:
+                              id:
+                                type: string
+                                description: The id of the asset this rendition is for
+                                example: 27c621ed48921b7338b84b4f415cba6b
+                            required:
+                            - id
+                          id:
+                            type: string
+                            description: The id of the rendition to create
+                            example: 0a800487f06d71eaf4cffdfde1ab28bc
+                        required:
+                        - asset
+                      - type: object
+                        properties:
+                          id:
+                            type: string
+                            description: The id of the rendition
+                            readOnly: true
+                            example: 0a800487f06d71eaf4cffdfde1ab28bc
+                          rev:
+                            type: string
+                            description: The revision of the rendition
+                            readOnly: true
+                            example: 2-c839bbb8844549c2e298275c4b2adcb8
+                          classification:
+                            type: string
+                            readOnly: true
+                            enum:
+                            - rendition
+                            description: The classification of a rendition is always "rendition"
+                          fileName:
+                            type: string
+                            readOnly: true
+                            description: File name of the resource
+                          mediaType:
+                            type: string
+                            readOnly: true
+                            description: Media type of the resource
+                          resource:
+                            type: string
+                            description: the id of the uploaded resource this rendition is for
+                            example: 67c621ed48921b7338b84b4f415cba6b
+                          links:
+                            title: Links
+                            type: object
+                            readOnly: true
+                            properties:
+                              self:
+                                description: Relative link to the rendition
+                                example:
+                                  href: /authoring/v1/renditions/0a800487f06d71eaf4cffdfde1ab28bc
+                                type: object
+                                properties:
+                                  href:
+                                    type: string
+                                    description: Relative url
+                                    readOnly: true
+                                    example: /a/b/c/1234
+                                required:
+                                - href
+                              media:
+                                description: Relative link to the rendition applied to the resource
+                                example:
+                                  href: /authoring/v1/resources/67c621ed48921b7338b84b4f415cba6b?resize=1.5xw:1.5xh&crop=200:200;50:100
+                                type: object
+                                properties:
+                                  href:
+                                    type: string
+                                    description: Relative url
+                                    readOnly: true
+                                    example: /a/b/c/1234
+                                required:
+                                - href
+                              asset:
+                                description: Relative link to the asset
+                                example:
+                                  href: /authoring/v1/assets/27c621ed48921b7338b84b4f415cba6b
+                                type: object
+                                properties:
+                                  href:
+                                    type: string
+                                    description: Relative url
+                                    readOnly: true
+                                    example: /a/b/c/1234
+                                required:
+                                - href
+                              resource:
+                                description: Relative link to the rendition
+                                example:
+                                  href: /authoring/v1/resources/67c621ed48921b7338b84b4f415cba6b
+                                type: object
+                                properties:
+                                  href:
+                                    type: string
+                                    description: Relative url
+                                    readOnly: true
+                                    example: /a/b/c/1234
+                                required:
+                                - href
+                            required:
+                            - self
+                            - media
+                            - asset
+                            - resource
+                        required:
+                        - id
+                        - rev
+                        - classification
+                        - fileName
+                        - mediaType
+                        - resource
+                required:
+                - limit
+                - offset
+                - href
+                - items
+        '400':
+          description: The provided parameters are invalid. Please read the error message and alter the request accordingly.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: an error response.
+                properties:
+                  requestId:
+                    type: string
+                    description: The current request ID
+                    example: d64dc285-0b62-aaa3-841f-de3588b64d34
+                  service:
+                    type: string
+                    description: The name of the service that produced the error
+                    example: authoring-rendition
+                  requestMethod:
+                    type: string
+                    description: The Http method type of the current request
+                    example: GET
+                  requestUri:
+                    type: string
+                    description: The request uri
+                    example: /authoring/v1/renditions
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code
+                        key:
+                          type: string
+                          description: The message key
+                          example: error.rendition.1
+                        message:
+                          type: string
+                          description: The error message
+                          example: The id requested does not exist.
+                        description:
+                          type: string
+                          description: Optional detailed error message
+                          example: Please check the ID you provided is correct before retrying the request.
+                        more_info:
+                          type: string
+                          description: Optional additional information for the message
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end user
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                          example: en
+                      required:
+                      - code
+                      - key
+                      - message
+                      - description
+                      - more_info
+                      - category
+                      - level
+                      - parameters
+                      - locale
+                required:
+                - requestId
+                - service
+                - requestMethod
+                - requestUri
+                - errors
+        '429':
+          description: Too Many Requests, the server has reached a limit, the request must be sent again at a later time.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '503':
+          description: Connection failed to datastore.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: an error response.
+                properties:
+                  requestId:
+                    type: string
+                    description: The current request ID
+                    example: d64dc285-0b62-aaa3-841f-de3588b64d34
+                  service:
+                    type: string
+                    description: The name of the service that produced the error
+                    example: authoring-rendition
+                  requestMethod:
+                    type: string
+                    description: The Http method type of the current request
+                    example: GET
+                  requestUri:
+                    type: string
+                    description: The request uri
+                    example: /authoring/v1/renditions
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code
+                        key:
+                          type: string
+                          description: The message key
+                          example: error.rendition.1
+                        message:
+                          type: string
+                          description: The error message
+                          example: The id requested does not exist.
+                        description:
+                          type: string
+                          description: Optional detailed error message
+                          example: Please check the ID you provided is correct before retrying the request.
+                        more_info:
+                          type: string
+                          description: Optional additional information for the message
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end user
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                          example: en
+                      required:
+                      - code
+                      - key
+                      - message
+                      - description
+                      - more_info
+                      - category
+                      - level
+                      - parameters
+                      - locale
+                required:
+                - requestId
+                - service
+                - requestMethod
+                - requestUri
+                - errors
+        default:
+          description: Unexpected error.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: an error response.
+                properties:
+                  requestId:
+                    type: string
+                    description: The current request ID
+                    example: d64dc285-0b62-aaa3-841f-de3588b64d34
+                  service:
+                    type: string
+                    description: The name of the service that produced the error
+                    example: authoring-rendition
+                  requestMethod:
+                    type: string
+                    description: The Http method type of the current request
+                    example: GET
+                  requestUri:
+                    type: string
+                    description: The request uri
+                    example: /authoring/v1/renditions
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code
+                        key:
+                          type: string
+                          description: The message key
+                          example: error.rendition.1
+                        message:
+                          type: string
+                          description: The error message
+                          example: The id requested does not exist.
+                        description:
+                          type: string
+                          description: Optional detailed error message
+                          example: Please check the ID you provided is correct before retrying the request.
+                        more_info:
+                          type: string
+                          description: Optional additional information for the message
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end user
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                          example: en
+                      required:
+                      - code
+                      - key
+                      - message
+                      - description
+                      - more_info
+                      - category
+                      - level
+                      - parameters
+                      - locale
+                required:
+                - requestId
+                - service
+                - requestMethod
+                - requestUri
+                - errors
+      x-ibm-dx-security-user-roles:
+      - admin
+      - manager
+      - editor
+      - viewer
+components:
+  schemas:
+    ErrorResponse:
+      description: This JSON record represents an error condition.
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            description: This JSON record represents an individual error or warning contained in an error message.
+            type: object
+            properties:
+              code:
+                type: integer
+                description: An error code
+              message:
+                type: string
+                description: A message describing what went wrong.
+              description:
+                type: string
+                description: Further explanation of the error condition and potential next steps to resolve the problem.
+              more_info:
+                type: string
+                description: A URL pointing to a web site that provides more information on the given error condition.
+              level:
+                type: string
+                enum:
+                - ERROR
+                - WARNING
+                description: The severity level of the message. Default is error.
+              parameters:
+                type: object
+                description: Additional properties reflecting the dynamic parts of the error condition.
+              cause:
+                type: object
+                description: This property can be used to transport causing error message records produced by a down stream service calls.
+              locale:
+                type: string
+                description: This property represents the locale of the text contained in properties 'message', and 'description'. This property is mandatory if message and description contain translated text.
+            required:
+            - code
+            - message
+        requestId:
+          type: string
+          description: The ID of the failing request.
+        service:
+          type: string
+          description: The name of the service serving the error message.
+      required:
+      - errors
+      - requestId
+x-refined-from:
+- acoustic-content-openapi-original.json
+- acoustic-content-swagger2-original.yaml
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

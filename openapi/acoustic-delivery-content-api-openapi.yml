@@ -1,0 +1,1388 @@
+openapi: 3.2.0
+info:
+  title: Acoustic Delivery content API
+  version: 1.0.142
+  x-ibm-name: ibm-watson-content-hub-api
+  description: 'Operations tagged Delivery content across 2 of this provider''s published API definitions: acoustic-content-openapi-original.json, acoustic-content-swagger2-original.yaml. Each path carries the servers of the definition it was published in.'
+tags:
+- name: Delivery content
+  description: 'Use the Content delivery content service REST API to retrieve published content items.
+
+
+    You can use the /delivery/v1/content routes to access content items as an unauthenticated user or the
+
+    /mydelivery/v1/content routes to access content items including restricted ones as an authenticated user.
+
+    While access to the latter routes requires at least Viewer role, accessing the anonymous routes does not
+
+    require any authentication.
+
+
+    You can retrieve a single content item by its ID or retrieve a collection of content items by passing in
+
+    an array of IDs. You can also give one or more field names to these APIs so that only those fields (if
+
+    they exist) are returned.
+
+
+    To access draft content items you need to access the system in preview mode. For more information on the
+
+    preview mode and previewing in general, please refer to https://developer.goacoustic.com/acoustic-content/docs/preview-content.
+
+    '
+paths:
+  /delivery/v1/content/bulk_retrieve:
+    post:
+      tags:
+      - Delivery content
+      x-ibm-dx-security-user-roles:
+      - admin
+      - manager
+      - editor
+      - viewer
+      - authenticatedVisitor
+      - anonymous
+      x-ibm-dx-vary: []
+      summary: Retrieve filtered content by id in bulk
+      description: "Returns an array of requested filtered content items. Restricted content items cannot be accessed.\nTo access those content items too, you have to use /mydelivery/v1/content/bulk_retrieve.\n\nSample request body for retrieving id and title fields of two content items with id '7f2335cc-d91d-4f52-9e26-2d9402e463c0' and '1067771c-ec05-4671-951b-18f503953f2d':\n\n    {\n      \"ids\": [\"7f2335cc-d91d-4f52-9e26-2d9402e463c0\", \"1067771c-ec05-4671-951b-18f503953f2d\"],\n      \"fields\": [\"id\", \"title\"]\n    }\n\nFor each `content item` requested ..\n\n* If a content item is not found for a specified `id`, the content retrieval for that id is skipped.\n* If a specified `field` is not found in the content, it will not be present in the response.\n* If no fields are specified for filtering, the whole content item is returned.\n* The `ids` array cannot be empty and hence, there should be at least one id specified for lookup.\n* A maximum of 25 content items can be retrieved at once. If the `ids` field is found to have more entries, only the first 25 content items requested are returned.\n<br />User roles: admin, manager, editor, viewer, authenticatedVisitor, anonymous"
+      parameters:
+      - name: Content-Type
+        in: header
+        description: Content type of the request body, should be 'application/json'.
+        required: true
+        schema:
+          type: string
+      requestBody:
+        $ref: '#/components/requestBodies/Bulkrequest'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                description: An array of JSON objects that contain the requested content items.
+                items:
+                  title: Content
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                      description: The ID of the content item.
+                    name:
+                      type: string
+                      description: The name of the content item.
+                    description:
+                      type: string
+                      description: The description text for this content item.
+                    classification:
+                      type: string
+                      description: The classification defines the document type. For content items, all documents are classified as "content".
+                    typeId:
+                      type: string
+                      description: The ID of the content type this item belongs to.
+                    locale:
+                      type: string
+                      description: locale of the document (e.g "en", or "de").
+                    lastModified:
+                      type: string
+                      format: date-time
+                      description: The last modified date of this content item in ISO 8601 with the format YYYY-MM-DDTHH:mm:ss.sssZ.
+                    lastModifierId:
+                      type: string
+                      description: name of user for now, this property may change once user management is defined.
+                    created:
+                      type: string
+                      format: date-time
+                      description: The created date of this content item in ISO 8601 with the format YYYY-MM-DDTHH:mm:ss.sssZ.
+                    creatorId:
+                      type: string
+                      description: The Id of the user that created this content item.
+                    tags:
+                      type: array
+                      items:
+                        type: string
+                      uniqueItems: true
+                      description: The tags which has been set for this content item.
+                    elements:
+                      type: object
+                      description: Defined by the type and capture in the schema given by the type, in a real content, this property will be filled with more information.
+                    kind:
+                      type: array
+                      items:
+                        type: string
+                      uniqueItems: true
+                      description: The tags which has been set by AI.
+                    type:
+                      type: string
+                      description: This is the Id of the content type document this content is based on.
+              examples:
+                response:
+                  value:
+                  - id: f54e763a-fd53-424b-8ad9-7cc690cca2db
+                    name: demo-article
+                    description: first edited at 10/10/2017
+                    classification: content
+                    typeId: 24490027-e55b-4739-a5a9-5c091c5d4a72
+                    locale: en
+                    lastModified: '2017-10-10T11:43:26.720Z'
+                    lastModifierId: 8b7c9180-aefb-4114-b62a-77b040111557
+                    created: '2017-10-10T11:38:25.023Z'
+                    creatorId: 8b7c9180-aefb-4114-b62a-77b040111557
+                    tags:
+                    - user:Acoustic
+                    - user:sample
+                    keywords: []
+                    status: ready
+                    elements:
+                      summary:
+                        elementType: text
+                        value: Describes
+                      title:
+                        elementType: text
+                        value: A demo article
+                      body:
+                        elementType: text
+                        value: This is a sample article about content that is managed by Content.
+                      author:
+                        elementType: text
+                        value: alan@mycompany.com
+                      category:
+                        elementType: category
+                        categoryIds:
+                        - ea8ba30b49d21dc79d559b73fd77b8c1
+                        - 911cf1415a408d9655659d01d34d04a1
+                        categories:
+                        - Sample Article/Tech
+                        - Sample Article/Example
+                      image:
+                        elementType: image
+                        renditions:
+                          default:
+                            renditionId: r=d7a1a2b9-47e4-4131-9c3c-18c464e84e68&a=98f98b21-fd87-4ca1-b98f-2dd9effe0d29
+                            source: /delivery/v1/resources/d7a1a2b9-47e4-4131-9c3c-18c464e84e68
+                            width: 4000
+                            height: 3000
+                            url: /b7e6dfb7-76cf-44a9-a354-2e212d4a878c/dxresources/d7a1/d7a1a2b9-47e4-4131-9c3c-18c464e84e68.JPG
+                          thumbnail:
+                            renditionId: 83408464-75e8-4027-b920-31f415e363ab
+                            source: /delivery/v1/resources/d7a1a2b9-47e4-4131-9c3c-18c464e84e68?resize=800px:600px&crop=800:500;0,50
+                            width: 800
+                            height: 500
+                            url: /b7e6dfb7-76cf-44a9-a354-2e212d4a878c/dxresources/d7a1/d7a1a2b9-47e4-4131-9c3c-18c464e84e68.JPG?resize=800px%3A600px&crop=800%3A500%3B0%2C50
+                        asset:
+                          id: 98f98b21-fd87-4ca1-b98f-2dd9effe0d29
+                          resourceUri: /delivery/v1/resources/d7a1a2b9-47e4-4131-9c3c-18c464e84e68
+                          fileName: SampleImage.JPG
+                          fileSize: 2059999
+                          mediaType: image/jpeg
+                          width: 4000
+                          height: 3000
+                        url: /b7e6dfb7-76cf-44a9-a354-2e212d4a878c/dxresources/d7a1/d7a1a2b9-47e4-4131-9c3c-18c464e84e68.JPG
+                    kind: []
+                    type: Sample Article
+                  - id: 7f2335cc-d91d-4f52-9e26-2d9402e463c0
+                    name: other-demo
+                    description: first edited at 10/9/2017
+                    classification: content
+                    typeId: 24490027-e55b-4739-a5a9-5c091c5d4a72
+                    locale: en
+                    lastModified: '2017-10-10T11:43:26.720Z'
+                    lastModifierId: 8b7c9180-aefb-4114-b62a-77b040111557
+                    created: '2017-10-10T11:38:25.023Z'
+                    creatorId: 8b7c9180-aefb-4114-b62a-77b040111557
+                    tags:
+                    - user:Acoustic
+                    - user:sample
+                    keywords: []
+                    status: ready
+                    elements:
+                      summary:
+                        elementType: text
+                        value: Describes
+                      title:
+                        elementType: text
+                        value: A second article
+                      body:
+                        elementType: text
+                        value: This article is a second example for WCH
+                      author:
+                        elementType: text
+                        value: alan@mycompany.com
+                      category:
+                        elementType: category
+                        categoryIds:
+                        - ea8ba30b49d21dc79d559b73fd77b8c1
+                        - 911cf1415a408d9655659d01d34d04a1
+                        categories:
+                        - Sample Article/Tech
+                        - Sample Article/Example
+                      image:
+                        elementType: image
+                        renditions:
+                          default:
+                            renditionId: r=d7a1a2b9-47e4-4131-9c3c-18c464e84e68&a=98f98b21-fd87-4ca1-b98f-2dd9effe0d29
+                            source: /delivery/v1/resources/d7a1a2b9-47e4-4131-9c3c-18c464e84e68
+                            width: 4000
+                            height: 3000
+                            url: /b7e6dfb7-76cf-44a9-a354-2e212d4a878c/dxresources/d7a1/d7a1a2b9-47e4-4131-9c3c-18c464e84e68.JPG
+                          thumbnail:
+                            renditionId: 83408464-75e8-4027-b920-31f415e363ab
+                            source: /delivery/v1/resources/d7a1a2b9-47e4-4131-9c3c-18c464e84e68?resize=800px:600px&crop=800:500;0,50
+                            width: 800
+                            height: 500
+                            url: /b7e6dfb7-76cf-44a9-a354-2e212d4a878c/dxresources/d7a1/d7a1a2b9-47e4-4131-9c3c-18c464e84e68.JPG?resize=800px%3A600px&crop=800%3A500%3B0%2C50
+                        asset:
+                          id: 98f98b21-fd87-4ca1-b98f-2dd9effe0d29
+                          resourceUri: /delivery/v1/resources/d7a1a2b9-47e4-4131-9c3c-18c464e84e68
+                          fileName: SampleImage.JPG
+                          fileSize: 2059999
+                          mediaType: image/jpeg
+                          width: 4000
+                          height: 3000
+                        url: /b7e6dfb7-76cf-44a9-a354-2e212d4a878c/dxresources/d7a1/d7a1a2b9-47e4-4131-9c3c-18c464e84e68.JPG
+                    kind: []
+                    type: Sample Article
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  service:
+                    type: string
+                    description: The name of the microservice that detected the error.
+                  requestId:
+                    type: string
+                    description: The ID of the request in which this error happened.
+                  errors:
+                    type: object
+                    description: This JSON object describes a specific error of an error condition.
+                    properties:
+                      code:
+                        type: integer
+                        description: An error code that is specific to the service that reports the error.
+                      message:
+                        type: string
+                        description: A brief error message.
+                      level:
+                        type: string
+                        enum:
+                        - WARNING
+                        - ERROR
+                        description: The error severity.
+                      description:
+                        type: string
+                        description: A detailed description that describes what caused the eror, and how to proceed.
+                      cause:
+                        type: object
+                        description: The causing error.
+                      locale:
+                        type: string
+                        description: The locale setting of the message and description text.
+              examples:
+                response:
+                  value:
+                    service: prod-delivery-content
+                    requestId: c39d3e05-22f7-4d7c-8d7b-21ba6a2db508
+                    errors:
+                      code: 2006
+                      message: Content Id list cannot be empty.
+                      level: ERROR
+                      description: The content id list was not passed or was empty.
+                      locale: en
+        '429':
+          description: Too Many Requests, the server has reached a limit, the request must be sent again at a later time.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  service:
+                    type: string
+                    description: The name of the microservice that detected the error.
+                  requestId:
+                    type: string
+                    description: The ID of the request in which this error happened.
+                  errors:
+                    type: object
+                    description: This JSON object describes a specific error of an error condition.
+                    properties:
+                      code:
+                        type: integer
+                        description: An error code that is specific to the service that reports the error.
+                      message:
+                        type: string
+                        description: A brief error message.
+                      level:
+                        type: string
+                        enum:
+                        - WARNING
+                        - ERROR
+                        description: The error severity.
+                      description:
+                        type: string
+                        description: A detailed description that describes what caused the eror, and how to proceed.
+                      cause:
+                        type: object
+                        description: The causing error.
+                      locale:
+                        type: string
+                        description: The locale setting of the message and description text.
+              examples:
+                response:
+                  value:
+                    service: prod-delivery-content
+                    requestId: c39d3e05-22f7-4d7c-8d7b-21ba6a2db508
+                    errors:
+                      code: 1014
+                      message: Unexpected error occurred.
+                      level: ERROR
+                      description: Unable to complete the request due to an unexpected error. Try again or contact Acoustic support if problem persists.
+                      locale: en
+  /mydelivery/v1/content/bulk_retrieve:
+    post:
+      tags:
+      - Delivery content
+      x-ibm-dx-security-user-roles:
+      - admin
+      - manager
+      - editor
+      - viewer
+      - authenticatedVisitor
+      summary: Retrieve filtered content items by id in bulk, including restricted ones.
+      description: "Returns an array of requested filtered content items. This route is restricted to authenticated users and allows to access restricted content items too.\n\nSample request body for retrieving id and title fields of two content items with id '7f2335cc-d91d-4f52-9e26-2d9402e463c0' and '1067771c-ec05-4671-951b-18f503953f2d':\n\n    {\n      \"ids\": [\"7f2335cc-d91d-4f52-9e26-2d9402e463c0\", \"1067771c-ec05-4671-951b-18f503953f2d\"],\n      \"fields\": [\"id\", \"title\"]\n    }\n\nFor each `content item` requested ..\n\n* If a content item is not found for a specified `id`, the content retrieval for that id is skipped.\n* If a specified `field` is not found in the content, it will not be present in the response.\n* If no fields are specified for filtering, the whole content item is returned.\n* The `ids` array cannot be empty and hence, there should be at least one id specified for lookup.\n* A maximum of 25 content items can be retrieved at once. If the `ids` field is found to have more entries, only the first 25 content items requested are returned.\n<br />User roles: admin, manager, editor, viewer, authenticatedVisitor"
+      parameters:
+      - name: Content-Type
+        in: header
+        description: Content type of the request body, should be 'application/json'.
+        required: true
+        schema:
+          type: string
+      requestBody:
+        $ref: '#/components/requestBodies/Bulkrequest'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                description: An array of JSON objects that contain the requested content items.
+                items:
+                  title: Content
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                      description: The ID of the content item.
+                    name:
+                      type: string
+                      description: The name of the content item.
+                    description:
+                      type: string
+                      description: The description text for this content item.
+                    classification:
+                      type: string
+                      description: The classification defines the document type. For content items, all documents are classified as "content".
+                    typeId:
+                      type: string
+                      description: The ID of the content type this item belongs to.
+                    locale:
+                      type: string
+                      description: locale of the document (e.g "en", or "de").
+                    lastModified:
+                      type: string
+                      format: date-time
+                      description: The last modified date of this content item in ISO 8601 with the format YYYY-MM-DDTHH:mm:ss.sssZ.
+                    lastModifierId:
+                      type: string
+                      description: name of user for now, this property may change once user management is defined.
+                    created:
+                      type: string
+                      format: date-time
+                      description: The created date of this content item in ISO 8601 with the format YYYY-MM-DDTHH:mm:ss.sssZ.
+                    creatorId:
+                      type: string
+                      description: The Id of the user that created this content item.
+                    tags:
+                      type: array
+                      items:
+                        type: string
+                      uniqueItems: true
+                      description: The tags which has been set for this content item.
+                    elements:
+                      type: object
+                      description: Defined by the type and capture in the schema given by the type, in a real content, this property will be filled with more information.
+                    kind:
+                      type: array
+                      items:
+                        type: string
+                      uniqueItems: true
+                      description: The tags which has been set by AI.
+                    type:
+                      type: string
+                      description: This is the Id of the content type document this content is based on.
+              examples:
+                response:
+                  value:
+                  - id: f54e763a-fd53-424b-8ad9-7cc690cca2db
+                    name: demo-article
+                    description: first edited at 10/10/2017
+                    classification: content
+                    typeId: 24490027-e55b-4739-a5a9-5c091c5d4a72
+                    locale: en
+                    lastModified: '2017-10-10T11:43:26.720Z'
+                    lastModifierId: 8b7c9180-aefb-4114-b62a-77b040111557
+                    created: '2017-10-10T11:38:25.023Z'
+                    creatorId: 8b7c9180-aefb-4114-b62a-77b040111557
+                    tags:
+                    - user:Acoustic
+                    - user:sample
+                    keywords: []
+                    status: ready
+                    elements:
+                      summary:
+                        elementType: text
+                        value: Describes
+                      title:
+                        elementType: text
+                        value: A demo article
+                      body:
+                        elementType: text
+                        value: This is a sample article about content that is managed by Content.
+                      author:
+                        elementType: text
+                        value: alan@mycompany.com
+                      category:
+                        elementType: category
+                        categoryIds:
+                        - ea8ba30b49d21dc79d559b73fd77b8c1
+                        - 911cf1415a408d9655659d01d34d04a1
+                        categories:
+                        - Sample Article/Tech
+                        - Sample Article/Example
+                      image:
+                        elementType: image
+                        renditions:
+                          default:
+                            renditionId: r=d7a1a2b9-47e4-4131-9c3c-18c464e84e68&a=98f98b21-fd87-4ca1-b98f-2dd9effe0d29
+                            source: /delivery/v1/resources/d7a1a2b9-47e4-4131-9c3c-18c464e84e68
+                            width: 4000
+                            height: 3000
+                            url: /b7e6dfb7-76cf-44a9-a354-2e212d4a878c/dxresources/d7a1/d7a1a2b9-47e4-4131-9c3c-18c464e84e68.JPG
+                          thumbnail:
+                            renditionId: 83408464-75e8-4027-b920-31f415e363ab
+                            source: /delivery/v1/resources/d7a1a2b9-47e4-4131-9c3c-18c464e84e68?resize=800px:600px&crop=800:500;0,50
+                            width: 800
+                            height: 500
+                            url: /b7e6dfb7-76cf-44a9-a354-2e212d4a878c/dxresources/d7a1/d7a1a2b9-47e4-4131-9c3c-18c464e84e68.JPG?resize=800px%3A600px&crop=800%3A500%3B0%2C50
+                        asset:
+                          id: 98f98b21-fd87-4ca1-b98f-2dd9effe0d29
+                          resourceUri: /delivery/v1/resources/d7a1a2b9-47e4-4131-9c3c-18c464e84e68
+                          fileName: SampleImage.JPG
+                          fileSize: 2059999
+                          mediaType: image/jpeg
+                          width: 4000
+                          height: 3000
+                        url: /b7e6dfb7-76cf-44a9-a354-2e212d4a878c/dxresources/d7a1/d7a1a2b9-47e4-4131-9c3c-18c464e84e68.JPG
+                    kind: []
+                    type: Sample Article
+                  - id: 7f2335cc-d91d-4f52-9e26-2d9402e463c0
+                    name: other-demo
+                    description: first edited at 10/9/2017
+                    classification: content
+                    typeId: 24490027-e55b-4739-a5a9-5c091c5d4a72
+                    locale: en
+                    lastModified: '2017-10-10T11:43:26.720Z'
+                    lastModifierId: 8b7c9180-aefb-4114-b62a-77b040111557
+                    created: '2017-10-10T11:38:25.023Z'
+                    creatorId: 8b7c9180-aefb-4114-b62a-77b040111557
+                    tags:
+                    - user:Acoustic
+                    - user:sample
+                    keywords: []
+                    status: ready
+                    elements:
+                      summary:
+                        elementType: text
+                        value: Describes
+                      title:
+                        elementType: text
+                        value: A second article
+                      body:
+                        elementType: text
+                        value: This article is a second example for WCH
+                      author:
+                        elementType: text
+                        value: alan@mycompany.com
+                      category:
+                        elementType: category
+                        categoryIds:
+                        - ea8ba30b49d21dc79d559b73fd77b8c1
+                        - 911cf1415a408d9655659d01d34d04a1
+                        categories:
+                        - Sample Article/Tech
+                        - Sample Article/Example
+                      image:
+                        elementType: image
+                        renditions:
+                          default:
+                            renditionId: r=d7a1a2b9-47e4-4131-9c3c-18c464e84e68&a=98f98b21-fd87-4ca1-b98f-2dd9effe0d29
+                            source: /delivery/v1/resources/d7a1a2b9-47e4-4131-9c3c-18c464e84e68
+                            width: 4000
+                            height: 3000
+                            url: /b7e6dfb7-76cf-44a9-a354-2e212d4a878c/dxresources/d7a1/d7a1a2b9-47e4-4131-9c3c-18c464e84e68.JPG
+                          thumbnail:
+                            renditionId: 83408464-75e8-4027-b920-31f415e363ab
+                            source: /delivery/v1/resources/d7a1a2b9-47e4-4131-9c3c-18c464e84e68?resize=800px:600px&crop=800:500;0,50
+                            width: 800
+                            height: 500
+                            url: /b7e6dfb7-76cf-44a9-a354-2e212d4a878c/dxresources/d7a1/d7a1a2b9-47e4-4131-9c3c-18c464e84e68.JPG?resize=800px%3A600px&crop=800%3A500%3B0%2C50
+                        asset:
+                          id: 98f98b21-fd87-4ca1-b98f-2dd9effe0d29
+                          resourceUri: /delivery/v1/resources/d7a1a2b9-47e4-4131-9c3c-18c464e84e68
+                          fileName: SampleImage.JPG
+                          fileSize: 2059999
+                          mediaType: image/jpeg
+                          width: 4000
+                          height: 3000
+                        url: /b7e6dfb7-76cf-44a9-a354-2e212d4a878c/dxresources/d7a1/d7a1a2b9-47e4-4131-9c3c-18c464e84e68.JPG
+                    kind: []
+                    type: Sample Article
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  service:
+                    type: string
+                    description: The name of the microservice that detected the error.
+                  requestId:
+                    type: string
+                    description: The ID of the request in which this error happened.
+                  errors:
+                    type: object
+                    description: This JSON object describes a specific error of an error condition.
+                    properties:
+                      code:
+                        type: integer
+                        description: An error code that is specific to the service that reports the error.
+                      message:
+                        type: string
+                        description: A brief error message.
+                      level:
+                        type: string
+                        enum:
+                        - WARNING
+                        - ERROR
+                        description: The error severity.
+                      description:
+                        type: string
+                        description: A detailed description that describes what caused the eror, and how to proceed.
+                      cause:
+                        type: object
+                        description: The causing error.
+                      locale:
+                        type: string
+                        description: The locale setting of the message and description text.
+              examples:
+                response:
+                  value:
+                    service: prod-delivery-content
+                    requestId: c39d3e05-22f7-4d7c-8d7b-21ba6a2db508
+                    errors:
+                      code: 2006
+                      message: Content Id list cannot be empty.
+                      level: ERROR
+                      description: The content id list was not passed or was empty.
+                      locale: en
+        '429':
+          description: Too Many Requests, the server has reached a limit, the request must be sent again at a later time.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  service:
+                    type: string
+                    description: The name of the microservice that detected the error.
+                  requestId:
+                    type: string
+                    description: The ID of the request in which this error happened.
+                  errors:
+                    type: object
+                    description: This JSON object describes a specific error of an error condition.
+                    properties:
+                      code:
+                        type: integer
+                        description: An error code that is specific to the service that reports the error.
+                      message:
+                        type: string
+                        description: A brief error message.
+                      level:
+                        type: string
+                        enum:
+                        - WARNING
+                        - ERROR
+                        description: The error severity.
+                      description:
+                        type: string
+                        description: A detailed description that describes what caused the eror, and how to proceed.
+                      cause:
+                        type: object
+                        description: The causing error.
+                      locale:
+                        type: string
+                        description: The locale setting of the message and description text.
+              examples:
+                response:
+                  value:
+                    service: prod-delivery-content
+                    requestId: c39d3e05-22f7-4d7c-8d7b-21ba6a2db508
+                    errors:
+                      code: 1014
+                      message: Unexpected error occurred.
+                      level: ERROR
+                      description: Unable to complete the request due to an unexpected error. Try again or contact Acoustic support if problem persists.
+                      locale: en
+  /delivery/v1/content/{id}:
+    get:
+      tags:
+      - Delivery content
+      x-ibm-dx-security-user-roles:
+      - admin
+      - manager
+      - editor
+      - viewer
+      - authenticatedVisitor
+      - anonymous
+      x-ibm-dx-vary: []
+      summary: Get content item
+      description: 'Returns the content item specified by `id`. Restricted content items cannot be accessed.
+
+        To access those content items too, you have to use /mydelivery/v1/content/{id}.
+
+        <br />User roles: admin, manager, editor, viewer, authenticatedVisitor, anonymous'
+      parameters:
+      - name: id
+        in: path
+        description: The ID of the content item.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: fields
+        in: query
+        description: Reduce the returned content item down to just the specified fields. Fields are specified by a comma seperated list of field names and should only be used once in the query string. To only retrieve `rev` and `last-modified` this parameter should look like `fields=rev,last-modified`.
+        required: false
+        style: form
+        explode: false
+        schema:
+          type: string
+          items:
+            type: string
+      - name: If-None-Match
+        in: header
+        description: The Etag value from a previous request to check whether a content item has been updated since, if so, a 304 (Not Modified) response code is returned instead of the content item.
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          headers:
+            Etag:
+              description: The Etag value identifies this content item for future requests.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                title: Content
+                type: object
+                properties:
+                  id:
+                    type: string
+                    description: The ID of the content item.
+                  name:
+                    type: string
+                    description: The name of the content item.
+                  description:
+                    type: string
+                    description: The description text for this content item.
+                  classification:
+                    type: string
+                    description: The classification defines the document type. For content items, all documents are classified as "content".
+                  typeId:
+                    type: string
+                    description: The ID of the content type this item belongs to.
+                  locale:
+                    type: string
+                    description: locale of the document (e.g "en", or "de").
+                  lastModified:
+                    type: string
+                    format: date-time
+                    description: The last modified date of this content item in ISO 8601 with the format YYYY-MM-DDTHH:mm:ss.sssZ.
+                  lastModifierId:
+                    type: string
+                    description: name of user for now, this property may change once user management is defined.
+                  created:
+                    type: string
+                    format: date-time
+                    description: The created date of this content item in ISO 8601 with the format YYYY-MM-DDTHH:mm:ss.sssZ.
+                  creatorId:
+                    type: string
+                    description: The Id of the user that created this content item.
+                  tags:
+                    type: array
+                    items:
+                      type: string
+                    uniqueItems: true
+                    description: The tags which has been set for this content item.
+                  elements:
+                    type: object
+                    description: Defined by the type and capture in the schema given by the type, in a real content, this property will be filled with more information.
+                  kind:
+                    type: array
+                    items:
+                      type: string
+                    uniqueItems: true
+                    description: The tags which has been set by AI.
+                  type:
+                    type: string
+                    description: This is the Id of the content type document this content is based on.
+              examples:
+                response:
+                  value:
+                    id: f54e763a-fd53-424b-8ad9-7cc690cca2db
+                    name: demo-article
+                    description: first edited at 10/10/2015
+                    classification: content
+                    typeId: 24490027-e55b-4739-a5a9-5c091c5d4a72
+                    locale: en
+                    lastModified: '2017-10-10T11:43:26.720Z'
+                    lastModifierId: 8b7c9180-aefb-4114-b62a-77b040111557
+                    created: '2017-10-10T11:38:25.023Z'
+                    creatorId: 8b7c9180-aefb-4114-b62a-77b040111557
+                    tags:
+                    - user:Acoustic
+                    - user:sample
+                    keywords: []
+                    status: ready
+                    elements:
+                      summary:
+                        elementType: text
+                        value: Describes
+                      title:
+                        elementType: text
+                        value: A demo article
+                      body:
+                        elementType: text
+                        value: This is a sample article about content that is managed by Content.
+                      author:
+                        elementType: text
+                        value: alan@mycompany.com
+                      category:
+                        elementType: category
+                        categoryIds:
+                        - ea8ba30b49d21dc79d559b73fd77b8c1
+                        - 911cf1415a408d9655659d01d34d04a1
+                        categories:
+                        - Sample Article/Tech
+                        - Sample Article/Example
+                      image:
+                        elementType: image
+                        renditions:
+                          default:
+                            renditionId: r=d7a1a2b9-47e4-4131-9c3c-18c464e84e68&a=98f98b21-fd87-4ca1-b98f-2dd9effe0d29
+                            source: /delivery/v1/resources/d7a1a2b9-47e4-4131-9c3c-18c464e84e68
+                            width: 4000
+                            height: 3000
+                            url: /b7e6dfb7-76cf-44a9-a354-2e212d4a878c/dxresources/d7a1/d7a1a2b9-47e4-4131-9c3c-18c464e84e68.JPG
+                          thumbnail:
+                            renditionId: 83408464-75e8-4027-b920-31f415e363ab
+                            source: /delivery/v1/resources/d7a1a2b9-47e4-4131-9c3c-18c464e84e68?resize=800px:600px&crop=800:500;0,50
+                            width: 800
+                            height: 500
+                            url: /b7e6dfb7-76cf-44a9-a354-2e212d4a878c/dxresources/d7a1/d7a1a2b9-47e4-4131-9c3c-18c464e84e68.JPG?resize=800px%3A600px&crop=800%3A500%3B0%2C50
+                        asset:
+                          id: 98f98b21-fd87-4ca1-b98f-2dd9effe0d29
+                          resourceUri: /delivery/v1/resources/d7a1a2b9-47e4-4131-9c3c-18c464e84e68
+                          fileName: SampleImage.JPG
+                          fileSize: 2059999
+                          mediaType: image/jpeg
+                          width: 4000
+                          height: 3000
+                        url: /b7e6dfb7-76cf-44a9-a354-2e212d4a878c/dxresources/d7a1/d7a1a2b9-47e4-4131-9c3c-18c464e84e68.JPG
+                    kind: []
+                    type: Sample Article
+        '304':
+          description: Not modified is returned when the If-None-Match header is used and the Etag value matches the most recent version of the response.
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  service:
+                    type: string
+                    description: The name of the microservice that detected the error.
+                  requestId:
+                    type: string
+                    description: The ID of the request in which this error happened.
+                  errors:
+                    type: object
+                    description: This JSON object describes a specific error of an error condition.
+                    properties:
+                      code:
+                        type: integer
+                        description: An error code that is specific to the service that reports the error.
+                      message:
+                        type: string
+                        description: A brief error message.
+                      level:
+                        type: string
+                        enum:
+                        - WARNING
+                        - ERROR
+                        description: The error severity.
+                      description:
+                        type: string
+                        description: A detailed description that describes what caused the eror, and how to proceed.
+                      cause:
+                        type: object
+                        description: The causing error.
+                      locale:
+                        type: string
+                        description: The locale setting of the message and description text.
+              examples:
+                response:
+                  value:
+                    service: prod-delivery-content
+                    requestId: c39d3e05-22f7-4d7c-8d7b-21ba6a2db508
+                    errors:
+                      code: 2001
+                      message: Missing or invalid value for 'fields' query parameter.
+                      level: ERROR
+                      description: Check that the 'fields' parameter is not blank, does not contain spaces or empty values, e.g. 'fields=rev,,last-modified' is considered invalid.
+                      locale: en
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  service:
+                    type: string
+                    description: The name of the microservice that detected the error.
+                  requestId:
+                    type: string
+                    description: The ID of the request in which this error happened.
+                  errors:
+                    type: object
+                    description: This JSON object describes a specific error of an error condition.
+                    properties:
+                      code:
+                        type: integer
+                        description: An error code that is specific to the service that reports the error.
+                      message:
+                        type: string
+                        description: A brief error message.
+                      level:
+                        type: string
+                        enum:
+                        - WARNING
+                        - ERROR
+                        description: The error severity.
+                      description:
+                        type: string
+                        description: A detailed description that describes what caused the eror, and how to proceed.
+                      cause:
+                        type: object
+                        description: The causing error.
+                      locale:
+                        type: string
+                        description: The locale setting of the message and description text.
+              examples:
+                response:
+                  value:
+                    service: prod-delivery-content
+                    requestId: c39d3e05-22f7-4d7c-8d7b-21ba6a2db508
+                    errors:
+                      code: 2003
+                      message: 'Content not found for id : f54e763a-fd53-424b-8ad9-7cc690cca2dc.'
+                      level: ERROR
+                      description: A content item with the specified id was not found in the system.
+                      locale: en
+        '429':
+          description: Too Many Requests, the server has reached a limit, the request must be sent again at a later time.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  service:
+                    type: string
+                    description: The name of the microservice that detected the error.
+                  requestId:
+                    type: string
+                    description: The ID of the request in which this error happened.
+                  errors:
+                    type: object
+                    description: This JSON object describes a specific error of an error condition.
+                    properties:
+                      code:
+                        type: integer
+                        description: An error code that is specific to the service that reports the error.
+                      message:
+                        type: string
+                        description: A brief error message.
+                      level:
+                        type: string
+                        enum:
+                        - WARNING
+                        - ERROR
+                        description: The error severity.
+                      description:
+                        type: string
+                        description: A detailed description that describes what caused the eror, and how to proceed.
+                      cause:
+                        type: object
+                        description: The causing error.
+                      locale:
+                        type: string
+                        description: The locale setting of the message and description text.
+              examples:
+                response:
+                  value:
+                    service: prod-delivery-content
+                    requestId: c39d3e05-22f7-4d7c-8d7b-21ba6a2db508
+                    errors:
+                      code: 1014
+                      message: Unexpected error occurred.
+                      level: ERROR
+                      description: Unable to complete the request due to an unexpected error. Try again or contact Acoustic support if problem persists.
+                      locale: en
+  /mydelivery/v1/content/{id}:
+    get:
+      tags:
+      - Delivery content
+      x-ibm-dx-security-user-roles:
+      - admin
+      - manager
+      - editor
+      - viewer
+      - authenticatedVisitor
+      summary: Get content item, including restricted ones.
+      description: 'Returns the content item specified by `id`. This route is restricted to authenticated users and allows to access restricted content items too.
+
+        <br />User roles: admin, manager, editor, viewer, authenticatedVisitor'
+      parameters:
+      - name: id
+        in: path
+        description: The ID of the content item.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: fields
+        in: query
+        description: Reduce the returned content item down to just the specified fields. Fields are specified by a comma seperated list of field names and should only be used once in the query string. To only retrieve `rev` and `last-modified` this parameter should look like `fields=rev,last-modified`.
+        required: false
+        style: form
+        explode: false
+        schema:
+          type: string
+          items:
+            type: string
+      - name: If-None-Match
+        in: header
+        description: The Etag value from a previous request to check whether a content item has been updated since, if so, a 304 (Not Modified) response code is returned instead of the content item.
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          headers:
+            Etag:
+              description: The Etag value identifies this content item for future requests.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                title: Content
+                type: object
+                properties:
+                  id:
+                    type: string
+                    description: The ID of the content item.
+                  name:
+                    type: string
+                    description: The name of the content item.
+                  description:
+                    type: string
+                    description: The description text for this content item.
+                  classification:
+                    type: string
+                    description: The classification defines the document type. For content items, all documents are classified as "content".
+                  typeId:
+                    type: string
+                    description: The ID of the content type this item belongs to.
+                  locale:
+                    type: string
+                    description: locale of the document (e.g "en", or "de").
+                  lastModified:
+                    type: string
+                    format: date-time
+                    description: The last modified date of this content item in ISO 8601 with the format YYYY-MM-DDTHH:mm:ss.sssZ.
+                  lastModifierId:
+                    type: string
+                    description: name of user for now, this property may change once user management is defined.
+                  created:
+                    type: string
+                    format: date-time
+                    description: The created date of this content item in ISO 8601 with the format YYYY-MM-DDTHH:mm:ss.sssZ.
+                  creatorId:
+                    type: string
+                    description: The Id of the user that created this content item.
+                  tags:
+                    type: array
+                    items:
+                      type: string
+                    uniqueItems: true
+                    description: The tags which has been set for this content item.
+                  elements:
+                    type: object
+                    description: Defined by the type and capture in the schema given by the type, in a real content, this property will be filled with more information.
+                  kind:
+                    type: array
+                    items:
+                      type: string
+                    uniqueItems: true
+                    description: The tags which has been set by AI.
+                  type:
+                    type: string
+                    description: This is the Id of the content type document this content is based on.
+              examples:
+                response:
+                  value:
+                    id: f54e763a-fd53-424b-8ad9-7cc690cca2db
+                    name: demo-article
+                    description: first edited at 10/10/2015
+                    classification: content
+                    typeId: 24490027-e55b-4739-a5a9-5c091c5d4a72
+                    locale: en
+                    lastModified: '2017-10-10T11:43:26.720Z'
+                    lastModifierId: 8b7c9180-aefb-4114-b62a-77b040111557
+                    created: '2017-10-10T11:38:25.023Z'
+                    creatorId: 8b7c9180-aefb-4114-b62a-77b040111557
+                    tags:
+                    - user:Acoustic
+                    - user:sample
+                    keywords: []
+                    status: ready
+                    elements:
+                      summary:
+                        elementType: text
+                        value: Describes
+                      title:
+                        elementType: text
+                        value: A demo article
+                      body:
+                        elementType: text
+                        value: This is a sample article about content that is managed by Content.
+                      author:
+                        elementType: text
+                        value: alan@mycompany.com
+                      category:
+                        elementType: category
+                        categoryIds:
+                        - ea8ba30b49d21dc79d559b73fd77b8c1
+                        - 911cf1415a408d9655659d01d34d04a1
+                        categories:
+                        - Sample Article/Tech
+                        - Sample Article/Example
+                      image:
+                        elementType: image
+                        renditions:
+                          default:
+                            renditionId: r=d7a1a2b9-47e4-4131-9c3c-18c464e84e68&a=98f98b21-fd87-4ca1-b98f-2dd9effe0d29
+                            source: /delivery/v1/resources/d7a1a2b9-47e4-4131-9c3c-18c464e84e68
+                            width: 4000
+                            height: 3000
+                            url: /b7e6dfb7-76cf-44a9-a354-2e212d4a878c/dxresources/d7a1/d7a1a2b9-47e4-4131-9c3c-18c464e84e68.JPG
+                          thumbnail:
+                            renditionId: 83408464-75e8-4027-b920-31f415e363ab
+                            source: /delivery/v1/resources/d7a1a2b9-47e4-4131-9c3c-18c464e84e68?resize=800px:600px&crop=800:500;0,50
+                            width: 800
+                            height: 500
+                            url: /b7e6dfb7-76cf-44a9-a354-2e212d4a878c/dxresources/d7a1/d7a1a2b9-47e4-4131-9c3c-18c464e84e68.JPG?resize=800px%3A600px&crop=800%3A500%3B0%2C50
+                        asset:
+                          id: 98f98b21-fd87-4ca1-b98f-2dd9effe0d29
+                          resourceUri: /delivery/v1/resources/d7a1a2b9-47e4-4131-9c3c-18c464e84e68
+                          fileName: SampleImage.JPG
+                          fileSize: 2059999
+                          mediaType: image/jpeg
+                          width: 4000
+                          height: 3000
+                        url: /b7e6dfb7-76cf-44a9-a354-2e212d4a878c/dxresources/d7a1/d7a1a2b9-47e4-4131-9c3c-18c464e84e68.JPG
+                    kind: []
+                    type: Sample Article
+        '304':
+          description: Not modified is returned when the If-None-Match header is used and the Etag value matches the most recent version of the response.
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  service:
+                    type: string
+                    description: The name of the microservice that detected the error.
+                  requestId:
+                    type: string
+                    description: The ID of the request in which this error happened.
+                  errors:
+                    type: object
+                    description: This JSON object describes a specific error of an error condition.
+                    properties:
+                      code:
+                        type: integer
+                        description: An error code that is specific to the service that reports the error.
+                      message:
+                        type: string
+                        description: A brief error message.
+                      level:
+                        type: string
+                        enum:
+                        - WARNING
+                        - ERROR
+                        description: The error severity.
+                      description:
+                        type: string
+                        description: A detailed description that describes what caused the eror, and how to proceed.
+                      cause:
+                        type: object
+                        description: The causing error.
+                      locale:
+                        type: string
+                        description: The locale setting of the message and description text.
+              examples:
+                response:
+                  value:
+                    service: prod-delivery-content
+                    requestId: c39d3e05-22f7-4d7c-8d7b-21ba6a2db508
+                    errors:
+                      code: 2001
+                      message: Missing or invalid value for 'fields' query parameter.
+                      level: ERROR
+                      description: Check that the 'fields' parameter is not blank, does not contain spaces or empty values, e.g. 'fields=rev,,last-modified' is considered invalid.
+                      locale: en
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  service:
+                    type: string
+                    description: The name of the microservice that detected the error.
+                  requestId:
+                    type: string
+                    description: The ID of the request in which this error happened.
+                  errors:
+                    type: object
+                    description: This JSON object describes a specific error of an error condition.
+                    properties:
+                      code:
+                        type: integer
+                        description: An error code that is specific to the service that reports the error.
+                      message:
+                        type: string
+                        description: A brief error message.
+                      level:
+                        type: string
+                        enum:
+                        - WARNING
+                        - ERROR
+                        description: The error severity.
+                      description:
+                        type: string
+                        description: A detailed description that describes what caused the eror, and how to proceed.
+                      cause:
+                        type: object
+                        description: The causing error.
+                      locale:
+                        type: string
+                        description: The locale setting of the message and description text.
+              examples:
+                response:
+                  value:
+                    service: prod-delivery-content
+                    requestId: c39d3e05-22f7-4d7c-8d7b-21ba6a2db508
+                    errors:
+                      code: 2003
+                      message: 'Content not found for id : f54e763a-fd53-424b-8ad9-7cc690cca2dc.'
+                      level: ERROR
+                      description: A content item with the specified id was not found in the system.
+                      locale: en
+        '429':
+          description: Too Many Requests, the server has reached a limit, the request must be sent again at a later time.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  service:
+                    type: string
+                    description: The name of the microservice that detected the error.
+                  requestId:
+                    type: string
+                    description: The ID of the request in which this error happened.
+                  errors:
+                    type: object
+                    description: This JSON object describes a specific error of an error condition.
+                    properties:
+                      code:
+                        type: integer
+                        description: An error code that is specific to the service that reports the error.
+                      message:
+                        type: string
+                        description: A brief error message.
+                      level:
+                        type: string
+                        enum:
+                        - WARNING
+                        - ERROR
+                        description: The error severity.
+                      description:
+                        type: string
+                        description: A detailed description that describes what caused the eror, and how to proceed.
+                      cause:
+                        type: object
+                        description: The causing error.
+                      locale:
+                        type: string
+                        description: The locale setting of the message and description text.
+              examples:
+                response:
+                  value:
+                    service: prod-delivery-content
+                    requestId: c39d3e05-22f7-4d7c-8d7b-21ba6a2db508
+                    errors:
+                      code: 1014
+                      message: Unexpected error occurred.
+                      level: ERROR
+                      description: Unable to complete the request due to an unexpected error. Try again or contact Acoustic support if problem persists.
+                      locale: en
+components:
+  schemas:
+    ErrorResponse:
+      description: This JSON record represents an error condition.
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            description: This JSON record represents an individual error or warning contained in an error message.
+            type: object
+            properties:
+              code:
+                type: integer
+                description: An error code
+              message:
+                type: string
+                description: A message describing what went wrong.
+              description:
+                type: string
+                description: Further explanation of the error condition and potential next steps to resolve the problem.
+              more_info:
+                type: string
+                description: A URL pointing to a web site that provides more information on the given error condition.
+              level:
+                type: string
+                enum:
+                - ERROR
+                - WARNING
+                description: The severity level of the message. Default is error.
+              parameters:
+                type: object
+                description: Additional properties reflecting the dynamic parts of the error condition.
+              cause:
+                type: object
+                description: This property can be used to transport causing error message records produced by a down stream service calls.
+              locale:
+                type: string
+                description: This property represents the locale of the text contained in properties 'message', and 'description'. This property is mandatory if message and description contain translated text.
+            required:
+            - code
+            - message
+        requestId:
+          type: string
+          description: The ID of the failing request.
+        service:
+          type: string
+          description: The name of the service serving the error message.
+      required:
+      - errors
+      - requestId
+  requestBodies:
+    Bulkrequest:
+      content:
+        application/json:
+          schema:
+            required:
+            - ids
+            properties:
+              ids:
+                type: array
+                description: An array of ids that should be retrieved by this bulk request.
+                items:
+                  type: string
+              fields:
+                type: array
+                description: An array of fields that should be returned by this bulk request.
+                items:
+                  type: string
+      description: The request object containing the list of ids to be looked up and the fields (optional) to be included in the response.
+      required: true
+x-refined-from:
+- acoustic-content-openapi-original.json
+- acoustic-content-swagger2-original.yaml
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

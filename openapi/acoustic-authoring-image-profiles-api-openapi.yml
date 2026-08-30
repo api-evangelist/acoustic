@@ -1,0 +1,1999 @@
+openapi: 3.2.0
+info:
+  title: Acoustic Authoring image profiles API
+  version: 1.0.142
+  x-ibm-name: ibm-watson-content-hub-api
+  description: 'Operations tagged Authoring image profiles across 2 of this provider''s published API definitions: acoustic-content-openapi-original.json, acoustic-content-swagger2-original.yaml. Each path carries the servers of the definition it was published in.'
+tags:
+- name: Authoring image profiles
+  description: Use the Acoustic Content authoring image profile service Rest APIs to work with image profiles. You can create, retrieve, and update image profiles in a database.
+paths:
+  /authoring/v1/image-profiles:
+    post:
+      summary: Create new image profiles.
+      description: 'Use the /image-profiles end-point to create a new image profile.<br />User roles: admin, manager'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              description: An new image profile.
+              properties:
+                name:
+                  type: string
+                  description: The name of the image profile.
+                  pattern: ^[a-zA-Z0-9*. \-+_~$!',()]*$
+                  minLength: 1
+                description:
+                  type: string
+                  description: The description of the image profile.
+                  pattern: ^[a-zA-Z0-9*. \-+_~$!',()]*$
+                classification:
+                  enum:
+                  - image-profile
+                created:
+                  type: string
+                  description: Optional creation date of this image profile in ISO 8601 with the format YYYY-MM-DDThh:mm:ss.sssZ. Value is ignored if set in the future.
+                  format: date-time
+                tags:
+                  type: array
+                  items:
+                    type: string
+                  uniqueItems: true
+                  example:
+                  - news
+                  - sample
+                dimensions:
+                  type: array
+                  items:
+                    type: object
+                    description: A indiviual dimension within an image profile.
+                    properties:
+                      label:
+                        type: string
+                        description: The dimension label.
+                      key:
+                        type: string
+                        description: The dimension key.
+                      description:
+                        type: string
+                        description: The description of the dimension.
+                      width:
+                        type: number
+                        description: The dimension's width
+                      height:
+                        type: number
+                        description: The dimension's height
+                isSystem:
+                  type: boolean
+                  description: Indicates whether this item is a 'system item' or not.
+                  default: false
+              required:
+              - name
+              - classification
+              - dimensions
+        description: Contains the image profile to create.
+        required: true
+      responses:
+        '200':
+          description: Success.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: An existing image profile.
+                properties:
+                  id:
+                    type: string
+                    description: The ID of the image profile.
+                    pattern: ^[a-zA-Z0-9*.\-+_~$!',()]*$
+                    minLength: 1
+                  rev:
+                    type: string
+                    description: The current revision of the image profile.
+                    minLength: 1
+                  name:
+                    type: string
+                    description: The name of the image profile.
+                    pattern: ^[a-zA-Z0-9*. \-+_~$!',()]*$
+                    minLength: 1
+                  description:
+                    type: string
+                    description: The description of the image profile.
+                    pattern: ^[a-zA-Z0-9*. \-+_~$!',()]*$
+                  classification:
+                    enum:
+                    - image-profile
+                  creatorId:
+                    type: string
+                    description: The ID of the user that created the image profile.
+                    minLength: 1
+                  creator:
+                    type: string
+                    description: 'The display name of the user that created the image profile. This field is only returned when the ''include'' query string option is set to ''ALL'' or ''metadata''.
+
+                      This field is read only.
+
+                      '
+                  created:
+                    type: string
+                    description: The created date of this image profile in ISO 8601 with the format YYYY-MM-DDThh:mm:ss.sssZ. This field is read only.
+                    format: date-time
+                    minLength: 1
+                  lastModifierId:
+                    type: string
+                    description: The ID of the user that last modified the image profile.
+                    minLength: 1
+                  lastModifier:
+                    type: string
+                    description: 'The display name of the last user that modified the image profile. This field is only returned when the ''include'' query string option is set to ''ALL'' or ''metadata''.
+
+                      This field is read only.
+
+                      '
+                  lastModified:
+                    type: string
+                    description: The last modified date of this image profile in ISO 8601 with the format YYYY-MM-DDThh:mm:ss.sssZ. This field is read only.
+                    format: date-time
+                    minLength: 1
+                  tags:
+                    type: array
+                    items:
+                      type: string
+                    uniqueItems: true
+                    example:
+                    - news
+                    - sample
+                  dimensions:
+                    type: array
+                    items:
+                      type: object
+                      description: A indiviual dimension within an image profile.
+                      properties:
+                        label:
+                          type: string
+                          description: The dimension label.
+                        key:
+                          type: string
+                          description: The dimension key.
+                        description:
+                          type: string
+                          description: The description of the dimension.
+                        width:
+                          type: number
+                          description: The dimension's width
+                        height:
+                          type: number
+                          description: The dimension's height
+                  isSystem:
+                    type: boolean
+                    description: Indicates whether this item is a 'system item' or not.
+                    default: false
+                required:
+                - rev
+                - name
+                - classification
+                - creatorId
+                - dimensions
+        '400':
+          description: Empty body or Invalid input.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: an error response.
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code.
+                        key:
+                          type: string
+                          description: The message key.
+                        message:
+                          type: string
+                          description: The error message.
+                        description:
+                          type: string
+                          description: Optional detailed error message.
+                        more_info:
+                          type: string
+                          description: Optional additional information for the message.
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end user.
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level.
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        field:
+                          type: string
+                          description: Only present on field validation errors, indicates the field in error.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                  requestId:
+                    type: string
+                    description: The current request ID.
+                  service:
+                    type: string
+                    description: The name of the service that produced the error.
+                  requestMethod:
+                    type: string
+                    description: The Http method type of the current request.
+                  requestUri:
+                    type: string
+                    description: The current request uri.
+        '404':
+          description: Current tenant's database is not provisioned.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: an error response.
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code.
+                        key:
+                          type: string
+                          description: The message key.
+                        message:
+                          type: string
+                          description: The error message.
+                        description:
+                          type: string
+                          description: Optional detailed error message.
+                        more_info:
+                          type: string
+                          description: Optional additional information for the message.
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end user.
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level.
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        field:
+                          type: string
+                          description: Only present on field validation errors, indicates the field in error.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                  requestId:
+                    type: string
+                    description: The current request ID.
+                  service:
+                    type: string
+                    description: The name of the service that produced the error.
+                  requestMethod:
+                    type: string
+                    description: The Http method type of the current request.
+                  requestUri:
+                    type: string
+                    description: The current request uri.
+        '409':
+          description: Image profile with the same name exists.
+        '429':
+          description: Too Many Requests, the server has reached a limit, the request must be sent again at a later time.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Unexpected error.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: an error response.
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code.
+                        key:
+                          type: string
+                          description: The message key.
+                        message:
+                          type: string
+                          description: The error message.
+                        description:
+                          type: string
+                          description: Optional detailed error message.
+                        more_info:
+                          type: string
+                          description: Optional additional information for the message.
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end user.
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level.
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        field:
+                          type: string
+                          description: Only present on field validation errors, indicates the field in error.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                  requestId:
+                    type: string
+                    description: The current request ID.
+                  service:
+                    type: string
+                    description: The name of the service that produced the error.
+                  requestMethod:
+                    type: string
+                    description: The Http method type of the current request.
+                  requestUri:
+                    type: string
+                    description: The current request uri.
+      x-ibm-dx-security-user-roles:
+      - admin
+      - manager
+      tags:
+      - Authoring image profiles
+    get:
+      summary: Retrieve all image profiles in the database.
+      description: 'Use the /image-profiles endpoint to retrieve all image profiles from the database.<br />User roles: admin, manager, editor, viewer'
+      parameters:
+      - name: offset
+        in: query
+        description: Use the offset parameter to specify the number of image profiles to skip and return the rest.
+        required: false
+        schema:
+          type: number
+          format: integer
+          default: 0
+      - name: limit
+        in: query
+        description: Set the limit for the number of image profiles that are returned.
+        required: false
+        schema:
+          type: number
+          format: integer
+          default: 50
+      - name: format
+        in: query
+        required: false
+        description: "Specify the result format.\n * `feed` - (default) returns a wrapper with links\n * `array` - returns just the array of results\n * `sequence` - each result is a separate JSON document on a new line\n"
+        schema:
+          type: string
+          enum:
+          - feed
+          - array
+          - sequence
+      - name: pageMode
+        in: query
+        required: false
+        description: "Specify the next and previous page link mode.\n * `offset` - (default) allows paging forward or backwards, but only a small number of times\n * `deep` - uses index keys to efficiently page through a large result set, but only in one direction\n"
+        schema:
+          type: string
+          enum:
+          - offset
+          - deep
+      - name: order
+        in: query
+        description: Specify whether you want the image profiles to be returned in ascending/alphabetical (default) or descending/reverse-alphabetical order.
+        required: false
+        schema:
+          type: string
+          enum:
+          - ascending
+          - descending
+          default: ascending
+      - name: fields
+        in: query
+        description: Only the image profile fields that are specified here are returned for each result. Any image profile field is a valid value and can be specified as a comma-separated list.
+        required: false
+        schema:
+          type: string
+      - name: include
+        in: query
+        description: "Specifies additional fields to include with each result.\nValid options are:\n     * all: Adds all current and future additional fields to the response.\nWhen used in-conjunction with the 'fields' option, both the fields that are specified in the 'fields' option and the fields in the 'include' option are returned.\n"
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: A query result that returns image profiles.
+                properties:
+                  offset:
+                    type: integer
+                    description: number of results to skip.
+                  limit:
+                    type: integer
+                    description: number of results to return.
+                  href:
+                    type: string
+                    description: the url of the current query.
+                  next:
+                    type: string
+                    description: the url for the next page of results. Only present if there are more results.
+                  previous:
+                    type: string
+                    description: the url for the previous page of results. Not present when on the first page.
+                  items:
+                    type: array
+                    items:
+                      type: object
+                      description: An existing image profile.
+                      properties:
+                        id:
+                          type: string
+                          description: The ID of the image profile.
+                          pattern: ^[a-zA-Z0-9*.\-+_~$!',()]*$
+                          minLength: 1
+                        rev:
+                          type: string
+                          description: The current revision of the image profile.
+                          minLength: 1
+                        name:
+                          type: string
+                          description: The name of the image profile.
+                          pattern: ^[a-zA-Z0-9*. \-+_~$!',()]*$
+                          minLength: 1
+                        description:
+                          type: string
+                          description: The description of the image profile.
+                          pattern: ^[a-zA-Z0-9*. \-+_~$!',()]*$
+                        classification:
+                          enum:
+                          - image-profile
+                        creatorId:
+                          type: string
+                          description: The ID of the user that created the image profile.
+                          minLength: 1
+                        creator:
+                          type: string
+                          description: 'The display name of the user that created the image profile. This field is only returned when the ''include'' query string option is set to ''ALL'' or ''metadata''.
+
+                            This field is read only.
+
+                            '
+                        created:
+                          type: string
+                          description: The created date of this image profile in ISO 8601 with the format YYYY-MM-DDThh:mm:ss.sssZ. This field is read only.
+                          format: date-time
+                          minLength: 1
+                        lastModifierId:
+                          type: string
+                          description: The ID of the user that last modified the image profile.
+                          minLength: 1
+                        lastModifier:
+                          type: string
+                          description: 'The display name of the last user that modified the image profile. This field is only returned when the ''include'' query string option is set to ''ALL'' or ''metadata''.
+
+                            This field is read only.
+
+                            '
+                        lastModified:
+                          type: string
+                          description: The last modified date of this image profile in ISO 8601 with the format YYYY-MM-DDThh:mm:ss.sssZ. This field is read only.
+                          format: date-time
+                          minLength: 1
+                        tags:
+                          type: array
+                          items:
+                            type: string
+                          uniqueItems: true
+                          example:
+                          - news
+                          - sample
+                        dimensions:
+                          type: array
+                          items:
+                            type: object
+                            description: A indiviual dimension within an image profile.
+                            properties:
+                              label:
+                                type: string
+                                description: The dimension label.
+                              key:
+                                type: string
+                                description: The dimension key.
+                              description:
+                                type: string
+                                description: The description of the dimension.
+                              width:
+                                type: number
+                                description: The dimension's width
+                              height:
+                                type: number
+                                description: The dimension's height
+                        isSystem:
+                          type: boolean
+                          description: Indicates whether this item is a 'system item' or not.
+                          default: false
+                      required:
+                      - rev
+                      - name
+                      - classification
+                      - creatorId
+                      - dimensions
+        '429':
+          description: Too Many Requests, the server has reached a limit, the request must be sent again at a later time.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      x-ibm-dx-security-user-roles:
+      - admin
+      - manager
+      - editor
+      - viewer
+      tags:
+      - Authoring image profiles
+  /authoring/v1/image-profiles/count:
+    get:
+      summary: Retrieve the total number of image profiles.
+      description: 'Use the /image-profiles/count endpoint to obtain the total number of image profiles within the database.<br />User roles: admin, manager, editor, viewer'
+      responses:
+        '200':
+          description: image-profile count
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  count:
+                    type: integer
+        '429':
+          description: Too Many Requests, the server has reached a limit, the request must be sent again at a later time.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        default:
+          description: Unexpected error.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: an error response.
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code.
+                        key:
+                          type: string
+                          description: The message key.
+                        message:
+                          type: string
+                          description: The error message.
+                        description:
+                          type: string
+                          description: Optional detailed error message.
+                        more_info:
+                          type: string
+                          description: Optional additional information for the message.
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end user.
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level.
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        field:
+                          type: string
+                          description: Only present on field validation errors, indicates the field in error.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                  requestId:
+                    type: string
+                    description: The current request ID.
+                  service:
+                    type: string
+                    description: The name of the service that produced the error.
+                  requestMethod:
+                    type: string
+                    description: The Http method type of the current request.
+                  requestUri:
+                    type: string
+                    description: The current request uri.
+      x-ibm-dx-security-user-roles:
+      - admin
+      - manager
+      - editor
+      - viewer
+      tags:
+      - Authoring image profiles
+  /authoring/v1/image-profiles/{id}:
+    put:
+      summary: Update an existing image profile.
+      description: 'Use the /image-profiles/{id} end-point to update an existing image profile within the database.<br />User roles: admin, manager'
+      parameters:
+      - name: id
+        in: path
+        description: The ID of the image profile document to update.
+        required: true
+        schema:
+          type: string
+      - name: forceOverride
+        in: query
+        description: Specifies whether revision checking should be disabled.
+        required: false
+        schema:
+          type: boolean
+          default: false
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              description: An existing image profile.
+              properties:
+                id:
+                  type: string
+                  description: The ID of the image profile.
+                  pattern: ^[a-zA-Z0-9*.\-+_~$!',()]*$
+                  minLength: 1
+                rev:
+                  type: string
+                  description: The current revision of the image profile.
+                  minLength: 1
+                name:
+                  type: string
+                  description: The name of the image profile.
+                  pattern: ^[a-zA-Z0-9*. \-+_~$!',()]*$
+                  minLength: 1
+                description:
+                  type: string
+                  description: The description of the image profile.
+                  pattern: ^[a-zA-Z0-9*. \-+_~$!',()]*$
+                classification:
+                  enum:
+                  - image-profile
+                creatorId:
+                  type: string
+                  description: The ID of the user that created the image profile.
+                  minLength: 1
+                creator:
+                  type: string
+                  description: 'The display name of the user that created the image profile. This field is only returned when the ''include'' query string option is set to ''ALL'' or ''metadata''.
+
+                    This field is read only.
+
+                    '
+                created:
+                  type: string
+                  description: The created date of this image profile in ISO 8601 with the format YYYY-MM-DDThh:mm:ss.sssZ. This field is read only.
+                  format: date-time
+                  minLength: 1
+                lastModifierId:
+                  type: string
+                  description: The ID of the user that last modified the image profile.
+                  minLength: 1
+                lastModifier:
+                  type: string
+                  description: 'The display name of the last user that modified the image profile. This field is only returned when the ''include'' query string option is set to ''ALL'' or ''metadata''.
+
+                    This field is read only.
+
+                    '
+                lastModified:
+                  type: string
+                  description: The last modified date of this image profile in ISO 8601 with the format YYYY-MM-DDThh:mm:ss.sssZ. This field is read only.
+                  format: date-time
+                  minLength: 1
+                tags:
+                  type: array
+                  items:
+                    type: string
+                  uniqueItems: true
+                  example:
+                  - news
+                  - sample
+                dimensions:
+                  type: array
+                  items:
+                    type: object
+                    description: A indiviual dimension within an image profile.
+                    properties:
+                      label:
+                        type: string
+                        description: The dimension label.
+                      key:
+                        type: string
+                        description: The dimension key.
+                      description:
+                        type: string
+                        description: The description of the dimension.
+                      width:
+                        type: number
+                        description: The dimension's width
+                      height:
+                        type: number
+                        description: The dimension's height
+                isSystem:
+                  type: boolean
+                  description: Indicates whether this item is a 'system item' or not.
+                  default: false
+              required:
+              - rev
+              - name
+              - classification
+              - creatorId
+              - dimensions
+        description: Contains the updated image profile object to save.
+        required: true
+      responses:
+        '200':
+          description: Success.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: An existing image profile.
+                properties:
+                  id:
+                    type: string
+                    description: The ID of the image profile.
+                    pattern: ^[a-zA-Z0-9*.\-+_~$!',()]*$
+                    minLength: 1
+                  rev:
+                    type: string
+                    description: The current revision of the image profile.
+                    minLength: 1
+                  name:
+                    type: string
+                    description: The name of the image profile.
+                    pattern: ^[a-zA-Z0-9*. \-+_~$!',()]*$
+                    minLength: 1
+                  description:
+                    type: string
+                    description: The description of the image profile.
+                    pattern: ^[a-zA-Z0-9*. \-+_~$!',()]*$
+                  classification:
+                    enum:
+                    - image-profile
+                  creatorId:
+                    type: string
+                    description: The ID of the user that created the image profile.
+                    minLength: 1
+                  creator:
+                    type: string
+                    description: 'The display name of the user that created the image profile. This field is only returned when the ''include'' query string option is set to ''ALL'' or ''metadata''.
+
+                      This field is read only.
+
+                      '
+                  created:
+                    type: string
+                    description: The created date of this image profile in ISO 8601 with the format YYYY-MM-DDThh:mm:ss.sssZ. This field is read only.
+                    format: date-time
+                    minLength: 1
+                  lastModifierId:
+                    type: string
+                    description: The ID of the user that last modified the image profile.
+                    minLength: 1
+                  lastModifier:
+                    type: string
+                    description: 'The display name of the last user that modified the image profile. This field is only returned when the ''include'' query string option is set to ''ALL'' or ''metadata''.
+
+                      This field is read only.
+
+                      '
+                  lastModified:
+                    type: string
+                    description: The last modified date of this image profile in ISO 8601 with the format YYYY-MM-DDThh:mm:ss.sssZ. This field is read only.
+                    format: date-time
+                    minLength: 1
+                  tags:
+                    type: array
+                    items:
+                      type: string
+                    uniqueItems: true
+                    example:
+                    - news
+                    - sample
+                  dimensions:
+                    type: array
+                    items:
+                      type: object
+                      description: A indiviual dimension within an image profile.
+                      properties:
+                        label:
+                          type: string
+                          description: The dimension label.
+                        key:
+                          type: string
+                          description: The dimension key.
+                        description:
+                          type: string
+                          description: The description of the dimension.
+                        width:
+                          type: number
+                          description: The dimension's width
+                        height:
+                          type: number
+                          description: The dimension's height
+                  isSystem:
+                    type: boolean
+                    description: Indicates whether this item is a 'system item' or not.
+                    default: false
+                required:
+                - rev
+                - name
+                - classification
+                - creatorId
+                - dimensions
+        '400':
+          description: Invalid ID or Invalid input.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: an error response.
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code.
+                        key:
+                          type: string
+                          description: The message key.
+                        message:
+                          type: string
+                          description: The error message.
+                        description:
+                          type: string
+                          description: Optional detailed error message.
+                        more_info:
+                          type: string
+                          description: Optional additional information for the message.
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end user.
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level.
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        field:
+                          type: string
+                          description: Only present on field validation errors, indicates the field in error.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                  requestId:
+                    type: string
+                    description: The current request ID.
+                  service:
+                    type: string
+                    description: The name of the service that produced the error.
+                  requestMethod:
+                    type: string
+                    description: The Http method type of the current request.
+                  requestUri:
+                    type: string
+                    description: The current request uri.
+        '401':
+          description: The user is not authorized to run this action.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: an error response.
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code.
+                        key:
+                          type: string
+                          description: The message key.
+                        message:
+                          type: string
+                          description: The error message.
+                        description:
+                          type: string
+                          description: Optional detailed error message.
+                        more_info:
+                          type: string
+                          description: Optional additional information for the message.
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end user.
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level.
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        field:
+                          type: string
+                          description: Only present on field validation errors, indicates the field in error.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                  requestId:
+                    type: string
+                    description: The current request ID.
+                  service:
+                    type: string
+                    description: The name of the service that produced the error.
+                  requestMethod:
+                    type: string
+                    description: The Http method type of the current request.
+                  requestUri:
+                    type: string
+                    description: The current request uri.
+        '404':
+          description: The document with ID {id} was not found OR Current tenant's database is not provisioned.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: an error response.
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code.
+                        key:
+                          type: string
+                          description: The message key.
+                        message:
+                          type: string
+                          description: The error message.
+                        description:
+                          type: string
+                          description: Optional detailed error message.
+                        more_info:
+                          type: string
+                          description: Optional additional information for the message.
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end user.
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level.
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        field:
+                          type: string
+                          description: Only present on field validation errors, indicates the field in error.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                  requestId:
+                    type: string
+                    description: The current request ID.
+                  service:
+                    type: string
+                    description: The name of the service that produced the error.
+                  requestMethod:
+                    type: string
+                    description: The Http method type of the current request.
+                  requestUri:
+                    type: string
+                    description: The current request uri.
+        '409':
+          description: Another user updated the document since it was last retrieved OR when changing the document name, there is an existing document with the chosen name.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: an error response.
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code.
+                        key:
+                          type: string
+                          description: The message key.
+                        message:
+                          type: string
+                          description: The error message.
+                        description:
+                          type: string
+                          description: Optional detailed error message.
+                        more_info:
+                          type: string
+                          description: Optional additional information for the message.
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end user.
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level.
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        field:
+                          type: string
+                          description: Only present on field validation errors, indicates the field in error.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                  requestId:
+                    type: string
+                    description: The current request ID.
+                  service:
+                    type: string
+                    description: The name of the service that produced the error.
+                  requestMethod:
+                    type: string
+                    description: The Http method type of the current request.
+                  requestUri:
+                    type: string
+                    description: The current request uri.
+        '429':
+          description: Too Many Requests, the server has reached a limit, the request must be sent again at a later time.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Unexpected error.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: an error response.
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code.
+                        key:
+                          type: string
+                          description: The message key.
+                        message:
+                          type: string
+                          description: The error message.
+                        description:
+                          type: string
+                          description: Optional detailed error message.
+                        more_info:
+                          type: string
+                          description: Optional additional information for the message.
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end user.
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level.
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        field:
+                          type: string
+                          description: Only present on field validation errors, indicates the field in error.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                  requestId:
+                    type: string
+                    description: The current request ID.
+                  service:
+                    type: string
+                    description: The name of the service that produced the error.
+                  requestMethod:
+                    type: string
+                    description: The Http method type of the current request.
+                  requestUri:
+                    type: string
+                    description: The current request uri.
+      x-ibm-dx-security-user-roles:
+      - admin
+      - manager
+      tags:
+      - Authoring image profiles
+    delete:
+      summary: Delete an existing image profile.
+      description: 'Use the /image-profiles/{id} endpoint to delete an existing image profile from the database.<br />User roles: admin, manager'
+      parameters:
+      - name: id
+        in: path
+        description: The ID of the image profile to delete.
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success.
+        '400':
+          description: Invalid ID OR Invalid input.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: an error response.
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code.
+                        key:
+                          type: string
+                          description: The message key.
+                        message:
+                          type: string
+                          description: The error message.
+                        description:
+                          type: string
+                          description: Optional detailed error message.
+                        more_info:
+                          type: string
+                          description: Optional additional information for the message.
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end user.
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level.
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        field:
+                          type: string
+                          description: Only present on field validation errors, indicates the field in error.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                  requestId:
+                    type: string
+                    description: The current request ID.
+                  service:
+                    type: string
+                    description: The name of the service that produced the error.
+                  requestMethod:
+                    type: string
+                    description: The Http method type of the current request.
+                  requestUri:
+                    type: string
+                    description: The current request uri.
+        '401':
+          description: The user is not authorized to run this action.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: an error response.
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code.
+                        key:
+                          type: string
+                          description: The message key.
+                        message:
+                          type: string
+                          description: The error message.
+                        description:
+                          type: string
+                          description: Optional detailed error message.
+                        more_info:
+                          type: string
+                          description: Optional additional information for the message.
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end user.
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level.
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        field:
+                          type: string
+                          description: Only present on field validation errors, indicates the field in error.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                  requestId:
+                    type: string
+                    description: The current request ID.
+                  service:
+                    type: string
+                    description: The name of the service that produced the error.
+                  requestMethod:
+                    type: string
+                    description: The Http method type of the current request.
+                  requestUri:
+                    type: string
+                    description: The current request uri.
+        '404':
+          description: The document with ID {id} was not found OR Current tenant's database is not provisioned.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: an error response.
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code.
+                        key:
+                          type: string
+                          description: The message key.
+                        message:
+                          type: string
+                          description: The error message.
+                        description:
+                          type: string
+                          description: Optional detailed error message.
+                        more_info:
+                          type: string
+                          description: Optional additional information for the message.
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end user.
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level.
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        field:
+                          type: string
+                          description: Only present on field validation errors, indicates the field in error.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                  requestId:
+                    type: string
+                    description: The current request ID.
+                  service:
+                    type: string
+                    description: The name of the service that produced the error.
+                  requestMethod:
+                    type: string
+                    description: The Http method type of the current request.
+                  requestUri:
+                    type: string
+                    description: The current request uri.
+        '429':
+          description: Too Many Requests, the server has reached a limit, the request must be sent again at a later time.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Unexpected error.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: an error response.
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code.
+                        key:
+                          type: string
+                          description: The message key.
+                        message:
+                          type: string
+                          description: The error message.
+                        description:
+                          type: string
+                          description: Optional detailed error message.
+                        more_info:
+                          type: string
+                          description: Optional additional information for the message.
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end user.
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level.
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        field:
+                          type: string
+                          description: Only present on field validation errors, indicates the field in error.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                  requestId:
+                    type: string
+                    description: The current request ID.
+                  service:
+                    type: string
+                    description: The name of the service that produced the error.
+                  requestMethod:
+                    type: string
+                    description: The Http method type of the current request.
+                  requestUri:
+                    type: string
+                    description: The current request uri.
+      x-ibm-dx-security-user-roles:
+      - admin
+      - manager
+      tags:
+      - Authoring image profiles
+    get:
+      summary: Retrieve an existing image profile.
+      description: 'Use the /image-profiles/{id} end-point to retrieve an existing image profile from the database.<br />User roles: admin, manager, editor, viewer'
+      parameters:
+      - name: id
+        in: path
+        description: The ID of the image profile to retrieve.
+        required: true
+        schema:
+          type: string
+      - name: fields
+        in: query
+        description: A comma separated list that when specified, limits the fields returned to just those specified. Any type document field is a valid value.
+        required: false
+        schema:
+          type: string
+      - name: include
+        in: query
+        description: "A comma separated list of additional fields (which are normally hidden) to add to the response.\nValid options are:\n     * metadata: Adds additional details such as creator and last modifier to the response.\n     * all: Adds all current and future additional fields to the response.\nWhen used in-conjunction with the 'fields' option, both sets of fields are returned. ie. those specified in the 'fields' option and those specified in the 'include' option.\n"
+        required: false
+        schema:
+          type: string
+      - name: If-None-Match
+        in: header
+        description: Provide an Etag value from a previous request to check whether the image profile retrieved is the most recent version. If the image profile is the most recent version, the call returns a 304 ( Not modified) message instead of sending the image profile back.
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success.
+          headers:
+            Etag:
+              description: The Etag value helps identify this document in future requests.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: object
+                description: An existing image profile.
+                properties:
+                  id:
+                    type: string
+                    description: The ID of the image profile.
+                    pattern: ^[a-zA-Z0-9*.\-+_~$!',()]*$
+                    minLength: 1
+                  rev:
+                    type: string
+                    description: The current revision of the image profile.
+                    minLength: 1
+                  name:
+                    type: string
+                    description: The name of the image profile.
+                    pattern: ^[a-zA-Z0-9*. \-+_~$!',()]*$
+                    minLength: 1
+                  description:
+                    type: string
+                    description: The description of the image profile.
+                    pattern: ^[a-zA-Z0-9*. \-+_~$!',()]*$
+                  classification:
+                    enum:
+                    - image-profile
+                  creatorId:
+                    type: string
+                    description: The ID of the user that created the image profile.
+                    minLength: 1
+                  creator:
+                    type: string
+                    description: 'The display name of the user that created the image profile. This field is only returned when the ''include'' query string option is set to ''ALL'' or ''metadata''.
+
+                      This field is read only.
+
+                      '
+                  created:
+                    type: string
+                    description: The created date of this image profile in ISO 8601 with the format YYYY-MM-DDThh:mm:ss.sssZ. This field is read only.
+                    format: date-time
+                    minLength: 1
+                  lastModifierId:
+                    type: string
+                    description: The ID of the user that last modified the image profile.
+                    minLength: 1
+                  lastModifier:
+                    type: string
+                    description: 'The display name of the last user that modified the image profile. This field is only returned when the ''include'' query string option is set to ''ALL'' or ''metadata''.
+
+                      This field is read only.
+
+                      '
+                  lastModified:
+                    type: string
+                    description: The last modified date of this image profile in ISO 8601 with the format YYYY-MM-DDThh:mm:ss.sssZ. This field is read only.
+                    format: date-time
+                    minLength: 1
+                  tags:
+                    type: array
+                    items:
+                      type: string
+                    uniqueItems: true
+                    example:
+                    - news
+                    - sample
+                  dimensions:
+                    type: array
+                    items:
+                      type: object
+                      description: A indiviual dimension within an image profile.
+                      properties:
+                        label:
+                          type: string
+                          description: The dimension label.
+                        key:
+                          type: string
+                          description: The dimension key.
+                        description:
+                          type: string
+                          description: The description of the dimension.
+                        width:
+                          type: number
+                          description: The dimension's width
+                        height:
+                          type: number
+                          description: The dimension's height
+                  isSystem:
+                    type: boolean
+                    description: Indicates whether this item is a 'system item' or not.
+                    default: false
+                required:
+                - rev
+                - name
+                - classification
+                - creatorId
+                - dimensions
+        '304':
+          description: Not modified is returned when using If-None-Match header and the value matches the latest version of the item.
+        '404':
+          description: The document with ID {id} was not found OR Current tenant's database is not provisioned.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: an error response.
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code.
+                        key:
+                          type: string
+                          description: The message key.
+                        message:
+                          type: string
+                          description: The error message.
+                        description:
+                          type: string
+                          description: Optional detailed error message.
+                        more_info:
+                          type: string
+                          description: Optional additional information for the message.
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end user.
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level.
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        field:
+                          type: string
+                          description: Only present on field validation errors, indicates the field in error.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                  requestId:
+                    type: string
+                    description: The current request ID.
+                  service:
+                    type: string
+                    description: The name of the service that produced the error.
+                  requestMethod:
+                    type: string
+                    description: The Http method type of the current request.
+                  requestUri:
+                    type: string
+                    description: The current request uri.
+        '429':
+          description: Too Many Requests, the server has reached a limit, the request must be sent again at a later time.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      x-ibm-dx-security-user-roles:
+      - admin
+      - manager
+      - editor
+      - viewer
+      tags:
+      - Authoring image profiles
+  /authoring/v1/image-profiles/views/by-modified:
+    get:
+      summary: Retrieve all image profiles in the database ordered by last modified date.
+      description: 'Use the /image-profiles/views/by-modified endpoint to retrieve all image profiles from the database and list them in the order of their last modified date.<br />User roles: admin, manager, editor, viewer'
+      parameters:
+      - name: start
+        in: query
+        required: false
+        description: 'Provide the date and time of when the last modifications were made to the image profiles that you want returned.
+
+          When the order is ascending (default), the image profiles that are modified on or after this date and time are returned.
+
+          When the order is descending, the image profiles that are modified on or before this date and time are returned.
+
+          The date value must be in the ISO 8601 format YYYY-MM-DD T hh:mm:ss:sssZ.
+
+          '
+        schema:
+          type: string
+          format: date-time
+      - name: end
+        in: query
+        required: false
+        description: 'Provide the date and time of when the last modifications were made to the image profiles that you want returned.
+
+          When the order is ascending (default), the image profiles that are modified on or before this date and time are returned.
+
+          When the order is descending, the image profiles that are modified on or after this date and time are returned.
+
+          The date value must be in the ISO 8601 format YYYY-MM-DD T hh:mm:ss:sssZ.
+
+          '
+        schema:
+          type: string
+          format: date-time
+      - name: startId
+        in: query
+        required: false
+        description: 'If start does not uniquely identify the result to start from, you can specify the UUID of the result as startId.
+
+          '
+        schema:
+          type: string
+      - name: endId
+        in: query
+        required: false
+        description: 'If end does not uniquely identify the result to end at, you can specify the UUID of the result as endId.
+
+          '
+        schema:
+          type: string
+      - name: offset
+        in: query
+        description: Use the offset parameter to specify the number of image profiles to skip and return the rest.
+        required: false
+        schema:
+          type: number
+          format: integer
+          default: 0
+      - name: limit
+        in: query
+        description: Set the limit for the number of image profiles that are returned.
+        required: false
+        schema:
+          type: number
+          format: integer
+          default: 50
+      - name: format
+        in: query
+        required: false
+        description: "Specify the result format.\n * `feed` - (default) returns a wrapper with links\n * `array` - returns just the array of results\n * `sequence` - each result is a separate JSON document on a new line\n"
+        schema:
+          type: string
+          enum:
+          - feed
+          - array
+          - sequence
+      - name: pageMode
+        in: query
+        required: false
+        description: "Specify the next and previous page link mode.\n * `offset` - (default) allows paging forward or backwards, but only a small number of times\n * `deep` - uses index keys to efficiently page through a large result set, but only in one direction\n"
+        schema:
+          type: string
+          enum:
+          - offset
+          - deep
+      - name: order
+        in: query
+        description: Specify whether you want the image profiles to be returned in ascending/oldest-first (default) or descending/newest-first order.
+        required: false
+        schema:
+          type: string
+          enum:
+          - ascending
+          - descending
+          default: ascending
+      - name: fields
+        in: query
+        description: Only the image profile fields that are specified here are returned for each result. Any image profile field is a valid value and can be specified as a comma-separated list.
+        required: false
+        schema:
+          type: string
+      - name: include
+        in: query
+        description: "Specifies additional fields to include with each result.\nValid options are:\n     * all: Adds all current and future additional fields to the response.\nWhen used in-conjunction with the 'fields' option, both the fields that are specified in the 'fields' option and the fields in the 'include' option are returned.\n"
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: A query result that returns image profiles.
+                properties:
+                  offset:
+                    type: integer
+                    description: number of results to skip.
+                  limit:
+                    type: integer
+                    description: number of results to return.
+                  href:
+                    type: string
+                    description: the url of the current query.
+                  next:
+                    type: string
+                    description: the url for the next page of results. Only present if there are more results.
+                  previous:
+                    type: string
+                    description: the url for the previous page of results. Not present when on the first page.
+                  items:
+                    type: array
+                    items:
+                      type: object
+                      description: An existing image profile.
+                      properties:
+                        id:
+                          type: string
+                          description: The ID of the image profile.
+                          pattern: ^[a-zA-Z0-9*.\-+_~$!',()]*$
+                          minLength: 1
+                        rev:
+                          type: string
+                          description: The current revision of the image profile.
+                          minLength: 1
+                        name:
+                          type: string
+                          description: The name of the image profile.
+                          pattern: ^[a-zA-Z0-9*. \-+_~$!',()]*$
+                          minLength: 1
+                        description:
+                          type: string
+                          description: The description of the image profile.
+                          pattern: ^[a-zA-Z0-9*. \-+_~$!',()]*$
+                        classification:
+                          enum:
+                          - image-profile
+                        creatorId:
+                          type: string
+                          description: The ID of the user that created the image profile.
+                          minLength: 1
+                        creator:
+                          type: string
+                          description: 'The display name of the user that created the image profile. This field is only returned when the ''include'' query string option is set to ''ALL'' or ''metadata''.
+
+                            This field is read only.
+
+                            '
+                        created:
+                          type: string
+                          description: The created date of this image profile in ISO 8601 with the format YYYY-MM-DDThh:mm:ss.sssZ. This field is read only.
+                          format: date-time
+                          minLength: 1
+                        lastModifierId:
+                          type: string
+                          description: The ID of the user that last modified the image profile.
+                          minLength: 1
+                        lastModifier:
+                          type: string
+                          description: 'The display name of the last user that modified the image profile. This field is only returned when the ''include'' query string option is set to ''ALL'' or ''metadata''.
+
+                            This field is read only.
+
+                            '
+                        lastModified:
+                          type: string
+                          description: The last modified date of this image profile in ISO 8601 with the format YYYY-MM-DDThh:mm:ss.sssZ. This field is read only.
+                          format: date-time
+                          minLength: 1
+                        tags:
+                          type: array
+                          items:
+                            type: string
+                          uniqueItems: true
+                          example:
+                          - news
+                          - sample
+                        dimensions:
+                          type: array
+                          items:
+                            type: object
+                            description: A indiviual dimension within an image profile.
+                            properties:
+                              label:
+                                type: string
+                                description: The dimension label.
+                              key:
+                                type: string
+                                description: The dimension key.
+                              description:
+                                type: string
+                                description: The description of the dimension.
+                              width:
+                                type: number
+                                description: The dimension's width
+                              height:
+                                type: number
+                                description: The dimension's height
+                        isSystem:
+                          type: boolean
+                          description: Indicates whether this item is a 'system item' or not.
+                          default: false
+                      required:
+                      - rev
+                      - name
+                      - classification
+                      - creatorId
+                      - dimensions
+        '429':
+          description: Too Many Requests, the server has reached a limit, the request must be sent again at a later time.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      x-ibm-dx-security-user-roles:
+      - admin
+      - manager
+      - editor
+      - viewer
+      tags:
+      - Authoring image profiles
+components:
+  schemas:
+    ErrorResponse:
+      description: This JSON record represents an error condition.
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            description: This JSON record represents an individual error or warning contained in an error message.
+            type: object
+            properties:
+              code:
+                type: integer
+                description: An error code
+              message:
+                type: string
+                description: A message describing what went wrong.
+              description:
+                type: string
+                description: Further explanation of the error condition and potential next steps to resolve the problem.
+              more_info:
+                type: string
+                description: A URL pointing to a web site that provides more information on the given error condition.
+              level:
+                type: string
+                enum:
+                - ERROR
+                - WARNING
+                description: The severity level of the message. Default is error.
+              parameters:
+                type: object
+                description: Additional properties reflecting the dynamic parts of the error condition.
+              cause:
+                type: object
+                description: This property can be used to transport causing error message records produced by a down stream service calls.
+              locale:
+                type: string
+                description: This property represents the locale of the text contained in properties 'message', and 'description'. This property is mandatory if message and description contain translated text.
+            required:
+            - code
+            - message
+        requestId:
+          type: string
+          description: The ID of the failing request.
+        service:
+          type: string
+          description: The name of the service serving the error message.
+      required:
+      - errors
+      - requestId
+x-refined-from:
+- acoustic-content-openapi-original.json
+- acoustic-content-swagger2-original.yaml
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

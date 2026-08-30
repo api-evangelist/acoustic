@@ -1,0 +1,280 @@
+openapi: 3.2.0
+info:
+  title: Acoustic Authoring Import API
+  version: 1.0.142
+  x-ibm-name: ibm-watson-content-hub-api
+  description: 'Operations tagged Authoring Import across 2 of this provider''s published API definitions: acoustic-content-openapi-original.json, acoustic-content-swagger2-original.yaml. Each path carries the servers of the definition it was published in.'
+tags:
+- name: Authoring Import
+  description: Provides generic copying and importing functionality
+paths:
+  /authoring/v1/copy/sync:
+    post:
+      tags:
+      - Authoring Import
+      summary: Copies the specified documents.
+      x-ibm-dx-security-user-roles:
+      - admin
+      - manager
+      description: 'Use the `/authoring/v1/copy/sync` endpoint to copy the specified documents for the current tenant.
+
+        Currently supported document classifications are `asset` and `content`.
+
+        As for all Acoustic Content PUT and POST requests, the Content-Type header should be set to application/json.
+
+        <br />User roles: admin, manager'
+      parameters:
+      - name: referencesToClear
+        in: query
+        description: 'Optional comma separated list of reference types to clear within copied documents.
+
+          Supported values: `asset`, `content`, `category`, `image-profile`
+
+          '
+        required: false
+        schema:
+          type: string
+      - name: referencesToClone
+        in: query
+        description: 'Optional comma separated list of reference types to copy (when referenceLevels > 0).
+
+          Defaults to the reference types of the initial items to copy.
+
+          Supported values: asset, content
+
+          '
+        required: false
+        schema:
+          type: string
+      - name: referenceLevels
+        in: query
+        description: The number of reference levels to copy. Defaults to 0, meaning to copy only the specified items.
+        required: false
+        schema:
+          type: number
+      - name: clearElementsOnLastLevel
+        in: query
+        description: 'Specifies whether the elements on the last level of references should have their elements cleared.
+
+          Has no effect when referencesLevels is not greater than zero.
+
+          '
+        schema:
+          type: boolean
+      - name: x-ibm-dx-publish-priority
+        in: header
+        description: Specify `now` to bypass the publishing schedule.
+        schema:
+          type: string
+          format: string
+          enum:
+          - now
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              description: 'The items to copy. The items need to be either ready OR belong to same project. Additional parameters "name", "add" and "remove" can be passed with each item to modify the name and add or remove a property from the copied item. Format is "[classification]:[id]?name=[custom-name];remove={\"kind\":[\"sample\"],\"description\":\"\"};add={\"kind\":[\"email\"]}"
+
+                The above parameters mean that the
+
+                (a) name of the copied item would be <custom-name>.
+
+                (b) "email" will be added to the "kind" array in the copied object.
+
+                (c) "sample" will be removed from "kind" array in the copied object.
+
+                (d) "description" will be removed from the copied object.
+
+                '
+              items:
+                type: string
+              example:
+              - content:2fd35e68-b4d2-4608-8dbe-82c42b321bd9
+              - content:2fd35e68-b4d2-4608-8dbe-82c42b321bd9:draft
+              - content:2fd35e68-b4d2-4608-8dbe-82c42b321bd9?name=custom-name
+              - 'content:2fd35e68-b4d2-4608-8dbe-82c42b321bd9?name=mycontent;remove={"kind": ["sample"]};add={"kind":["email"]'
+        description: The list of documents to copy
+        required: true
+      responses:
+        '200':
+          description: Results of the copy operation.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: A copy operation result.
+                properties:
+                  classification:
+                    type: string
+                    description: the document classification.
+                    enum:
+                    - copy
+                  status:
+                    type: string
+                    description: the status of the copy operation.
+                    enum:
+                    - success
+                    - failed
+                  params:
+                    type: object
+                    description: The list of query parameters applied for the copy operation.
+                    example:
+                      referenceLevels: '5'
+                      referencesToClone: content
+                      clearElementsOnLastLevel: 'false'
+                  rootCopiedItemCount:
+                    type: integer
+                    description: The number of root items copied in this request.
+                  rootCopiedItemList:
+                    type: object
+                    description: A mapping of all root source item ids to the copied item ids.
+                    example:
+                      content:::item1-id: content:::item1-id-copy
+                      content:::item2-id: content:::item2-id-copy
+                  nonrootCopiedItemCount:
+                    type: integer
+                    description: The number of non-root items copied in this request.
+                  nonrootCopiedItemList:
+                    type: object
+                    description: A mapping of all non-root source item ids to the copied item ids.
+                    example:
+                      content:::item1-id: content:::item1-id-copy
+                      content:::item2-id: content:::item2-id-copy
+                  failedToCopyCount:
+                    type: integer
+                    description: The number of source items for which the copy operation failed.
+                  failedToCopyList:
+                    type: object
+                    description: The list of failed source item ids to failure data. Failure data format is 'isRoot:::clearElements'
+                    example:
+                      content:::item1-id-copy: false:::false
+                      content:::item2-id-copy: true:::false
+        '400':
+          description: Tenant header (x-ibm-dx-tenant-id) not specified OR Tenant not found OR copy items belong to different projects.
+        '429':
+          description: Too Many Requests, the server has reached a limit, the request must be sent again at a later time.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Unexpected error.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: an error response.
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code.
+                        key:
+                          type: string
+                          description: The message key.
+                        message:
+                          type: string
+                          description: The error message.
+                        description:
+                          type: string
+                          description: Optional detailed error message.
+                        more_info:
+                          type: string
+                          description: Optional additional information for the message.
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end user.
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level.
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        field:
+                          type: string
+                          description: Only present on field validation errors, indicates the field in error.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                  requestId:
+                    type: string
+                    description: The current request ID.
+                  service:
+                    type: string
+                    description: The name of the service that produced the error.
+                  requestMethod:
+                    type: string
+                    description: The Http method type of the current request.
+                  requestUri:
+                    type: string
+                    description: The current request uri.
+components:
+  schemas:
+    ErrorResponse:
+      description: This JSON record represents an error condition.
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            description: This JSON record represents an individual error or warning contained in an error message.
+            type: object
+            properties:
+              code:
+                type: integer
+                description: An error code
+              message:
+                type: string
+                description: A message describing what went wrong.
+              description:
+                type: string
+                description: Further explanation of the error condition and potential next steps to resolve the problem.
+              more_info:
+                type: string
+                description: A URL pointing to a web site that provides more information on the given error condition.
+              level:
+                type: string
+                enum:
+                - ERROR
+                - WARNING
+                description: The severity level of the message. Default is error.
+              parameters:
+                type: object
+                description: Additional properties reflecting the dynamic parts of the error condition.
+              cause:
+                type: object
+                description: This property can be used to transport causing error message records produced by a down stream service calls.
+              locale:
+                type: string
+                description: This property represents the locale of the text contained in properties 'message', and 'description'. This property is mandatory if message and description contain translated text.
+            required:
+            - code
+            - message
+        requestId:
+          type: string
+          description: The ID of the failing request.
+        service:
+          type: string
+          description: The name of the service serving the error message.
+      required:
+      - errors
+      - requestId
+x-refined-from:
+- acoustic-content-openapi-original.json
+- acoustic-content-swagger2-original.yaml
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

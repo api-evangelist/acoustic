@@ -1,0 +1,382 @@
+openapi: 3.2.0
+info:
+  title: Acoustic Authoring context search API
+  version: 1.0.142
+  x-ibm-name: ibm-watson-content-hub-api
+  description: 'Operations tagged Authoring context search across 2 of this provider''s published API definitions: acoustic-content-openapi-original.json, acoustic-content-swagger2-original.yaml. Each path carries the servers of the definition it was published in.'
+tags:
+- name: Authoring context search
+  description: "The Authoring context search is a discretional middleware service that is positioned before the Search service. Use the Authoring context search Rest APIs to retrieve user targeted content items. You can target specific content items by providing the condition requests as filters. The filters that are currently supported by the API are  \n1. `accept-language` : Use this filter to target content items in a language of your preference.  \n2. `location` : Use this filter to target content items that are available in a location, that is, proximity to current location (within `distance` radius) of your preference.\n3. `similar` : Use this filter to target content items or assets that are similar to a specified item.\n"
+paths:
+  /authoring/v1/contextualsearch:
+    get:
+      tags:
+      - Authoring context search
+      x-ibm-dx-security-user-roles:
+      - admin
+      - manager
+      - editor
+      - viewer
+      summary: Retrieve contextual search results from the authoring collection.
+      description: "Use the /authoring/v1/contextualsearch endpoint to retrieve contextual search results from the authoring collection based on the passed filters.\nSee the Authoring Search documents on the Content API for details of the main search service parameters.\n#### Current filters\n* `accept-language` Searches for content with matching languages. If this filter is specified the `accept-language` request header must be specified with the ordered list of languages to search with. The search iterates through all of the languages in order until a language returns one or more matching content items or the service has completed the search for all the languages without finding any results. If the search returns content items the response header `content-language` is set to the language that returned those content items, otherwise this header is not returned in the response.\n* `proximity` Searches for content located within a certain radius of a specified location. `proximity` is used in combination with `distance` which is the bounding radius around the location. You can specify the location with the `position` parameter. If the parameter is not provided the location is read from the `X-Akamai-Edgescape` header. If the distance parameter is not provided distance is defaulted to 5.\n* `similar` Searches for content or assets that are similar to a specified item. `similar` uses the tags added by AI, a user, or included in the asset, such as image metadata tags to search. The content and assets with matching tags to the specified item are returned. Based on the number of tags that match a 'score' is calculated for each content and asset, the bigger the number of matching tags the higher the score. The results are returned as an ordered array response that starts with items with the highest `score` and lists them in a descending order. Note: Since the specified item in the query would be a perfect match, it is not returned as a result.\n#### Examples\n* **Search by proximity by using user's location:**  \n`q`=type:article&`fl`=description&`filter`=proximity&`distance`=50  \nSearches all content of the type `article` and returns items that are found within 50 km of user's location.\n\n\n* **Search by proximity by providing a location:**  \n`q`=type:article&`fl`=description&`filter`=proximity&`distance`=50&`position`=37.25,-5.796  \nSearches all content of the type `article` and returns items that are found within 50 km of the location that is specifed in the `position` parameter.\n\n\n* **Search by language (setting the `accept-language` request header):**  \n`q`=type:article&`fl`=description&`filter`=accept-language  \n`accept-language` de  \nSearches all content of the type `article` and returns items where the language is set to `German [de]`.\n\n\n* **Search by language with ordered language list (setting the `accept-language` request header):**  \n`q`=type:article&`fl`=description&`filter`=accept-language  \n`accept-language` en,de;q=0.5  \nSearches all content of the type 'article` and returns items where the language is set to `English [en]`. Then, proceeds to search all content of the type `article` for `German [de]` if no content is found for `English`.\n\n\n* **Search for images similar to a specified image:**  \n`q`=\\*:\\*&`filter`=similar&`similar-source-id`=acd-23-564-09-asdf&`similar-source-classification`=asset&fq=assetType:image&rows=100  \nThe search returns images that are similar to the item with the specified ID (`similar-source-id`) and classification (`similar-source-classification`). The results are sorted in order of descending `score` by default.\n\n\n* **Search for images similar to a specified image and sort results in ascending `score` order:**  \n`q`=\\*:\\*&`filter`=similar&`similar-source-id`=acd-23-564-09-asdf&`similar-source-classification`=asset&sort=score asc&fq=assetType:image&rows=100  \nThe search returns images that are similar to the item with the specified ID (`similar-source-id`) and classification (`similar-source-classification`). The results are sorted in order of ascending score.\n\n\n* **Search for images similar to a specified image and sort results in ascending `lastModified` order:**  \n`q`=\\*:\\*&`filter`=similar&`similar-source-id`=acd-23-564-09-asdf&`similar-source-classification`=asset&sort=lastModified asc&fq=assetType:image&rows=100  \nThe search returns images that are similar to the item with the specified ID (`similar-source-id`) and classification (`similar-source-classification`). The results are sorted in order of ascending last modified date.\n\n\n* **Apply location and language filters (setting the `accept-language` request header):**  \n`q`=type:article&`fl`=description&`filter`=proximity&`filter`=accept-language&`position`=0,0  \n`accept-language` en,de;q=0.5  \nSearches all content of the type `article` and returns items where the language is set to `English [en]` and the `location` is within a 5 km radius around the coordinates 0-degrees latitude and 0-degrees longitude. Then, proceeds to search all content of the type article for `German [de]` and `location` within a 5 km radius around the coordinates 0-degrees latitude and 0-degrees longitude if no content is found for `English` based search.\n\n\n* **Apply similar, location, and language filters (setting the `accept-language` request header):**  \n`q`=\\*:\\*&`fl`=description&`filter`=proximity&`filter`=accept-language&`position`=0,0&`filter`=similar&`similar-source-id`=acd-23-564-09-asdf&`similar-source-classification`=content&fq=classification:content&rows=100  \n`accept-language` en  \nThe search returns any type of content which meets all of the following criteria:  \n  1. `location` is within a radius of 5 km around the coordinates 0-degrees latitude and 0-degrees longitude  \n  2. language is set to `English [de]`  \n  3. similar to the item with specified id (`similar-source-id`) and classification (`similar-source-classification`).  \n<br />User roles: admin, manager, editor, viewer"
+      parameters:
+      - name: filter
+        in: query
+        description: Use the filter parameter to specify the type of contextual filters to apply, it can be used multiple times to apply multiple filters.
+        required: false
+        schema:
+          type: string
+          format: string
+      - name: position
+        description: Provide the center point for a proximity search by using the format "latitude,longitude".
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: distance
+        in: query
+        description: Provide the value for distance that specifies the bounding radius around the location. The default value is 5.
+        required: false
+        schema:
+          type: number
+          format: double
+          default: 5
+      - name: metric
+        in: query
+        description: 'Provide the metric that is used for the distance value.
+
+          Acceptable values are km (kilometers) and mi (miles).
+
+          The default value is km.
+
+          '
+        required: false
+        schema:
+          type: string
+          format: string
+          default: km
+      - name: accept-language
+        in: header
+        description: "Provide the ordered list of preferred languages in the request to filter the retrieved search results.  \nThis header must be provided if the filter to be applied is `accept-language` (a web browser would provide this header by default).\n"
+        required: false
+        schema:
+          type: string
+          format: string
+      - name: similar-source-id
+        in: query
+        description: "Provide the ID (uuid) of the item on which to base the `similar` search.  \nThis parameter is required if the filter to be applied is `similar`.\n"
+        required: false
+        schema:
+          type: string
+          format: string
+      - name: similar-source-classification
+        in: query
+        description: "Provide the classification of the item on which to base the `similar` search.  \nFor example, to specify an asset classification, use \"asset\".  \nThis parameter is required if the filter to be applied is `similar`.\n"
+        required: false
+        schema:
+          type: string
+          format: string
+      - name: df
+        description: Either the Solr "df" or "qf" parameter is required. The parameter is supported by the edismax query parser.
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: defType
+        description: The Solr "defType" parameter. Specify defType=edismax to use the edismax query parser.
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: facet
+        description: The Solr "facet" parameter enables faceted search. Always set this parameter to true if you are using the other "facet" parameters.
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: facet.contains
+        description: The Solr "facet.contains" parameter returns only facets that contain this term.
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: facet.containsIgnoreCase
+        description: The Solr "facet.containsIgnoreCase" parameter ignores case when the "facet.contains" parameter is applied.
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: facet.field
+        description: The Solr "facet.field" parameter identifies a field to be used as a facet.
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: facet.limit
+        description: The Solr "facet.limit" parameter specifies a limit for the number of results that are returned for each facet. Default value is 100.
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: facet.offset
+        description: The Solr "facet.offset" parameter specifies an offset into the facet results that are returned and can be used for paging facet results. Default value is 0.
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: facet.prefix
+        description: The Solr "facet.prefix" parameter returns only facets with this prefix.
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: facet.range
+        description: The Solr "facet.range" parameter.
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: facet.range.gap
+        description: The Solr "facet.range.gap" parameter.
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: facet.range.start
+        description: The Solr "facet.range.start" parameter.
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: facet.range.end
+        description: The Solr "facet.range.end" parameter.
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: fl
+        description: The Solr "fl" parameter defines the fields that are returned in the response. By default, the search service returns all fields.
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: fq
+        description: The Solr "fq" parameter applies a filter query to the search results.
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: f.<fieldName>.<FacetParam>
+        description: Many facet parameters can be overridden on a per-field basis by using the syntax "f.<fieldName>.<FacetParam>=<value>". For example, to specify a general limit of 10 terms for all facet fields and a specific limit of five terms for only the "category" facet field, use "facet.limit=10" and "f.category.facet.limit=5".
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: indent
+        description: If the Solr "indent" parameter is not "off" and has a non-blank value, then Solr attempts to indent the XML response such that it is easier to read. The default behavior is not to indent the XML response.
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: q
+        description: The Solr "q" parameter uses Solr/Lucene standard query syntax.
+        in: query
+        required: true
+        schema:
+          type: string
+      - name: qf
+        description: The Solr "qf" parameter is supported by the dismax or edismax query parser.
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: rows
+        description: The Solr "rows" parameter controls how many documents are returned at the most, and can be used for paging query results. The default value is 10. The maximum allowed value is 1000.
+        in: query
+        required: false
+        schema:
+          type: integer
+      - name: start
+        description: The Solr "start" parameter specifies an offset into the responses which are returned and can be used for paging query results. Default value is 0.
+        in: query
+        required: false
+        schema:
+          type: integer
+      - name: sort
+        description: The Solr "sort" parameter controls sorting of the query response. Sorting on not unique fields can cause paging to return duplicate or missing entries in subsequent pages of results. It's recommended to sort by unique field or a combination ex. sort=lastModied desc, status desc.
+        in: query
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Successfully returns the results from the authoring search service after it transforms the query based on the passed filters.
+          headers:
+            content-language:
+              description: 'The language of the returned search results when the accept-language filter is used.
+
+                This header is not present if no results are found for any of the languages listed in the accept-language header.
+
+                '
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  query:
+                    type: string
+              examples:
+                response:
+                  value:
+                    response:
+                      numFound: 359
+                      documents:
+                      - id: '21'
+                        type: article
+                        title: esse anim mollit
+                        description: Commodo excepteur commodo velit aliqua sunt proident mollit.
+                        owner: Harrell Stanton
+                        locale: en_GB
+                        locations:
+                        - -133.250593
+                        - -19.598289
+                        city: Savannah
+                        country: Germany
+                        demographic: teenager
+                        device: desktop
+                        creationDate: '2001-06-09T15:07:30.000Z'
+                        lastModifiedDate: '2001-06-09T15:07:30.000Z'
+                        _version_: '1537298216475688960'
+        '400':
+          description: Bad request - Unable to complete your request due to missing parameters. Provide all required parameters and try again.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+              examples:
+                response:
+                  value:
+                    service: prod-contextual-content-service
+                    requestId: '1983000440420008'
+                    errors:
+                      code: 101
+                      message: Error running query.
+                      level: ERROR
+                      description: Unable to complete the query due to an unexpected error. Try again or contact Acoustic support if problem persists.
+                      locale: en
+        '429':
+          description: Too Many Requests, the server has reached a limit, the request must be sent again at a later time.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        default:
+          description: Unable to complete your request due to an unexpected error. Try again later.
+          content:
+            application/json:
+              schema:
+                title: ErrorMessage
+                description: ErrorMessage
+                type: object
+                properties:
+                  service:
+                    type: string
+                    description: Service name.
+                  requestId:
+                    type: string
+                    description: Request ID.
+                  errors:
+                    type: object
+                    description: Error
+                    title: Error
+                    properties:
+                      code:
+                        type: integer
+                      message:
+                        type: string
+                      level:
+                        type: string
+                      description:
+                        type: string
+                      cause:
+                        type: object
+                        properties:
+                          code:
+                            type: integer
+                          message:
+                            type: string
+                      locale:
+                        type: string
+              examples:
+                response:
+                  value:
+                    service: prod-contextual-content-service
+                    requestId: '455478465455511'
+                    errors:
+                      code: 5004
+                      message: Unexpected error occurred.
+                      level: ERROR
+                      description: Unable to complete the request due to an unexpected error. Try again or contact Acoustic support if problem persists.
+                      locale: en
+components:
+  schemas:
+    ErrorResponse:
+      description: This JSON record represents an error condition.
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            description: This JSON record represents an individual error or warning contained in an error message.
+            type: object
+            properties:
+              code:
+                type: integer
+                description: An error code
+              message:
+                type: string
+                description: A message describing what went wrong.
+              description:
+                type: string
+                description: Further explanation of the error condition and potential next steps to resolve the problem.
+              more_info:
+                type: string
+                description: A URL pointing to a web site that provides more information on the given error condition.
+              level:
+                type: string
+                enum:
+                - ERROR
+                - WARNING
+                description: The severity level of the message. Default is error.
+              parameters:
+                type: object
+                description: Additional properties reflecting the dynamic parts of the error condition.
+              cause:
+                type: object
+                description: This property can be used to transport causing error message records produced by a down stream service calls.
+              locale:
+                type: string
+                description: This property represents the locale of the text contained in properties 'message', and 'description'. This property is mandatory if message and description contain translated text.
+            required:
+            - code
+            - message
+        requestId:
+          type: string
+          description: The ID of the failing request.
+        service:
+          type: string
+          description: The name of the service serving the error message.
+      required:
+      - errors
+      - requestId
+x-refined-from:
+- acoustic-content-openapi-original.json
+- acoustic-content-swagger2-original.yaml
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

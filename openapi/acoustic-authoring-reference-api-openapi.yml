@@ -1,0 +1,818 @@
+openapi: 3.2.0
+info:
+  title: Acoustic Authoring reference API
+  version: 1.0.142
+  x-ibm-name: ibm-watson-content-hub-api
+  description: 'Operations tagged Authoring reference across 2 of this provider''s published API definitions: acoustic-content-openapi-original.json, acoustic-content-swagger2-original.yaml. Each path carries the servers of the definition it was published in.'
+tags:
+- name: Authoring reference
+  description: The Content Authoring reference API is used to retrieve information about references between items in the system. The type of relationships that are tracked  depends on the type of item. Typically, if an item has an editable property that points to an ID of another item, it is tracked. You can use the API to fetch both incoming and outgoing references for any item.
+paths:
+  /authoring/v1/references/outgoing:
+    post:
+      tags:
+      - Authoring reference
+      summary: Retrieve the outgoing references for items.
+      description: "Use the `/references/outgoing` endpoint to retrieve outgoing references for items. This endpoint allows batch lookups by allowing multiple items to be looked at the same time\n### Examples: ###\n#### A simple lookup of the outgoing references for one item ####\nThe default depth to look for references in an item is `1`. If it is `depth.reached` and there are more references that are found in the item, the result `code` that is returned indicates that there are more references.\nYou can then either query at a higher depth or query for all items which have non empty `excluded` arrays.\n\nThe results are returned in a key value format with the `references` field where the key is the content hub ID of the item.\n\nIn Graph terminology, each element in the references object is a Node and the array of IDs in the `included` array on each Node is an outgoing edge to another node.\n##### Request: #####\n~~~\n   {\n     \"root\" : \"content:0e28db52-a916-49ea-9bde-9f014bc6f691\"\n   }\n~~~\n##### Response: #####\n~~~\n{\n   \"root\": \"content:0e28db52-a916-49ea-9bde-9f014bc6f691\",\n   \"result\": {\n     \"status\": \"ok\",\n     \"depth\": 1\n   },\n   \"next\": {\n     \"roots\": [\n       [\n         \"content-type:cad2e430-beed-40d0-bb57-1c86c4f912c0\"\n       ]\n     ],\n     \"filters\": {\n       \"filterType\": \"include\",\n       \"classifications\": [],\n       \"statuses\": []\n     },\n     \"depth\": 1,\n     \"metadata\": true,\n     \"fl\": []\n   },\n   \"references\": {\n     \"content:81baa86e-ee94-45de-8e90-b23d8ef84e45\": {\n       \"id\": \"81baa86e-ee94-45de-8e90-b23d8ef84e45\",\n       \"classification\": \"content\",\n       \"included\": [],\n       \"excluded\": [\n         \"content-type:cad2e430-beed-40d0-bb57-1c86c4f912c0\"\n       ]\n     },\n     \"content-type:bd078b79-7e1a-49e0-b3dd-e2540ac93eca\": {\n       \"id\": \"bd078b79-7e1a-49e0-b3dd-e2540ac93eca\",\n       \"classification\": \"content-type\",\n       \"included\": [],\n       \"excluded\": []\n     },\n     \"content:0e28db52-a916-49ea-9bde-9f014bc6f691\": {\n       \"id\": \"0e28db52-a916-49ea-9bde-9f014bc6f691\",\n       \"classification\": \"content\",\n       \"included\": [\n         \"content-type:bd078b79-7e1a-49e0-b3dd-e2540ac93eca\",\n         \"content:81baa86e-ee94-45de-8e90-b23d8ef84e45\"\n       ],\n       \"excluded\": []\n     }\n   }\n }\n~~~\n#### A simple lookup of the outgoing references for one item with metadata ####\nInstead of just getting a graph of content hub IDs, you can also request to retrieve metadata for each item.\n\nThe metadata returned are the default fields that are returned by the authoring search API (`authoring/v1/search`).\n##### Request: #####\n~~~\n   {\n     \"root\" : \"content:0e28db52-a916-49ea-9bde-9f014bc6f691\",\n     \"metadata\" : true\n   }\n~~~\n##### Response: #####\n~~~\n{\n   \"root\": \"content:0e28db52-a916-49ea-9bde-9f014bc6f691\",\n   \"result\": {\n     \"status\": \"ok\",\n     \"depth\": 1\n   },\n   \"references\": {\n     \"content:81baa86e-ee94-45de-8e90-b23d8ef84e45\": {\n       \"id\": \"81baa86e-ee94-45de-8e90-b23d8ef84e45\",\n       \"classification\": \"content\",\n       \"metadata\": {\n         \"id\": \"content:81baa86e-ee94-45de-8e90-b23d8ef84e45\",\n         \"name\": \"Slide7\",\n         \"classification\": \"content\",\n         \"type\": \"Slide\",\n         \"typeId\": \"cad2e430-beed-40d0-bb57-1c86c4f912c0\",\n         \"locale\": \"en\",\n         \"lastModified\": \"2017-06-09T01:21:31.369Z\",\n         \"lastModifier\": \"Thomas Watson\",\n         \"lastModifierId\": \"8bd88336-648c-46a6-80d4-73c0e81fb4fa\",\n         \"created\": \"2017-06-09T01:21:17.630Z\",\n         \"creator\": \"Thomas Watson\",\n         \"creatorId\": \"8bd88336-648c-46a6-80d4-73c0e81fb4fa\",\n         \"status\": \"ready\"\n       },\n       \"included\": [],\n       \"excluded\": [\n         \"content-type:cad2e430-beed-40d0-bb57-1c86c4f912c0\"\n       ]\n     },\n     \"content-type:bd078b79-7e1a-49e0-b3dd-e2540ac93eca\": {\n       \"id\": \"bd078b79-7e1a-49e0-b3dd-e2540ac93eca\",\n       \"classification\": \"content-type\",\n       \"metadata\": {\n         \"id\": \"content-type:bd078b79-7e1a-49e0-b3dd-e2540ac93eca\",\n         \"name\": \"Slideshow\",\n         \"classification\": \"content-type\",\n         \"lastModified\": \"2017-06-09T01:18:08.301Z\",\n         \"lastModifier\": \"Thomas Watson\",\n         \"lastModifierId\": \"8bd88336-648c-46a6-80d4-73c0e81fb4fa\",\n         \"created\": \"2017-06-09T01:15:56.578Z\",\n         \"creator\": \"Thomas Watson\",\n         \"creatorId\": \"8bd88336-648c-46a6-80d4-73c0e81fb4fa\",\n         \"status\": \"ready\"\n       },\n       \"included\": [],\n       \"excluded\": []\n     },\n     \"content:0e28db52-a916-49ea-9bde-9f014bc6f691\": {\n       \"id\": \"0e28db52-a916-49ea-9bde-9f014bc6f691\",\n       \"classification\": \"content\",\n       \"metadata\": {\n         \"id\": \"content:0e28db52-a916-49ea-9bde-9f014bc6f691\",\n         \"name\": \"MySlideshow\",\n         \"classification\": \"content\",\n         \"type\": \"Slideshow\",\n         \"typeId\": \"bd078b79-7e1a-49e0-b3dd-e2540ac93eca\",\n         \"locale\": \"en\",\n         \"lastModified\": \"2017-06-09T01:22:34.049Z\",\n         \"lastModifier\": \"Thomas Watson\",\n         \"lastModifierId\": \"8bd88336-648c-46a6-80d4-73c0e81fb4fa\",\n         \"created\": \"2017-06-09T01:18:58.426Z\",\n         \"creator\": \"Thomas Watson\",\n         \"creatorId\": \"8bd88336-648c-46a6-80d4-73c0e81fb4fa\",\n         \"status\": \"ready\"\n       },\n       \"included\": [\n         \"content-type:bd078b79-7e1a-49e0-b3dd-e2540ac93eca\",\n         \"content:81baa86e-ee94-45de-8e90-b23d8ef84e45\"\n       ],\n       \"excluded\": []\n     }\n   }\n }\n~~~\n#### Using fl parameter to request specific metadata fields ####\nJust like the search API, the `fl` parameter can be used to request specific fields, which include the `document` field, which is the entire API representation of the item.\n\nNote: When the `fl` parameter is used, the `id` field is also always returned.\n##### Request: #####\n~~~\n   {\n     \"root\" : \"content:0e28db52-a916-49ea-9bde-9f014bc6f691\",\n     \"metadata\" : true,\n     \"fl\" : [\"name\"]\n   }\n~~~\n##### Response: #####\n~~~\n {\n   \"root\": \"content:0e28db52-a916-49ea-9bde-9f014bc6f691\",\n   \"result\": {\n     \"status\": \"ok\",\n     \"depth\": 1\n   },\n   \"references\": {\n     \"content:81baa86e-ee94-45de-8e90-b23d8ef84e45\": {\n       \"id\": \"81baa86e-ee94-45de-8e90-b23d8ef84e45\",\n       \"classification\": \"content\",\n       \"metadata\": {\n         \"id\": \"content:81baa86e-ee94-45de-8e90-b23d8ef84e45\",\n         \"name\": \"Slide7\"\n       },\n       \"included\": [],\n       \"excluded\": [\n         \"content-type:cad2e430-beed-40d0-bb57-1c86c4f912c0\"\n       ]\n     },\n     \"content-type:bd078b79-7e1a-49e0-b3dd-e2540ac93eca\": {\n       \"id\": \"bd078b79-7e1a-49e0-b3dd-e2540ac93eca\",\n       \"classification\": \"content-type\",\n       \"metadata\": {\n         \"id\": \"content-type:bd078b79-7e1a-49e0-b3dd-e2540ac93eca\",\n         \"name\": \"Slideshow\"\n       },\n       \"included\": [],\n       \"excluded\": []\n     },\n     \"content:0e28db52-a916-49ea-9bde-9f014bc6f691\": {\n       \"id\": \"0e28db52-a916-49ea-9bde-9f014bc6f691\",\n       \"classification\": \"content\",\n       \"metadata\": {\n         \"id\": \"content:0e28db52-a916-49ea-9bde-9f014bc6f691\",\n         \"name\": \"MySlideshow\"\n       },\n       \"included\": [\n         \"content-type:bd078b79-7e1a-49e0-b3dd-e2540ac93eca\",\n         \"content:81baa86e-ee94-45de-8e90-b23d8ef84e45\"\n       ],\n       \"excluded\": []\n     }\n   }\n }\n~~~\n#### Multiple items can be looked up at once by specifying multiple roots ####\nNote: Items are not duplicated twice in the references map. It is just a key value of content hub ID to data.\n##### Request: #####\n~~~\n{\n \"roots\" : [ \"content:7015a689-91df-407e-9c1b-39ead6c37e89\",\n       \"content:af988817-fcae-4070-a987-93cb99e4f81d\"]\n}\n~~~\n##### Response: #####\n~~~\n {\n   \"roots\": [\n     \"content:7015a689-91df-407e-9c1b-39ead6c37e89\",\n     \"content:af988817-fcae-4070-a987-93cb99e4f81d\"\n   ],\n   \"result\": {\n     \"status\": \"ok\",\n     \"depth\": 1\n   },\n   \"references\": {\n     \"content:7015a689-91df-407e-9c1b-39ead6c37e89\": {\n       \"id\": \"7015a689-91df-407e-9c1b-39ead6c37e89\",\n       \"classification\": \"content\",\n       \"included\": [\n         \"content-type:cad2e430-beed-40d0-bb57-1c86c4f912c0\"\n       ],\n       \"excluded\": []\n     },\n     \"content:af988817-fcae-4070-a987-93cb99e4f81d\": {\n       \"id\": \"af988817-fcae-4070-a987-93cb99e4f81d\",\n       \"classification\": \"content\",\n       \"included\": [\n         \"content-type:cad2e430-beed-40d0-bb57-1c86c4f912c0\"\n       ],\n       \"excluded\": []\n     },\n     \"content-type:cad2e430-beed-40d0-bb57-1c86c4f912c0\": {\n       \"id\": \"cad2e430-beed-40d0-bb57-1c86c4f912c0\",\n       \"classification\": \"content-type\",\n       \"included\": [],\n       \"excluded\": []\n     }\n   }\n }\n\n~~~\n#### Using Filters ####\nYou can use some basic filters based on the item type such as content or asset and based on the status of the item such as ready or draft.\n\nFor example, when you use the filter \"content\" it returns only items of type content.\n##### Request: #####\n~~~\n {\n    \"root\":\"content:0e28db52-a916-49ea-9bde-9f014bc6f691\",\n    \"filters\":{\n       \"classifications\":[\n          \"content\"\n       ]\n    }\n }\n~~~\n##### Response: #####\n~~~\n{\n   \"root\": \"content:0e28db52-a916-49ea-9bde-9f014bc6f691\",\n  \"result\": {\n     \"status\": \"ok\",\n     \"depth\": 1\n   },\n   \"references\": {\n     \"content:81baa86e-ee94-45de-8e90-b23d8ef84e45\": {\n       \"id\": \"81baa86e-ee94-45de-8e90-b23d8ef84e45\",\n       \"classification\": \"content\",\n       \"included\": [],\n       \"excluded\": []\n     },\n     \"content:0e28db52-a916-49ea-9bde-9f014bc6f691\": {\n       \"id\": \"0e28db52-a916-49ea-9bde-9f014bc6f691\",\n       \"classification\": \"content\",\n       \"included\": [\n         \"content:81baa86e-ee94-45de-8e90-b23d8ef84e45\"\n       ],\n       \"excluded\": []\n     }\n   }\n }\n~~~\n<br />User roles: admin, manager, editor, viewer"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                filters:
+                  type: object
+                  properties:
+                    classifications:
+                      type: array
+                      items:
+                        type: string
+                    statuses:
+                      type: array
+                      items:
+                        enum:
+                        - draft
+                        - ready
+                        - retired
+                    filterType:
+                      enum:
+                      - include
+                      - exclude
+                  additionalProperties: false
+                depth:
+                  type: integer
+                fl:
+                  type: array
+                  items:
+                    type: string
+                metadata:
+                  type: boolean
+                root:
+                  type: string
+                roots:
+                  type: array
+                  items:
+                    type: string
+              additionalProperties: false
+        description: Provide the request details in the body.
+        required: true
+      responses:
+        '200':
+          description: Successfully returns the fetched references. Remember to check the `result.status` property, it can be `ok` or `warn`. If it is `ok`, the query ends normally. Otherwise, the query ends due to a limit but is still able to return an incomplete result set. For example, the query can end due to the current limit for a max depth of recursion of 10 and max total references of 500.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    type: object
+                    properties:
+                      status:
+                        enum:
+                        - ok
+                        - partial
+                      depth:
+                        type: integer
+                  next:
+                    type: object
+                    properties:
+                      roots:
+                        type: array
+                        items:
+                          type: string
+                      depth:
+                        type: integer
+                      fl:
+                        type: array
+                        items:
+                          type: string
+                      metadata:
+                        type: boolean
+                      filters:
+                        type: object
+                        properties:
+                          classifications:
+                            type: array
+                            items:
+                              type: string
+                          statuses:
+                            type: array
+                            items:
+                              enum:
+                              - draft
+                              - ready
+                              - retired
+                          filterType:
+                            enum:
+                            - include
+                            - exclude
+                        additionalProperties: false
+                  root:
+                    type: string
+                  roots:
+                    type: array
+                    items:
+                      type: string
+                  references:
+                    type: object
+                    additionalProperties:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        classification:
+                          type: string
+                          example: content
+                          description: Every item in content hub has a classification the classification and id combine to make a unique id across different types of items in content hub.
+                        metadata:
+                          type: object
+                          description: 'The metadata property is only added if you use include=metadata. Additionally the contents of this object mirrors what is returned by search which is why the search `fl` parameter is available for use here. So with fl=id,name The name and id will be added. The id will always be included '
+                          example:
+                          - name: Article 1
+                          - id: content:9aefea92-2dd4-42c3-8999-10acbcfcc054
+                        included:
+                          description: 'The included are outgoing references of this item we also fetched for metadata and references. Another way to put it is in the Graph traversal of the reference we walked these edges. Every id in here is guaranteed to also have a corresponding object in the references. '
+                          example:
+                          - content:2a1e4698-2b95-4f61-be9f-1a1ca477b3c1
+                          - asset:792c31ac-3a79-4183-8b7e-fce05e6dcc39
+                          - content-type:5b839b21-0b6e-412c-8421-6bde66ca624c
+                          type: array
+                          items:
+                            type: string
+                        excluded:
+                          description: 'If an outgoing reference is not included, then it is excluded. If its excluded we didn''t attempt to fetch information about these items (and their references). This can happen for a couple of reasons. The common one is because the reference was filtered out. See the filter information to find out how filters work. Another reason is if the query terminated early. This can happen if the '
+                          type: array
+                          items:
+                            type: string
+                      additionalProperties: false
+        '429':
+          description: Too Many Requests, the server has reached a limit, the request must be sent again at a later time.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        default:
+          description: Unexpected error.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: an error response.
+                properties:
+                  requestId:
+                    type: string
+                    description: The current request ID
+                  service:
+                    type: string
+                    description: The name of the service that produced the error
+                  requestMethod:
+                    type: string
+                    description: The Http method type of the current request
+                  requestUri:
+                    type: string
+                    description: The request uri
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code
+                        key:
+                          type: string
+                          description: The message key
+                        message:
+                          type: string
+                          description: The error message
+                        description:
+                          type: string
+                          description: Optional detailed error message
+                        more_info:
+                          type: string
+                          description: Optional additional information for the message
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end user
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        field:
+                          type: string
+                          description: Only present on field validation errors, indicates the field in error.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                      required:
+                      - code
+                      - key
+                      - message
+                      - description
+                      - more_info
+                      - category
+                      - level
+                      - parameters
+                      - field
+                      - locale
+                required:
+                - requestId
+                - service
+                - requestMethod
+                - requestUri
+                - errors
+      x-ibm-dx-security-user-roles:
+      - admin
+      - manager
+      - editor
+      - viewer
+  /authoring/v1/references/outgoing/{classification}/{id}:
+    get:
+      tags:
+      - Authoring reference
+      summary: Retrieve the outgoing references for an item with the provided ID.
+      description: "Use the /references/outgoing/{classification}/{id} endpoint to retrieve outgoing references for an item with the provided ID. The usage is similar to the batch outgoing reference endpoint (/reference/outgoing/) except the parameters are passed through query parameters and only one item can be requested at a time.\n\n ### Examples: ###\n #### A simple lookup of the outgoing references for one item ####\n The default depth to look for references in an item is `1`. If it is `depth.reached` and there are more references that are found in the item, the result `code` that is returned indicates that there are more references.\n You can either query at a higher depth or query for all items, which have non empty `excluded` arrays.\n\n The results are returned in a key value format with the `references` field where the key is the content hub ID of the item.\n\n In Graph terminology, each element in the references object is a Node and the array of IDs in the `included` array on each Node is an outgoing edge to another node.\n ##### Request: #####\n ~~~\n     \"{baseURL}/authoring/v1/references/outgoing/content/0e28db52-a916-49ea-9bde-9f014bc6f691\"\n ~~~\n ##### Response: #####\n ~~~\n {\n    \"root\": \"content:0e28db52-a916-49ea-9bde-9f014bc6f691\",\n    \"result\": {\n      \"status\": \"ok\",\n      \"depth\": 1\n    },\n    \"next\": {\n      \"roots\": [\n        [\n          \"content-type:cad2e430-beed-40d0-bb57-1c86c4f912c0\"\n        ]\n      ],\n      \"filters\": {\n        \"filterType\": \"include\",\n        \"classifications\": [],\n        \"statuses\": []\n      },\n      \"depth\": 1,\n      \"fl\": []\n    },\n    \"references\": {\n      \"content:81baa86e-ee94-45de-8e90-b23d8ef84e45\": {\n        \"id\": \"81baa86e-ee94-45de-8e90-b23d8ef84e45\",\n        \"classification\": \"content\",\n        \"included\": [],\n        \"excluded\": [\n          \"content-type:cad2e430-beed-40d0-bb57-1c86c4f912c0\"\n        ]\n      },\n      \"content-type:bd078b79-7e1a-49e0-b3dd-e2540ac93eca\": {\n        \"id\": \"bd078b79-7e1a-49e0-b3dd-e2540ac93eca\",\n        \"classification\": \"content-type\",\n        \"included\": [],\n        \"excluded\": []\n      },\n      \"content:0e28db52-a916-49ea-9bde-9f014bc6f691\": {\n        \"id\": \"0e28db52-a916-49ea-9bde-9f014bc6f691\",\n        \"classification\": \"content\",\n        \"included\": [\n          \"content-type:bd078b79-7e1a-49e0-b3dd-e2540ac93eca\",\n          \"content:81baa86e-ee94-45de-8e90-b23d8ef84e45\"\n        ],\n        \"excluded\": []\n      }\n    }\n  }\n ~~~\n #### A simple lookup of the outgoing references for one item with metadata ####\n Instead of just getting a graph of content hub IDs, you can also request to retrieve metadata for each item.\n\n The metadata returned are the default fields that are returned by authoring search API (`authoring/v1/search`).\n ##### Request: #####\n ~~~\n    {\n     \"{baseURL}/authoring/v1/references/outgoing/content/0e28db52-a916-49ea-9bde-9f014bc6f691?include=metadata\"\n    }\n ~~~\n ##### Response: #####\n ~~~\n {\n    \"root\": \"content:0e28db52-a916-49ea-9bde-9f014bc6f691\",\n    \"result\": {\n      \"status\": \"ok\",\n      \"depth\": 1\n    },\n    \"references\": {\n      \"content:81baa86e-ee94-45de-8e90-b23d8ef84e45\": {\n        \"id\": \"81baa86e-ee94-45de-8e90-b23d8ef84e45\",\n        \"classification\": \"content\",\n        \"metadata\": {\n          \"id\": \"content:81baa86e-ee94-45de-8e90-b23d8ef84e45\",\n          \"name\": \"Slide7\",\n          \"classification\": \"content\",\n          \"type\": \"Slide\",\n          \"typeId\": \"cad2e430-beed-40d0-bb57-1c86c4f912c0\",\n          \"locale\": \"en\",\n          \"lastModified\": \"2017-06-09T01:21:31.369Z\",\n          \"lastModifier\": \"Thomas Watson\",\n          \"lastModifierId\": \"8bd88336-648c-46a6-80d4-73c0e81fb4fa\",\n          \"created\": \"2017-06-09T01:21:17.630Z\",\n          \"creator\": \"Thomas Watson\",\n          \"creatorId\": \"8bd88336-648c-46a6-80d4-73c0e81fb4fa\",\n          \"status\": \"ready\"\n        },\n        \"included\": [],\n        \"excluded\": [\n          \"content-type:cad2e430-beed-40d0-bb57-1c86c4f912c0\"\n        ]\n      },\n      \"content-type:bd078b79-7e1a-49e0-b3dd-e2540ac93eca\": {\n        \"id\": \"bd078b79-7e1a-49e0-b3dd-e2540ac93eca\",\n        \"classification\": \"content-type\",\n        \"metadata\": {\n          \"id\": \"content-type:bd078b79-7e1a-49e0-b3dd-e2540ac93eca\",\n          \"name\": \"Slideshow\",\n          \"classification\": \"content-type\",\n          \"lastModified\": \"2017-06-09T01:18:08.301Z\",\n          \"lastModifier\": \"Thomas Watson\",\n          \"lastModifierId\": \"8bd88336-648c-46a6-80d4-73c0e81fb4fa\",\n          \"created\": \"2017-06-09T01:15:56.578Z\",\n          \"creator\": \"Thomas Watson\",\n          \"creatorId\": \"8bd88336-648c-46a6-80d4-73c0e81fb4fa\",\n          \"status\": \"ready\"\n        },\n        \"included\": [],\n        \"excluded\": []\n      },\n      \"content:0e28db52-a916-49ea-9bde-9f014bc6f691\": {\n        \"id\": \"0e28db52-a916-49ea-9bde-9f014bc6f691\",\n        \"classification\": \"content\",\n        \"metadata\": {\n          \"id\": \"content:0e28db52-a916-49ea-9bde-9f014bc6f691\",\n          \"name\": \"MySlideshow\",\n          \"classification\": \"content\",\n          \"type\": \"Slideshow\",\n          \"typeId\": \"bd078b79-7e1a-49e0-b3dd-e2540ac93eca\",\n          \"locale\": \"en\",\n          \"lastModified\": \"2017-06-09T01:22:34.049Z\",\n          \"lastModifier\": \"Thomas Watson\",\n          \"lastModifierId\": \"8bd88336-648c-46a6-80d4-73c0e81fb4fa\",\n          \"created\": \"2017-06-09T01:18:58.426Z\",\n          \"creator\": \"Thomas Watson\",\n          \"creatorId\": \"8bd88336-648c-46a6-80d4-73c0e81fb4fa\",\n          \"status\": \"ready\"\n        },\n        \"included\": [\n          \"content-type:bd078b79-7e1a-49e0-b3dd-e2540ac93eca\",\n          \"content:81baa86e-ee94-45de-8e90-b23d8ef84e45\"\n        ],\n        \"excluded\": []\n      }\n    }\n  }\n ~~~\n #### Using fl parameter to request specific metadata fields ####\n Just like the search API, the `fl` parameter can be used to request specific fields, which include the `document` field, which is the entire API representation of the item.\n\n Note: When the `fl` parameter is used, the `id` field  is also always returned.\n ##### Request: #####\n ~~~\n    {\n     \"{baseURL}/authoring/v1/references/outgoing/content/0e28db52-a916-49ea-9bde-9f014bc6f691?include=metadata&fl=name\"\n    }\n ~~~\n ##### Response: #####\n ~~~\n  {\n    \"root\": \"content:0e28db52-a916-49ea-9bde-9f014bc6f691\",\n    \"result\": {\n      \"status\": \"ok\",\n      \"depth\": 1,\n      \"code\": \"depth.reached\",\n      \"message\": \"Requested max level of 1 reached\"\n    },\n    \"references\": {\n      \"content:81baa86e-ee94-45de-8e90-b23d8ef84e45\": {\n        \"id\": \"81baa86e-ee94-45de-8e90-b23d8ef84e45\",\n        \"classification\": \"content\",\n        \"metadata\": {\n          \"id\": \"content:81baa86e-ee94-45de-8e90-b23d8ef84e45\",\n          \"name\": \"Slide7\"\n        },\n        \"included\": [],\n        \"excluded\": [\n          \"content-type:cad2e430-beed-40d0-bb57-1c86c4f912c0\"\n        ]\n      },\n      \"content-type:bd078b79-7e1a-49e0-b3dd-e2540ac93eca\": {\n        \"id\": \"bd078b79-7e1a-49e0-b3dd-e2540ac93eca\",\n        \"classification\": \"content-type\",\n        \"metadata\": {\n          \"id\": \"content-type:bd078b79-7e1a-49e0-b3dd-e2540ac93eca\",\n          \"name\": \"Slideshow\"\n        },\n        \"included\": [],\n        \"excluded\": []\n      },\n      \"content:0e28db52-a916-49ea-9bde-9f014bc6f691\": {\n        \"id\": \"0e28db52-a916-49ea-9bde-9f014bc6f691\",\n        \"classification\": \"content\",\n        \"metadata\": {\n          \"id\": \"content:0e28db52-a916-49ea-9bde-9f014bc6f691\",\n          \"name\": \"MySlideshow\"\n        },\n        \"included\": [\n          \"content-type:bd078b79-7e1a-49e0-b3dd-e2540ac93eca\",\n          \"content:81baa86e-ee94-45de-8e90-b23d8ef84e45\"\n        ],\n        \"excluded\": []\n      }\n    }\n  }\n ~~~\n #### Using Filters ####\n You can use some basic filters based on the item type such as content or asset and based on the status of the item such as ready or draft.\n For example, when you use the filter \"content\" it returns only items of type content.\n ##### Request: #####\n ~~~\n   \"{baseURL}/authoring/v1/references/outgoing/content/0e28db52-a916-49ea-9bde-9f014bc6f691?classifications=content\"\n ~~~\n ##### Response: #####\n ~~~\n {\n    \"root\": \"content:0e28db52-a916-49ea-9bde-9f014bc6f691\",\n   \"result\": {\n      \"status\": \"ok\",\n      \"depth\": 1\n    },\n    \"references\": {\n      \"content:81baa86e-ee94-45de-8e90-b23d8ef84e45\": {\n        \"id\": \"81baa86e-ee94-45de-8e90-b23d8ef84e45\",\n        \"classification\": \"content\",\n        \"included\": [],\n        \"excluded\": []\n      },\n      \"content:0e28db52-a916-49ea-9bde-9f014bc6f691\": {\n        \"id\": \"0e28db52-a916-49ea-9bde-9f014bc6f691\",\n        \"classification\": \"content\",\n        \"included\": [\n          \"content:81baa86e-ee94-45de-8e90-b23d8ef84e45\"\n        ],\n        \"excluded\": []\n      }\n    }\n  }\n ~~~\n<br />User roles: admin, manager, editor, viewer"
+      parameters:
+      - name: id
+        in: path
+        description: Provide the ID of the item for which you want to fetch references.
+        required: true
+        schema:
+          type: string
+      - name: classification
+        in: path
+        description: Provide the classification of the item for which you want to fetch references.
+        required: true
+        schema:
+          type: string
+      - name: filterType
+        in: query
+        description: Use the `filterType` parameter to inverse the filters. For example, if you are using `classifications=content-type`, it returns only content-types, however if you add `filterType=exclude` then, it returns everything besides content-types.
+        schema:
+          type: string
+          enum:
+          - include
+          - exclude
+      - name: depth
+        in: query
+        description: The amount of depth to recursively look for references in an item. The default depth to look for references in an item is 1, so only direct outgoing references are returned. Use a higher amount of depth to get recursive references. Currently, you can request a maximum depth of 10 in one query. The filters like `classifications` and `statuses` can be used to limit amount of data that is returned when you work with references.
+        schema:
+          type: integer
+          default: 1
+      - name: classifications
+        description: Classification of items to filter references by.
+        in: query
+        required: false
+        allowEmptyValue: true
+        style: form
+        explode: false
+        schema:
+          type: array
+          items:
+            type: string
+      - name: statuses
+        description: Provide the workflow status of the item to filter references. If items do not have workflow status, they are normally considered to be in the `ready` state for the purpose of this filtering.
+        in: query
+        required: false
+        allowEmptyValue: true
+        style: form
+        explode: false
+        schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - draft
+            - ready
+            - retired
+      - name: include
+        in: query
+        description: Use the 'include' parameter to add options to references that you fetch for an item. Currently, the only available option is `metadata`. When you use the `metadata` option in the `include` parameter, the returned code includes metadata about each of the references that are returned. The information that is returned can be controlled by using the `fl` parameter.
+        required: false
+        allowEmptyValue: true
+        style: form
+        explode: false
+        schema:
+          type: array
+          items:
+            type: string
+      - name: fl
+        in: query
+        description: The fields that you can specify in the `fl` parameter are similar to the `fl` query parameters in `/authoring/v1/search` API. You can use the `fl` parameter only if you are also using the `include=metadata` parameter. For example, to retrieve all the document for each of the references use `fl=document`. If the field is not specified, the default fields are returned. The `id` field is always returned  by default.
+        required: false
+        allowEmptyValue: true
+        style: form
+        explode: false
+        schema:
+          type: array
+          items:
+            type: string
+      responses:
+        '200':
+          description: Successfully returns the fetched references. Remember to check the `result.status`property, it can be `ok` or `warn`. If it is `ok` the query ends normally. Otherwise, the query ends due to a limit but is still able to return an incomplete result set. For example, the query can end due to the current limit for a max depth of recursion of 10 and a max total references of 500.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    type: object
+                    properties:
+                      status:
+                        enum:
+                        - ok
+                        - partial
+                      depth:
+                        type: integer
+                  next:
+                    type: object
+                    properties:
+                      roots:
+                        type: array
+                        items:
+                          type: string
+                      depth:
+                        type: integer
+                      fl:
+                        type: array
+                        items:
+                          type: string
+                      metadata:
+                        type: boolean
+                      filters:
+                        type: object
+                        properties:
+                          classifications:
+                            type: array
+                            items:
+                              type: string
+                          statuses:
+                            type: array
+                            items:
+                              enum:
+                              - draft
+                              - ready
+                              - retired
+                          filterType:
+                            enum:
+                            - include
+                            - exclude
+                        additionalProperties: false
+                  root:
+                    type: string
+                  roots:
+                    type: array
+                    items:
+                      type: string
+                  references:
+                    type: object
+                    additionalProperties:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        classification:
+                          type: string
+                          example: content
+                          description: Every item in content hub has a classification the classification and id combine to make a unique id across different types of items in content hub.
+                        metadata:
+                          type: object
+                          description: 'The metadata property is only added if you use include=metadata. Additionally the contents of this object mirrors what is returned by search which is why the search `fl` parameter is available for use here. So with fl=id,name The name and id will be added. The id will always be included '
+                          example:
+                          - name: Article 1
+                          - id: content:9aefea92-2dd4-42c3-8999-10acbcfcc054
+                        included:
+                          description: 'The included are outgoing references of this item we also fetched for metadata and references. Another way to put it is in the Graph traversal of the reference we walked these edges. Every id in here is guaranteed to also have a corresponding object in the references. '
+                          example:
+                          - content:2a1e4698-2b95-4f61-be9f-1a1ca477b3c1
+                          - asset:792c31ac-3a79-4183-8b7e-fce05e6dcc39
+                          - content-type:5b839b21-0b6e-412c-8421-6bde66ca624c
+                          type: array
+                          items:
+                            type: string
+                        excluded:
+                          description: 'If an outgoing reference is not included, then it is excluded. If its excluded we didn''t attempt to fetch information about these items (and their references). This can happen for a couple of reasons. The common one is because the reference was filtered out. See the filter information to find out how filters work. Another reason is if the query terminated early. This can happen if the '
+                          type: array
+                          items:
+                            type: string
+                      additionalProperties: false
+        '429':
+          description: Too Many Requests, the server has reached a limit, the request must be sent again at a later time.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        default:
+          description: Unexpected error.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: an error response.
+                properties:
+                  requestId:
+                    type: string
+                    description: The current request ID
+                  service:
+                    type: string
+                    description: The name of the service that produced the error
+                  requestMethod:
+                    type: string
+                    description: The Http method type of the current request
+                  requestUri:
+                    type: string
+                    description: The request uri
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code
+                        key:
+                          type: string
+                          description: The message key
+                        message:
+                          type: string
+                          description: The error message
+                        description:
+                          type: string
+                          description: Optional detailed error message
+                        more_info:
+                          type: string
+                          description: Optional additional information for the message
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end user
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        field:
+                          type: string
+                          description: Only present on field validation errors, indicates the field in error.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                      required:
+                      - code
+                      - key
+                      - message
+                      - description
+                      - more_info
+                      - category
+                      - level
+                      - parameters
+                      - field
+                      - locale
+                required:
+                - requestId
+                - service
+                - requestMethod
+                - requestUri
+                - errors
+      x-ibm-dx-security-user-roles:
+      - admin
+      - manager
+      - editor
+      - viewer
+  /authoring/v1/references/incoming:
+    post:
+      tags:
+      - Authoring reference
+      summary: Retrieve the incoming references for items.
+      description: "Use the `/references/incoming` endpoint to retrieve incoming references for items. This endpoint allows batch lookups by allowing multiple items to be looked at the same time\n### Examples: ###\n#### A simple lookup of the incoming references for one item ####\n\nThe results are returned in a key value format with the `references` field where the key is the content hub ID of the item.\n\nIn Graph terminology, each element in the references object is a Node and the array of IDs in the `included` array on each Node is an incoming edge to another node.\n##### Request: #####\n~~~\n   {\n     \"root\": \"content:3e01a155-458e-4428-b24f-d91bfdd2c991\"\n   }\n~~~\n##### Response: #####\n~~~\n{\n   \"references\": {\n       \"content:3e01a155-458e-4428-b24f-d91bfdd2c991\": [\n           {\n               \"uid\": \"content:7a061c8b-7fef-4fc9-89b0-6255f09697c6\",\n               \"id\": \"7a061c8b-7fef-4fc9-89b0-6255f09697c6\",\n               \"classification\": \"content\",\n               \"metadata\": {\n                   \"name\": \"Clean design\"\n               }\n           },\n           {\n               \"uid\": \"content:d01c64ee-0927-457a-a1e8-809c22a1f5cf\",\n               \"id\": \"d01c64ee-0927-457a-a1e8-809c22a1f5cf\",\n               \"classification\": \"content\",\n               \"metadata\": {\n                   \"name\": \"Editor's choice list sample\"\n               }\n           }\n       ]\n   }\n}\n~~~\n#### Multiple items can be looked up at once by specifying multiple roots ####\nNote: Items are not duplicated twice in the references map. It is just a key value of content hub ID to data.\n##### Request: #####\n~~~\n{\n    \"roots\":[\n       \"content:3e01a155-458e-4428-b24f-d91bfdd2c991\",\n       \"content:2d81b7e0-9a01-42aa-8c2a-b181d1abde8f\",\n       \"page:9f32901d-95e5-4c2a-b136-a92bd2f370ae\"\n    ]\n}\n~~~\n##### Response: #####\n~~~\n {\n     \"references\": {\n         \"content:3e01a155-458e-4428-b24f-d91bfdd2c991\": [\n             {\n                 \"uid\": \"content:7a061c8b-7fef-4fc9-89b0-6255f09697c6\",\n                 \"id\": \"7a061c8b-7fef-4fc9-89b0-6255f09697c6\",\n                 \"classification\": \"content\",\n                 \"metadata\": {\n                     \"name\": \"Clean design\"\n                 }\n             },\n             {\n                 \"uid\": \"content:d01c64ee-0927-457a-a1e8-809c22a1f5cf\",\n                 \"id\": \"d01c64ee-0927-457a-a1e8-809c22a1f5cf\",\n                 \"classification\": \"content\",\n                 \"metadata\": {\n                     \"name\": \"Editor's choice list sample\"\n                 }\n             }\n         ],\n         \"content:2d81b7e0-9a01-42aa-8c2a-b181d1abde8f\": [\n             {\n                 \"uid\": \"content:3872b3c8-f0f4-4eb4-8192-c6952cd8fd00\",\n                 \"id\": \"3872b3c8-f0f4-4eb4-8192-c6952cd8fd00\",\n                 \"classification\": \"content\",\n                 \"metadata\": {\n                     \"name\": \"Home\"\n                 }\n             },\n             {\n                 \"uid\": \"content:a05c4497-8d13-4a3a-8624-fcf48fad6288\",\n                 \"id\": \"a05c4497-8d13-4a3a-8624-fcf48fad6288\",\n                 \"classification\": \"content\",\n                 \"metadata\": {\n                     \"name\": \"Search results sample\"\n                 }\n             },\n             {\n                 \"uid\": \"content:ccc36bbc-791c-4212-b9e2-94b25080f36d:draft\",\n                 \"id\": \"ccc36bbc-791c-4212-b9e2-94b25080f36d:draft\",\n                 \"classification\": \"content\",\n                 \"metadata\": {\n                     \"name\": \"MyTestPage\"\n                 }\n             }\n         ],\n         \"page:9f32901d-95e5-4c2a-b136-a92bd2f370ae\": []\n     }\n }\n~~~\n#### Query on multiple roots with limit ####\n##### Request: #####\n~~~\n {\n    \"limit\":1,\n    \"roots\":[\n       \"content:3e01a155-458e-4428-b24f-d91bfdd2c991\",\n       \"content:2d81b7e0-9a01-42aa-8c2a-b181d1abde8f\",\n       \"page:9f32901d-95e5-4c2a-b136-a92bd2f370ae\"\n    ]\n }\n~~~\n##### Response: #####\n~~~\n {\n     \"references\": {\n         \"content:3e01a155-458e-4428-b24f-d91bfdd2c991\": [\n             {\n                 \"uid\": \"content:7a061c8b-7fef-4fc9-89b0-6255f09697c6\",\n                 \"id\": \"7a061c8b-7fef-4fc9-89b0-6255f09697c6\",\n                 \"classification\": \"content\",\n                 \"metadata\": {\n                     \"name\": \"Clean design\"\n                 }\n             }\n         ],\n         \"content:2d81b7e0-9a01-42aa-8c2a-b181d1abde8f\": [\n             {\n                 \"uid\": \"content:3872b3c8-f0f4-4eb4-8192-c6952cd8fd00\",\n                 \"id\": \"3872b3c8-f0f4-4eb4-8192-c6952cd8fd00\",\n                 \"classification\": \"content\",\n                 \"metadata\": {\n                     \"name\": \"Home\"\n                 }\n             }\n         ],\n         \"page:9f32901d-95e5-4c2a-b136-a92bd2f370ae\": []\n     }\n }\n~~~\n<br />User roles: admin, manager, editor, viewer"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                limit:
+                  type: integer
+                  description: maximum number of references return for each item.
+                excludeRoots:
+                  type: boolean
+                  description: excludes the references that are already in the requested roots.
+                excludeSoftReferences:
+                  type: boolean
+                  description: whether to exclude soft incoming references.
+                root:
+                  type: string
+                roots:
+                  type: array
+                  items:
+                    type: string
+              additionalProperties: false
+        description: Provide the request details in the body.
+        required: true
+      responses:
+        '200':
+          description: Successfully returns the fetched incoming references for given items.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  references:
+                    type: object
+                    additionalProperties:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          id:
+                            type: string
+                            example: 9aefea92-2dd4-42c3-8999-10acbcfcc054
+                            description: the id of the item.
+                          classification:
+                            type: string
+                            example: content
+                            description: Every item in content hub has a classification the classification and id combine to make a unique id across different types of items in content hub.
+                          metadata:
+                            type: object
+                            description: Basic meatadata like name, and does not include search metadata.
+                            example:
+                            - name: Article 1
+        '429':
+          description: Too Many Requests, the server has reached a limit, the request must be sent again at a later time.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        default:
+          description: Unexpected error.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: an error response.
+                properties:
+                  requestId:
+                    type: string
+                    description: The current request ID
+                  service:
+                    type: string
+                    description: The name of the service that produced the error
+                  requestMethod:
+                    type: string
+                    description: The Http method type of the current request
+                  requestUri:
+                    type: string
+                    description: The request uri
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: an individual error, info or warning message.
+                      properties:
+                        code:
+                          type: integer
+                          description: The message code
+                        key:
+                          type: string
+                          description: The message key
+                        message:
+                          type: string
+                          description: The error message
+                        description:
+                          type: string
+                          description: Optional detailed error message
+                        more_info:
+                          type: string
+                          description: Optional additional information for the message
+                        category:
+                          type: string
+                          description: The message category whereby only user messages are designed to be shown to an end user
+                          enum:
+                          - API
+                          - USER
+                        level:
+                          type: string
+                          description: Indicates the message level
+                          enum:
+                          - INFO
+                          - WARNING
+                          - ERROR
+                        parameters:
+                          type: object
+                          description: The message parameters of this message.
+                        field:
+                          type: string
+                          description: Only present on field validation errors, indicates the field in error.
+                        locale:
+                          type: string
+                          description: The current locale used to produce the error message.
+                      required:
+                      - code
+                      - key
+                      - message
+                      - description
+                      - more_info
+                      - category
+                      - level
+                      - parameters
+                      - field
+                      - locale
+                required:
+                - requestId
+                - service
+                - requestMethod
+                - requestUri
+                - errors
+      x-ibm-dx-security-user-roles:
+      - admin
+      - manager
+      - editor
+      - viewer
+  /authoring/v1/references/incoming/{classification}/{id}:
+    get:
+      summary: Retrieve the incoming references for an item with the provided ID.
+      description: "Use the `/references/incoming/{classification}/{id}` endpoint to retrieve the incoming references for an item with the provided ID.\n\n ### Examples: ###\n #### A simple lookup of the incoming references for one item ####\n\n ##### Request: #####\n ~~~\n     \"{baseURL}/authoring/v1/references/incoming/content-type/cad2e430-beed-40d0-bb57-1c86c4f912c0\"\n ~~~\n ##### Response: #####\n ~~~\n {\n    \"offset\": 0,\n    \"limit\": 200,\n    \"href\": \"/authoring/v1/references/incoming/content-type/cad2e430-beed-40d0-bb57-1c86c4f912c0?offset=0&limit=200\",\n    \"items\": [\n      {\n        \"id\": \"2107a014-51f7-4161-96e2-d8eac6ad7dd9\",\n        \"classification\": \"content\"\n      },\n      {\n        \"id\": \"367a067a-d49e-4a40-b16a-18442fd3b6ba\",\n        \"classification\": \"content\"\n      }\n    ]\n}\n ~~~\n #### A simple lookup of the incoming references for one item with metadata ####\n Instead of just getting the content hub IDs, you can also request to retrieve metadata for each item.\n\n The metadata returned are the default fields that are returned by authoring search API (`authoring/v1/search`).\n ##### Request: #####\n ~~~\n     \"{baseURL}/authoring/v1/references/incoming/content-type/cad2e430-beed-40d0-bb57-1c86c4f912c0?include=metadata\"\n ~~~\n ##### Response: #####\n ~~~\n {\n    \"offset\": 0,\n    \"limit\": 200,\n    \"href\": \"/authoring/v1/references/incoming/content-type/cad2e430-beed-40d0-bb57-1c86c4f912c0?offset=0&limit=200\",\n    \"items\": [\n      {\n        \"id\": \"2107a014-51f7-4161-96e2-d8eac6ad7dd9\",\n        \"classification\": \"content\",\n        \"metadata\": {\n          \"id\": \"content:2107a014-51f7-4161-96e2-d8eac6ad7dd9\",\n          \"name\": \"Slide6\",\n          \"classification\": \"content\",\n          \"type\": \"Slide\",\n          \"typeId\": \"cad2e430-beed-40d0-bb57-1c86c4f912c0\",\n          \"locale\": \"en\",\n          \"lastModified\": \"2017-06-09T04:09:35.622Z\",\n          \"lastModifier\": \"Thomas Watson\",\n          \"lastModifierId\": \"8bd88336-648c-46a6-80d4-73c0e81fb4fa\",\n          \"created\": \"2017-06-09T01:21:07.524Z\",\n          \"creator\": \"Thomas Watson\",\n          \"creatorId\": \"8bd88336-648c-46a6-80d4-73c0e81fb4fa\",\n          \"status\": \"ready\",\n          \"thumbnail\": \"/authoring/v1/resources/28dcd9c49b0d45fb8c7bf045cc0582db?fit=inside%7C220:145\"\n        }\n      },\n      {\n        \"id\": \"367a067a-d49e-4a40-b16a-18442fd3b6ba\",\n        \"classification\": \"content\",\n        \"metadata\": {\n          \"id\": \"content:367a067a-d49e-4a40-b16a-18442fd3b6ba\",\n          \"name\": \"Slide2\",\n          \"classification\": \"content\",\n          \"type\": \"Slide\",\n          \"typeId\": \"cad2e430-beed-40d0-bb57-1c86c4f912c0\",\n          \"locale\": \"en\",\n          \"lastModified\": \"2017-06-09T01:20:20.757Z\",\n          \"lastModifier\": \"Thomas Watson\",\n          \"lastModifierId\": \"8bd88336-648c-46a6-80d4-73c0e81fb4fa\",\n          \"created\": \"2017-06-09T01:20:13.104Z\",\n          \"creator\": \"Thomas Watson\",\n          \"creatorId\": \"8bd88336-648c-46a6-80d4-73c0e81fb4fa\",\n          \"status\": \"ready\"\n        }\n      }\n    ]\n  }\n ~~~\n #### Using fl parameter to request specific metadata fields ####\n Just like the search API, the `fl` parameter can be used to request specific fields including the `document` field, which is the entire API representation of the item.\n\n Note: When the `fl` parameter is used, the `id` field is also always returned.\n ##### Request: #####\n ~~~\n     \"{baseURL}/authoring/v1/references/incoming/content-type/cad2e430-beed-40d0-bb57-1c86c4f912c0?include=metadata&fl=name\"\n ~~~\n ##### Response: #####\n ~~~\n     {\n    \"offset\": 0,\n    \"limit\": 200,\n    \"href\": \"/authoring/v1/references/incoming/content-type/cad2e430-beed-40d0-bb57-1c86c4f912c0?offset=0&limit=200\",\n    \"items\": [\n      {\n        \"id\": \"2107a014-51f7-4161-96e2-d8eac6ad7dd9\",\n        \"classification\": \"content\",\n        \"metadata\": {\n          \"id\": \"content:2107a014-51f7-4161-96e2-d8eac6ad7dd9\",\n          \"name\": \"Slide6\"\n        }\n      },\n      {\n        \"id\": \"367a067a-d49e-4a40-b16a-18442fd3b6ba\",\n        \"classification\": \"content\",\n        \"metadata\": {\n          \"id\": \"content:367a067a-d49e-4a40-b16a-18442fd3b6ba\",\n          \"name\": \"Slide2\"\n        }\n      }\n    ]\n  }\n ~~~\n<br />User roles: admin, manager, editor, viewer"
+      parameters:
+      - name: id
+        in: path
+        description: Provide the ID of the item for which you want to fetch incoming references.
+        required: true
+        schema:
+          type: string
+      - name: classification
+        in: path
+        description: Provide the classification of the item for which you want to fetch incoming references.
+        required: true
+        schema:
+          type: string
+      - name: fl
+        in: query
+        description: The fields that you can specify in the `fl` parameter are similar to the `fl` query parameters in `/authoring/v1/search` API. You can use the `fl` parameter only if you are also using the `include=metadata` parameter. For example, to retrieve all the document for each of the references use `fl=document`. If the field is not specified, the default fields are returned. The `id` field is always returned  by default.
+        required: false
+        allowEmptyValue: true
+        style: form
+        explode: false
+        schema:
+          type: array
+          items:
+            type: string
+      - name: include
+        in: query
+        description: Use the 'include' parameter to add options to references that you fetch for an item. Currently, the only available option is `metadata`. When you use the `metadata` option in the `include` parameter, the returned code includes metadata about each of the references that are returned. The information that is returned can be controlled by using the `fl` parameter.
+        required: false
+        allowEmptyValue: true
+        style: form
+        explode: false
+        schema:
+          type: array
+          items:
+            type: string
+      - name: offset
+        in: query
+        description: Use the offset parameter to specify the number of references to skip from the beginning of the list and return the rest.
+        required: false
+        schema:
+          type: integer
+          default: 0
+      - name: limit
+        in: query
+        description: Set the limit for the maximum number of references to return in a single result. The current maximum value is 250.
+        required: false
+        schema:
+          type: integer
+          default: 50
+      tags:
+      - Authoring reference
+      responses:
+        '200':
+          description: Successfully returns the incoming references paged result.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  limit:
+                    type: integer
+                    description: The page size.
+                    example: 50
+                  offset:
+                    type: integer
+                    description: The number of items to skip from the beginning of the list.
+                    example: 0
+                  href:
+                    type: string
+                    description: A link to the current page.
+                    example: /authoring/v1/references/incoming/content/2a1e4698-2b95-4f61-be9f-1a1ca477b3c1?offset=50&limit=50
+                  next:
+                    type: string
+                    description: A link to the next page. Only shown if a next page exists.
+                    example: /authoring/v1/references/incoming/content/2a1e4698-2b95-4f61-be9f-1a1ca477b3c1?offset=100&limit=50
+                  previous:
+                    type: string
+                    description: A link to the previous page. Only shown if a previous page exists.
+                    example: /authoring/v1/references/incoming/content/2a1e4698-2b95-4f61-be9f-1a1ca477b3c1?offset=0&limit=50
+                  items:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          example: 9aefea92-2dd4-42c3-8999-10acbcfcc054
+                          description: the id of the item.
+                        classification:
+                          type: string
+                          example: content
+                          description: Every item in content hub has a classification the classification and id combine to make a unique id across different types of items in content hub.
+                        metadata:
+                          type: object
+                          description: 'The metadata property is only added if you use include=metadata. Additionally the contents of this object mirrors what is returned by search which is why the search `fl` parameter is available for use here. So with fl=id,name The name and id will be added. The id will always be included '
+                          example:
+                          - name: Article 1
+                          - id: content:9aefea92-2dd4-42c3-8999-10acbcfcc054
+        '429':
+          description: Too Many Requests, the server has reached a limit, the request must be sent again at a later time.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      x-ibm-dx-security-user-roles:
+      - admin
+      - manager
+      - editor
+      - viewer
+components:
+  schemas:
+    ErrorResponse:
+      description: This JSON record represents an error condition.
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            description: This JSON record represents an individual error or warning contained in an error message.
+            type: object
+            properties:
+              code:
+                type: integer
+                description: An error code
+              message:
+                type: string
+                description: A message describing what went wrong.
+              description:
+                type: string
+                description: Further explanation of the error condition and potential next steps to resolve the problem.
+              more_info:
+                type: string
+                description: A URL pointing to a web site that provides more information on the given error condition.
+              level:
+                type: string
+                enum:
+                - ERROR
+                - WARNING
+                description: The severity level of the message. Default is error.
+              parameters:
+                type: object
+                description: Additional properties reflecting the dynamic parts of the error condition.
+              cause:
+                type: object
+                description: This property can be used to transport causing error message records produced by a down stream service calls.
+              locale:
+                type: string
+                description: This property represents the locale of the text contained in properties 'message', and 'description'. This property is mandatory if message and description contain translated text.
+            required:
+            - code
+            - message
+        requestId:
+          type: string
+          description: The ID of the failing request.
+        service:
+          type: string
+          description: The name of the service serving the error message.
+      required:
+      - errors
+      - requestId
+x-refined-from:
+- acoustic-content-openapi-original.json
+- acoustic-content-swagger2-original.yaml
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

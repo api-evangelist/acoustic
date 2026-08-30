@@ -1,0 +1,690 @@
+openapi: 3.2.0
+info:
+  title: Acoustic Authoring search API
+  version: 1.0.142
+  x-ibm-name: ibm-watson-content-hub-api
+  description: 'Operations tagged Authoring search across 2 of this provider''s published API definitions: acoustic-content-openapi-original.json, acoustic-content-swagger2-original.yaml. Each path carries the servers of the definition it was published in.'
+tags:
+- name: Authoring search
+  description: ' ## General
+
+    Use the Content authoring search service REST API to access assets, categories, content, content types, image profiles, and taxonomies by searching the content hub. You need prior authentication to use the authoring search service. The authoring search service contains content in all states including draft, ready, and retired.
+
+    ## Content workflow (status)
+
+    The status of a content item can be determined by the **suffix** of the ID:
+
+    - An ID like xxxx:**draft** indicates that the item is a draft. This is the initial status of a new content item until it is published. A draft of a published content item will also have this suffix.
+
+    - An ID like xxxx:***[publishing_job_id]*** - indicates that the content item has been scheduled for publish in the given publishing job.
+
+    - An ID like xxxx with no suffix indicates that the content is **published** or **retired**.
+
+    A draft can be created from published. When such a draft is published, it will override the previously published content.
+
+
+    **Key notes:**
+
+    - The base ID (xxxx) does not change. Only the suffix changes according to the workflow status of the item.
+
+    - Where content and assets are referenced from within a content item, the ''raw'' ID form, without a suffix, is always used. For example, when a draft content item is referenced by another draft content item, the reference appears as a raw ID, and thus does not change when the items are published.
+
+    '
+paths:
+  /authoring/v1/search:
+    get:
+      x-ibm-dx-security-user-roles:
+      - admin
+      - manager
+      - editor
+      - viewer
+      tags:
+      - Authoring search
+      summary: Search in the authoring collection
+      description: "Performs a search query by passing all query parameters to Solr. The supported query parser for the \"defType\" parameter can be \"edismax\" or \"lucene\". The query parser name defined in \"q\" or \"fq\" parameter through \"{!<parser-name> ...}\" can have the value \"join\", \"lucene\", \"edismax\", or \"geofilt\". For more information about the query syntax and the available query parameters, see the Solr documentation.\n\n### ***Limitation of sort and pagination*** ###\n\nSorting on not unique fields can cause paging to return duplicate or missing entries in subsequent pages of results.\nIf an index modification (adding or removing documents) which affects the sequence of ordered documents matching a query occurs in between two requests from a client for subsequent pages of results then\nit is possible that these modifications can result in the same document being returned on multiple pages, or documents being \"skipped\" as the result set shrinks or grows.\nIt's recommended to sort by unique field or a combination ex. sort=lastModied desc, status desc.\n\n### ***Description of the authoring collection schema*** ###\n\nThe table below lists the **Name** of each field from the authoring collection. Additionally, it contains a **Description** of each field along with the following information:\n* **JSON Data Type:** This column specifies the data type of field values that Content returns in the result of a query.\n* **Solr Field Type:** This column specifies how Content stores values of the field in the authoring collection.\n  * **boolean:** This field type is based on the Solr *BoolField* class. \n  * **date:** This field type is based on the Solr *TrieDateField* class.\n  * **int:** This field type is based on the Solr *TrieIntField* class.\n  * **long:** This field type is based on the Solr *TrieLongField* class.\n  * **location_rpt:** This field type is based on the Solr *LatLonPointSpatialField* class.\n  * **path_hierarchical_index:** This field type is based on the Solr *TextField* class. It uses a hierarchical path tokenizer to index field values.\n  * **string:** This field type is based on the Solr *StrField* class.\n  * **string_ci:** This field type is based on the Solr *TextField* class. It is a case insensitive version of *string* field type.\n  * **text_general:** This field type is based on the Solr *TextField* class.\n* **Indexed:** This column specifies whether you can use values of the field in a query to retrieve matching documents.\n* **Stored:** This column specifies whether you can retrieve the actual value of the field using a query. The fields ***highlighted*** in this column are included in the query result by default. To override that default field list, use the \"fl\" parameter in your query.\n\n| Name             | Description | JSON Data Type | Solr Field Type | Indexed | Stored* |\n|------------------|-------------|----------------|-----------------|---------|---------|\n| assetType        | For assets, this field contains the asset type. The value that is returned can be \"document\", \"file\", \"image\", or \"video\". | string | string_ci | true | ***true*** |\n| categories       | The list of all category selections for the asset or content. All category selection elements on content are merged into this property. | array of strings | path_hierarchical_index | true | ***true*** |\n| categoryLeaves   | The list of all leaf category selection elements for the asset or content. | array of strings | string_ci | true | false |\n| classification   | This field describes the kind of item. The value that is returned can be \"asset\", \"category\", \"content\", \"content-type\", \"image-profile\", or \"taxonomy\". | string | string_ci | true | ***true*** |\n| created          | The creation date of the item. | string | date | true | ***true*** |\n| creator          | The name of the user who created the item. | string | string_ci | true | ***true*** |\n| creatorId        | The UUID of the user that created the item. | string | string | true | ***true*** |\n| description      | The description of the item. | string | text_general | true | ***true*** |\n| document         | For assets and content, this field contains the full JSON document for the item. | string | string | false | true |\n| fileName         | For assets, the name of the file that is uploaded to Content. This name is also used when you download the an image, rather than the asset name. | string | string_ci | true | ***true*** |\n| fileSize         | For assets, this field contains the file size in bytes. | number | int | true | ***true*** |\n| height           | For images, this field contains the height. | number | int | true | ***true*** |\n| id               | The identifier of the item. It consists of the classification and the ID separated by a colon. This identifier is unique. | string | string | true | ***true*** |\n| isManaged        | For assets and content, this field specifies whether the content is managed or not managed and whether the asset is a managed asset or a so-called non-managed web asset. | boolean | boolean | true | false |\n| keywords         | The list of keywords related to the item. | array of strings | string_ci | true | ***true*** |\n| lastModified     | The last modification date of the item. | string | date | true | ***true*** |\n| lastModifier     | The name of the user who last modified the item. | string | string_ci | true | ***true*** |\n| lastModifierId   | The UUID of the user that last modified the item. | string | string | true | ***true*** |\n| locale           | The language for which the item was created. | string | string_ci | true | ***true*** |\n| location         | For assets, this field contains the folder path without the file name. This allows for efficient queries for sibling assets. | string | string_ci | true | false |\n| locationPaths    | For assets, this field contains all of the path segments. This allows for efficient queries that return assets in subfolders of the queried value. For example, the query *locationPaths:\"/dxdam\"* will return assets that are stored in the */dxdam* folder or any subfolder. | string | path_hierarchical_index | true | false |\n| locations        | For content, this field contains an array of strings. Each string consists of the latitude and the longitude of a Location element of the content item. For example, this field contains [\"48.666259, 9.039273\", \"53.418880, -6.416081\"] for a content item with two Location elements. | array of strings | location_rpt | true | ***true*** |\n| media            | For assets, this field contains the URL to the binary of the asset. It is relative to the API URL for your tenant. | string | string_ci | true | ***true*** |\n| mediaType        | For assets, this field contains the media type. | string | string | true | ***true*** |\n| name             | The name of the item. | string | string_ci | true | ***true*** |\n| path             | For assets, this field contains the folder path including file name. | string | string_ci | true | ***true*** |\n| renditionCount   | For image profiles, this field contains the number of renditions. | number | int | true | ***true*** |\n| resource         | For assets, this field contains the ID of the related resource. You can use this resource ID with the authoring and delivery resource service REST APIs. | string | string | true | ***true*** |\n| status           | For assets and content, this field contains the state the item is in. The value of this field can be \"draft\", \"ready\" or \"retired\". | string | string_ci | true | ***true*** |\n| tags             | The list of tags assigned to the item. | array of strings | string_ci | true | ***true*** |\n| text             | For content, this field is a collection of field names and text fragments that make up the item. It facilitates full-text search. | array of strings | text_general | true | false |\n| thumbnail        | For assets, this field contains the URL to the thumbnail of the asset. It is relative to the API URL for your tenant. | string | string_ci | true | ***true*** |\n| type             | For content, this field contains the name of the content type. | string | string_ci | true | ***true*** |\n| typeId           | For content, this field contains the ID of the content type. | string | string_ci | true | ***true*** |\n| width            | For images, this field contains the width. | number | int | true | ***true*** |\n\n\\* **Note:** Temporarily, the authoring collection might store field values even though the table above indicates otherwise.\n\n### ***Search Query Examples*** ###\n\n#### **Using a wildcard in the search term** ####\n\nIn this example, the request URL defines a query using the standard query syntax. The \"name\" field is specified as the query field. The search term contains a wildcard to match any name that starts with the word \"Red\", for example \"Red clover\" or \"Red_clover.pdf\".  \nThe \"numFound\" property from the response provides the number of documents that match the query. The value of the \"documents\" property contains the documents from the authoring collection selected by the query. Each document is returned with its stored fields as explained in the description of the authoring collection schema.\n\n##### *Request:* #####\n\n~~~\n{baseURL}/authoring/v1/search?q=name:Red*\n~~~\n\n##### *Response:* #####\n\n~~~\n{\n    \"numFound\": 4,\n    \"documents\": [\n        {\n            \"id\": \"asset:53876d53-fbcf-45cf-8d53-f640c93f55c0\",\n            \"name\": \"Red_clover.jpg\",\n            \"classification\": \"asset\",\n            \"assetType\": \"image\",\n            \"description\": \"This is an image of a red clover plant.\",\n            \"lastModified\": \"2017-06-27T14:49:12.160Z\",\n            \"lastModifier\": \"John Doe\",\n            \"lastModifierId\": \"7129fa28-0d25-4162-8700-cbc5c294dacc\",\n            \"created\": \"2017-06-27T14:49:09.197Z\",\n            \"creator\": \"John Doe\",\n            \"creatorId\": \"7129fa28-0d25-4162-8700-cbc5c294dacc\",\n            \"status\": \"ready\",\n            \"resource\": \"b110f3efdb6e1d305a88348b1caca710\",\n            \"path\": \"/dxdam/53/53876d53-fbcf-45cf-8d53-f640c93f55c0/Red_clover.jpg\",\n            \"mediaType\": \"image/jpeg\",\n            \"fileSize\": 25513,\n            \"width\": 330,\n            \"height\": 440,\n            \"fileName\": \"Red_clover.jpg\",\n            \"thumbnail\": \"/authoring/v1/resources/b110f3efdb6e1d305a88348b1caca710?fit=inside%7C220:145\",\n            \"media\": \"/authoring/v1/resources/b110f3efdb6e1d305a88348b1caca710.jpg\",\n            \"tags\": [\n                \"red clover\",\n                \"clover\",\n                \"alpine clover\",\n                \"pink color\",\n                \"plant\",\n                \"purple color\",\n                \"herb\"\n            ]\n        },\n        {\n            \"id\": \"asset:7001cf29-b28b-4462-9b4a-827ab15eaff4\",\n            \"name\": \"Red_clover.pdf\",\n            \"classification\": \"asset\",\n            \"assetType\": \"file\",\n            \"description\": \"Description of the red clover.\",\n            \"lastModified\": \"2017-06-27T14:49:14.409Z\",\n            \"lastModifier\": \"Jane Doe\",\n            \"lastModifierId\": \"7129fa28-0d25-4162-9400-cbc5c294dacc\",\n            \"created\": \"2017-06-27T14:49:13.130Z\",\n            \"creator\": \"John Doe\",\n            \"creatorId\": \"7129fa28-0d25-4162-8700-cbc5c294dacc\",\n            \"status\": \"ready\",\n            \"resource\": \"14da685e6f1c2c67b26d5a0c80bc2be8\",\n            \"path\": \"/dxdam/70/7001cf29-b28b-4462-9b4a-827ab15eaff4/Red_clover.pdf\",\n            \"mediaType\": \"application/pdf\",\n            \"fileSize\": 331680,\n            \"keywords\": [\n                \"red clover\",\n                \"Trifolium pratense\",\n                \"red clover flowers\",\n                \"red clover rust\",\n                \"Red Clover Pollination\",\n                \"Red Clover Tea\",\n                \"South America\"\n            ],\n            \"fileName\": \"Red_clover.pdf\",\n            \"media\": \"/authoring/v1/resources/14da685e6f1c2c67b26d5a0c80bc2be8.pdf\",\n            \"tags\": [\n                \"Trifolium pratense\",\n                \"US Department of Agriculture\",\n                \"American Cancer Society\",\n                \"Europe\",\n                \"Clover\",\n                \"Western Asia\",\n                \"South America\",\n                \"Africa\"\n            ]\n        },\n        {\n            \"id\": \"asset:454581ee-d0f1-4eb3-9ac6-3ce4990cce24\",\n            \"name\": \"Red_clover_herbarium.jpg\",\n            \"classification\": \"asset\",\n            \"assetType\": \"image\",\n            \"description\": \"This is an image of the red clover from an herbarium.\",\n            \"lastModified\": \"2017-06-27T14:49:13.608Z\",\n            \"lastModifier\": \"Jane Doe\",\n            \"lastModifierId\": \"7129fa28-0d25-4162-9400-cbc5c294dacc\",\n            \"created\": \"2017-06-27T14:49:11.157Z\",\n            \"creator\": \"John Doe\",\n            \"creatorId\": \"7129fa28-0d25-4162-8700-cbc5c294dacc\",\n            \"status\": \"ready\",\n            \"resource\": \"e7cd2cac2e5bfce2878a707377bf42d6\",\n            \"path\": \"/dxdam/45/454581ee-d0f1-4eb3-9ac6-3ce4990cce24/Red_clover_herbarium.jpg\",\n            \"mediaType\": \"image/jpeg\",\n            \"fileSize\": 557238,\n            \"width\": 1601,\n            \"height\": 2200,\n            \"fileName\": \"Red_clover_herbarium.jpg\",\n            \"thumbnail\": \"/authoring/v1/resources/e7cd2cac2e5bfce2878a707377bf42d6?fit=inside%7C220:145\",\n            \"media\": \"/authoring/v1/resources/e7cd2cac2e5bfce2878a707377bf42d6.jpg\",\n            \"tags\": [\n                \"olive green color\",\n                \"plant\",\n                \"clover\",\n                \"herbarium\",\n                \"sage green color\"\n            ]\n        },\n        {\n            \"id\": \"content:c65a949c-5822-49bb-ad5d-647cd9820c57\",\n            \"name\": \"Red clover\",\n            \"classification\": \"content\",\n            \"description\": \"This content provides information on the red clover.\",\n            \"type\": \"Plant\",\n            \"typeId\": \"357e5d59-be20-4fe5-ba9e-31913f6fc229\",\n            \"locale\": \"en\",\n            \"lastModified\": \"2017-06-27T14:49:36.389Z\",\n            \"lastModifier\": \"Jane Doe\",\n            \"lastModifierId\": \"7129fa28-0d25-4162-9400-cbc5c294dacc\",\n            \"created\": \"2017-06-27T14:49:36.389Z\",\n            \"creator\": \"John Doe\",\n            \"creatorId\": \"7129fa28-0d25-4162-8700-cbc5c294dacc\",\n            \"status\": \"ready\",\n            \"categories\": [\n                \"Plant classification/Plantae/Angiosperms/Eudicots/Rosids/Fabales/Fabaceae/Faboideae/Trifolieae/Trifolium\",\n                \"Plant habitats/Grassland/Meadow/Wet meadow\"\n            ],\n            \"tags\": [\n                \"clover\",\n                \"purple\",\n                \"luck\",\n                \"pink\"\n            ]\n        }\n    ]\n}\n~~~\n\n#### **Specifying the fields to return** ####\n\nThis example demonstrates the use of the \"fl\" parameter. It defines that only the \"name\" field and the \"classification\" field will be returned for each document matching the query.\nThe number of returned documents is limited to 10 by default.\n\n##### *Request:* #####\n\n~~~\n  {baseURL}/authoring/v1/search?q=tags:thistle&fl=name&fl=classification\n~~~\n\n##### *Response:* #####\n\n~~~\n{\n    \"numFound\": 12,\n    \"documents\": [\n        {\n            \"name\": \"Spiny_sowthistle.jpg\",\n            \"classification\": \"asset\"\n        },\n        {\n            \"name\": \"Spiny_sowthistle.pdf\",\n            \"classification\": \"asset\"\n        },\n        {\n            \"name\": \"Common_sowthistle.pdf\",\n            \"classification\": \"asset\"\n        },\n        {\n            \"name\": \"Common_sowthistle_herbarium.jpg\",\n            \"classification\": \"asset\"\n        },\n        {\n            \"name\": \"Common_sowthistle.jpg\",\n            \"classification\": \"asset\"\n        },\n        {\n            \"name\": \"Spiny sowthistle\",\n            \"classification\": \"content\"\n        },\n        {\n            \"name\": \"Common sowthistle\",\n            \"classification\": \"content\"\n        },\n        {\n            \"name\": \"Spiny_sowthistle_herbarium.jpg\",\n            \"classification\": \"asset\"\n        },\n        {\n            \"name\": \"Marsh_thistle.jpg\",\n            \"classification\": \"asset\"\n        },\n        {\n            \"name\": \"Marsh_thistle_herbarium.jpg\",\n            \"classification\": \"asset\"\n        }\n    ]\n}\n~~~\n\n#### **Limiting the number of results and returned fields** ####\n\nIn this example, the maximum number of documents to include in the query result is limited to 5.\nBy default, if you do not specify the \"rows\" parameter, the service returns a maximum of 10 documents.\nThe \"fl\" parameter defines that only the \"name\" field and the \"classification\" field will be returned for each document matching the quey.\n\n##### *Request:* #####\n\n~~~\n  {baseURL}/authoring/v1/search?q=tags:thistle&fl=name&fl=classification&rows=5\n~~~\n\n##### *Response:* #####\n\n~~~\n{\n    \"numFound\": 12,\n    \"documents\": [\n        {\n            \"name\": \"Spiny_sowthistle.jpg\",\n            \"classification\": \"asset\"\n        },\n        {\n            \"name\": \"Spiny_sowthistle.pdf\",\n            \"classification\": \"asset\"\n        },\n        {\n            \"name\": \"Common_sowthistle.pdf\",\n            \"classification\": \"asset\"\n        },\n        {\n            \"name\": \"Common_sowthistle_herbarium.jpg\",\n            \"classification\": \"asset\"\n        },\n        {\n            \"name\": \"Common_sowthistle.jpg\",\n            \"classification\": \"asset\"\n        }\n    ]\n}\n~~~\n\n#### **Paging through the query result** ####\n\nIn this example, the \"rows\" parameter is still set to 5 to limit the number of documents returned by the query.\nThe \"start\" parameter defines an absolute offset of 3 in the complete sorted list of matches.\nTherefore, the result of the query includes documents 4 through 8 from a total of 12 documents that match the query.\nIf an index modification (adding or removing) which affects the sequence of ordered documents matching a query occurs\nin between two requests from a client for subsequent pages of results then\nit is possible that these modifications can result in the same document being returned on multiple pages, or documents\nbeing \"skipped\" as the result set shrinks or grows. For more information about sorting and paging see the Solr documentation.\nThe default value of the \"start\" parameter is 0.\n\n##### *Request:* #####\n\n~~~\n  {baseURL}/authpring/v1/search?q=tags:thistle&fl=name&fl=classification&rows=5&start=3\n~~~\n\n##### *Response:* #####\n\n~~~\n{\n    \"numFound\": 12,\n    \"documents\": [\n        {\n            \"name\": \"Common_sowthistle_herbarium.jpg\",\n            \"classification\": \"asset\"\n        },\n        {\n            \"name\": \"Common_sowthistle.jpg\",\n            \"classification\": \"asset\"\n        },\n        {\n            \"name\": \"Spiny sowthistle\",\n            \"classification\": \"content\"\n        },\n        {\n            \"name\": \"Common sowthistle\",\n            \"classification\": \"content\"\n        },\n        {\n            \"name\": \"Spiny_sowthistle_herbarium.jpg\",\n            \"classification\": \"asset\"\n        }\n    ]\n}\n~~~\n\n#### **Sorting the query result** ####\n\nIn this example, the query contains the \"sort\" parameter to sort the query result by \"name\" in an ascending order.\nThe response includes the first 5 documents from the sorted query result. If an index modification (such as adding or\nremoving documents) which affects the sequence of ordered documents matching a query occurs in between two requests from\na client for subsequent pages of results, then it is possible that these modifications can result in the same document\nbeing returned on multiple pages, or documents being \"skipped\" as the result set shrinks or grows. It's recommended to\nsort by unique field or their combination ex:  sort=name asc, lastModified asc\n\n##### *Request:* #####\n\n~~~\n  {baseURL}/authoring/v1/search?q=tags:thistle&fl=name&fl=classification&rows=5&sort=name asc,lastModified asc\n~~~\n\n##### *Response:* #####\n\n~~~\n{\n    \"numFound\": 12,\n    \"documents\": [\n        {\n            \"name\": \"Common sowthistle\",\n            \"classification\": \"content\"\n        },\n        {\n            \"name\": \"Common_sowthistle.jpg\",\n            \"classification\": \"asset\"\n        },\n        {\n            \"name\": \"Common_sowthistle.pdf\",\n            \"classification\": \"asset\"\n        },\n        {\n            \"name\": \"Common_sowthistle_herbarium.jpg\",\n            \"classification\": \"asset\"\n        },\n        {\n            \"name\": \"Marsh thistle\",\n            \"classification\": \"content\"\n        }\n    ]\n}\n~~~\n\n#### **Getting only the number of matching documents** ####\n\nThis example demonstrates how you can limit the response to only the number of documents that match the query by adding the \"rows\" parameters with a value of 0.\n\n##### *Request:* #####\n\n~~~\n  {baseURL}/authoring/v1/search?q=*:*&rows=0\n~~~\n\n##### *Response:* #####\n\n~~~\n{\n    \"numFound\": 169\n}\n~~~\n\n#### **Using boolean operators in a query** ####\n\nThis example demonstrates the use of a boolean operator to combine different conditions in the query. This particular query returns Content \"content\" that is tagged with \"dandelion\". The fields of matching documents that are included in the response are limited to \"name\", \"classification\", and \"tags\".\n\n##### *Request:* #####\n\n~~~\n  {baseURL}/authoring/v1/search?q=classification:content AND tags:dandelion&fl=name&fl=classification&fl=tags\n~~~\n\n##### *Response:* #####\n\n~~~\n{\n    \"numFound\": 1,\n    \"documents\": [\n        {\n            \"name\": \"Common dandelion\",\n            \"classification\": \"content\",\n            \"tags\": [\n                \"dandelion\",\n                \"yellow\",\n                \"tortoise\"\n            ]\n        }\n    ]\n}\n~~~\n\n#### **Getting the \"document\" field as JSON object** ####\n\nIn this example, the query is extended by an additional \"fl\" parameter to also retrieve the \"document\" field. To return the value of that specific field as JSON object, the \"[json]\" qualifier is added. By default, the field value is returned as an escaped JSON string. \n\n##### *Request:* #####\n\n~~~\n  {baseURL}/authoring/v1/search?q=classification:content AND tags:dandelion&fl=name&fl=classification&fl=tags&fl=document:[json]\n~~~\n\n##### *Response:* #####\n\n~~~\n{\n    \"numFound\": 1,\n    \"documents\": [\n        {\n            \"name\": \"Common dandelion\",\n            \"classification\": \"content\",\n            \"tags\": [\n                \"dandelion\",\n                \"yellow\",\n                \"tortoise\"\n            ],\n            \"document\": {\n                \"id\": \"662c212c-e8f6-4dcc-b4fa-cddb76aac7c0\",\n                \"name\": \"Common dandelion\",\n                \"description\": \"This content provides information on the common dandelion.\",\n                \"classification\": \"content\",\n                \"typeId\": \"357e5d59-be20-4fe5-ba9e-31913f6fc229\",\n                \"locale\": \"en\",\n                \"lastModified\": \"2017-06-27T14:49:35.361Z\",\n                \"lastModifierId\": \"7129fa28-0d25-4162-8700-cbc5c294dacc\",\n                \"created\": \"2017-06-27T14:49:35.361Z\",\n                \"creatorId\": \"7129fa28-0d25-4162-8700-cbc5c294dacc\",\n                \"tags\": [\n                    \"dandelion\",\n                    \"yellow\",\n                    \"tortoise\"\n                ],\n                \"status\": \"ready\",\n                \"elements\": {\n                    \"source\": {\n                        \"elementType\": \"link\",\n                        \"linkURL\": \"https://en.wikipedia.org/wiki/Taraxacum_officinale\",\n                        \"linkText\": \"Wikipedia\"\n                    },\n                    \"scientificClassification\": {\n                        \"elementType\": \"category\",\n                        \"categoryIds\": [\n                            \"e7411413986ff741cb4495df45e4b7a1\"\n                        ],\n                        \"categories\": [\n                            \"Plant classification/Plantae/Angiosperms/Eudicots/Asterids/Asterales/Asteraceae/Cichorioideae/Cichorieae/Taraxacum\"\n                        ]\n                    },\n                    \"attachment\": {\n                        \"elementType\": \"file\",\n                        \"asset\": {\n                            \"id\": \"ba56e2b8-c7bf-4f45-b791-323f85fdfbc5\",\n                            \"resourceUri\": \"/authoring/v1/resources/623912367a4183a13fd53be2ad9d65e9\",\n                            \"fileSize\": 485686,\n                            \"fileName\": \"Common_dandelion.pdf\",\n                            \"mediaType\": \"application/pdf\"\n                        }\n                    },\n                    \"commonNames\": {\n                        \"elementType\": \"text\",\n                        \"value\": \"common dandelion,dandelion\"\n                    },\n                    \"binomialName\": {\n                        \"elementType\": \"text\",\n                        \"value\": \"taraxacum officinale\"\n                    },\n                    \"herbariumSpecimenDate\": {\n                        \"elementType\": \"datetime\",\n                        \"value\": \"1999-10-02T22:00:00Z\"\n                    },\n                    \"photo\": {\n                        \"elementType\": \"image\",\n                        \"renditions\": {\n                            \"default\": {\n                                \"renditionId\": \"1d9c8fd6-5d82-477c-bf5c-08ef8bd3f9c8\",\n                                \"source\": \"/authoring/v1/resources/14da685e6f1c2c67b26d5a0c80b2ed91\"\n                            }\n                        },\n                        \"asset\": {\n                            \"id\": \"16ae839a-5c79-4d83-bc80-14fa794c890f\",\n                            \"resourceUri\": \"/authoring/v1/resources/14da685e6f1c2c67b26d5a0c80b2ed91\",\n                            \"fileName\": \"Common_dandelion.jpg\",\n                            \"fileSize\": 24800,\n                            \"mediaType\": \"image/jpeg\"\n                        }\n                    },\n                    \"description\": {\n                        \"elementType\": \"text\",\n                        \"value\": \"Taraxacum officinale is a flowering herbaceous perennial plant of the family Asteraceae (Compositae).\\n\\nIt can be found growing in temperate regions of the world, in lawns, on roadsides, on disturbed banks and shores of water ways, and other areas with moist soils. T. officinale is considered a weed, especially in lawns and along roadsides, but it is sometimes used as a medical herb and in food preparation. Common dandelion is well known for its yellow flower heads that turn into round balls of silver tufted fruits that disperse in the wind called \\\"blowballs\\\" or \\\"clocks\\\" (in both British and American English).\\n\\nTaraxacum officinale grows from generally unbranched taproots and produces one to more than ten stems that are typically 5–40 cm (2.0–15.7 in) tall, but sometimes up to 70 cm (28 in) tall. The stems can be tinted purplish, they are upright or lax, and produce flower heads that are held as tall or taller than the foliage. The foliage may be upright-growing or horizontally spreading; the leaves have petioles that are either unwinged or narrowly winged. The stems can be glabrous or sparsely covered with short hairs. Plants have milky latex and the leaves are all basal; each flowering stem lacks bracts and has one single flower head. The yellow flower heads lack receptacle bracts and all the flowers, which are called florets, are ligulate and bisexual. In many lineages, fruits are mostly produced by apomixis, notwithstanding the flowers are visited by many types of insects.\\n\\nThe leaves are 5–45 cm (2.0–17.7 in) long and 1–10 cm (0.39–3.94 in) wide, and are oblanceolate, oblong, or obovate in shape, with the bases gradually narrowing to the petiole. The leaf margins are typically shallowly lobed to deeply lobed and often lacerate or toothed with sharp or dull teeth.\\n\\nThe calyculi (the cuplike bracts that hold the florets) are composed of 12 to 18 segments: each segment is reflexed and sometimes glaucous. The lanceolate shaped bractlets are in two series, with the apices acuminate in shape. The 14–25 mm (0.55–0.98 in) wide involucres are green to dark green or brownish-green, with the tips dark gray or purplish. The florets number 40 to over 100 per head, having corollas that are yellow or orange-yellow in color.\\n\\nThe fruits, called cypselae, range in color from olive-green or olive-brown to straw-colored to grayish, they are oblanceoloid in shape and 2–3 mm (0.079–0.118 in) long with slender beaks. The fruits have 4 to 12 ribs that have sharp edges. The silky pappi, which form the parachutes, are white to silver-white in color and around 6 mm wide. Plants typically have 24 or 40 pairs of chromosomes, while some have 16 or 32 pairs.\"\n                    },\n                    \"herbariumSpecimenLocality\": {\n                        \"elementType\": \"category\",\n                        \"categoryIds\": [\n                            \"e7cd2cac2e5bfce2878a7073777b0e78\"\n                        ],\n                        \"categories\": [\n                            \"Plant habitats/Grassland/Meadow/Wet meadow\"\n                        ]\n                    },\n                    \"herbariumSpecimenPhoto\": {\n                        \"elementType\": \"image\",\n                        \"renditions\": {\n                            \"default\": {\n                                \"renditionId\": \"2be697cd-30df-4f1d-afc8-ac17fa0ab5a0\",\n                                \"source\": \"/authoring/v1/resources/b110f3efdb6e1d305a88348b1ca4d530\"\n                            },\n                            \"medium\": {\n                                \"renditionId\": \"eb688f20-2fb0-414f-a6aa-8f6e0f8a61b3\",\n                                \"source\": \"/authoring/v1/resources/b110f3efdb6e1d305a88348b1ca4d530?resize=800px:1100px&crop=800:1100;0,0\"\n                            },\n                            \"large\": {\n                                \"renditionId\": \"112f0a63-72b0-4b39-b769-c7bdadcae542\",\n                                \"source\": \"/authoring/v1/resources/b110f3efdb6e1d305a88348b1ca4d530?resize=1200px:1650px&crop=1200:1650;0,0\"\n                            },\n                            \"small\": {\n                                \"renditionId\": \"4a06a904-64cd-4942-ae1b-1b15389e48e2\",\n                                \"source\": \"/authoring/v1/resources/b110f3efdb6e1d305a88348b1ca4d530?resize=400px:550px&crop=400:550;0,0\"\n                            }\n                        },\n                        \"asset\": {\n                            \"id\": \"852c1de4-661e-4a18-9ba8-bb49c65c50a6\",\n                            \"resourceUri\": \"/authoring/v1/resources/b110f3efdb6e1d305a88348b1ca4d530\",\n                            \"fileName\": \"Common_dandelion_herbarium.jpg\",\n                            \"fileSize\": 695051,\n                            \"mediaType\": \"image/jpeg\"\n                        }\n                    }\n                },\n                \"type\": \"Plant\",\n                \"creator\": \"John Doe\",\n                \"lastModifier\": \"John Doe\",\n                \"rev\": \"1-58a14c32fbe1af22dd368c10a350d401\"\n            }\n        }\n    ]\n}\n~~~\n\n#### **Getting documents including all available stored fields** ####\n\nIn this example, the query matches all Content items of type \"asset\" that are tagged with \"dandelion\". The response includes the first document matching the query and provides all stored fields that are available for that document.\n\n##### *Request:* #####\n\n~~~\n  {baseURL}/authoring/v1/search?q=classification:asset AND tags:dandelion&fl=*&rows=1&amp;fl=document:[json]\n~~~\n\n##### *Response:* #####\n\n~~~\n{\n    \"numFound\": 3,\n    \"documents\": [\n        {\n            \"id\": \"asset:16ae839a-5c79-4d83-bc80-14fa794c890f\",\n            \"name\": \"Common_dandelion.jpg\",\n            \"classification\": \"asset\",\n            \"assetType\": \"image\",\n            \"description\": \"This is an image of a common dandelion plant.\",\n            \"lastModified\": \"2017-06-27T14:49:20.045Z\",\n            \"lastModifier\": \"John Doe\",\n            \"lastModifierId\": \"7129fa28-0d25-4162-8700-cbc5c294dacc\",\n            \"created\": \"2017-06-27T14:49:18.152Z\",\n            \"creator\": \"John Doe\",\n            \"creatorId\": \"7129fa28-0d25-4162-8700-cbc5c294dacc\",\n            \"status\": \"ready\",\n            \"resource\": \"14da685e6f1c2c67b26d5a0c80b2ed91\",\n            \"path\": \"/dxdam/16/16ae839a-5c79-4d83-bc80-14fa794c890f/Common_dandelion.jpg\",\n            \"location\": \"/dxdam/16/16ae839a-5c79-4d83-bc80-14fa794c890f\",\n            \"locationPaths\": \"/dxdam/16/16ae839a-5c79-4d83-bc80-14fa794c890f\",\n            \"mediaType\": \"image/jpeg\",\n            \"fileSize\": 24800,\n            \"width\": 300,\n            \"height\": 300,\n            \"fileName\": \"Common_dandelion.jpg\",\n            \"thumbnail\": \"/authoring/v1/resources/14da685e6f1c2c67b26d5a0c80b2ed91?fit=inside%7C220:145\",\n            \"media\": \"/authoring/v1/resources/14da685e6f1c2c67b26d5a0c80b2ed91.jpg\",\n            \"tags\": [\n                \"hawkweed\",\n                \"common dandelion\",\n                \"pale yellow color\",\n                \"oxtongue\",\n                \"dandelion\",\n                \"cat's-ear\",\n                \"plant\",\n                \"weed\",\n                \"yellow color\",\n                \"herb\"\n            ],\n            \"text\": [\n                \"common dandelion\",\n                \"300x300\"\n            ],\n            \"isManaged\": true,\n            \"document\": {\n                \"mediaType\": \"image/jpeg\",\n                \"name\": \"Common_dandelion.jpg\",\n                \"path\": \"/dxdam/16/16ae839a-5c79-4d83-bc80-14fa794c890f/Common_dandelion.jpg\",\n                \"digest\": \"JK500obHI3/Rq9eoL+6/mg==\",\n                \"usageRights\": {\n                    \"categories\": []\n                },\n                \"assetType\": \"image\",\n                \"lastModified\": \"2017-06-27T14:49:20.045Z\",\n                \"description\": \"This is an image of a common dandelion plant.\",\n                \"tags\": {\n                    \"values\": [\n                        \"classification:hawkweed\",\n                        \"classification:common dandelion\",\n                        \"classification:pale yellow color\",\n                        \"classification:oxtongue\",\n                        \"dandelion\",\n                        \"classification:cat's-ear\",\n                        \"classification:plant\",\n                        \"classification:weed\",\n                        \"classification:yellow color\",\n                        \"classification:herb\"\n                    ],\n                    \"declined\": [],\n                    \"analysis\": \"complete\",\n                    \"suggested\": [\n                        \"classification:common dandelion\",\n                        \"classification:herb\",\n                        \"classification:plant\",\n                        \"classification:cat's-ear\",\n                        \"classification:weed\",\n                        \"classification:hawkweed\",\n                        \"classification:pale yellow color\"\n                    ]\n                },\n                \"altText\": \"common dandelion\",\n                \"categoryIds\": [],\n                \"fileName\": \"Common_dandelion.jpg\",\n                \"creatorId\": \"7129fa28-0d25-4162-8700-cbc5c294dacc\",\n                \"rev\": \"2-8c303149b41f473432d334432dc1c2c3\",\n                \"cognitive\": {\n                    \"classifications\": [\n                        \"common dandelion\",\n                        \"herb\",\n                        \"plant\",\n                        \"cat's-ear\",\n                        \"weed\",\n                        \"hawkweed\",\n                        \"pale yellow color\"\n                    ],\n                    \"faces\": [],\n                    \"colors\": {\n                        \"vibrant\": \"#d5b706\",\n                        \"muted\": \"#5c4c44\",\n                        \"darkVibrant\": \"#856706\",\n                        \"darkMuted\": \"#46522b\"\n                    },\n                    \"status\": \"complete\"\n                },\n                \"id\": \"16ae839a-5c79-4d83-bc80-14fa794c890f\",\n                \"resource\": \"14da685e6f1c2c67b26d5a0c80b2ed91\",\n                \"fileSize\": 24800,\n                \"status\": \"ready\",\n                \"lastModifierId\": \"7129fa28-0d25-4162-8700-cbc5c294dacc\",\n                \"renditions\": {\n                    \"default\": {\n                        \"id\": \"r=14da685e6f1c2c67b26d5a0c80b2ed91&a=16ae839a-5c79-4d83-bc80-14fa794c890f\",\n                        \"source\": \"/authoring/v1/resources/14da685e6f1c2c67b26d5a0c80b2ed91\"\n                    }\n                },\n                \"metadata\": {\n                    \"width\": 300,\n                    \"height\": 300\n                },\n                \"classification\": \"asset\",\n                \"created\": \"2017-06-27T14:49:18.152Z\",\n                \"links\": {\n                    \"self\": {\n                        \"href\": \"/authoring/v1/assets/16ae839a-5c79-4d83-bc80-14fa794c890f\"\n                    },\n                    \"media\": {\n                        \"href\": \"/authoring/v1/resources/14da685e6f1c2c67b26d5a0c80b2ed91.jpg\"\n                    },\n                    \"thumbnail\": {\n                        \"href\": \"/authoring/v1/resources/14da685e6f1c2c67b26d5a0c80b2ed91?fit=inside%7C220:145\"\n                    }\n                },\n                \"creator\": \"John Doe\",\n                \"lastModifier\": \"John Doe\",\n                \"categories\": []\n            },\n            \"_version_\": 1571369737461432320\n        }\n    ]\n}\n~~~\n\n#### **Searching only in a subset of all documents** ####\n\nThis example demonstrates the use of the \"fq\" parameter to search only in the specific subset of all documents that are classified as \"asset\". The filter query is a means to limit the set of documents that can be returned by a query. Restricting the query to a subset of all documents can speed up complex queries, because the filter query is cached independently from the main query.\n\n##### *Request:* #####\n\n~~~\n  {baseURL}/authoring/v1/search?fq=classification:asset&q=tags:dandelion&fl=name&fl=classification\n~~~\n\n##### *Response:* #####\n\n~~~\n{\n    \"numFound\": 3,\n    \"documents\": [\n        {\n            \"name\": \"Common_dandelion.pdf\",\n            \"classification\": \"asset\"\n        },\n        {\n            \"name\": \"Common_dandelion_herbarium.jpg\",\n            \"classification\": \"asset\"\n        },\n        {\n            \"name\": \"Common_dandelion.jpg\",\n            \"classification\": \"asset\"\n        }\n    ]\n}\n~~~\n\n#### **Getting documents based on the last modification date** ####\n\nThis example demonstrates the use of the \"fq\" parameter to search only in the specific subset of all documents that were modified in the last 2 days. The filter query is a means to limit the set of documents that can be returned by a query. Restricting the query to a subset of all documents can speed up complex queries, because the filter query is cached independently from the main query.\n\n##### *Request:* #####\n\n~~~\n  {baseURL}/authoring/v1/search?fq=lastModified:[NOW-2DAYS/DAY TO NOW]&q=tags:thistle&fl=lastModified&fl=name\n~~~\n\n##### *Response:* #####\n\n~~~\n{\n    \"numFound\": 4,\n    \"documents\": [\n        {\n            \"name\": \"Marsh_thistle.jpg\",\n            \"lastModified\": \"2017-07-03T08:38:50.870Z\"\n        },\n        {\n            \"name\": \"Marsh_thistle_herbarium.jpg\",\n            \"lastModified\": \"2017-07-03T08:39:29.610Z\"\n        },\n        {\n            \"name\": \"Marsh_thistle.pdf\",\n            \"lastModified\": \"2017-07-03T08:40:15.777Z\"\n        },\n        {\n            \"name\": \"Marsh thistle\",\n            \"lastModified\": \"2017-07-03T08:37:10.966Z\"\n        }\n    ]\n}\n~~~\n\n#### **Getting documents with a specific field not set** ####\n\nIn this example, all documents are filtered to retrieve only entries that have no data set for the field 'tags'. The query returns only the 5 most recently updated documents. \n\n##### *Request:* #####\n\n~~~\n  {baseURL}/authoring/v1/search?q=*:*&fq=NOT tags:[* TO *]&sort=lastModified desc&rows=5&fl=name&fl=classification&fl=lastModified\n~~~\n\n##### *Response:* #####\n\n~~~\n{\n    \"numFound\": 98,\n    \"documents\": [\n        {\n            \"name\": \"Plant habitats\",\n            \"classification\": \"taxonomy\",\n            \"lastModified\": \"2017-07-24T12:43:17.065Z\"\n        },\n        {\n            \"name\": \"Chelidonium\",\n            \"classification\": \"category\",\n            \"lastModified\": \"2017-06-27T15:00:24.342Z\"\n        },\n        {\n            \"name\": \"Taraxacum\",\n            \"classification\": \"category\",\n            \"lastModified\": \"2017-06-27T14:49:03.920Z\"\n        },\n        {\n            \"name\": \"Trifolium\",\n            \"classification\": \"category\",\n            \"lastModified\": \"2017-06-27T14:49:02.458Z\"\n        },\n        {\n            \"name\": \"Cirsium\",\n            \"classification\": \"category\",\n            \"lastModified\": \"2017-06-27T14:49:00.952Z\"\n        }\n    ]\n} \n~~~\n\n#### **Getting documents with a specific field not set in combination with an OR clause** ####\n\nIn this example, all documents are filtered to retrieve only entries that were modified in the last 21 days or that have no data set for the field 'tags'. The query returns only the 5 most recently updated documents.\n\n##### *Request:* #####\n\n~~~\n  {baseURL}/authoring/v1/search?q=*:*&fq=lastModified:[NOW-21DAYS TO NOW] OR (*:* NOT tags:[* TO *])&sort=lastModified desc&rows=5&fl=name&fl=classification&fl=lastModified\n~~~\n\n##### *Response:* #####\n\n~~~\n{\n    \"numFound\": 99,\n    \"documents\": [\n        {\n            \"name\": \"Plant habitats\",\n            \"classification\": \"taxonomy\",\n            \"lastModified\": \"2017-07-24T12:43:17.065Z\"\n        },\n        {\n            \"name\": \"Marsh thistle\",\n            \"classification\": \"content\",\n            \"lastModified\": \"2017-07-03T08:37:10.966Z\"\n        },\n        {\n            \"name\": \"Chelidonium\",\n            \"classification\": \"category\",\n            \"lastModified\": \"2017-06-27T15:00:24.342Z\"\n        },\n        {\n            \"name\": \"Taraxacum\",\n            \"classification\": \"category\",\n            \"lastModified\": \"2017-06-27T14:49:03.920Z\"\n        },\n        {\n            \"name\": \"Trifolium\",\n            \"classification\": \"category\",\n            \"lastModified\": \"2017-06-27T14:49:02.458Z\"\n        }\n    ]\n} \n~~~\n\n#### **Getting available facet terms** ####\n\nFaceted search organizes search results into categories based on terms from the indexed items. This can be useful, for example, to implement typeahead suggestions or filter functions. \n\nTo enable faceting, add the \"facet\" parameter to the request and set its value to \"true\". Then use the \"facet.field\" parameter to specify each field to be treated as a facet. \nIn this example, the response contains the facet terms that are available in the authoring collection for the fields \"classification\", \"type\", and \"assetType\". \nThe request does not contain a query that matches any documents. Therefore, the \"numFound\" property from the response and the number following each facet term are 0.\n\n##### *Request:* #####\n\n~~~\n  {baseURL}/authoring/v1/search?facet=true&facet.field=classification&facet.field=type&facet.field=assetType\n~~~\n\n##### *Response:* #####\n\n~~~\n{\n    \"numFound\": 0,\n    \"facets\": {\n        \"classification\": [\n            \"asset\",\n            0,\n            \"category\",\n            0,\n            \"content\",\n            0,\n            \"content-type\",\n            0,\n            \"image-profile\",\n            0,\n            \"taxonomy\",\n            0\n        ],\n        \"type\": [\n            \"plant\",\n            0\n        ],\n        \"assetType\": [\n            \"file\",\n            0,\n            \"image\",\n            0\n        ]\n    }\n}\n~~~\n\n#### **Getting available facet terms that contain a specific substring** ####\n\nThis example demonstrates the use of the \"facet.contains\" parameter to retrieve only facet terms that contain a specific character or character sequence.\n\n##### *Request:* #####\n\n~~~\n  {baseURL}/authoring/v1/search?facet=true&facet.field=classification&facet.field=type&facet.field=assetType&facet.contains=nt\n~~~\n\n##### *Response:* #####\n\n~~~\n{\n    \"numFound\": 0,\n    \"facets\": {\n        \"classification\": [\n            \"content\",\n            0,\n            \"content-type\",\n            0\n        ],\n        \"type\": [\n            \"plant\",\n            0\n        ],\n        \"assetType\": []\n    }\n}\n~~~\n\n#### **Limiting the number of returned facet terms** ####\n\nThis example uses the \"facet.limit\" parameter to obtain only the first facet term for each selected facet.\n\n##### *Request:* #####\n\n~~~\n  {baseURL}/authoring/v1/search?facet=true&facet.field=classification&facet.field=type&facet.field=assetType&facet.limit=1\n~~~\n\n##### *Response:* #####\n\n~~~\n{\n    \"numFound\": 0,\n    \"facets\": {\n        \"classification\": [\n            \"asset\",\n            0\n        ],\n        \"type\": [\n            \"plant\",\n            0\n        ],\n        \"assetType\": [\n            \"file\",\n            0\n        ]\n    }\n}\n~~~\n\n#### **Paging through the returned facet terms** ####\n\nIn this example, the \"facet.limit\" parameter is still set to 1 to limit the number of facet terms in the response. The \"facet.offset\" parameter defines an offset of 1.\nTherefore, the response includes the second facet term for each facet provided there are more facet terms available.\n\n##### *Request:* #####\n\n~~~\n  {baseURL}/authoring/v1/search?facet=true&facet.field=classification&facet.field=type&facet.field=assetType&facet.limit=1&facet.offset=1\n~~~\n\n##### *Response:* #####\n\n~~~\n{\n    \"numFound\": 0,\n    \"facets\": {\n        \"classification\": [\n            \"category\",\n            0\n        ],\n        \"type\": [],\n        \"assetType\": [\n            \"image\",\n            0\n        ]\n    }\n}\n~~~\n\n#### **Getting facet ranges** ####\n\nThis example demonstrates the use of range faceting by adding corresponding \"facet.range\" parameters to the request. \nRange faceting is supported on date and numeric fields that support range queries.  \n\n##### *Request:* #####\n\n~~~\n  {baseURL}/authoring/v1/search?facet=true&facet.range=created&facet.range.start=NOW/DAY-3DAYS&facet.range.end=NOW&facet.range.gap=%2B1DAY\n~~~\n\n##### Response: #####\n\n~~~\n{\n    \"numFound\": 0,\n    \"facet_ranges\": {\n        \"created\": {\n            \"counts\": [\n                \"2017-07-03T00:00:00Z\",\n                0,\n                \"2017-07-04T00:00:00Z\",\n                0,\n                \"2017-07-05T00:00:00Z\",\n                0,\n                \"2017-07-06T00:00:00Z\",\n                0\n            ],\n            \"gap\": \"+1DAY\",\n            \"start\": \"2017-07-03T00:00:00Z\",\n            \"end\": \"2017-07-07T00:00:00Z\"\n        }\n    }\n}\n~~~\n\n#### **Getting the facet term information for a query result** ####\n\nThis example shows the combination of a query and faceting. The response contains information about the usage of the selected facet terms across all documents of the query result.\nAmong the 32 documents that match the query there are:\n* 24 documents with the \"classification\" field value set to \"asset\" and 8 classified as \"content\"\n* 8 documents with the content \"type\" field value set to \"plant\"\n* 16 documents with the \"assetType\" field value set to \"image\" and 8 assets of type \"file\"\n\n##### *Request:* #####\n\n~~~\n  {baseURL}/authoring/v1/search?q=name:Common*&fl=name&fl=classification&facet=true&facet.field=classification&facet.field=type&facet.field=assetType&rows=5\n~~~\n\n##### *Response:* #####\n\n~~~\n{\n    \"numFound\": 32,\n    \"documents\": [\n        {\n            \"name\": \"Common_daisy.jpg\",\n            \"classification\": \"asset\"\n        },\n        {\n            \"name\": \"Common_reed_herbarium.jpg\",\n            \"classification\": \"asset\"\n        },\n        {\n            \"name\": \"Common_yarrow.jpg\",\n            \"classification\": \"asset\"\n        },\n        {\n            \"name\": \"Common_nettle.pdf\",\n            \"classification\": \"asset\"\n        },\n        {\n            \"name\": \"Common_silverweed.pdf\",\n            \"classification\": \"asset\"\n        }\n    ],\n    \"facets\": {\n        \"classification\": [\n            \"asset\",\n            24,\n            \"content\",\n            8,\n            \"category\",\n            0,\n            \"content-type\",\n            0,\n            \"image-profile\",\n            0,\n            \"taxonomy\",\n            0\n        ],\n        \"type\": [\n            \"plant\",\n            8\n        ],\n        \"assetType\": [\n            \"image\",\n            16,\n            \"file\",\n            8\n        ]\n    }\n}\n~~~\n\n#### **Using the Extended DisMax query parser** ####\n\nThe Content authoring search service REST API includes an additional query parser that supports more parameters than the standard query parser used in the previous examples.\n\nIn this example, the \"defType\" parameter tells the service to use the \"edismax\" query parser. The query that matches the term \"content\" or \"asset\" is performed on the query field \"classification\" that is specified using the \"qf\" parameter.  \nThe response includes a maximum of 1 document as per \"rows\" parameter.\n\n##### *Request:* #####\n\n~~~\n  {baseURL}/authoring/v1/search?q=content OR asset&defType=edismax&qf=classification&rows=1\n~~~\n\n##### *Response:* #####\n\n~~~\n{\n    \"numFound\": 68,\n    \"documents\": [\n        {\n            \"id\": \"content:23c6a637-d5e8-4ef8-ba87-0f5c2fb2aa62\",\n            \"name\": \"Common daisy\",\n            \"classification\": \"content\",\n            \"description\": \"This content provides information on the common daisy.\",\n            \"type\": \"Plant\",\n            \"typeId\": \"357e5d59-be20-4fe5-ba9e-31913f6fc229\",\n            \"locale\": \"en\",\n            \"lastModified\": \"2017-06-27T14:49:35.333Z\",\n            \"lastModifier\": \"John Doe\",\n            \"lastModifierId\": \"7129fa28-0d25-4162-8700-cbc5c294dacc\",\n            \"created\": \"2017-06-27T14:49:35.333Z\",\n            \"creator\": \"John Doe\",\n            \"creatorId\": \"7129fa28-0d25-4162-8700-cbc5c294dacc\",\n            \"status\": \"ready\",\n            \"categories\": [\n                \"Plant classification/Plantae/Angiosperms/Eudicots/Asterids/Asterales/Asteraceae/Asteroideae/Astereae/Bellis\",\n                \"Plant habitats/Grassland/Meadow/Rich pasture\"\n            ],\n            \"tags\": [\n                \"daisy\",\n                \"white\",\n                \"yellow\"\n            ]\n        }\n    ]\n}\n~~~\n<br />User roles: admin, manager, editor, viewer"
+      parameters:
+      - name: defType
+        description: The Solr "defType" parameter. Specify "defType=edismax" to use the edismax query parser.
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: df
+        description: Either the Solr "df" or "qf" parameter is required. The parameter is supported by the edismax query parser.
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: facet
+        description: The Solr "facet" parameter enables faceted search. Always set this parameter to true if you are using the other "facet" parameters.
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: facet.contains
+        description: The Solr "facet.contains" parameter returns only facets containing this term.
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: facet.containsIgnoreCase
+        description: The Solr "facet.containsIgnoreCase" parameter ignores case when the "facet.contains" parameter is applied.
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: facet.field
+        description: The Solr "facet.field" parameter identifies a field to be used as a facet.
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: facet.limit
+        description: The Solr "facet.limit" parameter specifies a limit for the number of results that are returned for each facet. Default value is 100.
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: facet.offset
+        description: The Solr "facet.offset" parameter specifies an offset into the facet results that are returned and can be used for paging facet results. Default value is 0.
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: facet.prefix
+        description: The Solr "facet.prefix" parameter returns only facets with this prefix.
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: facet.range
+        description: The Solr "facet.range" parameter.
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: facet.range.end
+        description: The Solr "facet.range.end" parameter.
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: facet.range.gap
+        description: The Solr "facet.range.gap" parameter.
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: facet.range.start
+        description: The Solr "facet.range.start" parameter.
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: fl
+        description: The Solr "fl" parameter defines the fields that are returned in the response. By default, the search service returns all fields that are highlighted in the "Stored" column of the table at the beginning of this document.
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: fq
+        description: The Solr "fq" parameter applies a filter query to the search results.
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: f.<fieldName>.<FacetParam>
+        description: Many "facet" parameters can be overridden on a per-field basis using the syntax "f.<fieldName>.<FacetParam>=<value>". For example, to specify a general limit of 10 terms for all facet fields and a specific limit of 5 terms for only the "category" facet field, use "facet.limit=10" and "f.category.facet.limit=5".
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: indent
+        description: If the Solr "indent" parameter is not "off" and has a non-blank value, then Solr attempts at indenting the XML response such that it is easier to read. The default behavior is not to indent the XML response.
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: q
+        description: The Solr "q" parameter uses Solr/Lucene standard query syntax.
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: qf
+        description: Either the Solr "df" or "qf" parameter is required. The parameter is supported by the edismax query parser.
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: rows
+        description: The Solr "rows" parameter controls how many documents are returned at the most, and can be used for paging query results. The default value is 10. The maximum allowed value is 1000.
+        in: query
+        required: false
+        schema:
+          type: integer
+      - name: sort
+        description: The Solr "sort" parameter controls sorting of the query response. Sorting on not unique fields can cause paging to return duplicate or missing entries in subsequent pages of results. It's recommended to sort by unique field or a combination ex. sort=lastModied desc, status desc.
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: start
+        description: The Solr "start" parameter specifies an offset into the responses, which are returned and can be used for paging query results. Default value is 0.
+        in: query
+        required: false
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: See the description above for examples of response data for different queries.
+        '400':
+          description: Bad request - Unable to complete your request due to missing parameters. Provide all required parameters and try again.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: This JSON object describes an error condition.
+                properties:
+                  requestId:
+                    type: string
+                    description: The unique identifier of the request that failed.
+                  service:
+                    type: string
+                    description: The name of the service that reports the error.
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: This JSON object describes a specific error of an error condition.
+                      properties:
+                        code:
+                          type: integer
+                          description: An error code that is specific to the service that reports the error.
+                        message:
+                          type: string
+                          description: A message that describes what went wrong.
+                        description:
+                          type: string
+                          description: A more detailed explanation of the error condition and recommended steps to resolve the issue.
+                        more_info:
+                          type: string
+                          description: A URL pointing to a source that provides more information on this error.
+                        level:
+                          type: string
+                          enum:
+                          - ERROR
+                          - WARNING
+                          description: The severity of this error.
+                        parameters:
+                          type: object
+                          description: Additional properties that represent dynamic parts used in the 'message'.
+                        cause:
+                          type: object
+                          description: The error message that was produced by a downstream service and represents the cause of this error.
+                        locale:
+                          type: string
+                          description: The locale information of the text provided as 'message' and as 'description' of this error.
+                      required:
+                      - code
+                      - message
+                required:
+                - requestId
+                - errors
+        '404':
+          description: Not found - The authoring collection was not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: This JSON object describes an error condition.
+                properties:
+                  requestId:
+                    type: string
+                    description: The unique identifier of the request that failed.
+                  service:
+                    type: string
+                    description: The name of the service that reports the error.
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: This JSON object describes a specific error of an error condition.
+                      properties:
+                        code:
+                          type: integer
+                          description: An error code that is specific to the service that reports the error.
+                        message:
+                          type: string
+                          description: A message that describes what went wrong.
+                        description:
+                          type: string
+                          description: A more detailed explanation of the error condition and recommended steps to resolve the issue.
+                        more_info:
+                          type: string
+                          description: A URL pointing to a source that provides more information on this error.
+                        level:
+                          type: string
+                          enum:
+                          - ERROR
+                          - WARNING
+                          description: The severity of this error.
+                        parameters:
+                          type: object
+                          description: Additional properties that represent dynamic parts used in the 'message'.
+                        cause:
+                          type: object
+                          description: The error message that was produced by a downstream service and represents the cause of this error.
+                        locale:
+                          type: string
+                          description: The locale information of the text provided as 'message' and as 'description' of this error.
+                      required:
+                      - code
+                      - message
+                required:
+                - requestId
+                - errors
+        '414':
+          description: The request URL that addresses the search service is larger than the supported size of 4,096 bytes. Reduce the length of the query.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: This JSON object describes an error condition.
+                properties:
+                  requestId:
+                    type: string
+                    description: The unique identifier of the request that failed.
+                  service:
+                    type: string
+                    description: The name of the service that reports the error.
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: This JSON object describes a specific error of an error condition.
+                      properties:
+                        code:
+                          type: integer
+                          description: An error code that is specific to the service that reports the error.
+                        message:
+                          type: string
+                          description: A message that describes what went wrong.
+                        description:
+                          type: string
+                          description: A more detailed explanation of the error condition and recommended steps to resolve the issue.
+                        more_info:
+                          type: string
+                          description: A URL pointing to a source that provides more information on this error.
+                        level:
+                          type: string
+                          enum:
+                          - ERROR
+                          - WARNING
+                          description: The severity of this error.
+                        parameters:
+                          type: object
+                          description: Additional properties that represent dynamic parts used in the 'message'.
+                        cause:
+                          type: object
+                          description: The error message that was produced by a downstream service and represents the cause of this error.
+                        locale:
+                          type: string
+                          description: The locale information of the text provided as 'message' and as 'description' of this error.
+                      required:
+                      - code
+                      - message
+                required:
+                - requestId
+                - errors
+        '429':
+          description: Too Many Requests, the server has reached a limit, the request must be sent again at a later time.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error - Unable to complete your request due to an exception. Try again later.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: This JSON object describes an error condition.
+                properties:
+                  requestId:
+                    type: string
+                    description: The unique identifier of the request that failed.
+                  service:
+                    type: string
+                    description: The name of the service that reports the error.
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: This JSON object describes a specific error of an error condition.
+                      properties:
+                        code:
+                          type: integer
+                          description: An error code that is specific to the service that reports the error.
+                        message:
+                          type: string
+                          description: A message that describes what went wrong.
+                        description:
+                          type: string
+                          description: A more detailed explanation of the error condition and recommended steps to resolve the issue.
+                        more_info:
+                          type: string
+                          description: A URL pointing to a source that provides more information on this error.
+                        level:
+                          type: string
+                          enum:
+                          - ERROR
+                          - WARNING
+                          description: The severity of this error.
+                        parameters:
+                          type: object
+                          description: Additional properties that represent dynamic parts used in the 'message'.
+                        cause:
+                          type: object
+                          description: The error message that was produced by a downstream service and represents the cause of this error.
+                        locale:
+                          type: string
+                          description: The locale information of the text provided as 'message' and as 'description' of this error.
+                      required:
+                      - code
+                      - message
+                required:
+                - requestId
+                - errors
+  /authoring/v1/search/json:
+    parameters: []
+    post:
+      x-ibm-dx-security-user-roles:
+      - admin
+      - manager
+      - editor
+      - viewer
+      tags:
+      - Authoring search
+      summary: Search in the authoring collection using post request with json body
+      description: 'The request body contains an json object with search query
+
+        <br />User roles: admin, manager, editor, viewer'
+      responses:
+        '200':
+          description: See the description above for examples of response data for different queries.
+        '400':
+          description: Bad request - Unable to complete your request due to missing parameters. Provide all required parameters and try again.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: This JSON object describes an error condition.
+                properties:
+                  requestId:
+                    type: string
+                    description: The unique identifier of the request that failed.
+                  service:
+                    type: string
+                    description: The name of the service that reports the error.
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: This JSON object describes a specific error of an error condition.
+                      properties:
+                        code:
+                          type: integer
+                          description: An error code that is specific to the service that reports the error.
+                        message:
+                          type: string
+                          description: A message that describes what went wrong.
+                        description:
+                          type: string
+                          description: A more detailed explanation of the error condition and recommended steps to resolve the issue.
+                        more_info:
+                          type: string
+                          description: A URL pointing to a source that provides more information on this error.
+                        level:
+                          type: string
+                          enum:
+                          - ERROR
+                          - WARNING
+                          description: The severity of this error.
+                        parameters:
+                          type: object
+                          description: Additional properties that represent dynamic parts used in the 'message'.
+                        cause:
+                          type: object
+                          description: The error message that was produced by a downstream service and represents the cause of this error.
+                        locale:
+                          type: string
+                          description: The locale information of the text provided as 'message' and as 'description' of this error.
+                      required:
+                      - code
+                      - message
+                required:
+                - requestId
+                - errors
+        '404':
+          description: Not found - The authoring collection was not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: This JSON object describes an error condition.
+                properties:
+                  requestId:
+                    type: string
+                    description: The unique identifier of the request that failed.
+                  service:
+                    type: string
+                    description: The name of the service that reports the error.
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: This JSON object describes a specific error of an error condition.
+                      properties:
+                        code:
+                          type: integer
+                          description: An error code that is specific to the service that reports the error.
+                        message:
+                          type: string
+                          description: A message that describes what went wrong.
+                        description:
+                          type: string
+                          description: A more detailed explanation of the error condition and recommended steps to resolve the issue.
+                        more_info:
+                          type: string
+                          description: A URL pointing to a source that provides more information on this error.
+                        level:
+                          type: string
+                          enum:
+                          - ERROR
+                          - WARNING
+                          description: The severity of this error.
+                        parameters:
+                          type: object
+                          description: Additional properties that represent dynamic parts used in the 'message'.
+                        cause:
+                          type: object
+                          description: The error message that was produced by a downstream service and represents the cause of this error.
+                        locale:
+                          type: string
+                          description: The locale information of the text provided as 'message' and as 'description' of this error.
+                      required:
+                      - code
+                      - message
+                required:
+                - requestId
+                - errors
+        '414':
+          description: The request URL that addresses the search service is larger than the supported size of 4,096 bytes. Reduce the length of the query.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: This JSON object describes an error condition.
+                properties:
+                  requestId:
+                    type: string
+                    description: The unique identifier of the request that failed.
+                  service:
+                    type: string
+                    description: The name of the service that reports the error.
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: This JSON object describes a specific error of an error condition.
+                      properties:
+                        code:
+                          type: integer
+                          description: An error code that is specific to the service that reports the error.
+                        message:
+                          type: string
+                          description: A message that describes what went wrong.
+                        description:
+                          type: string
+                          description: A more detailed explanation of the error condition and recommended steps to resolve the issue.
+                        more_info:
+                          type: string
+                          description: A URL pointing to a source that provides more information on this error.
+                        level:
+                          type: string
+                          enum:
+                          - ERROR
+                          - WARNING
+                          description: The severity of this error.
+                        parameters:
+                          type: object
+                          description: Additional properties that represent dynamic parts used in the 'message'.
+                        cause:
+                          type: object
+                          description: The error message that was produced by a downstream service and represents the cause of this error.
+                        locale:
+                          type: string
+                          description: The locale information of the text provided as 'message' and as 'description' of this error.
+                      required:
+                      - code
+                      - message
+                required:
+                - requestId
+                - errors
+        '429':
+          description: Too Many Requests, the server has reached a limit, the request must be sent again at a later time.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error - Unable to complete your request due to an exception. Try again later.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: This JSON object describes an error condition.
+                properties:
+                  requestId:
+                    type: string
+                    description: The unique identifier of the request that failed.
+                  service:
+                    type: string
+                    description: The name of the service that reports the error.
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      description: This JSON object describes a specific error of an error condition.
+                      properties:
+                        code:
+                          type: integer
+                          description: An error code that is specific to the service that reports the error.
+                        message:
+                          type: string
+                          description: A message that describes what went wrong.
+                        description:
+                          type: string
+                          description: A more detailed explanation of the error condition and recommended steps to resolve the issue.
+                        more_info:
+                          type: string
+                          description: A URL pointing to a source that provides more information on this error.
+                        level:
+                          type: string
+                          enum:
+                          - ERROR
+                          - WARNING
+                          description: The severity of this error.
+                        parameters:
+                          type: object
+                          description: Additional properties that represent dynamic parts used in the 'message'.
+                        cause:
+                          type: object
+                          description: The error message that was produced by a downstream service and represents the cause of this error.
+                        locale:
+                          type: string
+                          description: The locale information of the text provided as 'message' and as 'description' of this error.
+                      required:
+                      - code
+                      - message
+                required:
+                - requestId
+                - errors
+components:
+  schemas:
+    ErrorResponse:
+      description: This JSON record represents an error condition.
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            description: This JSON record represents an individual error or warning contained in an error message.
+            type: object
+            properties:
+              code:
+                type: integer
+                description: An error code
+              message:
+                type: string
+                description: A message describing what went wrong.
+              description:
+                type: string
+                description: Further explanation of the error condition and potential next steps to resolve the problem.
+              more_info:
+                type: string
+                description: A URL pointing to a web site that provides more information on the given error condition.
+              level:
+                type: string
+                enum:
+                - ERROR
+                - WARNING
+                description: The severity level of the message. Default is error.
+              parameters:
+                type: object
+                description: Additional properties reflecting the dynamic parts of the error condition.
+              cause:
+                type: object
+                description: This property can be used to transport causing error message records produced by a down stream service calls.
+              locale:
+                type: string
+                description: This property represents the locale of the text contained in properties 'message', and 'description'. This property is mandatory if message and description contain translated text.
+            required:
+            - code
+            - message
+        requestId:
+          type: string
+          description: The ID of the failing request.
+        service:
+          type: string
+          description: The name of the service serving the error message.
+      required:
+      - errors
+      - requestId
+x-refined-from:
+- acoustic-content-openapi-original.json
+- acoustic-content-swagger2-original.yaml
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

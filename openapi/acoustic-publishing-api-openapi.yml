@@ -1,0 +1,1453 @@
+openapi: 3.2.0
+info:
+  title: Acoustic Publishing API
+  version: 1.0.142
+  x-ibm-name: ibm-watson-content-hub-api
+  description: 'Operations tagged Publishing across 2 of this provider''s published API definitions: acoustic-content-openapi-original.json, acoustic-content-swagger2-original.yaml. Each path carries the servers of the definition it was published in.'
+tags:
+- name: Publishing
+  description: "Use the Content Publishing APIs to update the default site revision, which is a snapshot of your published site at a specific time. current-job instance is used to track the state of the job.\n A site revision represents a specific revision of a site."
+paths:
+  /publishing/v1/jobs:
+    x-ibm-dx-security-user-roles:
+    - admin
+    - manager
+    post:
+      tags:
+      - Publishing
+      summary: Create a job
+      description: 'Use the /jobs endpoint to create a job. The job starts automatically and runs asynchronously. Use the /jobs/current-job/status to retrieve the details about the current job status.<br />User roles: admin, manager'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              description: created job. When creating a job, you can specify mode that can be used.
+              properties:
+                mode:
+                  type: string
+                  enum:
+                  - UPDATE
+                  - REBUILD
+                  description: Specifies if the site revision will be updated or rebuilt from scratch. Default is 'UPDATE'
+      responses:
+        '201':
+          description: Successfully triggered a new job.
+          content:
+            application/json:
+              schema:
+                type: object
+                allOf:
+                - type: object
+                  required:
+                  - id
+                  - rev
+                  - created
+                  - creator
+                  - lastModified
+                  - lastModifier
+                  properties:
+                    links:
+                      type: object
+                      required:
+                      - self
+                      properties:
+                        self:
+                          type: object
+                          required:
+                          - href
+                          - methods
+                          description: url pointing to this document
+                          properties:
+                            href:
+                              type: string
+                              maxLength: 1024
+                            methods:
+                              type: array
+                              items:
+                                type: string
+                                enum:
+                                - GET
+                                - POST
+                                - PUT
+                                - DELETE
+                            name:
+                              description: single value object where key is the locale and value is the display name
+                              type: object
+                    id:
+                      type: string
+                      description: Unique identifier representing a specific item
+                      maxLength: 64
+                    rev:
+                      type: string
+                      maxLength: 64
+                      description: a string identifying a specific version of the document
+                    created:
+                      type: string
+                      format: date-time
+                      description: date when this item was created
+                    creator:
+                      type: object
+                      required:
+                      - id
+                      description: A reference to the User who has created the item
+                      properties:
+                        id:
+                          type: string
+                          maxLength: 64
+                    lastModified:
+                      type: string
+                      format: date-time
+                      description: date when this item was modifed for the last time
+                    lastModifier:
+                      type: object
+                      required:
+                      - id
+                      description: A reference to the User who has modified the item
+                      properties:
+                        id:
+                          type: string
+                          maxLength: 64
+                required:
+                - state
+                - mode
+                properties:
+                  mode:
+                    type: string
+                    enum:
+                    - UPDATE
+                    - REBUILD
+                    description: Specifies if the site revision will be updated or rebuilt from scratch. Default is 'UPDATE'
+                  state:
+                    type: string
+                    description: Enumeration of publishing job states
+                    enum:
+                    - READY
+                    - BUILDING
+                    - PENDING
+                  childJobIds:
+                    description: If this job has been created manually, the childJob array contains the ids of those jobs that have been triggered by this job.
+                    type: array
+                    items:
+                      type: string
+                      maxLength: 64
+        '400':
+          description: Unable to handle the request as it does not match the API definition.
+          content:
+            application/json:
+              schema:
+                description: This JSON record represents an error condition.
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      description: This JSON record represents an individual error or warning contained in an error message.
+                      type: object
+                      properties:
+                        code:
+                          type: integer
+                          description: An error code defined by the publishing service.
+                        message:
+                          type: string
+                          description: A message describing what went wrong.
+                        description:
+                          type: string
+                          description: Further explanation of the error condition and potential next steps to resolve the problem.
+                        more_info:
+                          type: string
+                          description: A URL pointing to a web site that provides more information on the given error condition.
+                        level:
+                          type: string
+                          enum:
+                          - ERROR
+                          - WARNING
+                          description: The severity level of the message. Default is error.
+                        parameters:
+                          type: object
+                          description: Additional properties reflecting the dynamic parts of the error condition.
+                        cause:
+                          type: object
+                          description: This property can be used to transport causing error message records produced by a down stream service calls.
+                        locale:
+                          type: string
+                          description: This property represents the locale of the text contained in properties 'message', and 'description'. This property is mandatory if message and description contain translated text.
+                      required:
+                      - code
+                      - message
+                  requestId:
+                    type: string
+                    description: The ID of the failing request.
+                  service:
+                    type: string
+                    description: The name of the service serving the error message.
+                required:
+                - errors
+                - requestId
+        '429':
+          description: Too Many Requests, the server has reached a limit, the request must be sent again at a later time.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /publishing/v1/jobs/current-job:
+    x-ibm-dx-security-user-roles:
+    - admin
+    - manager
+    get:
+      x-ibm-dx-security-user-roles:
+      - admin
+      - manager
+      - editor
+      tags:
+      - Publishing
+      summary: Retrieve an existing job
+      description: 'Use the /jobs/current-job endpoint to retrieve current-job from the database.<br />User roles: admin, manager, editor'
+      responses:
+        '200':
+          description: Successfully retrieved an current-job.
+          headers:
+            Content-Location:
+              description: Provide the URL of the actual revision of the job that is returned.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: object
+                allOf:
+                - type: object
+                  required:
+                  - id
+                  - rev
+                  - created
+                  - creator
+                  - lastModified
+                  - lastModifier
+                  properties:
+                    links:
+                      type: object
+                      required:
+                      - self
+                      properties:
+                        self:
+                          type: object
+                          required:
+                          - href
+                          - methods
+                          description: url pointing to this document
+                          properties:
+                            href:
+                              type: string
+                              maxLength: 1024
+                            methods:
+                              type: array
+                              items:
+                                type: string
+                                enum:
+                                - GET
+                                - POST
+                                - PUT
+                                - DELETE
+                            name:
+                              description: single value object where key is the locale and value is the display name
+                              type: object
+                    id:
+                      type: string
+                      description: Unique identifier representing a specific item
+                      maxLength: 64
+                    rev:
+                      type: string
+                      maxLength: 64
+                      description: a string identifying a specific version of the document
+                    created:
+                      type: string
+                      format: date-time
+                      description: date when this item was created
+                    creator:
+                      type: object
+                      required:
+                      - id
+                      description: A reference to the User who has created the item
+                      properties:
+                        id:
+                          type: string
+                          maxLength: 64
+                    lastModified:
+                      type: string
+                      format: date-time
+                      description: date when this item was modifed for the last time
+                    lastModifier:
+                      type: object
+                      required:
+                      - id
+                      description: A reference to the User who has modified the item
+                      properties:
+                        id:
+                          type: string
+                          maxLength: 64
+                required:
+                - state
+                - mode
+                properties:
+                  mode:
+                    type: string
+                    enum:
+                    - UPDATE
+                    - REBUILD
+                    description: Specifies if the site revision will be updated or rebuilt from scratch. Default is 'UPDATE'
+                  state:
+                    type: string
+                    description: Enumeration of publishing job states
+                    enum:
+                    - READY
+                    - BUILDING
+                    - PENDING
+                  childJobIds:
+                    description: If this job has been created manually, the childJob array contains the ids of those jobs that have been triggered by this job.
+                    type: array
+                    items:
+                      type: string
+                      maxLength: 64
+        '400':
+          description: Unable to handle the request as it does not match the API definition.
+          content:
+            application/json:
+              schema:
+                description: This JSON record represents an error condition.
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      description: This JSON record represents an individual error or warning contained in an error message.
+                      type: object
+                      properties:
+                        code:
+                          type: integer
+                          description: An error code defined by the publishing service.
+                        message:
+                          type: string
+                          description: A message describing what went wrong.
+                        description:
+                          type: string
+                          description: Further explanation of the error condition and potential next steps to resolve the problem.
+                        more_info:
+                          type: string
+                          description: A URL pointing to a web site that provides more information on the given error condition.
+                        level:
+                          type: string
+                          enum:
+                          - ERROR
+                          - WARNING
+                          description: The severity level of the message. Default is error.
+                        parameters:
+                          type: object
+                          description: Additional properties reflecting the dynamic parts of the error condition.
+                        cause:
+                          type: object
+                          description: This property can be used to transport causing error message records produced by a down stream service calls.
+                        locale:
+                          type: string
+                          description: This property represents the locale of the text contained in properties 'message', and 'description'. This property is mandatory if message and description contain translated text.
+                      required:
+                      - code
+                      - message
+                  requestId:
+                    type: string
+                    description: The ID of the failing request.
+                  service:
+                    type: string
+                    description: The name of the service serving the error message.
+                required:
+                - errors
+                - requestId
+        '404':
+          description: current-job was not found.
+          content:
+            application/json:
+              schema:
+                description: This JSON record represents an error condition.
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      description: This JSON record represents an individual error or warning contained in an error message.
+                      type: object
+                      properties:
+                        code:
+                          type: integer
+                          description: An error code defined by the publishing service.
+                        message:
+                          type: string
+                          description: A message describing what went wrong.
+                        description:
+                          type: string
+                          description: Further explanation of the error condition and potential next steps to resolve the problem.
+                        more_info:
+                          type: string
+                          description: A URL pointing to a web site that provides more information on the given error condition.
+                        level:
+                          type: string
+                          enum:
+                          - ERROR
+                          - WARNING
+                          description: The severity level of the message. Default is error.
+                        parameters:
+                          type: object
+                          description: Additional properties reflecting the dynamic parts of the error condition.
+                        cause:
+                          type: object
+                          description: This property can be used to transport causing error message records produced by a down stream service calls.
+                        locale:
+                          type: string
+                          description: This property represents the locale of the text contained in properties 'message', and 'description'. This property is mandatory if message and description contain translated text.
+                      required:
+                      - code
+                      - message
+                  requestId:
+                    type: string
+                    description: The ID of the failing request.
+                  service:
+                    type: string
+                    description: The name of the service serving the error message.
+                required:
+                - errors
+                - requestId
+        '429':
+          description: Too Many Requests, the server has reached a limit, the request must be sent again at a later time.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /publishing/v1/jobs/current-job/status:
+    x-ibm-dx-security-user-roles:
+    - admin
+    - manager
+    get:
+      x-ibm-dx-security-user-roles:
+      - admin
+      - manager
+      - editor
+      tags:
+      - Publishing
+      summary: Retrieve the status of current-job
+      description: 'Use the /jobs/current-job/status endpoint to retrieve the status information for the current-job.<br />User roles: admin, manager, editor'
+      responses:
+        '200':
+          description: Successfully retrieved the status for the current-job.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - id
+                - created
+                - messages
+                - lastModified
+                - state
+                - tasks
+                properties:
+                  id:
+                    type: string
+                    description: Unique identifier of associated job
+                    maxLength: 64
+                  created:
+                    type: string
+                    format: date-time
+                    description: date when this item was created
+                  lastModified:
+                    type: string
+                    format: date-time
+                    description: date when this item was modifed for the last time
+                  state:
+                    type: string
+                    description: Enumeration of publishing job states
+                    enum:
+                    - READY
+                    - BUILDING
+                    - PENDING
+                  tasks:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        type:
+                          type: string
+                          description: Indicates which type of task is reported.
+                          enum:
+                          - PUBLISH_ASSET
+                          - PUBLISH_CATEGORY
+                          - PUBLISH_CONTENT
+                          - PUBLISH_PAGE
+                          - PUBLISH_SITE
+                          - PUBLISH_RESOURCE
+                        messageType:
+                          type: string
+                          description: Indicates if the task has been successful.
+                          enum:
+                          - ERROR
+                          - INFO
+                          - WARNING
+                        num:
+                          type: integer
+                          format: int32
+                        total:
+                          type: integer
+                          format: int32
+                        docs:
+                          type: object
+                          description: Map which enumerates the events that shall be published grouped by their classification ('content', 'asset', etc.).
+                          properties:
+                            content:
+                              type: object
+                              description: Map which enumerates the items that shall be published groupd by their event type ('created', 'updated', etc.)
+                              properties:
+                                created:
+                                  description: List of items that have been created
+                                  type: array
+                                  items:
+                                    type: string
+                                updated:
+                                  description: List of items that have been updated
+                                  type: array
+                                  items:
+                                    type: string
+                                deleted:
+                                  description: List of items that have been deleted
+                                  type: array
+                                  items:
+                                    type: string
+                            page:
+                              type: object
+                              description: Map which enumerates the items that shall be published groupd by their event type ('created', 'updated', etc.)
+                              properties:
+                                created:
+                                  description: List of items that have been created
+                                  type: array
+                                  items:
+                                    type: string
+                                updated:
+                                  description: List of items that have been updated
+                                  type: array
+                                  items:
+                                    type: string
+                                deleted:
+                                  description: List of items that have been deleted
+                                  type: array
+                                  items:
+                                    type: string
+                            site:
+                              type: object
+                              description: Map which enumerates the items that shall be published groupd by their event type ('created', 'updated', etc.)
+                              properties:
+                                created:
+                                  description: List of items that have been created
+                                  type: array
+                                  items:
+                                    type: string
+                                updated:
+                                  description: List of items that have been updated
+                                  type: array
+                                  items:
+                                    type: string
+                                deleted:
+                                  description: List of items that have been deleted
+                                  type: array
+                                  items:
+                                    type: string
+                            asset:
+                              type: object
+                              description: Map which enumerates the items that shall be published groupd by their event type ('created', 'updated', etc.)
+                              properties:
+                                created:
+                                  description: List of items that have been created
+                                  type: array
+                                  items:
+                                    type: string
+                                updated:
+                                  description: List of items that have been updated
+                                  type: array
+                                  items:
+                                    type: string
+                                deleted:
+                                  description: List of items that have been deleted
+                                  type: array
+                                  items:
+                                    type: string
+                            category:
+                              type: object
+                              description: Map which enumerates the items that shall be published groupd by their event type ('created', 'updated', etc.)
+                              properties:
+                                created:
+                                  description: List of items that have been created
+                                  type: array
+                                  items:
+                                    type: string
+                                updated:
+                                  description: List of items that have been updated
+                                  type: array
+                                  items:
+                                    type: string
+                                deleted:
+                                  description: List of items that have been deleted
+                                  type: array
+                                  items:
+                                    type: string
+                            resource:
+                              type: object
+                              description: Map which enumerates the items that shall be published groupd by their event type ('created', 'updated', etc.)
+                              properties:
+                                created:
+                                  description: List of items that have been created
+                                  type: array
+                                  items:
+                                    type: string
+                                updated:
+                                  description: List of items that have been updated
+                                  type: array
+                                  items:
+                                    type: string
+                                deleted:
+                                  description: List of items that have been deleted
+                                  type: array
+                                  items:
+                                    type: string
+                  messages:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          description: Unique identifier of the message
+                          maxLength: 64
+                        text:
+                          type: string
+                          description: The message text
+                          maxLength: 512
+                        locale:
+                          type: string
+                          description: locale information for this message
+                          maxLength: 10
+                        type:
+                          type: string
+                          description: tbd
+                          enum:
+                          - ERROR
+                          - INFO
+                          - WARNING
+        '400':
+          description: Unable to handle the request as it does not match the API definition.
+          content:
+            application/json:
+              schema:
+                description: This JSON record represents an error condition.
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      description: This JSON record represents an individual error or warning contained in an error message.
+                      type: object
+                      properties:
+                        code:
+                          type: integer
+                          description: An error code defined by the publishing service.
+                        message:
+                          type: string
+                          description: A message describing what went wrong.
+                        description:
+                          type: string
+                          description: Further explanation of the error condition and potential next steps to resolve the problem.
+                        more_info:
+                          type: string
+                          description: A URL pointing to a web site that provides more information on the given error condition.
+                        level:
+                          type: string
+                          enum:
+                          - ERROR
+                          - WARNING
+                          description: The severity level of the message. Default is error.
+                        parameters:
+                          type: object
+                          description: Additional properties reflecting the dynamic parts of the error condition.
+                        cause:
+                          type: object
+                          description: This property can be used to transport causing error message records produced by a down stream service calls.
+                        locale:
+                          type: string
+                          description: This property represents the locale of the text contained in properties 'message', and 'description'. This property is mandatory if message and description contain translated text.
+                      required:
+                      - code
+                      - message
+                  requestId:
+                    type: string
+                    description: The ID of the failing request.
+                  service:
+                    type: string
+                    description: The name of the service serving the error message.
+                required:
+                - errors
+                - requestId
+        '404':
+          description: The status for the current-job.
+          content:
+            application/json:
+              schema:
+                description: This JSON record represents an error condition.
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      description: This JSON record represents an individual error or warning contained in an error message.
+                      type: object
+                      properties:
+                        code:
+                          type: integer
+                          description: An error code defined by the publishing service.
+                        message:
+                          type: string
+                          description: A message describing what went wrong.
+                        description:
+                          type: string
+                          description: Further explanation of the error condition and potential next steps to resolve the problem.
+                        more_info:
+                          type: string
+                          description: A URL pointing to a web site that provides more information on the given error condition.
+                        level:
+                          type: string
+                          enum:
+                          - ERROR
+                          - WARNING
+                          description: The severity level of the message. Default is error.
+                        parameters:
+                          type: object
+                          description: Additional properties reflecting the dynamic parts of the error condition.
+                        cause:
+                          type: object
+                          description: This property can be used to transport causing error message records produced by a down stream service calls.
+                        locale:
+                          type: string
+                          description: This property represents the locale of the text contained in properties 'message', and 'description'. This property is mandatory if message and description contain translated text.
+                      required:
+                      - code
+                      - message
+                  requestId:
+                    type: string
+                    description: The ID of the failing request.
+                  service:
+                    type: string
+                    description: The name of the service serving the error message.
+                required:
+                - errors
+                - requestId
+        '429':
+          description: Too Many Requests, the server has reached a limit, the request must be sent again at a later time.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /publishing/v1/site-revisions/default:
+    x-ibm-dx-security-user-roles:
+    - admin
+    - manager
+    get:
+      x-ibm-dx-security-user-roles:
+      - admin
+      - manager
+      - editor
+      tags:
+      - Publishing
+      summary: Get the default site revision
+      description: 'Use the /site-revisions/default endpoint to retrieve the default site revision<br />User roles: admin, manager, editor'
+      parameters:
+      - name: include
+        in: query
+        description: Optional include parameter. Currently the links section can be included using the value 'links'.
+        required: false
+        style: form
+        explode: false
+        schema:
+          type: string
+          items:
+            type: string
+            enum:
+            - links
+            - none
+      responses:
+        '200':
+          description: The default site revision
+          headers:
+            Content-Location:
+              description: URL of the actual revision of the returned item
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: object
+                allOf:
+                - type: object
+                  required:
+                  - id
+                  - rev
+                  - created
+                  - creator
+                  - lastModified
+                  - lastModifier
+                  properties:
+                    links:
+                      type: object
+                      required:
+                      - self
+                      properties:
+                        self:
+                          type: object
+                          required:
+                          - href
+                          - methods
+                          description: url pointing to this document
+                          properties:
+                            href:
+                              type: string
+                              maxLength: 1024
+                            methods:
+                              type: array
+                              items:
+                                type: string
+                                enum:
+                                - GET
+                                - POST
+                                - PUT
+                                - DELETE
+                            name:
+                              description: single value object where key is the locale and value is the display name
+                              type: object
+                    id:
+                      type: string
+                      description: Unique identifier representing a specific item
+                      maxLength: 64
+                    rev:
+                      type: string
+                      maxLength: 64
+                      description: a string identifying a specific version of the document
+                    created:
+                      type: string
+                      format: date-time
+                      description: date when this item was created
+                    creator:
+                      type: object
+                      required:
+                      - id
+                      description: A reference to the User who has created the item
+                      properties:
+                        id:
+                          type: string
+                          maxLength: 64
+                    lastModified:
+                      type: string
+                      format: date-time
+                      description: date when this item was modifed for the last time
+                    lastModifier:
+                      type: object
+                      required:
+                      - id
+                      description: A reference to the User who has modified the item
+                      properties:
+                        id:
+                          type: string
+                          maxLength: 64
+                - type: object
+                  required:
+                  - name
+                  properties:
+                    description:
+                      type: object
+                      description: an object holding the localized description for multiple languages
+                    name:
+                      type: object
+                      description: an object holding the localized title for multiple languages
+                - type: object
+                  properties:
+                    state:
+                      type: string
+                      description: State of the site revision
+                      enum:
+                      - READY
+                      - BUILDING
+                      - PENDING
+                    autoPublishEnabled:
+                      description: If true, any updates affecting this site revision will be published automatically. Default is true.
+                      type: boolean
+                    lastSucceeded:
+                      type: string
+                      format: date-time
+                      description: date when this site revision was last updated successfully (last time a job for that site revision completed successfully)
+                    active:
+                      type: boolean
+                      description: indicates if this site revision is the active one.
+                    job:
+                      type: object
+                      required:
+                      - id
+                      description: Reference to the job that modified this site revision most recently
+                      properties:
+                        id:
+                          type: string
+                          maxLength: 64
+                required:
+                - state
+        '400':
+          description: Unable to handle the request as it does not match the API definition.
+          content:
+            application/json:
+              schema:
+                description: This JSON record represents an error condition.
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      description: This JSON record represents an individual error or warning contained in an error message.
+                      type: object
+                      properties:
+                        code:
+                          type: integer
+                          description: An error code defined by the publishing service.
+                        message:
+                          type: string
+                          description: A message describing what went wrong.
+                        description:
+                          type: string
+                          description: Further explanation of the error condition and potential next steps to resolve the problem.
+                        more_info:
+                          type: string
+                          description: A URL pointing to a web site that provides more information on the given error condition.
+                        level:
+                          type: string
+                          enum:
+                          - ERROR
+                          - WARNING
+                          description: The severity level of the message. Default is error.
+                        parameters:
+                          type: object
+                          description: Additional properties reflecting the dynamic parts of the error condition.
+                        cause:
+                          type: object
+                          description: This property can be used to transport causing error message records produced by a down stream service calls.
+                        locale:
+                          type: string
+                          description: This property represents the locale of the text contained in properties 'message', and 'description'. This property is mandatory if message and description contain translated text.
+                      required:
+                      - code
+                      - message
+                  requestId:
+                    type: string
+                    description: The ID of the failing request.
+                  service:
+                    type: string
+                    description: The name of the service serving the error message.
+                required:
+                - errors
+                - requestId
+        '429':
+          description: Too Many Requests, the server has reached a limit, the request must be sent again at a later time.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    put:
+      tags:
+      - Publishing
+      summary: Update the default site revision
+      description: 'Use the /site-revisions/default endpoint to update the values of properties ''autoPublishEnabled'', ''name'' and ''description'' by replacing them with the ones in request body. Please note: Modifications to the ''autoPublishEnabled'' flag are not picked up by WCH immediately but with a time lag of up to 30 seconds<br />User roles: admin, manager'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              description: Only properties autoPublishEnabled, name and description will be updated, others will be ignored
+              type: object
+              allOf:
+              - type: object
+                required:
+                - name
+                properties:
+                  name:
+                    type: object
+                    description: an object holding the localized title for multiple languages
+                  description:
+                    type: object
+                    description: an object holding the localized description for multiple languages
+              - type: object
+                required:
+                - rev
+                - id
+                properties:
+                  links:
+                    type: object
+                    properties:
+                      self:
+                        type: object
+                        required:
+                        - href
+                        - methods
+                        description: url pointing to this document
+                        properties:
+                          href:
+                            type: string
+                            maxLength: 1024
+                          methods:
+                            type: array
+                            items:
+                              type: string
+                              enum:
+                              - GET
+                              - POST
+                              - PUT
+                              - DELETE
+                          name:
+                            description: single value object where key is the locale and value is the display name
+                            type: object
+                  id:
+                    type: string
+                    description: Unique identifier representing a specific item
+                    maxLength: 64
+                  rev:
+                    type: string
+                    maxLength: 64
+                    description: a string identifying a specific version of the document
+                  created:
+                    type: string
+                    format: date-time
+                    description: date when this item was created
+                  creator:
+                    type: object
+                    required:
+                    - id
+                    description: A reference to the User who has created the item
+                    properties:
+                      id:
+                        type: string
+                        maxLength: 64
+                  lastModified:
+                    type: string
+                    format: date-time
+                    description: date when this item was modifed for the last time
+                  lastModifier:
+                    type: object
+                    required:
+                    - id
+                    description: A reference to the User who has modified the item
+                    properties:
+                      id:
+                        type: string
+                        maxLength: 64
+              - type: object
+                properties:
+                  state:
+                    type: string
+                    description: State of the site revision
+                    enum:
+                    - READY
+                    - BUILDING
+                    - PENDING
+                  autoPublishEnabled:
+                    description: If true, any updates affecting this site revision will be published automatically. Default is true.
+                    type: boolean
+                  lastSucceeded:
+                    type: string
+                    format: date-time
+                    description: date when this site revision was last updated successfully (last time a job for that site revision completed successfully)
+                  active:
+                    type: boolean
+                    description: indicates if this site revision is the active one.
+                  job:
+                    type: object
+                    required:
+                    - id
+                    description: Reference to the job that modified this site revision most recently
+                    properties:
+                      id:
+                        type: string
+                        maxLength: 64
+        required: true
+      responses:
+        '200':
+          description: Successfully updated the site revision.
+          content:
+            application/json:
+              schema:
+                type: object
+                allOf:
+                - type: object
+                  required:
+                  - id
+                  - rev
+                  - created
+                  - creator
+                  - lastModified
+                  - lastModifier
+                  properties:
+                    links:
+                      type: object
+                      required:
+                      - self
+                      properties:
+                        self:
+                          type: object
+                          required:
+                          - href
+                          - methods
+                          description: url pointing to this document
+                          properties:
+                            href:
+                              type: string
+                              maxLength: 1024
+                            methods:
+                              type: array
+                              items:
+                                type: string
+                                enum:
+                                - GET
+                                - POST
+                                - PUT
+                                - DELETE
+                            name:
+                              description: single value object where key is the locale and value is the display name
+                              type: object
+                    id:
+                      type: string
+                      description: Unique identifier representing a specific item
+                      maxLength: 64
+                    rev:
+                      type: string
+                      maxLength: 64
+                      description: a string identifying a specific version of the document
+                    created:
+                      type: string
+                      format: date-time
+                      description: date when this item was created
+                    creator:
+                      type: object
+                      required:
+                      - id
+                      description: A reference to the User who has created the item
+                      properties:
+                        id:
+                          type: string
+                          maxLength: 64
+                    lastModified:
+                      type: string
+                      format: date-time
+                      description: date when this item was modifed for the last time
+                    lastModifier:
+                      type: object
+                      required:
+                      - id
+                      description: A reference to the User who has modified the item
+                      properties:
+                        id:
+                          type: string
+                          maxLength: 64
+                - type: object
+                  required:
+                  - name
+                  properties:
+                    description:
+                      type: object
+                      description: an object holding the localized description for multiple languages
+                    name:
+                      type: object
+                      description: an object holding the localized title for multiple languages
+                - type: object
+                  properties:
+                    docs:
+                      type: object
+                      description: Map which enumerates the events that shall be published grouped by their classification ('content', 'asset', etc.).
+                      properties:
+                        content:
+                          type: object
+                          description: Map which enumerates the items that shall be published groupd by their event type ('created', 'updated', etc.)
+                          properties:
+                            created:
+                              description: List of items that have been created
+                              type: array
+                              items:
+                                type: string
+                            updated:
+                              description: List of items that have been updated
+                              type: array
+                              items:
+                                type: string
+                            deleted:
+                              description: List of items that have been deleted
+                              type: array
+                              items:
+                                type: string
+                        page:
+                          type: object
+                          description: Map which enumerates the items that shall be published groupd by their event type ('created', 'updated', etc.)
+                          properties:
+                            created:
+                              description: List of items that have been created
+                              type: array
+                              items:
+                                type: string
+                            updated:
+                              description: List of items that have been updated
+                              type: array
+                              items:
+                                type: string
+                            deleted:
+                              description: List of items that have been deleted
+                              type: array
+                              items:
+                                type: string
+                        site:
+                          type: object
+                          description: Map which enumerates the items that shall be published groupd by their event type ('created', 'updated', etc.)
+                          properties:
+                            created:
+                              description: List of items that have been created
+                              type: array
+                              items:
+                                type: string
+                            updated:
+                              description: List of items that have been updated
+                              type: array
+                              items:
+                                type: string
+                            deleted:
+                              description: List of items that have been deleted
+                              type: array
+                              items:
+                                type: string
+                        asset:
+                          type: object
+                          description: Map which enumerates the items that shall be published groupd by their event type ('created', 'updated', etc.)
+                          properties:
+                            created:
+                              description: List of items that have been created
+                              type: array
+                              items:
+                                type: string
+                            updated:
+                              description: List of items that have been updated
+                              type: array
+                              items:
+                                type: string
+                            deleted:
+                              description: List of items that have been deleted
+                              type: array
+                              items:
+                                type: string
+                        category:
+                          type: object
+                          description: Map which enumerates the items that shall be published groupd by their event type ('created', 'updated', etc.)
+                          properties:
+                            created:
+                              description: List of items that have been created
+                              type: array
+                              items:
+                                type: string
+                            updated:
+                              description: List of items that have been updated
+                              type: array
+                              items:
+                                type: string
+                            deleted:
+                              description: List of items that have been deleted
+                              type: array
+                              items:
+                                type: string
+                        resource:
+                          type: object
+                          description: Map which enumerates the items that shall be published groupd by their event type ('created', 'updated', etc.)
+                          properties:
+                            created:
+                              description: List of items that have been created
+                              type: array
+                              items:
+                                type: string
+                            updated:
+                              description: List of items that have been updated
+                              type: array
+                              items:
+                                type: string
+                            deleted:
+                              description: List of items that have been deleted
+                              type: array
+                              items:
+                                type: string
+        '400':
+          description: Unable to handle the request as it does not match the API definition.
+          content:
+            application/json:
+              schema:
+                description: This JSON record represents an error condition.
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      description: This JSON record represents an individual error or warning contained in an error message.
+                      type: object
+                      properties:
+                        code:
+                          type: integer
+                          description: An error code defined by the publishing service.
+                        message:
+                          type: string
+                          description: A message describing what went wrong.
+                        description:
+                          type: string
+                          description: Further explanation of the error condition and potential next steps to resolve the problem.
+                        more_info:
+                          type: string
+                          description: A URL pointing to a web site that provides more information on the given error condition.
+                        level:
+                          type: string
+                          enum:
+                          - ERROR
+                          - WARNING
+                          description: The severity level of the message. Default is error.
+                        parameters:
+                          type: object
+                          description: Additional properties reflecting the dynamic parts of the error condition.
+                        cause:
+                          type: object
+                          description: This property can be used to transport causing error message records produced by a down stream service calls.
+                        locale:
+                          type: string
+                          description: This property represents the locale of the text contained in properties 'message', and 'description'. This property is mandatory if message and description contain translated text.
+                      required:
+                      - code
+                      - message
+                  requestId:
+                    type: string
+                    description: The ID of the failing request.
+                  service:
+                    type: string
+                    description: The name of the service serving the error message.
+                required:
+                - errors
+                - requestId
+        '409':
+          description: Response indicating that the site revision cannot be activated
+          content:
+            application/json:
+              schema:
+                description: This JSON record represents an error condition.
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      description: This JSON record represents an individual error or warning contained in an error message.
+                      type: object
+                      properties:
+                        code:
+                          type: integer
+                          description: An error code defined by the publishing service.
+                        message:
+                          type: string
+                          description: A message describing what went wrong.
+                        description:
+                          type: string
+                          description: Further explanation of the error condition and potential next steps to resolve the problem.
+                        more_info:
+                          type: string
+                          description: A URL pointing to a web site that provides more information on the given error condition.
+                        level:
+                          type: string
+                          enum:
+                          - ERROR
+                          - WARNING
+                          description: The severity level of the message. Default is error.
+                        parameters:
+                          type: object
+                          description: Additional properties reflecting the dynamic parts of the error condition.
+                        cause:
+                          type: object
+                          description: This property can be used to transport causing error message records produced by a down stream service calls.
+                        locale:
+                          type: string
+                          description: This property represents the locale of the text contained in properties 'message', and 'description'. This property is mandatory if message and description contain translated text.
+                      required:
+                      - code
+                      - message
+                  requestId:
+                    type: string
+                    description: The ID of the failing request.
+                  service:
+                    type: string
+                    description: The name of the service serving the error message.
+                required:
+                - errors
+                - requestId
+        '429':
+          description: Too Many Requests, the server has reached a limit, the request must be sent again at a later time.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+components:
+  schemas:
+    ErrorResponse:
+      description: This JSON record represents an error condition.
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            description: This JSON record represents an individual error or warning contained in an error message.
+            type: object
+            properties:
+              code:
+                type: integer
+                description: An error code
+              message:
+                type: string
+                description: A message describing what went wrong.
+              description:
+                type: string
+                description: Further explanation of the error condition and potential next steps to resolve the problem.
+              more_info:
+                type: string
+                description: A URL pointing to a web site that provides more information on the given error condition.
+              level:
+                type: string
+                enum:
+                - ERROR
+                - WARNING
+                description: The severity level of the message. Default is error.
+              parameters:
+                type: object
+                description: Additional properties reflecting the dynamic parts of the error condition.
+              cause:
+                type: object
+                description: This property can be used to transport causing error message records produced by a down stream service calls.
+              locale:
+                type: string
+                description: This property represents the locale of the text contained in properties 'message', and 'description'. This property is mandatory if message and description contain translated text.
+            required:
+            - code
+            - message
+        requestId:
+          type: string
+          description: The ID of the failing request.
+        service:
+          type: string
+          description: The name of the service serving the error message.
+      required:
+      - errors
+      - requestId
+x-refined-from:
+- acoustic-content-openapi-original.json
+- acoustic-content-swagger2-original.yaml
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

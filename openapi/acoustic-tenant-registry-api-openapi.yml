@@ -1,0 +1,575 @@
+openapi: 3.2.0
+info:
+  title: Acoustic Tenant Registry API
+  version: 1.0.142
+  x-ibm-name: ibm-watson-content-hub-api
+  description: 'Operations tagged Tenant Registry across 2 of this provider''s published API definitions: acoustic-content-openapi-original.json, acoustic-content-swagger2-original.yaml. Each path carries the servers of the definition it was published in.'
+tags:
+- name: Tenant Registry
+paths:
+  /registry/v1/currenttenant:
+    parameters:
+    - in: header
+      name: x-ibm-dx-tenant-id
+      description: ID of Tenant
+      required: true
+      schema:
+        type: string
+    get:
+      x-ibm-dx-security-user-roles:
+      - admin
+      - manager
+      - editor
+      - viewer
+      - authenticatedVisitor
+      - anonymous
+      summary: Retrieve a tenant
+      tags:
+      - Tenant Registry
+      description: '##### Example request using curl
+
+
+        `curl -X GET {api-url}/registry/v1/currenttenant`
+
+        If the user is not logged in then the /definitions/TenantAnonymous is returned
+
+        <br />User roles: admin, manager, editor, viewer, authenticatedVisitor, anonymous'
+      parameters:
+      - name: fields
+        in: query
+        description: return these json fields ex  ?fields=id,name
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - _id
+                properties:
+                  name:
+                    type: string
+                  id:
+                    type: string
+                    description: read-only - UUID of the tenant
+                  _id:
+                    type: string
+                    description: DEPRECATED - read-only - UUID of the tenant.  Use 'id' instead of _id
+                  locale:
+                    type: string
+                    description: The locale the UI is shown in
+                    readOnly: true
+                  defaultContentLocale:
+                    type: string
+                    description: The default locale for content
+                  contentLocales:
+                    type: array
+                    items:
+                      type: string
+                    description: Array of locales the content can be in
+                    default:
+                    - en-US
+                  locked:
+                    type: boolean
+                    description: set to true if the tenant is 'locked' and should not have access to the system
+                  watsonConfidenceLevel:
+                    type: number
+                    format: double
+                  maxUploadSize:
+                    type: integer
+                    description: Max upload size - should apply to files/images/audio/video unless useSingleUploadSize is false in which case the individual max uploads apply
+                  useSingleUploadSize:
+                    type: boolean
+                    description: Use the maxUploadSize to cover all uploads or use the individual max upload sizes
+                  maxUploadSizeFiles:
+                    type: integer
+                    description: Max upload size for files (if useSingleUploadSize is false)
+                  maxUploadSizeImage:
+                    type: integer
+                    description: Max upload size for images (if useSingleUploadSize is false)
+                  maxUploadSizeVideo:
+                    type: integer
+                    description: Max upload size for videos (if useSingleUploadSize is false)
+                  maxAuthors:
+                    type: integer
+                  maxContentItems:
+                    type: integer
+                    description: Max content items the tenant can have based on plan purchased
+                  maxStorageSize:
+                    type: integer
+                    description: Max amount of storage the tenant has, based on plan purchased
+                  maxDataTransfer:
+                    type: integer
+                    description: Max amount of data transfer the tenant has per month, based on plan purchased
+                  isDAMEnabled:
+                    type: boolean
+                    readOnly: true
+                  tier:
+                    type: string
+                    description: The tier of the product the tenant has purchased
+                  ibmUniqueId:
+                    type: string
+                  isEdgeSideEnabled:
+                    type: boolean
+                  maxUserSessions:
+                    type: integer
+                    description: Max number of User sessions
+                  configDeliveryCacheMaxage:
+                    type: integer
+                    format: int64
+                    description: Used when setting Cache-Control max-age response header - value in seconds - can not be negative value
+                  capability:
+                    type: string
+                    description: indicates the capabilities supported by a tenant
+                  corsWhitelist:
+                    type: array
+                    items:
+                      type: string
+                  mandatoryAssetPublishApproval:
+                    type: object
+                    description: Can not be set for Base tiers
+                    properties:
+                      enabled:
+                        type: boolean
+                        description: True if mandatory approval is enabled
+                      exemptAssetTypes:
+                        type: array
+                        items:
+                          type: string
+                  mandatoryContentPublishApproval:
+                    type: object
+                    description: Can not be set for Base tiers
+                    properties:
+                      enabled:
+                        type: boolean
+                        description: True if mandatory approval is enabled
+                      exemptContentTypes:
+                        type: array
+                        items:
+                          type: string
+                  deliveryAccess:
+                    type: object
+                    properties:
+                      secureAlways:
+                        type: boolean
+                      content:
+                        type: string
+                      assets:
+                        type: string
+                  ibmCommerce:
+                    type: object
+                    properties:
+                      tenantId:
+                        type: string
+                      apiGatewayHost:
+                        type: string
+                      previewSearchHost:
+                        type: string
+                      previewTransactionHost:
+                        type: string
+                      liveSearchHost:
+                        type: string
+                      liveTransactionHost:
+                        type: string
+                      environmentType:
+                        type: string
+                  ibmWca:
+                    type: object
+                    description: Properties for Campaign integration
+                  edgeToken:
+                    type: string
+                    description: string to hold edge configuration of the tenant
+                  importZip:
+                    type: object
+                    description: Information on most recent zip imported
+        '400':
+          description: Error response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                  message:
+                    type: string
+                  fields:
+                    type: string
+        '404':
+          description: Indicates the tenant does not exist
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                  message:
+                    type: string
+                  fields:
+                    type: string
+        '429':
+          description: Too Many Requests, the server has reached a limit, the request must be sent again at a later time.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    put:
+      x-ibm-dx-security-user-roles:
+      - admin
+      x-ibm-dx-operator-entrypoint-roles:
+      - system
+      tags:
+      - Tenant Registry
+      summary: Update a tenant
+      description: '##### Example request using curl
+
+
+        `curl -X PUT -d ''{"_id":"85b4686b-8614-475f-8933-144d42f84521","locale":"de", "name":"sample_tenant"}'' {api-url}/registry/v1/currenttenant`
+
+        <br />User roles: admin'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                id:
+                  type: string
+                  description: read-only - UUID of the tenant
+                _id:
+                  type: string
+                  description: DEPRECATED - read-only - UUID of the tenant.  Use 'id' instead of _id
+                locale:
+                  type: string
+                defaultContentLocale:
+                  type: string
+                  description: The default locale for content
+                contentLocales:
+                  type: array
+                  items:
+                    type: string
+                  description: Array of locales the content can be in
+                  default:
+                  - en-US
+                watsonConfidenceLevel:
+                  type: number
+                  format: double
+                maxUploadSize:
+                  type: integer
+                maxBulkUploadSize:
+                  type: integer
+                useSingleUploadSize:
+                  type: boolean
+                maxUploadSizeDocument:
+                  type: integer
+                maxUploadSizeImage:
+                  type: integer
+                maxUploadSizeAudio:
+                  type: integer
+                maxUploadSizeVideo:
+                  type: integer
+                maxAuthors:
+                  type: integer
+                corsWhitelist:
+                  type: array
+                  items:
+                    type: string
+                configDeliveryCacheMaxage:
+                  type: integer
+                  format: int64
+                  description: Used when setting Cache-Control max-age response header - value in seconds - can not be negative value
+                mandatoryAssetPublishApproval:
+                  type: object
+                  description: Can not be set for Base tiers
+                  properties:
+                    enabled:
+                      type: boolean
+                      description: True if mandatory approval is enabled
+                    exemptAssetTypes:
+                      type: array
+                      items:
+                        type: string
+                mandatoryContentPublishApproval:
+                  type: object
+                  description: Can not be set for Base tiers
+                  properties:
+                    enabled:
+                      type: boolean
+                      description: True if mandatory approval is enabled
+                    exemptContentTypes:
+                      type: array
+                      items:
+                        type: string
+                ibmCommerce:
+                  type: object
+                  properties:
+                    tenantId:
+                      type: string
+                    apiGatewayHost:
+                      type: string
+                    previewSearchHost:
+                      type: string
+                    previewTransactionHost:
+                      type: string
+                    liveSearchHost:
+                      type: string
+                    liveTransactionHost:
+                      type: string
+                    environmentType:
+                      type: string
+                ibmWca:
+                  type: object
+                  description: Properties for Campaign integration
+                edgeToken:
+                  type: string
+                  description: string to hold edge configuration of the tenant
+                importZip:
+                  type: object
+                  description: Information on most recent zip imported
+        description: Definition of the new tenant
+        required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - _id
+                properties:
+                  name:
+                    type: string
+                  id:
+                    type: string
+                    description: read-only - UUID of the tenant
+                  _id:
+                    type: string
+                    description: DEPRECATED - read-only - UUID of the tenant.  Use 'id' instead of _id
+                  locale:
+                    type: string
+                    description: The locale the UI is shown in
+                    readOnly: true
+                  defaultContentLocale:
+                    type: string
+                    description: The default locale for content
+                  contentLocales:
+                    type: array
+                    items:
+                      type: string
+                    description: Array of locales the content can be in
+                    default:
+                    - en-US
+                  locked:
+                    type: boolean
+                    description: set to true if the tenant is 'locked' and should not have access to the system
+                  watsonConfidenceLevel:
+                    type: number
+                    format: double
+                  maxUploadSize:
+                    type: integer
+                    description: Max upload size - should apply to files/images/audio/video unless useSingleUploadSize is false in which case the individual max uploads apply
+                  useSingleUploadSize:
+                    type: boolean
+                    description: Use the maxUploadSize to cover all uploads or use the individual max upload sizes
+                  maxUploadSizeFiles:
+                    type: integer
+                    description: Max upload size for files (if useSingleUploadSize is false)
+                  maxUploadSizeImage:
+                    type: integer
+                    description: Max upload size for images (if useSingleUploadSize is false)
+                  maxUploadSizeVideo:
+                    type: integer
+                    description: Max upload size for videos (if useSingleUploadSize is false)
+                  maxAuthors:
+                    type: integer
+                  maxContentItems:
+                    type: integer
+                    description: Max content items the tenant can have based on plan purchased
+                  maxStorageSize:
+                    type: integer
+                    description: Max amount of storage the tenant has, based on plan purchased
+                  maxDataTransfer:
+                    type: integer
+                    description: Max amount of data transfer the tenant has per month, based on plan purchased
+                  isDAMEnabled:
+                    type: boolean
+                    readOnly: true
+                  tier:
+                    type: string
+                    description: The tier of the product the tenant has purchased
+                  ibmUniqueId:
+                    type: string
+                  isEdgeSideEnabled:
+                    type: boolean
+                  maxUserSessions:
+                    type: integer
+                    description: Max number of User sessions
+                  configDeliveryCacheMaxage:
+                    type: integer
+                    format: int64
+                    description: Used when setting Cache-Control max-age response header - value in seconds - can not be negative value
+                  capability:
+                    type: string
+                    description: indicates the capabilities supported by a tenant
+                  corsWhitelist:
+                    type: array
+                    items:
+                      type: string
+                  mandatoryAssetPublishApproval:
+                    type: object
+                    description: Can not be set for Base tiers
+                    properties:
+                      enabled:
+                        type: boolean
+                        description: True if mandatory approval is enabled
+                      exemptAssetTypes:
+                        type: array
+                        items:
+                          type: string
+                  mandatoryContentPublishApproval:
+                    type: object
+                    description: Can not be set for Base tiers
+                    properties:
+                      enabled:
+                        type: boolean
+                        description: True if mandatory approval is enabled
+                      exemptContentTypes:
+                        type: array
+                        items:
+                          type: string
+                  deliveryAccess:
+                    type: object
+                    properties:
+                      secureAlways:
+                        type: boolean
+                      content:
+                        type: string
+                      assets:
+                        type: string
+                  ibmCommerce:
+                    type: object
+                    properties:
+                      tenantId:
+                        type: string
+                      apiGatewayHost:
+                        type: string
+                      previewSearchHost:
+                        type: string
+                      previewTransactionHost:
+                        type: string
+                      liveSearchHost:
+                        type: string
+                      liveTransactionHost:
+                        type: string
+                      environmentType:
+                        type: string
+                  ibmWca:
+                    type: object
+                    description: Properties for Campaign integration
+                  edgeToken:
+                    type: string
+                    description: string to hold edge configuration of the tenant
+                  importZip:
+                    type: object
+                    description: Information on most recent zip imported
+        '400':
+          description: Error response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                  message:
+                    type: string
+                  fields:
+                    type: string
+        '404':
+          description: Indicates the tenant does not exist
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                  message:
+                    type: string
+                  fields:
+                    type: string
+        '429':
+          description: Too Many Requests, the server has reached a limit, the request must be sent again at a later time.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+components:
+  schemas:
+    ErrorResponse:
+      description: This JSON record represents an error condition.
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            description: This JSON record represents an individual error or warning contained in an error message.
+            type: object
+            properties:
+              code:
+                type: integer
+                description: An error code
+              message:
+                type: string
+                description: A message describing what went wrong.
+              description:
+                type: string
+                description: Further explanation of the error condition and potential next steps to resolve the problem.
+              more_info:
+                type: string
+                description: A URL pointing to a web site that provides more information on the given error condition.
+              level:
+                type: string
+                enum:
+                - ERROR
+                - WARNING
+                description: The severity level of the message. Default is error.
+              parameters:
+                type: object
+                description: Additional properties reflecting the dynamic parts of the error condition.
+              cause:
+                type: object
+                description: This property can be used to transport causing error message records produced by a down stream service calls.
+              locale:
+                type: string
+                description: This property represents the locale of the text contained in properties 'message', and 'description'. This property is mandatory if message and description contain translated text.
+            required:
+            - code
+            - message
+        requestId:
+          type: string
+          description: The ID of the failing request.
+        service:
+          type: string
+          description: The name of the service serving the error message.
+      required:
+      - errors
+      - requestId
+x-refined-from:
+- acoustic-content-openapi-original.json
+- acoustic-content-swagger2-original.yaml
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true
