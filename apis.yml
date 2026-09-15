@@ -26,19 +26,16 @@ accessModel:
   method: searched
 image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/acoustic.png
 name: Acoustic
-description: >-
-  Acoustic is a real-time behavioral marketing platform for B2C companies, delivering
-  omnichannel customer engagement across email, SMS, WhatsApp, mobile push and web.
-  Its developer portal at developer.goacoustic.com publishes an RFC 9727 api-catalog
-  advertising six API products: Acoustic Connect (a GraphQL API for contacts,
-  consent, audiences, product catalog and signals), Acoustic Campaign (a long-lived
-  REST + XML API estate inherited from Silverpop, with a live Swagger service
-  description per regional pod), Acoustic Content (a headless CMS / digital asset
-  management REST API covering authoring, delivery, rendering, publishing and
-  webhooks), Acoustic Personalization (a client-side library for real-time content
-  and product recommendations), Acoustic Experience Analytics (Tealeaf) and Acoustic
-  Exchange. Formerly IBM Watson Marketing, Acoustic was carved out as an independent
-  martech company and is a portfolio company of Sapphire Ventures.
+description: 'Acoustic is a real-time behavioral marketing platform for B2C companies, delivering omnichannel
+  customer engagement across email, SMS, WhatsApp, mobile push and web. Its developer portal at developer.goacoustic.com
+  publishes an RFC 9727 api-catalog advertising six API products: Acoustic Connect (a GraphQL API for
+  contacts, consent, audiences, product catalog and signals), Acoustic Campaign (a long-lived REST + XML
+  API estate inherited from Silverpop, with a live Swagger service description per regional pod), Acoustic
+  Content (a headless CMS / digital asset management REST API covering authoring, delivery, rendering,
+  publishing and webhooks), Acoustic Personalization (a client-side library for real-time content and
+  product recommendations), Acoustic Experience Analytics (Tealeaf) and Acoustic Exchange. Formerly IBM
+  Watson Marketing, Acoustic was carved out as an independent martech company and is a portfolio company
+  of Sapphire Ventures.'
 url: https://raw.githubusercontent.com/api-evangelist/acoustic/refs/heads/main/apis.yml
 x-type: company
 x-source: vc-portfolio
@@ -83,10 +80,9 @@ tags_raw:
 - Consent Management
 apis:
 - name: Acoustic Campaign REST API
-  description: >-
-    REST API for the Acoustic Campaign (formerly Silverpop Engage) marketing automation platform, covering
-    contact databases, relational tables, programs, contact sources, channels (push, SMS, in-app, rich
-    content), messages, web tracking, Universal Behaviors (events), event types, organization settings
+  description: REST API for the Acoustic Campaign (formerly Silverpop Engage) marketing automation platform,
+    covering contact databases, relational tables, programs, contact sources, channels (push, SMS, in-app,
+    rich content), messages, web tracking, Universal Behaviors (events), event types, organization settings
     and GDPR job status. Acoustic serves a live, unauthenticated Swagger 1.1 service description from
     every regional pod at /restdoc, and each pod is a separate base host (api-campaign-us-1..6, -eu-1,
     -ap-2, -ap-3, -ca-1).
@@ -141,12 +137,11 @@ apis:
   - type: Authentication
     url: authentication/acoustic-authentication.yml
 - name: Acoustic Campaign XML API
-  description: >-
-    The long-lived XML-over-HTTP API for Acoustic Campaign, inherited from Silverpop Engage. A single
-    POST endpoint per regional pod accepts XML request documents for contact list management, recipient
-    management, mailing and template management, relational tables, scheduling, reporting and data export.
-    Authenticated with OAuth 2 (refresh-token grant) or the legacy jsessionid session. Acoustic publishes
-    a public Postman collection for it.
+  description: The long-lived XML-over-HTTP API for Acoustic Campaign, inherited from Silverpop Engage.
+    A single POST endpoint per regional pod accepts XML request documents for contact list management,
+    recipient management, mailing and template management, relational tables, scheduling, reporting and
+    data export. Authenticated with OAuth 2 (refresh-token grant) or the legacy jsessionid session. Acoustic
+    publishes a public Postman collection for it.
   humanURL: https://developer.goacoustic.com/acoustic-campaign/reference/xml-api-overview-1
   baseURL: https://api-campaign-us-1.goacoustic.com/XMLAPI
   properties:
@@ -157,11 +152,11 @@ apis:
   - type: Authentication
     url: authentication/acoustic-authentication.yml
 - name: Acoustic Connect API
-  description: >-
-    The GraphQL API for Acoustic Connect — the platform's contact, consent, audience, reference-set, product-catalog,
-    product-performance and signal surface. A single POST endpoint at the region host root, authenticated
-    with an X-API-Key header generated in Connect under Administration > General settings > API keys.
-    Three regional endpoints (us-east-1, ap-southeast-2, eu-central-1). Schema introspection is authentication-gated.
+  description: The GraphQL API for Acoustic Connect — the platform's contact, consent, audience, reference-set,
+    product-catalog, product-performance and signal surface. A single POST endpoint at the region host
+    root, authenticated with an X-API-Key header generated in Connect under Administration > General settings
+    > API keys. Three regional endpoints (us-east-1, ap-southeast-2, eu-central-1). Schema introspection
+    is authentication-gated.
   humanURL: https://developer.goacoustic.com/acoustic-connect/reference/introduction
   baseURL: https://connect-gql-us-1.goacoustic.com/
   properties:
@@ -174,31 +169,29 @@ apis:
   - type: Authentication
     url: authentication/acoustic-authentication.yml
 - name: Acoustic Personalization
-  description: >-
-    Real-time personalization library and APIs for delivering optimized, tailored content to each visitor
-    based on behavior and contextual data, with product catalog, recommendations, zones, geolocation and
-    behavioral analytics capture. Delivered as a client-side PZN library (MPA script deployment via Exchange
-    Capture, or an npm package for Angular/React SPAs distributed from Acoustic's private Artifactory).
-    Acoustic publishes no callable API host for Personalization: /acoustic-personalization/reference returns
-    404, and the endpoints the library talks to are registered per tenant inside Exchange rather than
-    documented, so baseURL is deliberately left unset rather than pointed at a docs page.
+  description: 'Real-time personalization library and APIs for delivering optimized, tailored content
+    to each visitor based on behavior and contextual data, with product catalog, recommendations, zones,
+    geolocation and behavioral analytics capture. Delivered as a client-side PZN library (MPA script deployment
+    via Exchange Capture, or an npm package for Angular/React SPAs distributed from Acoustic''s private
+    Artifactory). Acoustic publishes no callable API host for Personalization: /acoustic-personalization/reference
+    returns 404, and the endpoints the library talks to are registered per tenant inside Exchange rather
+    than documented, so baseURL is deliberately left unset rather than pointed at a docs page.'
   humanURL: https://developer.goacoustic.com/acoustic-personalization/
   x-baseURL-status: no-usable-base
-  x-baseURL-note: >-
-    Checked 2026-08-13. https://developer.goacoustic.com/acoustic-personalization/reference returns HTTP
-    404; the docs describe a browser library and Exchange-registered endpoints, never a public API host.
+  x-baseURL-note: Checked 2026-08-13. https://developer.goacoustic.com/acoustic-personalization/reference
+    returns HTTP 404; the docs describe a browser library and Exchange-registered endpoints, never a public
+    API host.
   properties:
   - type: Documentation
     url: https://developer.goacoustic.com/acoustic-personalization/docs
   - type: GettingStarted
-    url: >-
-      https://developer.goacoustic.com/acoustic-personalization/docs/quick-start-guide-for-personalization
+    url: https://developer.goacoustic.com/acoustic-personalization/docs/quick-start-guide-for-personalization
   - type: Components
     url: components/acoustic-components.yml
 - aid: acoustic:acoustic-administering-user-profiles-api
   name: Acoustic Administering user profiles API
-  description: >-
-    The Administering user profiles API from Acoustic — 3 operation(s) for administering user profiles.
+  description: The Administering user profiles API from Acoustic — 3 operation(s) for administering user
+    profiles.
   humanURL: https://developer.goacoustic.com/acoustic-content/
   baseURL: https://content-us-1.content-cms.com/api/{tenantId}
   tags:
@@ -226,8 +219,7 @@ apis:
     url: llms/acoustic-llms.txt
 - aid: acoustic:acoustic-authoring-assets-api
   name: Acoustic Authoring assets API
-  description: >-
-    ## General
+  description: '## General
 
     Use the Content Asset service Rest APIs to work with assets. Assets are file types that are uploaded
     or created such as an image file, video file, or text that are used in content items. You can create,
@@ -255,8 +247,8 @@ apis:
     - The base ID (xxxx) does not change. Only the suffix changes according to the workflow status of
     the item.
 
-    - Where content and assets are referenced from within a content item, the 'raw' ID form, without a
-    suffix, is always used. For example, when a draft content item is referenced by another draft content
+    - Where content and assets are referenced from within a content item, the ''raw'' ID form, without
+    a suffix, is always used. For example, when a draft content item is referenced by another draft content
     item, the reference appears as a raw ID, and thus does not change when the items are published.
 
     - API clients should not depend on the ID format and should not attempt to parse it. Instead, the
@@ -266,7 +258,7 @@ apis:
     it is published.
 
     - Draft items that have a published version will have a ***linkedDoc*** property within the ***links***
-    property. This property will not appear for drafts that do not have a published version.
+    property. This property will not appear for drafts that do not have a published version.'
   humanURL: https://developer.goacoustic.com/acoustic-content/
   baseURL: https://content-us-1.content-cms.com/api/{tenantId}
   tags:
@@ -294,9 +286,8 @@ apis:
     url: llms/acoustic-llms.txt
 - aid: acoustic:acoustic-authoring-categories-api
   name: Acoustic Authoring categories API
-  description: >-
-    Use the Acoustic Content category authoring data service Rest APIs to work with category and taxonomy
-    items.
+  description: Use the Acoustic Content category authoring data service Rest APIs to work with category
+    and taxonomy items.
   humanURL: https://developer.goacoustic.com/acoustic-content/
   baseURL: https://content-us-1.content-cms.com/api/{tenantId}
   tags:
@@ -324,9 +315,8 @@ apis:
     url: llms/acoustic-llms.txt
 - aid: acoustic:acoustic-authoring-changes-api
   name: Acoustic Authoring changes API
-  description: >-
-    Use the Content Authoring Changes Rest APIs to apply changes, including bulk actions, to multiple
-    types of Content items.
+  description: Use the Content Authoring Changes Rest APIs to apply changes, including bulk actions, to
+    multiple types of Content items.
   humanURL: https://developer.goacoustic.com/acoustic-content/
   baseURL: https://content-us-1.content-cms.com/api/{tenantId}
   tags:
@@ -354,10 +344,10 @@ apis:
     url: llms/acoustic-llms.txt
 - aid: acoustic:acoustic-authoring-comments-api
   name: Acoustic Authoring comments API
-  description: >-
-    Use the Content Authoring comment APIs to work with comments. Comments are a simple way to associate
-    a message to an item in Content. Comments are associated with a single item and user (creatorId).
-    An item can have many comments. You can create, retrieve, and delete comments from a database.
+  description: Use the Content Authoring comment APIs to work with comments. Comments are a simple way
+    to associate a message to an item in Content. Comments are associated with a single item and user
+    (creatorId). An item can have many comments. You can create, retrieve, and delete comments from a
+    database.
   humanURL: https://developer.goacoustic.com/acoustic-content/
   baseURL: https://content-us-1.content-cms.com/api/{tenantId}
   tags:
@@ -385,8 +375,7 @@ apis:
     url: llms/acoustic-llms.txt
 - aid: acoustic:acoustic-authoring-content-api
   name: Acoustic Authoring content API
-  description: >-
-    ## General
+  description: '## General
 
     Use the Content content authoring data service Rest APIs to work with content documents. Content includes
     items that you compose in your content hub and upload from outside your content subscription. You
@@ -415,8 +404,8 @@ apis:
     - The base ID (xxxx) does not change. Only the suffix changes according to the workflow status of
     the item.
 
-    - Where content and assets are referenced from within a content item, the 'raw' ID form, without a
-    suffix, is always used. For example, when a draft content item is referenced by another draft content
+    - Where content and assets are referenced from within a content item, the ''raw'' ID form, without
+    a suffix, is always used. For example, when a draft content item is referenced by another draft content
     item, the reference appears as a raw ID, and thus does not change when the items are published.
 
     - API clients should not depend on the ID format and should not attempt to parse it. Instead, the
@@ -426,7 +415,7 @@ apis:
     it is published.
 
     - Draft items that have a published version will have a ***linkedDoc*** property within the ***links***
-    property. This property will not appear for drafts that do not have a published version.
+    property. This property will not appear for drafts that do not have a published version.'
   humanURL: https://developer.goacoustic.com/acoustic-content/
   baseURL: https://content-us-1.content-cms.com/api/{tenantId}
   tags:
@@ -489,9 +478,8 @@ apis:
     url: llms/acoustic-llms.txt
 - aid: acoustic:acoustic-authoring-image-profiles-api
   name: Acoustic Authoring image profiles API
-  description: >-
-    Use the Acoustic Content authoring image profile service Rest APIs to work with image profiles. You
-    can create, retrieve, and update image profiles in a database.
+  description: Use the Acoustic Content authoring image profile service Rest APIs to work with image profiles.
+    You can create, retrieve, and update image profiles in a database.
   humanURL: https://developer.goacoustic.com/acoustic-content/
   baseURL: https://content-us-1.content-cms.com/api/{tenantId}
   tags:
@@ -547,17 +535,17 @@ apis:
     url: llms/acoustic-llms.txt
 - aid: acoustic:acoustic-authoring-layouts-api
   name: Acoustic Authoring layouts API
-  description: >-
-    Use the Content content authoring layout service Rest APIs to work with layouts and layout mappings.
+  description: 'Use the Content content authoring layout service Rest APIs to work with layouts and layout
+    mappings.
 
 
     Layouts define the template for the type documents. They define the markup and how to add content
-    properties and elements into the markup. For example, the layouts 'Article', and 'Event' would define
-    what an article or event looks like on the web site, or email.
+    properties and elements into the markup. For example, the layouts ''Article'', and ''Event'' would
+    define what an article or event looks like on the web site, or email.
 
 
     Layout Mappings define an association between a content-type and one or more layouts. Specifically
-    marking those layouts as valid for the given content-type.
+    marking those layouts as valid for the given content-type.'
   humanURL: https://developer.goacoustic.com/acoustic-content/
   baseURL: https://content-us-1.content-cms.com/api/{tenantId}
   tags:
@@ -585,9 +573,8 @@ apis:
     url: llms/acoustic-llms.txt
 - aid: acoustic:acoustic-authoring-library-api
   name: Acoustic Authoring library API
-  description: >-
-    Use the Content library Rest APIs to work with libraries. Libraries currently support having content
-    and asset items added to them.
+  description: Use the Content library Rest APIs to work with libraries. Libraries currently support having
+    content and asset items added to them.
   humanURL: https://developer.goacoustic.com/acoustic-content/
   baseURL: https://content-us-1.content-cms.com/api/{tenantId}
   tags:
@@ -615,9 +602,8 @@ apis:
     url: llms/acoustic-llms.txt
 - aid: acoustic:acoustic-authoring-reference-api
   name: Acoustic Authoring reference API
-  description: >-
-    The Content Authoring reference API is used to retrieve information about references between items
-    in the system. The type of relationships that are tracked  depends on the type of item. Typically,
+  description: The Content Authoring reference API is used to retrieve information about references between
+    items in the system. The type of relationships that are tracked  depends on the type of item. Typically,
     if an item has an editable property that points to an ID of another item, it is tracked. You can use
     the API to fetch both incoming and outgoing references for any item.
   humanURL: https://developer.goacoustic.com/acoustic-content/
@@ -647,11 +633,10 @@ apis:
     url: llms/acoustic-llms.txt
 - aid: acoustic:acoustic-authoring-renditions-api
   name: Acoustic Authoring renditions API
-  description: >-
-    Use the Content renditions data service Rest APIs to work with image renditions. A 'rendition' of
-    an image defines how you can customize a source image such as the width and height to be shown for
-    a particular device or context. Renditions that are not referenced by an asset or content will be
-    cleaned up periodically.
+  description: Use the Content renditions data service Rest APIs to work with image renditions. A 'rendition'
+    of an image defines how you can customize a source image such as the width and height to be shown
+    for a particular device or context. Renditions that are not referenced by an asset or content will
+    be cleaned up periodically.
   humanURL: https://developer.goacoustic.com/acoustic-content/
   baseURL: https://content-us-1.content-cms.com/api/{tenantId}
   tags:
@@ -679,10 +664,9 @@ apis:
     url: llms/acoustic-llms.txt
 - aid: acoustic:acoustic-authoring-resources-api
   name: Acoustic Authoring resources API
-  description: >-
-    Use the Content resources data service Rest APIs to work with resources. Resources are binary files
-    that are stored in the CMS and used in content or site design. Resources that are not referenced by
-    an asset or content will be cleaned up periodically.
+  description: Use the Content resources data service Rest APIs to work with resources. Resources are
+    binary files that are stored in the CMS and used in content or site design. Resources that are not
+    referenced by an asset or content will be cleaned up periodically.
   humanURL: https://developer.goacoustic.com/acoustic-content/
   baseURL: https://content-us-1.content-cms.com/api/{tenantId}
   tags:
@@ -710,10 +694,9 @@ apis:
     url: llms/acoustic-llms.txt
 - aid: acoustic:acoustic-authoring-review-api
   name: Acoustic Authoring review API
-  description: >-
-    Use the Content Review Rest APIs to review assets and content. Use reviews to receive feedback from
-    other members of your team. You can start, update, and complete the reviews that are set up. You can
-    approve the content and assets under review.
+  description: Use the Content Review Rest APIs to review assets and content. Use reviews to receive feedback
+    from other members of your team. You can start, update, and complete the reviews that are set up.
+    You can approve the content and assets under review.
   humanURL: https://developer.goacoustic.com/acoustic-content/
   baseURL: https://content-us-1.content-cms.com/api/{tenantId}
   tags:
@@ -741,8 +724,7 @@ apis:
     url: llms/acoustic-llms.txt
 - aid: acoustic:acoustic-authoring-search-api
   name: Acoustic Authoring search API
-  description: >-
-    ## General
+  description: '## General
 
     Use the Content authoring search service REST API to access assets, categories, content, content types,
     image profiles, and taxonomies by searching the content hub. You need prior authentication to use
@@ -770,9 +752,9 @@ apis:
     - The base ID (xxxx) does not change. Only the suffix changes according to the workflow status of
     the item.
 
-    - Where content and assets are referenced from within a content item, the 'raw' ID form, without a
-    suffix, is always used. For example, when a draft content item is referenced by another draft content
-    item, the reference appears as a raw ID, and thus does not change when the items are published.
+    - Where content and assets are referenced from within a content item, the ''raw'' ID form, without
+    a suffix, is always used. For example, when a draft content item is referenced by another draft content
+    item, the reference appears as a raw ID, and thus does not change when the items are published.'
   humanURL: https://developer.goacoustic.com/acoustic-content/
   baseURL: https://content-us-1.content-cms.com/api/{tenantId}
   tags:
@@ -800,10 +782,9 @@ apis:
     url: llms/acoustic-llms.txt
 - aid: acoustic:acoustic-authoring-sites-api
   name: Acoustic Authoring sites API
-  description: >-
-    Use the Content authoring sites service Rest APIs to work with sites. Sites are comprised of a site
-    metadata and a hierarchy of pages. You can retrieve or update site metadata and create, read, update,
-    and delete site pages belonging to a site. The out-of-the-box site has an ID of 'default'.
+  description: Use the Content authoring sites service Rest APIs to work with sites. Sites are comprised
+    of a site metadata and a hierarchy of pages. You can retrieve or update site metadata and create,
+    read, update, and delete site pages belonging to a site. The out-of-the-box site has an ID of 'default'.
   humanURL: https://developer.goacoustic.com/acoustic-content/
   baseURL: https://content-us-1.content-cms.com/api/{tenantId}
   tags:
@@ -831,13 +812,12 @@ apis:
     url: llms/acoustic-llms.txt
 - aid: acoustic:acoustic-authoring-types-api
   name: Acoustic Authoring types API
-  description: >-
-    Use the Acoustic Content authoring type service Rest APIs to work with content type documents. Content
-    types define a set of related elements that are used to create content. You can create, retrieve,
+  description: 'Use the Acoustic Content authoring type service Rest APIs to work with content type documents.
+    Content types define a set of related elements that are used to create content. You can create, retrieve,
     and update content type documents in a database. You can also validate documents.
 
 
-    Note: Documents created or updated in the old 1.0 format will be migrated to the 1.1 format on save.
+    Note: Documents created or updated in the old 1.0 format will be migrated to the 1.1 format on save.'
   humanURL: https://developer.goacoustic.com/acoustic-content/
   baseURL: https://content-us-1.content-cms.com/api/{tenantId}
   tags:
@@ -865,10 +845,9 @@ apis:
     url: llms/acoustic-llms.txt
 - aid: acoustic:acoustic-authoring-version-api
   name: Acoustic Authoring version API
-  description: >-
-    Use the Content version Rest APIs to work with authoring items that have versions. Versioned documents
-    currently includes assets and content items within Content. The version APIs allow you to retrieve
-    versions.
+  description: Use the Content version Rest APIs to work with authoring items that have versions. Versioned
+    documents currently includes assets and content items within Content. The version APIs allow you to
+    retrieve versions.
   humanURL: https://developer.goacoustic.com/acoustic-content/
   baseURL: https://content-us-1.content-cms.com/api/{tenantId}
   tags:
@@ -896,8 +875,7 @@ apis:
     url: llms/acoustic-llms.txt
 - aid: acoustic:acoustic-delivery-content-api
   name: Acoustic Delivery content API
-  description: >-
-    Use the Content delivery content service REST API to retrieve published content items.
+  description: 'Use the Content delivery content service REST API to retrieve published content items.
 
 
     You can use the /delivery/v1/content routes to access content items as an unauthenticated user or
@@ -924,7 +902,7 @@ apis:
     To access draft content items you need to access the system in preview mode. For more information
     on the
 
-    preview mode and previewing in general, please refer to https://developer.goacoustic.com/acoustic-content/docs/preview-content.
+    preview mode and previewing in general, please refer to https://developer.goacoustic.com/acoustic-content/docs/preview-content.'
   humanURL: https://developer.goacoustic.com/acoustic-content/
   baseURL: https://content-us-1.content-cms.com/api/{tenantId}
   tags:
@@ -987,9 +965,8 @@ apis:
     url: llms/acoustic-llms.txt
 - aid: acoustic:acoustic-delivery-render-api
   name: Acoustic Delivery render API
-  description: >-
-    The Content Delivery rendering REST API provides information to render content and pages in client-side
-    applications.
+  description: 'The Content Delivery rendering REST API provides information to render content and pages
+    in client-side applications.
 
 
     **Client-side programming support**
@@ -1030,7 +1007,7 @@ apis:
 
 
     In order to render content and the page structure in client-side applications you must to consider
-    the following aspects&#58;
+    the following aspects:
 
 
     * Identify the addressed page that correlates to the application routing state.
@@ -1038,7 +1015,7 @@ apis:
     * Identify the addressed content and layout information and render the content.
 
 
-    With the following steps you can achieve these aspects&#58;
+    With the following steps you can achieve these aspects:
 
 
     1. Retrieve the site and page information by using the "Delivery Site By ID" API route. The response
@@ -1055,7 +1032,7 @@ apis:
 
     4. Based on the provided layout information, identify the related the layout component of your application
     and render the content item by using the layout component. If required the layout can render nested
-    layouts.
+    layouts.'
   humanURL: https://developer.goacoustic.com/acoustic-content/
   baseURL: https://content-us-1.content-cms.com/api/{tenantId}
   tags:
@@ -1083,8 +1060,7 @@ apis:
     url: llms/acoustic-llms.txt
 - aid: acoustic:acoustic-delivery-resources-api
   name: Acoustic Delivery resources API
-  description: >-
-    The Delivery Resource Service (DRS) provides access to the published resources in Akamai.
+  description: 'The Delivery Resource Service (DRS) provides access to the published resources in Akamai.
 
 
     The recommended URL for addressing published resources is the Akamai URL which is a static file access.
@@ -1105,7 +1081,7 @@ apis:
 
     To access draft resources you need to access the system in preview mode. For more information on the
 
-    preview mode and previewing in general, please refer to https://developer.goacoustic.com/acoustic-content/docs/preview-content.
+    preview mode and previewing in general, please refer to https://developer.goacoustic.com/acoustic-content/docs/preview-content.'
   humanURL: https://developer.goacoustic.com/acoustic-content/
   baseURL: https://content-us-1.content-cms.com/api/{tenantId}
   tags:
@@ -1133,14 +1109,13 @@ apis:
     url: llms/acoustic-llms.txt
 - aid: acoustic:acoustic-delivery-search-api
   name: Acoustic Delivery search API
-  description: >-
-    Use the Watson Content Hub delivery search REST API to search for published  assets, content items,
-    categories and pages. You can use the /delivery/v1/search route to perform anonymous searches or the
-    /mydelivery/v1/search route to perform authenticated searches that include restricted items. While
-    access to the latter route requires at least Authenticated visitor role, accessing the anonymous route
-    does not require any authentication. The delivery search provides access to published items only.
-    To include draft items into your search, you can access this delivery search via the preview host.
-    For more information on the preview host and previewing in general, please refer to https://developer.goacoustic.com/acoustic-content/docs/preview-content
+  description: Use the Watson Content Hub delivery search REST API to search for published  assets, content
+    items, categories and pages. You can use the /delivery/v1/search route to perform anonymous searches
+    or the /mydelivery/v1/search route to perform authenticated searches that include restricted items.
+    While access to the latter route requires at least Authenticated visitor role, accessing the anonymous
+    route does not require any authentication. The delivery search provides access to published items
+    only. To include draft items into your search, you can access this delivery search via the preview
+    host. For more information on the preview host and previewing in general, please refer to https://developer.goacoustic.com/acoustic-content/docs/preview-content
   humanURL: https://developer.goacoustic.com/acoustic-content/
   baseURL: https://content-us-1.content-cms.com/api/{tenantId}
   tags:
@@ -1224,10 +1199,9 @@ apis:
     url: llms/acoustic-llms.txt
 - aid: acoustic:acoustic-publishing-api
   name: Acoustic Publishing API
-  description: >-
-    Use the Content Publishing APIs to update the default site revision, which is a snapshot of your published
-    site at a specific time. current-job instance is used to track the state of the job.
-     A site revision represents a specific revision of a site.
+  description: "Use the Content Publishing APIs to update the default site revision, which is a snapshot\
+    \ of your published site at a specific time. current-job instance is used to track the state of the\
+    \ job.\n A site revision represents a specific revision of a site."
   humanURL: https://developer.goacoustic.com/acoustic-content/
   baseURL: https://content-us-1.content-cms.com/api/{tenantId}
   tags:
@@ -1283,9 +1257,8 @@ apis:
     url: llms/acoustic-llms.txt
 - aid: acoustic:acoustic-webhook-profiles-api
   name: Acoustic Webhook profiles API
-  description: >-
-    Use the Content webhook service Rest APIs to work with webhook profiles. You can create, retrieve
-    and update webhook profiles in a database.
+  description: 'Use the Content webhook service Rest APIs to work with webhook profiles. You can create,
+    retrieve and update webhook profiles in a database.
 
 
     ### Webhook Timeouts and Retry policy
@@ -1294,7 +1267,7 @@ apis:
     perform their processing in background threads. The only situation whereby webhooks will be retried/re-sent
     is in the event of a communication error, and in this case only a single retry will occur.
 
-    Note: Non-2xx responses from receivers are explicitly not retried
+    Note: Non-2xx responses from receivers are explicitly not retried'
   humanURL: https://developer.goacoustic.com/acoustic-content/
   baseURL: https://content-us-1.content-cms.com/api/{tenantId}
   tags:
@@ -1407,23 +1380,17 @@ common:
   url: mcp/acoustic-tool-crosswalk.yml
 - type: Overlay
   url: overlays/acoustic-content-overlay.yaml
-
 x-enrichment:
   date: '2026-08-13'
   status: enriched
   artifacts_added: 39
   pass: local-v1
-  note: >-
-    Contract discovery beat a JS-rendered docs host twice. The full Acoustic Content
-    OpenAPI 3.0.0 (136 paths / 178 operations / 294 schemas) was extracted from the
-    ReadMe-embedded API definition at /branches/1.0/apis/acoustic-content-api.json on
-    developer.goacoustic.com, and a first-party Swagger 2.0 copy (142 paths / 187
-    operations) was found at
-    github.com/acoustic-content-samples/wch-openapi-documentation. Acoustic Campaign
-    turned out to serve a live, unauthenticated Swagger 1.1 service description from
-    every regional pod at /restdoc (11 resources, 64 operations), and Acoustic Connect
-    is a GraphQL API whose endpoint is the region host root with introspection gated
-    behind X-API-Key. The developer portal also serves a real RFC 9727
-    /.well-known/api-catalog advertising six API products, four more than this profile
-    previously knew about.
-
+  note: Contract discovery beat a JS-rendered docs host twice. The full Acoustic Content OpenAPI 3.0.0
+    (136 paths / 178 operations / 294 schemas) was extracted from the ReadMe-embedded API definition at
+    /branches/1.0/apis/acoustic-content-api.json on developer.goacoustic.com, and a first-party Swagger
+    2.0 copy (142 paths / 187 operations) was found at github.com/acoustic-content-samples/wch-openapi-documentation.
+    Acoustic Campaign turned out to serve a live, unauthenticated Swagger 1.1 service description from
+    every regional pod at /restdoc (11 resources, 64 operations), and Acoustic Connect is a GraphQL API
+    whose endpoint is the region host root with introspection gated behind X-API-Key. The developer portal
+    also serves a real RFC 9727 /.well-known/api-catalog advertising six API products, four more than
+    this profile previously knew about.
