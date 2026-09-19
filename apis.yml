@@ -46,6 +46,9 @@ x-tier-reason: machine-readable-contracts-harvested
 specificationVersion: '0.23'
 created: '2026-07-17'
 modified: '2026-08-13'
+x-docs-platform: readme
+x-docs-platform-confidence: high
+x-docs-platform-checked: 2026-09-17
 tags:
 - Company
 - MarTech
@@ -200,7 +203,7 @@ apis:
   - type: OpenAPI
     url: openapi/acoustic-administering-user-profiles-api-openapi.yml
   - type: Swagger
-    url: openapi/acoustic-content-swagger2-original.yaml
+    url: openapi/_original/acoustic-content-swagger2-original.yaml
   - type: Documentation
     url: https://developer.goacoustic.com/acoustic-content/docs
   - type: APIReference
@@ -267,7 +270,7 @@ apis:
   - type: OpenAPI
     url: openapi/acoustic-authoring-assets-api-openapi.yml
   - type: Swagger
-    url: openapi/acoustic-content-swagger2-original.yaml
+    url: openapi/_original/acoustic-content-swagger2-original.yaml
   - type: Documentation
     url: https://developer.goacoustic.com/acoustic-content/docs
   - type: APIReference
@@ -296,7 +299,7 @@ apis:
   - type: OpenAPI
     url: openapi/acoustic-authoring-categories-api-openapi.yml
   - type: Swagger
-    url: openapi/acoustic-content-swagger2-original.yaml
+    url: openapi/_original/acoustic-content-swagger2-original.yaml
   - type: Documentation
     url: https://developer.goacoustic.com/acoustic-content/docs
   - type: APIReference
@@ -325,7 +328,7 @@ apis:
   - type: OpenAPI
     url: openapi/acoustic-authoring-changes-api-openapi.yml
   - type: Swagger
-    url: openapi/acoustic-content-swagger2-original.yaml
+    url: openapi/_original/acoustic-content-swagger2-original.yaml
   - type: Documentation
     url: https://developer.goacoustic.com/acoustic-content/docs
   - type: APIReference
@@ -356,7 +359,7 @@ apis:
   - type: OpenAPI
     url: openapi/acoustic-authoring-comments-api-openapi.yml
   - type: Swagger
-    url: openapi/acoustic-content-swagger2-original.yaml
+    url: openapi/_original/acoustic-content-swagger2-original.yaml
   - type: Documentation
     url: https://developer.goacoustic.com/acoustic-content/docs
   - type: APIReference
@@ -424,7 +427,7 @@ apis:
   - type: OpenAPI
     url: openapi/acoustic-authoring-content-api-openapi.yml
   - type: Swagger
-    url: openapi/acoustic-content-swagger2-original.yaml
+    url: openapi/_original/acoustic-content-swagger2-original.yaml
   - type: Documentation
     url: https://developer.goacoustic.com/acoustic-content/docs
   - type: APIReference
@@ -459,7 +462,7 @@ apis:
   - type: OpenAPI
     url: openapi/acoustic-authoring-context-search-api-openapi.yml
   - type: Swagger
-    url: openapi/acoustic-content-swagger2-original.yaml
+    url: openapi/_original/acoustic-content-swagger2-original.yaml
   - type: Documentation
     url: https://developer.goacoustic.com/acoustic-content/docs
   - type: APIReference
@@ -488,7 +491,7 @@ apis:
   - type: OpenAPI
     url: openapi/acoustic-authoring-image-profiles-api-openapi.yml
   - type: Swagger
-    url: openapi/acoustic-content-swagger2-original.yaml
+    url: openapi/_original/acoustic-content-swagger2-original.yaml
   - type: Documentation
     url: https://developer.goacoustic.com/acoustic-content/docs
   - type: APIReference
@@ -516,7 +519,7 @@ apis:
   - type: OpenAPI
     url: openapi/acoustic-authoring-import-api-openapi.yml
   - type: Swagger
-    url: openapi/acoustic-content-swagger2-original.yaml
+    url: openapi/_original/acoustic-content-swagger2-original.yaml
   - type: Documentation
     url: https://developer.goacoustic.com/acoustic-content/docs
   - type: APIReference
@@ -554,7 +557,7 @@ apis:
   - type: OpenAPI
     url: openapi/acoustic-authoring-layouts-api-openapi.yml
   - type: Swagger
-    url: openapi/acoustic-content-swagger2-original.yaml
+    url: openapi/_original/acoustic-content-swagger2-original.yaml
   - type: Documentation
     url: https://developer.goacoustic.com/acoustic-content/docs
   - type: APIReference
@@ -583,7 +586,7 @@ apis:
   - type: OpenAPI
     url: openapi/acoustic-authoring-library-api-openapi.yml
   - type: Swagger
-    url: openapi/acoustic-content-swagger2-original.yaml
+    url: openapi/_original/acoustic-content-swagger2-original.yaml
   - type: Documentation
     url: https://developer.goacoustic.com/acoustic-content/docs
   - type: APIReference
@@ -614,7 +617,7 @@ apis:
   - type: OpenAPI
     url: openapi/acoustic-authoring-reference-api-openapi.yml
   - type: Swagger
-    url: openapi/acoustic-content-swagger2-original.yaml
+    url: openapi/_original/acoustic-content-swagger2-original.yaml
   - type: Documentation
     url: https://developer.goacoustic.com/acoustic-content/docs
   - type: APIReference
@@ -645,7 +648,7 @@ apis:
   - type: OpenAPI
     url: openapi/acoustic-authoring-renditions-api-openapi.yml
   - type: Swagger
-    url: openapi/acoustic-content-swagger2-original.yaml
+    url: openapi/_original/acoustic-content-swagger2-original.yaml
   - type: Documentation
     url: https://developer.goacoustic.com/acoustic-content/docs
   - type: APIReference
@@ -675,7 +678,7 @@ apis:
   - type: OpenAPI
     url: openapi/acoustic-authoring-resources-api-openapi.yml
   - type: Swagger
-    url: openapi/acoustic-content-swagger2-original.yaml
+    url: openapi/_original/acoustic-content-swagger2-original.yaml
   - type: Documentation
     url: https://developer.goacoustic.com/acoustic-content/docs
   - type: APIReference
@@ -705,7 +708,7 @@ apis:
   - type: OpenAPI
     url: openapi/acoustic-authoring-review-api-openapi.yml
   - type: Swagger
-    url: openapi/acoustic-content-swagger2-original.yaml
+    url: openapi/_original/acoustic-content-swagger2-original.yaml
   - type: Documentation
     url: https://developer.goacoustic.com/acoustic-content/docs
   - type: APIReference
@@ -763,7 +766,7 @@ apis:
   - type: OpenAPI
     url: openapi/acoustic-authoring-search-api-openapi.yml
   - type: Swagger
-    url: openapi/acoustic-content-swagger2-original.yaml
+    url: openapi/_original/acoustic-content-swagger2-original.yaml
   - type: Documentation
     url: https://developer.goacoustic.com/acoustic-content/docs
   - type: APIReference
@@ -793,7 +796,7 @@ apis:
   - type: OpenAPI
     url: openapi/acoustic-authoring-sites-api-openapi.yml
   - type: Swagger
-    url: openapi/acoustic-content-swagger2-original.yaml
+    url: openapi/_original/acoustic-content-swagger2-original.yaml
   - type: Documentation
     url: https://developer.goacoustic.com/acoustic-content/docs
   - type: APIReference
@@ -826,7 +829,7 @@ apis:
   - type: OpenAPI
     url: openapi/acoustic-authoring-types-api-openapi.yml
   - type: Swagger
-    url: openapi/acoustic-content-swagger2-original.yaml
+    url: openapi/_original/acoustic-content-swagger2-original.yaml
   - type: Documentation
     url: https://developer.goacoustic.com/acoustic-content/docs
   - type: APIReference
@@ -856,7 +859,7 @@ apis:
   - type: OpenAPI
     url: openapi/acoustic-authoring-version-api-openapi.yml
   - type: Swagger
-    url: openapi/acoustic-content-swagger2-original.yaml
+    url: openapi/_original/acoustic-content-swagger2-original.yaml
   - type: Documentation
     url: https://developer.goacoustic.com/acoustic-content/docs
   - type: APIReference
@@ -911,7 +914,7 @@ apis:
   - type: OpenAPI
     url: openapi/acoustic-delivery-content-api-openapi.yml
   - type: Swagger
-    url: openapi/acoustic-content-swagger2-original.yaml
+    url: openapi/_original/acoustic-content-swagger2-original.yaml
   - type: Documentation
     url: https://developer.goacoustic.com/acoustic-content/docs
   - type: APIReference
@@ -946,7 +949,7 @@ apis:
   - type: OpenAPI
     url: openapi/acoustic-delivery-context-search-api-openapi.yml
   - type: Swagger
-    url: openapi/acoustic-content-swagger2-original.yaml
+    url: openapi/_original/acoustic-content-swagger2-original.yaml
   - type: Documentation
     url: https://developer.goacoustic.com/acoustic-content/docs
   - type: APIReference
@@ -1041,7 +1044,7 @@ apis:
   - type: OpenAPI
     url: openapi/acoustic-delivery-render-api-openapi.yml
   - type: Swagger
-    url: openapi/acoustic-content-swagger2-original.yaml
+    url: openapi/_original/acoustic-content-swagger2-original.yaml
   - type: Documentation
     url: https://developer.goacoustic.com/acoustic-content/docs
   - type: APIReference
@@ -1090,7 +1093,7 @@ apis:
   - type: OpenAPI
     url: openapi/acoustic-delivery-resources-api-openapi.yml
   - type: Swagger
-    url: openapi/acoustic-content-swagger2-original.yaml
+    url: openapi/_original/acoustic-content-swagger2-original.yaml
   - type: Documentation
     url: https://developer.goacoustic.com/acoustic-content/docs
   - type: APIReference
@@ -1124,7 +1127,7 @@ apis:
   - type: OpenAPI
     url: openapi/acoustic-delivery-search-api-openapi.yml
   - type: Swagger
-    url: openapi/acoustic-content-swagger2-original.yaml
+    url: openapi/_original/acoustic-content-swagger2-original.yaml
   - type: Documentation
     url: https://developer.goacoustic.com/acoustic-content/docs
   - type: APIReference
@@ -1152,7 +1155,7 @@ apis:
   - type: OpenAPI
     url: openapi/acoustic-delivery-sites-api-openapi.yml
   - type: Swagger
-    url: openapi/acoustic-content-swagger2-original.yaml
+    url: openapi/_original/acoustic-content-swagger2-original.yaml
   - type: Documentation
     url: https://developer.goacoustic.com/acoustic-content/docs
   - type: APIReference
@@ -1180,7 +1183,7 @@ apis:
   - type: OpenAPI
     url: openapi/acoustic-login-service-api-openapi.yml
   - type: Swagger
-    url: openapi/acoustic-content-swagger2-original.yaml
+    url: openapi/_original/acoustic-content-swagger2-original.yaml
   - type: Documentation
     url: https://developer.goacoustic.com/acoustic-content/docs
   - type: APIReference
@@ -1210,7 +1213,7 @@ apis:
   - type: OpenAPI
     url: openapi/acoustic-publishing-api-openapi.yml
   - type: Swagger
-    url: openapi/acoustic-content-swagger2-original.yaml
+    url: openapi/_original/acoustic-content-swagger2-original.yaml
   - type: Documentation
     url: https://developer.goacoustic.com/acoustic-content/docs
   - type: APIReference
@@ -1238,7 +1241,7 @@ apis:
   - type: OpenAPI
     url: openapi/acoustic-tenant-registry-api-openapi.yml
   - type: Swagger
-    url: openapi/acoustic-content-swagger2-original.yaml
+    url: openapi/_original/acoustic-content-swagger2-original.yaml
   - type: Documentation
     url: https://developer.goacoustic.com/acoustic-content/docs
   - type: APIReference
@@ -1276,7 +1279,7 @@ apis:
   - type: OpenAPI
     url: openapi/acoustic-webhook-profiles-api-openapi.yml
   - type: Swagger
-    url: openapi/acoustic-content-swagger2-original.yaml
+    url: openapi/_original/acoustic-content-swagger2-original.yaml
   - type: Documentation
     url: https://developer.goacoustic.com/acoustic-content/docs
   - type: APIReference
