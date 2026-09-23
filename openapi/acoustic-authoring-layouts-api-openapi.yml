@@ -1,111 +1,21 @@
 openapi: 3.2.0
 info:
-  title: Acoustic Authoring layouts API
   version: 1.0.142
   x-ibm-name: ibm-watson-content-hub-api
-  description: 'Operations tagged Authoring layouts across 2 of this provider''s published API definitions: acoustic-content-openapi-original.json, acoustic-content-swagger2-original.yaml. Each path carries the servers of the definition it was published in.'
+  title: Acoustic Content Authoring layouts API
+  description: Copyright © Acoustic, L.P. 2023
 tags:
 - name: Authoring layouts
-  description: 'Use the Content content authoring layout service Rest APIs to work with layouts and layout mappings.
-
-
-    Layouts define the template for the type documents. They define the markup and how to add content properties and elements into the markup. For example, the layouts ''Article'', and ''Event'' would define what an article or event looks like on the web site, or email.
-
-
-    Layout Mappings define an association between a content-type and one or more layouts. Specifically marking those layouts as valid for the given content-type.
-
-    '
+  description: Use the Content content authoring layout service Rest APIs to work with layouts and layout mappings.
 paths:
   /authoring/v1/layouts:
     post:
       tags:
       - Authoring layouts
-      summary: Create new layouts.
-      description: 'Use the /layouts end-point to create a new layout.<br />User roles: admin, manager'
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              description: A new layout.
-              properties:
-                name:
-                  type: string
-                  description: The name of the layout.
-                  pattern: ^[a-zA-Z0-9*. \-+_~$!',()]*$
-                  minLength: 1
-                  example: Sample layout
-                description:
-                  type: string
-                  description: The description of the layout.
-                  pattern: ^[a-zA-Z0-9*. \-+_~$!',()]*$
-                  example: An example description of the sample layout
-                classification:
-                  type: string
-                  description: Indicates the type of this document.
-                  enum:
-                  - layout
-                created:
-                  type: string
-                  description: Optional creation date of this layout in ISO 8601 with the format YYYY-MM-DDThh:mm:ss.sssZ. Value is ignored if set in the future.
-                  format: date-time
-                path:
-                  type: string
-                  description: Optional path to associate with the layout. Must be unique. Will default to filesystem friendly version of /[NAME].
-                  example: /myLayouts/SampleLayout.json
-                prerender:
-                  type: boolean
-                  description: Indicates if the layout should be prerendered.
-                  default: false
-                  example: false
-                tags:
-                  type: array
-                  items:
-                    type: string
-                  uniqueItems: true
-                  example:
-                  - news
-                  - sample
-                thumbnail:
-                  type: object
-                  description: 'The reference to the asset that should act as the thumbnail of this layout.
+      summary: Create new layouts
+      description: 'Use the /layouts end-point to create a new layout.
 
-                    The thumbnail can be referred to by either id or path.
-
-                    '
-                  properties:
-                    id:
-                      type: string
-                      description: The ID of the asset.
-                      example: 6c622bbb-5f5b-45d4-89e1-fce1c054138f
-                    path:
-                      type: string
-                      description: The path of the asset.
-                      example: /sales/images/hub.png
-                template:
-                  type: string
-                  minLength: 1
-                  example: /mytemplates/template.hbs
-                templateType:
-                  type: string
-                  description: Specifies the type of template associated with this layout. This field is required when prerender field is set to true.
-                  enum:
-                  - handlebars
-                  - angular
-                  default: handlebars
-                  example: handlebars
-                urlTemplate:
-                  type: string
-                  description: Specifies the pattern for url generation.
-                isSystem:
-                  type: boolean
-                  description: Indicates whether this item is a 'system item' or not.
-                  default: false
-              required:
-              - name
-              - template
-        description: Contains the layout to create.
-        required: true
+        User roles: admin, manager'
       responses:
         '201':
           description: Success.
@@ -505,11 +415,99 @@ paths:
       x-ibm-dx-security-user-roles:
       - admin
       - manager
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              description: A new layout.
+              properties:
+                name:
+                  type: string
+                  description: The name of the layout.
+                  pattern: ^[a-zA-Z0-9*. \-+_~$!',()]*$
+                  minLength: 1
+                  example: Sample layout
+                description:
+                  type: string
+                  description: The description of the layout.
+                  pattern: ^[a-zA-Z0-9*. \-+_~$!',()]*$
+                  example: An example description of the sample layout
+                classification:
+                  type: string
+                  description: Indicates the type of this document.
+                  enum:
+                  - layout
+                created:
+                  type: string
+                  description: Optional creation date of this layout in ISO 8601 with the format YYYY-MM-DDThh:mm:ss.sssZ. Value is ignored if set in the future.
+                  format: date-time
+                path:
+                  type: string
+                  description: Optional path to associate with the layout. Must be unique. Will default to filesystem friendly version of /[NAME].
+                  example: /myLayouts/SampleLayout.json
+                prerender:
+                  type: boolean
+                  description: Indicates if the layout should be prerendered.
+                  default: false
+                  example: false
+                tags:
+                  type: array
+                  items:
+                    type: string
+                  uniqueItems: true
+                  example:
+                  - news
+                  - sample
+                thumbnail:
+                  type: object
+                  description: 'The reference to the asset that should act as the thumbnail of this layout.
+
+                    The thumbnail can be referred to by either id or path.
+
+                    '
+                  properties:
+                    id:
+                      type: string
+                      description: The ID of the asset.
+                      example: 6c622bbb-5f5b-45d4-89e1-fce1c054138f
+                    path:
+                      type: string
+                      description: The path of the asset.
+                      example: /sales/images/hub.png
+                template:
+                  type: string
+                  minLength: 1
+                  example: /mytemplates/template.hbs
+                templateType:
+                  type: string
+                  description: Specifies the type of template associated with this layout. This field is required when prerender field is set to true.
+                  enum:
+                  - handlebars
+                  - angular
+                  default: handlebars
+                  example: handlebars
+                urlTemplate:
+                  type: string
+                  description: Specifies the pattern for url generation.
+                isSystem:
+                  type: boolean
+                  description: Indicates whether this item is a 'system item' or not.
+                  default: false
+              required:
+              - name
+              - template
+        description: Contains the layout to create.
+        required: true
+      operationId: postAuthoringV1Layouts
+      x-operation-id-source: derived
     get:
       tags:
       - Authoring layouts
-      summary: Retrieve all layouts in the database.
-      description: 'Use the /layouts endpoint to retrieve all layouts from the database.<br />User roles: admin, manager, editor, viewer'
+      summary: Retrieve all layouts in the database
+      description: 'Use the /layouts endpoint to retrieve all layouts from the database.
+
+        User roles: admin, manager, editor, viewer'
       parameters:
       - name: offset
         in: query
@@ -730,12 +728,16 @@ paths:
       - manager
       - editor
       - viewer
+      operationId: getAuthoringV1Layouts
+      x-operation-id-source: derived
   /authoring/v1/layouts/by-content/{content-id}:
     get:
       tags:
       - Authoring layouts
-      summary: Retrieves the layouts associated with the specified content.
-      description: 'Use the /layouts/by-content/{contentId} endpoint to retrieve the layouts associated with the specified content. When the ''filter'' query string parameter is set to ''selected'', only the selected layout (which could be a content override) is returned.<br />User roles: admin, manager, editor, viewer'
+      summary: Retrieves the layouts associated with the specified content
+      description: 'Use the /layouts/by-content/{contentId} endpoint to retrieve the layouts associated with the specified content. When the ''filter'' query string parameter is set to ''selected'', only the selected layout (which could be a content override) is returned.
+
+        User roles: admin, manager, editor, viewer'
       parameters:
       - name: content-id
         in: path
@@ -1062,12 +1064,16 @@ paths:
       - manager
       - editor
       - viewer
+      operationId: getAuthoringV1LayoutsByContentByContentId
+      x-operation-id-source: derived
   /authoring/v1/layouts/by-path:
     get:
       tags:
       - Authoring layouts
-      summary: Retrieve an existing layout by its path.
-      description: 'Use the /layouts/by-path end-point to retrieve an existing layout from the database.<br />User roles: admin, manager, editor, viewer'
+      summary: Retrieve an existing layout by its path
+      description: 'Use the /layouts/by-path end-point to retrieve an existing layout from the database.
+
+        User roles: admin, manager, editor, viewer'
       parameters:
       - name: path
         in: query
@@ -1436,12 +1442,16 @@ paths:
       - manager
       - editor
       - viewer
+      operationId: getAuthoringV1LayoutsByPath
+      x-operation-id-source: derived
   /authoring/v1/layouts/count:
     get:
       tags:
       - Authoring layouts
-      summary: Retrieve the total number of layouts.
-      description: 'Use the /layouts/count endpoint to obtain the total number of layouts within the database.<br />User roles: admin, manager, editor, viewer'
+      summary: Retrieve the total number of layouts
+      description: 'Use the /layouts/count endpoint to obtain the total number of layouts within the database.
+
+        User roles: admin, manager, editor, viewer'
       responses:
         '200':
           description: layout count
@@ -1526,12 +1536,16 @@ paths:
       - manager
       - editor
       - viewer
+      operationId: getAuthoringV1LayoutsCount
+      x-operation-id-source: derived
   /authoring/v1/layouts/{id}:
     put:
       tags:
       - Authoring layouts
-      summary: Update an existing layout.
-      description: 'Use the /layouts/{id} end-point to update an existing layout within the database.<br />User roles: admin, manager'
+      summary: Update an existing layout
+      description: 'Use the /layouts/{id} end-point to update an existing layout within the database.
+
+        User roles: admin, manager'
       parameters:
       - name: id
         in: path
@@ -1546,142 +1560,6 @@ paths:
         schema:
           type: boolean
           default: false
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              description: An existing layout.
-              properties:
-                id:
-                  type: string
-                  description: The ID of the layout.
-                  pattern: ^[a-zA-Z0-9*.\-+_~$!',()]*$
-                  minLength: 1
-                  example: f26044ca-d92d-49e8-acd9-00563c1e0db9
-                rev:
-                  type: string
-                  description: The current revision of the layout.
-                  minLength: 1
-                  example: 139c63397272172e73f52d22f22f606f6c
-                name:
-                  type: string
-                  description: The name of the layout.
-                  pattern: ^[a-zA-Z0-9*. \-+_~$!',()]*$
-                  minLength: 1
-                  example: Sample layout
-                description:
-                  type: string
-                  description: The description of the layout.
-                  pattern: ^[a-zA-Z0-9*. \-+_~$!',()]*$
-                  example: An example description of the sample layout
-                classification:
-                  type: string
-                  description: Indicates the type of this document.
-                  enum:
-                  - layout
-                creatorId:
-                  type: string
-                  description: The ID of the user that created the layout.
-                  example: 8c622bbb-5f5b-45d4-89e1-fce1c054138f
-                creator:
-                  type: string
-                  description: 'The display name of the user that created the layout. This field is only returned when the ''include'' query string option is set to ''ALL'' or ''metadata''.
-
-                    This field is read only.
-
-                    '
-                  example: Thomas Watson
-                created:
-                  type: string
-                  description: The created date of this layout in ISO 8601 with the format YYYY-MM-DDThh:mm:ss.sssZ. This field is read only.
-                  format: date-time
-                lastModifierId:
-                  type: string
-                  description: The ID of the user that last modified the layout.
-                  example: 8c622bbb-5f5b-45d4-89e1-fce1c054138f
-                lastModifier:
-                  type: string
-                  description: 'The display name of the last user that modified the layout. This field is only returned when the ''include'' query string option is set to ''ALL'' or ''metadata''.
-
-                    This field is read only.
-
-                    '
-                  example: Thomas Watson
-                lastModified:
-                  type: string
-                  description: The last modified date of this layout in ISO 8601 with the format YYYY-MM-DDThh:mm:ss.sssZ. This field is read only.
-                  format: date-time
-                path:
-                  type: string
-                  description: Optional path to associate with the layout. Must be unique. Will default to filesystem friendly version of /[NAME].
-                  example: /myLayouts/SampleLayout.json
-                prerender:
-                  type: boolean
-                  description: Indicates if the layout should be prerendered.
-                  default: false
-                  example: false
-                tags:
-                  type: array
-                  items:
-                    type: string
-                  uniqueItems: true
-                  example:
-                  - news
-                  - sample
-                thumbnail:
-                  type: object
-                  description: 'The reference to the asset that should act as the thumbnail of this layout.
-
-                    The thumbnail can be referred to by either id or path.
-
-                    '
-                  properties:
-                    id:
-                      type: string
-                      description: The ID of the asset.
-                      example: 6c622bbb-5f5b-45d4-89e1-fce1c054138f
-                    path:
-                      type: string
-                      description: 'The path of the asset. This field is only returned when the ''include'' query string option is set to ''ALL'' or ''metadata''.
-
-                        This field is read only.
-
-                        '
-                      example: /sales/images/hub.png
-                    url:
-                      type: string
-                      description: 'The URL of the asset. This field is only returned when the ''include'' query string option is set to ''ALL'' or ''metadata''.
-
-                        This field is read only.
-
-                        '
-                      example: /authoring/v1/resources/d45c83a8-2738-48a2-89e1-35256ee16283.jpg
-                template:
-                  type: string
-                  minLength: 1
-                  example: /mytemplates/template.hbs
-                templateType:
-                  type: string
-                  description: Specifies the type of template associated with this layout. This field is required when prerender field is set to true.
-                  enum:
-                  - handlebars
-                  - angular
-                  default: handlebars
-                  example: handlebars
-                urlTemplate:
-                  type: string
-                  description: Specifies the pattern for url generation.
-                isSystem:
-                  type: boolean
-                  description: Indicates whether this item is a 'system item' or not.
-                  default: false
-              required:
-              - rev
-              - name
-              - template
-        description: Contains the updated layout object to save.
-        required: true
       responses:
         '200':
           description: Success.
@@ -2205,11 +2083,151 @@ paths:
       x-ibm-dx-security-user-roles:
       - admin
       - manager
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              description: An existing layout.
+              properties:
+                id:
+                  type: string
+                  description: The ID of the layout.
+                  pattern: ^[a-zA-Z0-9*.\-+_~$!',()]*$
+                  minLength: 1
+                  example: f26044ca-d92d-49e8-acd9-00563c1e0db9
+                rev:
+                  type: string
+                  description: The current revision of the layout.
+                  minLength: 1
+                  example: 139c63397272172e73f52d22f22f606f6c
+                name:
+                  type: string
+                  description: The name of the layout.
+                  pattern: ^[a-zA-Z0-9*. \-+_~$!',()]*$
+                  minLength: 1
+                  example: Sample layout
+                description:
+                  type: string
+                  description: The description of the layout.
+                  pattern: ^[a-zA-Z0-9*. \-+_~$!',()]*$
+                  example: An example description of the sample layout
+                classification:
+                  type: string
+                  description: Indicates the type of this document.
+                  enum:
+                  - layout
+                creatorId:
+                  type: string
+                  description: The ID of the user that created the layout.
+                  example: 8c622bbb-5f5b-45d4-89e1-fce1c054138f
+                creator:
+                  type: string
+                  description: 'The display name of the user that created the layout. This field is only returned when the ''include'' query string option is set to ''ALL'' or ''metadata''.
+
+                    This field is read only.
+
+                    '
+                  example: Thomas Watson
+                created:
+                  type: string
+                  description: The created date of this layout in ISO 8601 with the format YYYY-MM-DDThh:mm:ss.sssZ. This field is read only.
+                  format: date-time
+                lastModifierId:
+                  type: string
+                  description: The ID of the user that last modified the layout.
+                  example: 8c622bbb-5f5b-45d4-89e1-fce1c054138f
+                lastModifier:
+                  type: string
+                  description: 'The display name of the last user that modified the layout. This field is only returned when the ''include'' query string option is set to ''ALL'' or ''metadata''.
+
+                    This field is read only.
+
+                    '
+                  example: Thomas Watson
+                lastModified:
+                  type: string
+                  description: The last modified date of this layout in ISO 8601 with the format YYYY-MM-DDThh:mm:ss.sssZ. This field is read only.
+                  format: date-time
+                path:
+                  type: string
+                  description: Optional path to associate with the layout. Must be unique. Will default to filesystem friendly version of /[NAME].
+                  example: /myLayouts/SampleLayout.json
+                prerender:
+                  type: boolean
+                  description: Indicates if the layout should be prerendered.
+                  default: false
+                  example: false
+                tags:
+                  type: array
+                  items:
+                    type: string
+                  uniqueItems: true
+                  example:
+                  - news
+                  - sample
+                thumbnail:
+                  type: object
+                  description: 'The reference to the asset that should act as the thumbnail of this layout.
+
+                    The thumbnail can be referred to by either id or path.
+
+                    '
+                  properties:
+                    id:
+                      type: string
+                      description: The ID of the asset.
+                      example: 6c622bbb-5f5b-45d4-89e1-fce1c054138f
+                    path:
+                      type: string
+                      description: 'The path of the asset. This field is only returned when the ''include'' query string option is set to ''ALL'' or ''metadata''.
+
+                        This field is read only.
+
+                        '
+                      example: /sales/images/hub.png
+                    url:
+                      type: string
+                      description: 'The URL of the asset. This field is only returned when the ''include'' query string option is set to ''ALL'' or ''metadata''.
+
+                        This field is read only.
+
+                        '
+                      example: /authoring/v1/resources/d45c83a8-2738-48a2-89e1-35256ee16283.jpg
+                template:
+                  type: string
+                  minLength: 1
+                  example: /mytemplates/template.hbs
+                templateType:
+                  type: string
+                  description: Specifies the type of template associated with this layout. This field is required when prerender field is set to true.
+                  enum:
+                  - handlebars
+                  - angular
+                  default: handlebars
+                  example: handlebars
+                urlTemplate:
+                  type: string
+                  description: Specifies the pattern for url generation.
+                isSystem:
+                  type: boolean
+                  description: Indicates whether this item is a 'system item' or not.
+                  default: false
+              required:
+              - rev
+              - name
+              - template
+        description: Contains the updated layout object to save.
+        required: true
+      operationId: putAuthoringV1LayoutsById
+      x-operation-id-source: derived
     delete:
       tags:
       - Authoring layouts
-      summary: Delete an existing layout.
-      description: 'Use the /layouts/{id} endpoint to delete an existing layout from the database.<br />User roles: admin, manager'
+      summary: Delete an existing layout
+      description: 'Use the /layouts/{id} endpoint to delete an existing layout from the database.
+
+        User roles: admin, manager'
       parameters:
       - name: id
         in: path
@@ -2544,11 +2562,15 @@ paths:
       x-ibm-dx-security-user-roles:
       - admin
       - manager
+      operationId: deleteAuthoringV1LayoutsById
+      x-operation-id-source: derived
     get:
       tags:
       - Authoring layouts
-      summary: Retrieve an existing layout.
-      description: 'Use the /layouts/{id} end-point to retrieve an existing layout from the database.<br />User roles: admin, manager, editor, viewer'
+      summary: Retrieve an existing layout
+      description: 'Use the /layouts/{id} end-point to retrieve an existing layout from the database.
+
+        User roles: admin, manager, editor, viewer'
       parameters:
       - name: id
         in: path
@@ -2917,12 +2939,16 @@ paths:
       - manager
       - editor
       - viewer
+      operationId: getAuthoringV1LayoutsById
+      x-operation-id-source: derived
   /authoring/v1/layouts/views/by-modified:
     get:
       tags:
       - Authoring layouts
-      summary: Retrieve all layouts in the database ordered by last modified date.
-      description: 'Use the /layouts/views/by-modified endpoint to retrieve all layouts from the database and list them in the order of their last modified date.<br />User roles: admin, manager, editor, viewer'
+      summary: Retrieve all layouts in the database ordered by last modified date
+      description: 'Use the /layouts/views/by-modified endpoint to retrieve all layouts from the database and list them in the order of their last modified date.
+
+        User roles: admin, manager, editor, viewer'
       parameters:
       - name: start
         in: query
@@ -3252,12 +3278,16 @@ paths:
       - manager
       - editor
       - viewer
+      operationId: getAuthoringV1LayoutsViewsByModified
+      x-operation-id-source: derived
   /authoring/v1/layouts/views/by-name:
     get:
       tags:
       - Authoring layouts
-      summary: Retrieve all layouts in the database with the specified name.
-      description: 'Use the /layouts/views/by-name endpoint to retrieve all layouts from the database with the specified name.<br />User roles: admin, manager, editor, viewer'
+      summary: Retrieve all layouts in the database with the specified name
+      description: 'Use the /layouts/views/by-name endpoint to retrieve all layouts from the database with the specified name.
+
+        User roles: admin, manager, editor, viewer'
       parameters:
       - name: name
         in: query
@@ -3591,136 +3621,16 @@ paths:
       - manager
       - editor
       - viewer
+      operationId: getAuthoringV1LayoutsViewsByName
+      x-operation-id-source: derived
   /authoring/v1/layout-mappings:
     post:
       tags:
       - Authoring layouts
-      summary: Create new layout mappings.
-      description: 'Use the /layout-mapping end-point to create a new layout mapping.<br />User roles: admin, manager'
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              description: A new layout mapping.
-              properties:
-                name:
-                  type: string
-                  description: The name of the layout mapping.
-                  pattern: ^[a-zA-Z0-9*. \-+_~$!',()]*$
-                  minLength: 1
-                  example: Sample layout mapping
-                classification:
-                  type: string
-                  description: Indicates the type of this document.
-                  enum:
-                  - layout-mapping
-                created:
-                  type: string
-                  description: Optional creation date of this layout mapping in ISO 8601 with the format YYYY-MM-DDThh:mm:ss.sssZ. Value is ignored if set in the future.
-                  format: date-time
-                path:
-                  type: string
-                  description: Optional path to associate with the layout mapping. Must be unique. Will default to filesystem friendly version of /[NAME].
-                  example: /myLayoutMappings/SampleMapping.json
-                tags:
-                  type: array
-                  items:
-                    type: string
-                  uniqueItems: true
-                  example:
-                  - news
-                  - sample
-                type:
-                  type: object
-                  description: 'The mapped content-type. Must be unique.
+      summary: Create new layout mappings
+      description: 'Use the /layout-mapping end-point to create a new layout mapping.
 
-                    During create and update operations, the mapped content-type can be referred to by either id or name.
-
-                    '
-                  properties:
-                    id:
-                      type: string
-                      description: The ID of the mapped content-type.
-                      pattern: ^[a-zA-Z0-9*.\-+_~$!',()]*$
-                      minLength: 1
-                      example: 092c46f6-09c0-4ffe-9f21-52d041b4a73c
-                    name:
-                      type: string
-                      description: 'The name of the mapped content-type. This field is only returned when the ''include'' query string option is set to ''ALL'' or ''metadata''.
-
-                        '
-                      example: Sample Type
-                mappings:
-                  type: array
-                  description: The mapped layouts.
-                  items:
-                    type: object
-                    description: 'an individual layout mapping entry.
-
-                      During creates and updates, if there is only one layout specified within the ''layouts'' property, then the ''defaultLayout'' property is optional (and will be inserted by the system).
-
-                      '
-                    properties:
-                      defaultLayout:
-                        type: object
-                        description: an individual layout reference.
-                        properties:
-                          id:
-                            type: string
-                            description: The ID of the referenced layout.
-                            pattern: ^[a-zA-Z0-9*.\-+_~$!',()]*$
-                            minLength: 1
-                            example: f26044ca-d92d-49e8-acd9-00563c1e0db9
-                          name:
-                            type: string
-                            description: 'The name of the referenced layout. This field is only returned when the ''include'' query string option is set to ''ALL'' or ''metadata''.
-
-                              This field is read only.
-
-                              '
-                            example: Sample Layout
-                        required:
-                        - id
-                      layouts:
-                        type: array
-                        description: The full set of layouts (including the default) associated with this entry. Only layouts specified in this list can be set as a Content override (via the Content.selectedLayouts property)
-                        items:
-                          type: object
-                          description: an individual layout reference.
-                          properties:
-                            id:
-                              type: string
-                              description: The ID of the referenced layout.
-                              pattern: ^[a-zA-Z0-9*.\-+_~$!',()]*$
-                              minLength: 1
-                              example: f26044ca-d92d-49e8-acd9-00563c1e0db9
-                            name:
-                              type: string
-                              description: 'The name of the referenced layout. This field is only returned when the ''include'' query string option is set to ''ALL'' or ''metadata''.
-
-                                This field is read only.
-
-                                '
-                              example: Sample Layout
-                          required:
-                          - id
-                        minItems: 1
-                    required:
-                    - defaultLayout
-                    - layouts
-                  minItems: 1
-                  maxItems: 1
-                isSystem:
-                  type: boolean
-                  description: Indicates whether this item is a 'system item' or not.
-                  default: false
-              required:
-              - name
-              - type
-              - mappings
-        description: Contains the layout mapping to create.
-        required: true
+        User roles: admin, manager'
       responses:
         '201':
           description: Success.
@@ -4150,11 +4060,139 @@ paths:
       x-ibm-dx-security-user-roles:
       - admin
       - manager
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              description: A new layout mapping.
+              properties:
+                name:
+                  type: string
+                  description: The name of the layout mapping.
+                  pattern: ^[a-zA-Z0-9*. \-+_~$!',()]*$
+                  minLength: 1
+                  example: Sample layout mapping
+                classification:
+                  type: string
+                  description: Indicates the type of this document.
+                  enum:
+                  - layout-mapping
+                created:
+                  type: string
+                  description: Optional creation date of this layout mapping in ISO 8601 with the format YYYY-MM-DDThh:mm:ss.sssZ. Value is ignored if set in the future.
+                  format: date-time
+                path:
+                  type: string
+                  description: Optional path to associate with the layout mapping. Must be unique. Will default to filesystem friendly version of /[NAME].
+                  example: /myLayoutMappings/SampleMapping.json
+                tags:
+                  type: array
+                  items:
+                    type: string
+                  uniqueItems: true
+                  example:
+                  - news
+                  - sample
+                type:
+                  type: object
+                  description: 'The mapped content-type. Must be unique.
+
+                    During create and update operations, the mapped content-type can be referred to by either id or name.
+
+                    '
+                  properties:
+                    id:
+                      type: string
+                      description: The ID of the mapped content-type.
+                      pattern: ^[a-zA-Z0-9*.\-+_~$!',()]*$
+                      minLength: 1
+                      example: 092c46f6-09c0-4ffe-9f21-52d041b4a73c
+                    name:
+                      type: string
+                      description: 'The name of the mapped content-type. This field is only returned when the ''include'' query string option is set to ''ALL'' or ''metadata''.
+
+                        '
+                      example: Sample Type
+                mappings:
+                  type: array
+                  description: The mapped layouts.
+                  items:
+                    type: object
+                    description: 'an individual layout mapping entry.
+
+                      During creates and updates, if there is only one layout specified within the ''layouts'' property, then the ''defaultLayout'' property is optional (and will be inserted by the system).
+
+                      '
+                    properties:
+                      defaultLayout:
+                        type: object
+                        description: an individual layout reference.
+                        properties:
+                          id:
+                            type: string
+                            description: The ID of the referenced layout.
+                            pattern: ^[a-zA-Z0-9*.\-+_~$!',()]*$
+                            minLength: 1
+                            example: f26044ca-d92d-49e8-acd9-00563c1e0db9
+                          name:
+                            type: string
+                            description: 'The name of the referenced layout. This field is only returned when the ''include'' query string option is set to ''ALL'' or ''metadata''.
+
+                              This field is read only.
+
+                              '
+                            example: Sample Layout
+                        required:
+                        - id
+                      layouts:
+                        type: array
+                        description: The full set of layouts (including the default) associated with this entry. Only layouts specified in this list can be set as a Content override (via the Content.selectedLayouts property)
+                        items:
+                          type: object
+                          description: an individual layout reference.
+                          properties:
+                            id:
+                              type: string
+                              description: The ID of the referenced layout.
+                              pattern: ^[a-zA-Z0-9*.\-+_~$!',()]*$
+                              minLength: 1
+                              example: f26044ca-d92d-49e8-acd9-00563c1e0db9
+                            name:
+                              type: string
+                              description: 'The name of the referenced layout. This field is only returned when the ''include'' query string option is set to ''ALL'' or ''metadata''.
+
+                                This field is read only.
+
+                                '
+                              example: Sample Layout
+                          required:
+                          - id
+                        minItems: 1
+                    required:
+                    - defaultLayout
+                    - layouts
+                  minItems: 1
+                  maxItems: 1
+                isSystem:
+                  type: boolean
+                  description: Indicates whether this item is a 'system item' or not.
+                  default: false
+              required:
+              - name
+              - type
+              - mappings
+        description: Contains the layout mapping to create.
+        required: true
+      operationId: postAuthoringV1LayoutMappings
+      x-operation-id-source: derived
     get:
       tags:
       - Authoring layouts
-      summary: Retrieve all layout mappings in the database.
-      description: 'Use the /layout-mappings endpoint to retrieve all layout mappings from the database.<br />User roles: admin, manager, editor, viewer'
+      summary: Retrieve all layout mappings in the database
+      description: 'Use the /layout-mappings endpoint to retrieve all layout mappings from the database.
+
+        User roles: admin, manager, editor, viewer'
       parameters:
       - name: offset
         in: query
@@ -4405,12 +4443,16 @@ paths:
       - manager
       - editor
       - viewer
+      operationId: getAuthoringV1LayoutMappings
+      x-operation-id-source: derived
   /authoring/v1/layout-mappings/by-path:
     get:
       tags:
       - Authoring layouts
-      summary: Retrieve an existing layout mapping by its path.
-      description: 'Use the /layout-mappings/by-path end-point to retrieve an existing layout mapping from the database.<br />User roles: admin, manager, editor, viewer'
+      summary: Retrieve an existing layout mapping by its path
+      description: 'Use the /layout-mappings/by-path end-point to retrieve an existing layout mapping from the database.
+
+        User roles: admin, manager, editor, viewer'
       parameters:
       - name: path
         in: query
@@ -4809,12 +4851,16 @@ paths:
       - manager
       - editor
       - viewer
+      operationId: getAuthoringV1LayoutMappingsByPath
+      x-operation-id-source: derived
   /authoring/v1/layout-mappings/by-type/{type-id}:
     get:
       tags:
       - Authoring layouts
-      summary: Retrieve an existing layout mapping via its associated content-type.
-      description: 'Use the /layout-mappings/by-type/{type-id} end-point to retrieve an existing layout mapping from the database.<br />User roles: admin, manager, editor, viewer'
+      summary: Retrieve an existing layout mapping via its associated content-type
+      description: 'Use the /layout-mappings/by-type/{type-id} end-point to retrieve an existing layout mapping from the database.
+
+        User roles: admin, manager, editor, viewer'
       parameters:
       - name: type-id
         in: path
@@ -5150,11 +5196,15 @@ paths:
       - manager
       - editor
       - viewer
+      operationId: getAuthoringV1LayoutMappingsByTypeByTypeId
+      x-operation-id-source: derived
     delete:
       tags:
       - Authoring layouts
-      summary: Deletes an existing layout mapping via its associated content-type.
-      description: 'Use the /layout-mappings/by-type/{type-id} end-point to delete an existing layout mapping from the database.<br />User roles: admin, manager'
+      summary: Deletes an existing layout mapping via its associated content-type
+      description: 'Use the /layout-mappings/by-type/{type-id} end-point to delete an existing layout mapping from the database.
+
+        User roles: admin, manager'
       parameters:
       - name: type-id
         in: path
@@ -5363,12 +5413,16 @@ paths:
       x-ibm-dx-security-user-roles:
       - admin
       - manager
+      operationId: deleteAuthoringV1LayoutMappingsByTypeByTypeId
+      x-operation-id-source: derived
   /authoring/v1/layout-mappings/by-type/{type-id}/copy:
     post:
       tags:
       - Authoring layouts
-      summary: Copies an existing layout mapping via its associated content-type.
-      description: 'Use the /layout-mappings/by-type/{type-id}/copy end-point to create a duplicate of a layout mapping. The new layout mapping will have a name in the format ''Copy [NUMBER] of [SOURCE-NAME]''<br />User roles: admin, manager'
+      summary: Copies an existing layout mapping via its associated content-type
+      description: 'Use the /layout-mappings/by-type/{type-id}/copy end-point to create a duplicate of a layout mapping. The new layout mapping will have a name in the format ''Copy [NUMBER] of [SOURCE-NAME]''
+
+        User roles: admin, manager'
       parameters:
       - name: type-id
         in: path
@@ -5791,12 +5845,16 @@ paths:
       x-ibm-dx-security-user-roles:
       - admin
       - manager
+      operationId: postAuthoringV1LayoutMappingsByTypeByTypeIdCopy
+      x-operation-id-source: derived
   /authoring/v1/layout-mappings/count:
     get:
       tags:
       - Authoring layouts
-      summary: Retrieve the total number of layout mappings.
-      description: 'Use the /layout-mappings/count endpoint to obtain the total number of layout mappings within the database.<br />User roles: admin, manager, editor, viewer'
+      summary: Retrieve the total number of layout mappings
+      description: 'Use the /layout-mappings/count endpoint to obtain the total number of layout mappings within the database.
+
+        User roles: admin, manager, editor, viewer'
       responses:
         '200':
           description: layout mapping count
@@ -5881,12 +5939,16 @@ paths:
       - manager
       - editor
       - viewer
+      operationId: getAuthoringV1LayoutMappingsCount
+      x-operation-id-source: derived
   /authoring/v1/layout-mappings/{id}:
     put:
       tags:
       - Authoring layouts
-      summary: Update an existing layout mapping.
-      description: 'Use the /layout-mappings/{id} end-point to update an existing layout mapping within the database.<br />User roles: admin, manager'
+      summary: Update an existing layout mapping
+      description: 'Use the /layout-mappings/{id} end-point to update an existing layout mapping within the database.
+
+        User roles: admin, manager'
       parameters:
       - name: id
         in: path
@@ -5901,172 +5963,6 @@ paths:
         schema:
           type: boolean
           default: false
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              description: An existing layout mapping.
-              properties:
-                id:
-                  type: string
-                  description: The ID of the layout mapping.
-                  pattern: ^[a-zA-Z0-9*.\-+_~$!',()]*$
-                  minLength: 1
-                  example: e0192c4c-9633-4853-856a-ce04e37ec40c
-                rev:
-                  type: string
-                  description: The current revision of the layout mapping.
-                  minLength: 1
-                  example: 1d5fc65f4cd277eb5340355db7ecdfde75
-                name:
-                  type: string
-                  description: The name of the layout mapping.
-                  pattern: ^[a-zA-Z0-9*. \-+_~$!',()]*$
-                  minLength: 1
-                  example: Sample layout mapping
-                classification:
-                  type: string
-                  description: Indicates the type of this document.
-                  enum:
-                  - layout-mapping
-                creatorId:
-                  type: string
-                  description: The ID of the user that created the layout mapping.
-                  example: 8c622bbb-5f5b-45d4-89e1-fce1c054138f
-                creator:
-                  type: string
-                  description: 'The display name of the user that created the layout mapping. This field is only returned when the ''include'' query string option is set to ''ALL'' or ''metadata''.
-
-                    This field is read only.
-
-                    '
-                  example: Thomas Watson
-                created:
-                  type: string
-                  description: The created date of this layout mapping in ISO 8601 with the format YYYY-MM-DDThh:mm:ss.sssZ. This field is read only.
-                  format: date-time
-                  example: '2016-11-02T06:28:47Z'
-                lastModifierId:
-                  type: string
-                  description: The ID of the user that last modified the layout mapping.
-                  example: 8c622bbb-5f5b-45d4-89e1-fce1c054138f
-                lastModifier:
-                  type: string
-                  description: 'The display name of the last user that modified the layout mapping. This field is only returned when the ''include'' query string option is set to ''ALL'' or ''metadata''.
-
-                    This field is read only.
-
-                    '
-                  example: Thomas Watson
-                lastModified:
-                  type: string
-                  description: The last modified date of this layout mapping in ISO 8601 with the format YYYY-MM-DDThh:mm:ss.sssZ. This field is read only.
-                  format: date-time
-                  example: '2016-11-02T06:28:47Z'
-                path:
-                  type: string
-                  description: Optional path to associate with the layout mapping. Must be unique. Will default to filesystem friendly version of /[NAME].
-                  example: /myLayoutMappings/SampleMapping.json
-                tags:
-                  type: array
-                  items:
-                    type: string
-                  uniqueItems: true
-                  example:
-                  - news
-                  - sample
-                type:
-                  type: object
-                  description: 'The mapped content-type. Must be unique.
-
-                    During create and update operations, the mapped content-type can be referred to by either id or name.
-
-                    '
-                  properties:
-                    id:
-                      type: string
-                      description: The ID of the mapped content-type.
-                      pattern: ^[a-zA-Z0-9*.\-+_~$!',()]*$
-                      minLength: 1
-                      example: 092c46f6-09c0-4ffe-9f21-52d041b4a73c
-                    name:
-                      type: string
-                      description: 'The name of the mapped content-type. This field is only returned when the ''include'' query string option is set to ''ALL'' or ''metadata''.
-
-                        '
-                      example: Sample Type
-                mappings:
-                  type: array
-                  description: The mapped layouts.
-                  items:
-                    type: object
-                    description: 'an individual layout mapping entry.
-
-                      During creates and updates, if there is only one layout specified within the ''layouts'' property, then the ''defaultLayout'' property is optional (and will be inserted by the system).
-
-                      '
-                    properties:
-                      defaultLayout:
-                        type: object
-                        description: an individual layout reference.
-                        properties:
-                          id:
-                            type: string
-                            description: The ID of the referenced layout.
-                            pattern: ^[a-zA-Z0-9*.\-+_~$!',()]*$
-                            minLength: 1
-                            example: f26044ca-d92d-49e8-acd9-00563c1e0db9
-                          name:
-                            type: string
-                            description: 'The name of the referenced layout. This field is only returned when the ''include'' query string option is set to ''ALL'' or ''metadata''.
-
-                              This field is read only.
-
-                              '
-                            example: Sample Layout
-                        required:
-                        - id
-                      layouts:
-                        type: array
-                        description: The full set of layouts (including the default) associated with this entry. Only layouts specified in this list can be set as a Content override (via the Content.selectedLayouts property)
-                        items:
-                          type: object
-                          description: an individual layout reference.
-                          properties:
-                            id:
-                              type: string
-                              description: The ID of the referenced layout.
-                              pattern: ^[a-zA-Z0-9*.\-+_~$!',()]*$
-                              minLength: 1
-                              example: f26044ca-d92d-49e8-acd9-00563c1e0db9
-                            name:
-                              type: string
-                              description: 'The name of the referenced layout. This field is only returned when the ''include'' query string option is set to ''ALL'' or ''metadata''.
-
-                                This field is read only.
-
-                                '
-                              example: Sample Layout
-                          required:
-                          - id
-                        minItems: 1
-                    required:
-                    - defaultLayout
-                    - layouts
-                  minItems: 1
-                  maxItems: 1
-                isSystem:
-                  type: boolean
-                  description: Indicates whether this item is a 'system item' or not.
-                  default: false
-              required:
-              - rev
-              - name
-              - type
-              - mappings
-        description: Contains the updated layout mapping object to save.
-        required: true
       responses:
         '200':
           description: Success.
@@ -6620,11 +6516,181 @@ paths:
       x-ibm-dx-security-user-roles:
       - admin
       - manager
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              description: An existing layout mapping.
+              properties:
+                id:
+                  type: string
+                  description: The ID of the layout mapping.
+                  pattern: ^[a-zA-Z0-9*.\-+_~$!',()]*$
+                  minLength: 1
+                  example: e0192c4c-9633-4853-856a-ce04e37ec40c
+                rev:
+                  type: string
+                  description: The current revision of the layout mapping.
+                  minLength: 1
+                  example: 1d5fc65f4cd277eb5340355db7ecdfde75
+                name:
+                  type: string
+                  description: The name of the layout mapping.
+                  pattern: ^[a-zA-Z0-9*. \-+_~$!',()]*$
+                  minLength: 1
+                  example: Sample layout mapping
+                classification:
+                  type: string
+                  description: Indicates the type of this document.
+                  enum:
+                  - layout-mapping
+                creatorId:
+                  type: string
+                  description: The ID of the user that created the layout mapping.
+                  example: 8c622bbb-5f5b-45d4-89e1-fce1c054138f
+                creator:
+                  type: string
+                  description: 'The display name of the user that created the layout mapping. This field is only returned when the ''include'' query string option is set to ''ALL'' or ''metadata''.
+
+                    This field is read only.
+
+                    '
+                  example: Thomas Watson
+                created:
+                  type: string
+                  description: The created date of this layout mapping in ISO 8601 with the format YYYY-MM-DDThh:mm:ss.sssZ. This field is read only.
+                  format: date-time
+                  example: '2016-11-02T06:28:47Z'
+                lastModifierId:
+                  type: string
+                  description: The ID of the user that last modified the layout mapping.
+                  example: 8c622bbb-5f5b-45d4-89e1-fce1c054138f
+                lastModifier:
+                  type: string
+                  description: 'The display name of the last user that modified the layout mapping. This field is only returned when the ''include'' query string option is set to ''ALL'' or ''metadata''.
+
+                    This field is read only.
+
+                    '
+                  example: Thomas Watson
+                lastModified:
+                  type: string
+                  description: The last modified date of this layout mapping in ISO 8601 with the format YYYY-MM-DDThh:mm:ss.sssZ. This field is read only.
+                  format: date-time
+                  example: '2016-11-02T06:28:47Z'
+                path:
+                  type: string
+                  description: Optional path to associate with the layout mapping. Must be unique. Will default to filesystem friendly version of /[NAME].
+                  example: /myLayoutMappings/SampleMapping.json
+                tags:
+                  type: array
+                  items:
+                    type: string
+                  uniqueItems: true
+                  example:
+                  - news
+                  - sample
+                type:
+                  type: object
+                  description: 'The mapped content-type. Must be unique.
+
+                    During create and update operations, the mapped content-type can be referred to by either id or name.
+
+                    '
+                  properties:
+                    id:
+                      type: string
+                      description: The ID of the mapped content-type.
+                      pattern: ^[a-zA-Z0-9*.\-+_~$!',()]*$
+                      minLength: 1
+                      example: 092c46f6-09c0-4ffe-9f21-52d041b4a73c
+                    name:
+                      type: string
+                      description: 'The name of the mapped content-type. This field is only returned when the ''include'' query string option is set to ''ALL'' or ''metadata''.
+
+                        '
+                      example: Sample Type
+                mappings:
+                  type: array
+                  description: The mapped layouts.
+                  items:
+                    type: object
+                    description: 'an individual layout mapping entry.
+
+                      During creates and updates, if there is only one layout specified within the ''layouts'' property, then the ''defaultLayout'' property is optional (and will be inserted by the system).
+
+                      '
+                    properties:
+                      defaultLayout:
+                        type: object
+                        description: an individual layout reference.
+                        properties:
+                          id:
+                            type: string
+                            description: The ID of the referenced layout.
+                            pattern: ^[a-zA-Z0-9*.\-+_~$!',()]*$
+                            minLength: 1
+                            example: f26044ca-d92d-49e8-acd9-00563c1e0db9
+                          name:
+                            type: string
+                            description: 'The name of the referenced layout. This field is only returned when the ''include'' query string option is set to ''ALL'' or ''metadata''.
+
+                              This field is read only.
+
+                              '
+                            example: Sample Layout
+                        required:
+                        - id
+                      layouts:
+                        type: array
+                        description: The full set of layouts (including the default) associated with this entry. Only layouts specified in this list can be set as a Content override (via the Content.selectedLayouts property)
+                        items:
+                          type: object
+                          description: an individual layout reference.
+                          properties:
+                            id:
+                              type: string
+                              description: The ID of the referenced layout.
+                              pattern: ^[a-zA-Z0-9*.\-+_~$!',()]*$
+                              minLength: 1
+                              example: f26044ca-d92d-49e8-acd9-00563c1e0db9
+                            name:
+                              type: string
+                              description: 'The name of the referenced layout. This field is only returned when the ''include'' query string option is set to ''ALL'' or ''metadata''.
+
+                                This field is read only.
+
+                                '
+                              example: Sample Layout
+                          required:
+                          - id
+                        minItems: 1
+                    required:
+                    - defaultLayout
+                    - layouts
+                  minItems: 1
+                  maxItems: 1
+                isSystem:
+                  type: boolean
+                  description: Indicates whether this item is a 'system item' or not.
+                  default: false
+              required:
+              - rev
+              - name
+              - type
+              - mappings
+        description: Contains the updated layout mapping object to save.
+        required: true
+      operationId: putAuthoringV1LayoutMappingsById
+      x-operation-id-source: derived
     delete:
       tags:
       - Authoring layouts
-      summary: Delete an existing layout mapping.
-      description: 'Use the /layout-mappings/{id} endpoint to delete an existing layout mapping from the database.<br />User roles: admin, manager'
+      summary: Delete an existing layout mapping
+      description: 'Use the /layout-mappings/{id} endpoint to delete an existing layout mapping from the database.
+
+        User roles: admin, manager'
       parameters:
       - name: id
         in: path
@@ -6959,11 +7025,15 @@ paths:
       x-ibm-dx-security-user-roles:
       - admin
       - manager
+      operationId: deleteAuthoringV1LayoutMappingsById
+      x-operation-id-source: derived
     get:
       tags:
       - Authoring layouts
-      summary: Retrieve an existing layout mapping.
-      description: 'Use the /layout-mappings/{id} end-point to retrieve an existing layout mapping from the database.<br />User roles: admin, manager, editor, viewer'
+      summary: Retrieve an existing layout mapping
+      description: 'Use the /layout-mappings/{id} end-point to retrieve an existing layout mapping from the database.
+
+        User roles: admin, manager, editor, viewer'
       parameters:
       - name: id
         in: path
@@ -7362,12 +7432,16 @@ paths:
       - manager
       - editor
       - viewer
+      operationId: getAuthoringV1LayoutMappingsById
+      x-operation-id-source: derived
   /authoring/v1/layout-mappings/{id}/copy:
     post:
       tags:
       - Authoring layouts
-      summary: Copies an existing layout mapping.
-      description: 'Use the /layout-mappings/{id}/copy end-point to create a duplicate of a layout mapping. The new layout mapping will have a name in the format ''Copy [NUMBER] of [SOURCE-NAME]''<br />User roles: admin, manager'
+      summary: Copies an existing layout mapping
+      description: 'Use the /layout-mappings/{id}/copy end-point to create a duplicate of a layout mapping. The new layout mapping will have a name in the format ''Copy [NUMBER] of [SOURCE-NAME]''
+
+        User roles: admin, manager'
       parameters:
       - name: id
         in: path
@@ -7790,12 +7864,16 @@ paths:
       x-ibm-dx-security-user-roles:
       - admin
       - manager
+      operationId: postAuthoringV1LayoutMappingsByIdCopy
+      x-operation-id-source: derived
   /authoring/v1/layout-mappings/views/by-modified:
     get:
       tags:
       - Authoring layouts
-      summary: Retrieve all layout mappings in the database ordered by last modified date.
-      description: 'Use the /layout-mappings/views/by-modified endpoint to retrieve all layout mappings from the database and list them in the order of their last modified date.<br />User roles: admin, manager, editor, viewer'
+      summary: Retrieve all layout mappings in the database ordered by last modified date
+      description: 'Use the /layout-mappings/views/by-modified endpoint to retrieve all layout mappings from the database and list them in the order of their last modified date.
+
+        User roles: admin, manager, editor, viewer'
       parameters:
       - name: start
         in: query
@@ -8155,12 +8233,16 @@ paths:
       - manager
       - editor
       - viewer
+      operationId: getAuthoringV1LayoutMappingsViewsByModified
+      x-operation-id-source: derived
   /authoring/v1/layout-mappings/views/by-name:
     get:
       tags:
       - Authoring layouts
-      summary: Retrieve all layout mappings in the database with the specified name.
-      description: 'Use the /layout-mappings/views/by-name endpoint to retrieve all layout mappings from the database with the specified name.<br />User roles: admin, manager, editor, viewer'
+      summary: Retrieve all layout mappings in the database with the specified name
+      description: 'Use the /layout-mappings/views/by-name endpoint to retrieve all layout mappings from the database with the specified name.
+
+        User roles: admin, manager, editor, viewer'
       parameters:
       - name: name
         in: query
@@ -8524,6 +8606,8 @@ paths:
       - manager
       - editor
       - viewer
+      operationId: getAuthoringV1LayoutMappingsViewsByName
+      x-operation-id-source: derived
 components:
   schemas:
     ErrorResponse:
@@ -8575,9 +8659,3 @@ components:
       required:
       - errors
       - requestId
-x-refined-from:
-- acoustic-content-openapi-original.json
-- acoustic-content-swagger2-original.yaml
-x-readme:
-  explorer-enabled: true
-  proxy-enabled: true

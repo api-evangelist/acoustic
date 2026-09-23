@@ -1,70 +1,22 @@
 openapi: 3.2.0
 info:
-  title: Acoustic Authoring review API
   version: 1.0.142
   x-ibm-name: ibm-watson-content-hub-api
-  description: 'Operations tagged Authoring review across 2 of this provider''s published API definitions: acoustic-content-openapi-original.json, acoustic-content-swagger2-original.yaml. Each path carries the servers of the definition it was published in.'
+  title: Acoustic Content Authoring review API
+  description: Copyright © Acoustic, L.P. 2023
 tags:
 - name: Authoring review
   description: Use the Content Review Rest APIs to review assets and content. Use reviews to receive feedback from other members of your team. You can start, update, and complete the reviews that are set up. You can approve the content and assets under review.
 paths:
   /authoring/v1/review:
     post:
-      summary: Start a review.
+      summary: Start a review
       description: 'Use the /review endpoint to start a review. Currently, only Assets and Contents can be reviewed.
 
         This endpoint updates the status of the items in bulk. Items with the updated status are added in the review model. Check whether the items were successfully added to the review model from the items field in the returned API representation of review model. You can identify the items that failed to update or invalid items by checking the item IDs that are listed in the response header.
 
-        <br />User roles: admin, manager, editor'
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                name:
-                  type: string
-                  description: The name of the review.
-                  example: Sample Review
-                targetDate:
-                  type: string
-                  format: date-time
-                  description: Optional. Set a target date for when the review is due and must end.
-                  example: '2018-01-22T03:00:20.945Z'
-                approvers:
-                  type: array
-                  description: Approvers' user ID for the review.
-                  items:
-                    title: User
-                    type: object
-                    description: A user object with user ID.
-                    properties:
-                      id:
-                        type: string
-                        example: 45341daf-6b42-40c9-8aea-e9e24bf83b0a
-                  uniqueItems: true
-                items:
-                  type: array
-                  description: Provide the ID of the items that you want to submit for review. The unique ID (uid) is the items classification and the ID combined to create an ID that is unique across all items in Content.
-                  items:
-                    title: Unique document ID
-                    type: object
-                    description: The unique document ID is the items classification and the ID combined to create an ID that is unique across all content hub items.
-                    properties:
-                      id:
-                        type: string
-                        example: a9e1e857-4eb3-4994-9214-3ed739a9987b
-                      classification:
-                        enum:
-                        - asset
-                        - content
-                        example: content
-                        description: The classification of the item.
-                  uniqueItems: true
-              required:
-              - name
-        description: Provide the review item fields such as name, targetDate, and items. The name field is required.
-        required: true
+
+        User roles: admin, manager, editor'
       tags:
       - Authoring review
       responses:
@@ -77,7 +29,6 @@ paths:
                 type: array
                 items:
                   type: string
-              style: simple
           content:
             application/json:
               schema:
@@ -539,12 +490,64 @@ paths:
       - admin
       - manager
       - editor
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: The name of the review.
+                  example: Sample Review
+                targetDate:
+                  type: string
+                  format: date-time
+                  description: Optional. Set a target date for when the review is due and must end.
+                  example: '2018-01-22T03:00:20.945Z'
+                approvers:
+                  type: array
+                  description: Approvers' user ID for the review.
+                  items:
+                    title: User
+                    type: object
+                    description: A user object with user ID.
+                    properties:
+                      id:
+                        type: string
+                        example: 45341daf-6b42-40c9-8aea-e9e24bf83b0a
+                  uniqueItems: true
+                items:
+                  type: array
+                  description: Provide the ID of the items that you want to submit for review. The unique ID (uid) is the items classification and the ID combined to create an ID that is unique across all items in Content.
+                  items:
+                    title: Unique document ID
+                    type: object
+                    description: The unique document ID is the items classification and the ID combined to create an ID that is unique across all content hub items.
+                    properties:
+                      id:
+                        type: string
+                        example: a9e1e857-4eb3-4994-9214-3ed739a9987b
+                      classification:
+                        enum:
+                        - asset
+                        - content
+                        example: content
+                        description: The classification of the item.
+                  uniqueItems: true
+              required:
+              - name
+        description: Provide the review item fields such as name, targetDate, and items. The name field is required.
+        required: true
+      operationId: postAuthoringV1Review
+      x-operation-id-source: derived
   /authoring/v1/review/{id}:
     get:
-      summary: Retrieve an existing review.
+      summary: Retrieve an existing review
       description: 'Use the /review/{id} endpoint to retrieve an existing review that matches the ID that is specified from the database. This endpoint returns the API representation of the requested review.
 
-        <br />User roles: admin, manager, editor, viewer'
+
+        User roles: admin, manager, editor, viewer'
       parameters:
       - name: id
         in: path
@@ -1019,11 +1022,14 @@ paths:
       - manager
       - editor
       - viewer
+      operationId: getAuthoringV1ReviewById
+      x-operation-id-source: derived
     put:
-      summary: Update an existing review.
+      summary: Update an existing review
       description: 'Use the /review/{id} end point to update an existing review that matches the ID that is specified.
 
-        <br />User roles: admin, manager, editor'
+
+        User roles: admin, manager, editor'
       parameters:
       - name: id
         in: path
@@ -1031,41 +1037,6 @@ paths:
         required: true
         schema:
           type: string
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                rev:
-                  type: string
-                  description: The current revision of the document.
-                  example: 1-b79b6fe8de3e2b63c45895f733482774
-                name:
-                  type: string
-                  description: The name of the review.
-                  example: Sample Review
-                targetDate:
-                  type: string
-                  format: date-time
-                  description: Optional. Set a target date for when the review is due and must end.
-                  example: '2018-01-22T03:00:20.945Z'
-                approvers:
-                  type: array
-                  description: Approvers' user ID for the review.
-                  items:
-                    title: User
-                    type: object
-                    description: A user object with user ID.
-                    properties:
-                      id:
-                        type: string
-                        example: 45341daf-6b42-40c9-8aea-e9e24bf83b0a
-                  uniqueItems: true
-              required:
-              - rev
-              - name
-        description: Provide the review item fields such as name, targetDate, and items. The current revision must be provided in order to update the review.
       tags:
       - Authoring review
       responses:
@@ -1710,11 +1681,49 @@ paths:
       - admin
       - manager
       - editor
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                rev:
+                  type: string
+                  description: The current revision of the document.
+                  example: 1-b79b6fe8de3e2b63c45895f733482774
+                name:
+                  type: string
+                  description: The name of the review.
+                  example: Sample Review
+                targetDate:
+                  type: string
+                  format: date-time
+                  description: Optional. Set a target date for when the review is due and must end.
+                  example: '2018-01-22T03:00:20.945Z'
+                approvers:
+                  type: array
+                  description: Approvers' user ID for the review.
+                  items:
+                    title: User
+                    type: object
+                    description: A user object with user ID.
+                    properties:
+                      id:
+                        type: string
+                        example: 45341daf-6b42-40c9-8aea-e9e24bf83b0a
+                  uniqueItems: true
+              required:
+              - rev
+              - name
+        description: Provide the review item fields such as name, targetDate, and items. The current revision must be provided in order to update the review.
+      operationId: putAuthoringV1ReviewById
+      x-operation-id-source: derived
     delete:
-      summary: Delete an existing review.
+      summary: Delete an existing review
       description: 'Use the /review/{id} endpoint to delete an existing review in the database.
 
-        <br />User roles: admin, manager, editor'
+
+        User roles: admin, manager, editor'
       parameters:
       - name: id
         in: path
@@ -2093,10 +2102,17 @@ paths:
       - admin
       - manager
       - editor
+      operationId: deleteAuthoringV1ReviewById
+      x-operation-id-source: derived
   /authoring/v1/review/{id}/approve:
     post:
-      summary: Approve items in a review.
-      description: "Use the /review/{id}/approve endpoint to approve items in the specified review. \nThis endpoint approves the items that you specify that were added to the specified review in bulk. For example, if Content A, Content B, and Asset C were added to a review, and you requested approval for Content A and Asset C, then only the items that you requested are approved. Check whether the items were successfully approved from the approvals field in the returned API representation of review model. You can identify the items that failed to approve by checking the item IDs that are listed in the response header. The review is automatically complete when all items that were requested for approval are approved.\n<br />User roles: admin, manager, editor"
+      summary: Approve items in a review
+      description: 'Use the /review/{id}/approve endpoint to approve items in the specified review.
+
+        This endpoint approves the items that you specify that were added to the specified review in bulk. For example, if Content A, Content B, and Asset C were added to a review, and you requested approval for Content A and Asset C, then only the items that you requested are approved. Check whether the items were successfully approved from the approvals field in the returned API representation of review model. You can identify the items that failed to approve by checking the item IDs that are listed in the response header. The review is automatically complete when all items that were requested for approval are approved.
+
+
+        User roles: admin, manager, editor'
       parameters:
       - name: id
         in: path
@@ -2104,35 +2120,6 @@ paths:
         required: true
         schema:
           type: string
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                ids:
-                  title: Unique ID list
-                  type: array
-                  description: Provide the ID of the items that you want to submit for review. The unique ID (uid) is the items classification and the ID combined to create an ID that is unique across all content hub items.
-                  items:
-                    title: Unique document ID
-                    type: object
-                    description: The unique document ID is the items classification and the ID combined to create an ID that is unique across all content hub items.
-                    properties:
-                      id:
-                        type: string
-                        example: a9e1e857-4eb3-4994-9214-3ed739a9987b
-                      classification:
-                        enum:
-                        - asset
-                        - content
-                        example: content
-                        description: The classification of the item.
-                  uniqueItems: true
-              required:
-              - ids
-        description: Provide the unique IDs of the items that you want to approve.
-        required: true
       tags:
       - Authoring review
       responses:
@@ -2145,7 +2132,6 @@ paths:
                 type: array
                 items:
                   type: string
-              style: simple
         '400':
           description: The required parameters are missing or invalid. Provide valid parameters and try again.
           content:
@@ -2423,14 +2409,46 @@ paths:
       - admin
       - manager
       - editor
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ids:
+                  title: Unique ID list
+                  type: array
+                  description: Provide the ID of the items that you want to submit for review. The unique ID (uid) is the items classification and the ID combined to create an ID that is unique across all content hub items.
+                  items:
+                    title: Unique document ID
+                    type: object
+                    description: The unique document ID is the items classification and the ID combined to create an ID that is unique across all content hub items.
+                    properties:
+                      id:
+                        type: string
+                        example: a9e1e857-4eb3-4994-9214-3ed739a9987b
+                      classification:
+                        enum:
+                        - asset
+                        - content
+                        example: content
+                        description: The classification of the item.
+                  uniqueItems: true
+              required:
+              - ids
+        description: Provide the unique IDs of the items that you want to approve.
+        required: true
+      operationId: postAuthoringV1ReviewByIdApprove
+      x-operation-id-source: derived
   /authoring/v1/review/{id}/approve-all:
     post:
-      summary: Approve all items in a review.
+      summary: Approve all items in a review
       description: 'Use the /review/{id}/approve-all endpoint to approve all items in the specified review.
 
         This endpoint approves all the items added to the specified review in bulk. For example, if Content A, Content B, and Asset C were added to a review, then all three items in the review are approved. Check whether the items were successfully approved from the approvals field in the returned API representation of review model. You can identify the items that failed to approve by checking the item IDs that are listed in the response header. The review is automatically complete when all items are approved.
 
-        <br />User roles: admin, manager, editor'
+
+        User roles: admin, manager, editor'
       parameters:
       - name: id
         in: path
@@ -2450,7 +2468,6 @@ paths:
                 type: array
                 items:
                   type: string
-              style: simple
         '400':
           description: The required parameters are missing or invalid. Provide valid parameters and try again.
           content:
@@ -2728,12 +2745,15 @@ paths:
       - admin
       - manager
       - editor
+      operationId: postAuthoringV1ReviewByIdApproveAll
+      x-operation-id-source: derived
   /authoring/v1/review/{id}/complete:
     post:
-      summary: Complete a review.
+      summary: Complete a review
       description: 'Use the /review/end/{id} endpoint to end a review. This endpoint changes the review status to complete. The approved items in the review remain as approved, whereas the status of the unapproved items in the review will change to in progress status.
 
-        <br />User roles: admin, manager, editor'
+
+        User roles: admin, manager, editor'
       parameters:
       - name: id
         in: path
@@ -2753,7 +2773,6 @@ paths:
                 type: array
                 items:
                   type: string
-              style: simple
         '404':
           description: The review with ID {id} was not found.
           content:
@@ -3031,6 +3050,8 @@ paths:
       - admin
       - manager
       - editor
+      operationId: postAuthoringV1ReviewByIdComplete
+      x-operation-id-source: derived
 components:
   schemas:
     ErrorResponse:
@@ -3082,9 +3103,3 @@ components:
       required:
       - errors
       - requestId
-x-refined-from:
-- acoustic-content-openapi-original.json
-- acoustic-content-swagger2-original.yaml
-x-readme:
-  explorer-enabled: true
-  proxy-enabled: true

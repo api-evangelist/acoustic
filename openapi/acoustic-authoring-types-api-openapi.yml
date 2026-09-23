@@ -1,250 +1,22 @@
 openapi: 3.2.0
 info:
-  title: Acoustic Authoring types API
   version: 1.0.142
   x-ibm-name: ibm-watson-content-hub-api
-  description: 'Operations tagged Authoring types across 2 of this provider''s published API definitions: acoustic-content-openapi-original.json, acoustic-content-swagger2-original.yaml. Each path carries the servers of the definition it was published in.'
+  title: Acoustic Content Authoring types API
+  description: Copyright © Acoustic, L.P. 2023
 tags:
 - name: Authoring types
   description: 'Use the Acoustic Content authoring type service Rest APIs to work with content type documents. Content types define a set of related elements that are used to create content. You can create, retrieve, and update content type documents in a database. You can also validate documents.
 
 
-    Note: Documents created or updated in the old 1.0 format will be migrated to the 1.1 format on save.
-
-    '
+    Note: Documents created or updated in the old 1.0 format will be migrated to the 1.1 format on save.'
 paths:
   /authoring/v1/types:
     post:
       tags:
       - Authoring types
-      summary: Create new type documents.
-      description: "Use the /types end-point to create a new type document.\n## Example elements\n### Category element\n```\n{\n   \"key\": \"MyCategoryElement\",\n   \"label\": \"My Category Element\",\n   \"elementType\": \"category\",\n   \"restrictedParents\": [\"63b5f83684cddba687cb41eca328a41a\"],\n      - Optional. Indicates that categories can only been chosen from the specified parent. Currently only supports a single entry.\n   \"searchKey\": \"string1\" | \"string2\" | \"string3\" | \"string4\" | \"sortableString1\" | \"sortableString2\" | \"sortableString3\" | \"sortableString4\",\n      - Optional. Indicates that the value of this element will be searchable under the specified key\n   \"required\": false,\n   \"helpText\": \"Please select a category from the list\"\n}\n```\n### Date (Date and Time) element\n```\n{\n   \"key\": \"MyDateElement\",\n   \"label\": \"My Date Element\",\n   \"elementType\": \"datetime\",\n   \"fieldType\": \"date-time\",\n   \"searchKey\": \"date1\" | \"date2\" | \"sortableDate1\" | \"sortableDate2\",\n      - Optional. Indicates that the value of this element will be searchable under the specified key\n   \"required\": false,\n   \"allowMultipleValues\": true,\n   \"minimumValues\": 1,\n   \"maximumValues\": 50,\n   \"fieldLabel\": \"Date\",\n   \"helpText\": \"Please select a date and time\"\n}\n```\n### Date (Date only) element\n```\n{\n   \"key\": \"MyDateElement\",\n   \"label\": \"My Date Element\",\n   \"elementType\": \"datetime\",\n   \"fieldType\": \"date\",\n   \"searchKey\": \"date1\" | \"date2\" | \"sortableDate1\" | \"sortableDate2\",\n      - Optional. Indicates that the value of this element will be searchable under the specified key\n   \"required\": false,\n   \"allowMultipleValues\": true,\n   \"minimumValues\": 1,\n   \"maximumValues\": 50,\n   \"fieldLabel\": \"Date\",\n   \"helpText\": \"Please select a date\"\n}\n```\n### File element\n```\n{\n   \"key\": \"MyFileElement\",\n   \"label\": \"My File Element\",\n   \"elementType\": \"file\",\n   \"acceptType\": [\"plain-text\", \"presentation\", \"rich-document\", \"spreadsheet\", \"pdf-document\"],\n      - Optional. Specifies the allowed file types.. with the above list comprising the allowed values.\n   \"searchKey\": \"string1\" | \"string2\" | \"string3\" | \"string4\" | \"sortableString1\" | \"sortableString2\" | \"sortableString3\" | \"sortableString4\",\n      - Optional. Indicates that the value of this element will be searchable under the specified key\n   \"required\": false,\n   \"allowMultipleValues\": true,\n   \"minimumValues\": 1,\n   \"maximumValues\": 50,\n   \"fieldLabel\": \"File\",\n   \"helpText\": \"Please select a file\"\n}\n```\n### Formatted-Text element\n```\n{\n   \"key\": \"MyFormattedTextElement\",\n   \"label\": \"My Formatted Text Element\",\n   \"elementType\": \"formattedtext\",\n   \"searchKey\": \"string1\" | \"string2\" | \"string3\" | \"string4\" | \"sortableString1\" | \"sortableString2\" | \"sortableString3\" | \"sortableString4\",\n      - Optional. Indicates that the value of this element will be searchable under the specified key\n   \"required\": false,\n   \"allowMultipleValues\": true,\n   \"minimumValues\": 1,\n   \"maximumValues\": 50,\n   \"fieldLabel\": \"Text\",\n   \"helpText\": \"Enter some text\"\n}\n```\n### Group element\n```\n{\n   \"key\": \"MyGroupElement\",\n   \"label\": \"My Group Element\",\n   \"elementType\": \"group\",\n   \"typeRef\": {\"id\":\"73b5f83684cddba687cb41eca328a41a\"},\n      - Must refer to an existing content-type whose `kind` attribute contains the value `embedded`\n   \"required\": false,\n   \"allowMultipleValues\": true,\n   \"minimumValues\": 1,\n   \"maximumValues\": 50,\n   \"fieldLabel\": \"Text\",\n   \"helpText\": \"Please fill in these fields\"\n}\n```\n### Image element\n```\n{\n   \"key\": \"MyImageElement\",\n   \"label\": \"My Image Element\",\n   \"elementType\": \"image\",\n   \"acceptType\": [\"jpg\", \"jpeg\", \"png\", \"gif\", \"svg\"],\n      - Optional. Specifies the allowed image types.. with the above list comprising the allowed values.\n   \"imageProfileId\": \"83b5f83684cddba687cb41eca328a4567\",\n      - Optional. Specifies the ID of the image profile that this element is using. If an image profile is selected, then 'svg' is no longer allowed as an acceptType.\n   \"searchKey\": \"string1\" | \"string2\" | \"string3\" | \"string4\" | \"sortableString1\" | \"sortableString2\" | \"sortableString3\" | \"sortableString4\",\n      - Optional. Indicates that the value of this element will be searchable under the specified key\n   \"required\": false,\n   \"allowMultipleValues\": true,\n   \"minimumValues\": 1,\n   \"maximumValues\": 50,\n   \"fieldLabel\": \"Image\",\n   \"helpText\": \"Please select an image\"\n}\n```\n### Link element\n```\n{\n   \"key\": \"MyLinkElement\",\n   \"label\": \"My Link Element\",\n   \"elementType\": \"link\",\n   \"searchKey\": \"string1\" | \"string2\" | \"string3\" | \"string4\" | \"sortableString1\" | \"sortableString2\" | \"sortableString3\" | \"sortableString4\",\n      - Optional. Indicates that the value of this element will be searchable under the specified key\n   \"required\": false,\n   \"allowMultipleValues\": true,\n   \"minimumValues\": 1,\n   \"maximumValues\": 50,\n   \"fieldLabel\": \"Link\",\n   \"helpText\": \"Please select a link\"\n}\n```\n### Location element\n```\n{\n   \"key\": \"MyLocationElement\",\n   \"label\": \"My Location element\",\n   \"elementType\": \"location\",\n   \"searchKey\": \"location1\",\n      - Optional. Indicates that the value of this element will be searchable under the specified key\n   \"required\": false,\n   \"helpText\": \"Please select a location\"\n}\n```\n### Number (Decimal) element\n```\n{\n   \"key\": \"MyNumberElement\",\n   \"label\": \"My Number Element\",\n   \"elementType\": \"number\",\n   \"fieldType\": \"decimal\",\n   \"minimum\": 10.0,\n      - Optional. Specifies the lowest accepted number.\n   \"maximum\": 49.9,\n      - Optional. Specifies the highest accepted number.\n   \"searchKey\": \"number1\" | \"number2\" | \"sortableNumber1\" | \"sortableNumber2\",\n      - Optional. Indicates that the value of this element will be searchable under the specified key\n   \"required\": false,\n   \"allowMultipleValues\": true,\n   \"minimumValues\": 1,\n   \"maximumValues\": 50,\n   \"fieldLabel\": \"Number\",\n   \"helpText\": \"Enter a number between 10.0 and 49.9\"\n}\n```\n### Number (Integer) element\n```\n{\n   \"key\": \"MyNumberElement\",\n   \"label\": \"My Number Element\",\n   \"elementType\": \"number\",\n   \"fieldType\": \"integer\",\n   \"minimum\": 10,\n      - Optional. Specifies the lowest accepted number.\n   \"maximum\": 49,\n      - Optional. Specifies the highest accepted number.\n   \"searchKey\": \"number1\" | \"number2\" | \"sortableNumber1\" | \"sortableNumber2\",\n      - Optional. Indicates that the value of this element will be searchable under the specified key\n   \"required\": false,\n   \"allowMultipleValues\": true,\n   \"minimumValues\": 1,\n   \"maximumValues\": 50,\n   \"fieldLabel\": \"Number\",\n   \"helpText\": \"Enter a number between 10 and 49\"\n}\n```\n### Option Selection element\n```\n{\n   \"key\": \"MyOptionSelectionElement\",\n   \"label\": \"My Option Selection Element\",\n   \"elementType\": \"optionselection\",\n   \"options\": [{\"label\":\"Option 1\", \"selection\": \"Value 1\"}, {\"label\":\"Option 2\", \"selection\": \"Value 2\"}],\n   \"searchKey\": \"string1\" | \"string2\" | \"string3\" | \"string4\" | \"sortableString1\" | \"sortableString2\" | \"sortableString3\" | \"sortableString4\",\n      - Optional. Indicates that the value of this element will be searchable under the specified key\n   \"required\": false,\n   \"allowMultipleValues\": true,\n   \"minimumValues\": 1,\n   \"maximumValues\": 50,\n   \"helpText\": \"Enter make a selection\"\n}\n```\n### Reference element\n```\n{\n   \"key\": \"MyReferenceElement\",\n   \"label\": \"My Reference Element\",\n   \"elementType\": \"reference\",\n   \"restrictTypes\": [{\"id\":\"23b5f83684cddba687cb41eca328a1234\"}, {\"id\":\"23fhf83684cddba687cb41eca328a6789\"}],\n      - Optional. Restricts the allowed content items, to only those from the specified content-types.\n   \"searchKey\": \"string1\" | \"string2\" | \"string3\" | \"string4\" | \"sortableString1\" | \"sortableString2\" | \"sortableString3\" | \"sortableString4\",\n      - Optional. Indicates that the value of this element will be searchable under the specified key\n   \"required\": false,\n   \"allowMultipleValues\": true,\n   \"minimumValues\": 1,\n   \"maximumValues\": 50,\n   \"fieldLabel\": \"Reference\",\n   \"helpText\": \"Please select an item\"\n}\n```\n### Text (Single Line) element\n```\n{\n   \"key\": \"MyTextElement\",\n   \"label\": \"My Text Element\",\n   \"elementType\": \"text\",\n   \"minLength\": 5,\n      - Optional. Specifies the lowest number of accepted characters. Default is 0.\n   \"maxLength\": 50,\n      - Optional. Specifies the highest number of accepted characters. Default is 10000.\n   \"displayType\": \"singleLine\",\n   \"displayWidth\": 20,\n      - Optional. Specifies the width of the text editor in characters.\n   \"searchKey\": \"string1\" | \"string2\" | \"string3\" | \"string4\" | \"sortableString1\" | \"sortableString2\" | \"sortableString3\" | \"sortableString4\",\n      - Optional. Indicates that the value of this element will be searchable under the specified key\n   \"required\": false,\n   \"allowMultipleValues\": true,\n   \"minimumValues\": 1,\n   \"maximumValues\": 50,\n   \"fieldLabel\": \"Text\",\n   \"helpText\": \"Enter some text between 5 and 50 characters\"\n}\n```\n### Text (Multi Line) element\n```\n{\n   \"key\": \"MyTextElement\",\n   \"label\": \"My Text Element\",\n   \"elementType\": \"text\",\n   \"minLength\": 5,\n      - Optional. Specifies the lowest number of accepted characters. Default is 0.\n   \"maxLength\": 50,\n      - Optional. Specifies the highest number of accepted characters. Default is 10000.\n   \"displayType\": \"multiLine\",\n   \"displayWidth\": 20,\n      - Optional. Specifies the width of the text editor in characters.\n   \"displayHeight\": 10,\n      - Optional. Specifies the number of lines shown within the text editor.\n   \"searchKey\": \"string1\" | \"string2\" | \"string3\" | \"string4\" | \"sortableString1\" | \"sortableString2\" | \"sortableString3\" | \"sortableString4\",\n      - Optional. Indicates that the value of this element will be searchable under the specified key\n   \"required\": false,\n   \"allowMultipleValues\": true,\n   \"minimumValues\": 1,\n   \"maximumValues\": 50,\n   \"fieldLabel\": \"Text\",\n   \"helpText\": \"Enter some text between 5 and 50 characters\"\n}\n```\n### Toggle element\n```\n{\n   \"key\": \"MyToggleElement\",\n   \"label\": \"My Toggle element\",\n   \"elementType\": \"toggle\",\n   \"statement\": \"Lead in question\",\n      - Optional. Specifies the text (typically a question) to show with the toggle\n   \"searchKey\": \"boolean1\" | \"boolean2\",\n      - Optional. Indicates that the value of this element will be searchable under the specified key\n   \"helpText\": \"Please make a selection\"\n}\n```\n### Video element\n```\n{\n   \"key\": \"MyVideoElement\",\n   \"label\": \"My Video Element\",\n   \"elementType\": \"video\",\n   \"acceptType\": [\"mp4\"],\n      - Optional. Specifies the allowed video types.. with the above list comprising the allowed values.\n   \"searchKey\": \"string1\" | \"string2\" | \"string3\" | \"string4\" | \"sortableString1\" | \"sortableString2\" | \"sortableString3\" | \"sortableString4\",\n      - Optional. Indicates that the value of this element will be searchable under the specified key\n   \"required\": false,\n   \"allowMultipleValues\": true,\n   \"minimumValues\": 1,\n   \"maximumValues\": 50,\n   \"fieldLabel\": \"Video\",\n   \"helpText\": \"Please select a video\"\n}\n```\n\n**Note:** Use the /types/new end-point to return a blank document instead of creating a new type document from scratch. To add an element to a type document, merge the element-fragment section from the element definition into the element section of the type document.\n<br />User roles: admin, manager"
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              description: An new type document.
-              properties:
-                name:
-                  type: string
-                  description: The name of the type document.
-                  pattern: ^[a-zA-Z0-9*. \-+_~$!',()]*$
-                  minLength: 1
-                description:
-                  type: string
-                  description: The description of the type document.
-                  pattern: ^[a-zA-Z0-9*. \-+_~$!',()]*$
-                classification:
-                  type: string
-                  description: the type document classification.
-                  enum:
-                  - content-type
-                kind:
-                  type: array
-                  description: "Identifies the sub-classification of the type document.\nValid values include:\n   * custom-ui: This type document has a custom user interface defined\n   * embedded: This type document can be included within another type document\n   * standalone: This type document can be used to create normal content items\n   * page: This type document can be used to create site pages\n   * landing-page: This type document can be used to create landing pages\n   * email: This type document can be used to create email messages\n   * site: This type document can be used to create sites\n"
-                  items:
-                    type: string
-                    enum:
-                    - custom-ui
-                    - embedded
-                    - standalone
-                    - page
-                    - landing-page
-                    - email
-                    - site
-                contentThumbnail:
-                  type: object
-                  description: The thumbnail settings for content using this type.
-                  properties:
-                    source:
-                      type: string
-                      enum:
-                      - imageElementOrType
-                      - imageElement
-                      - type
-                      - none
-                    imageElement:
-                      type: string
-                      description: When the 'source' is either 'imageElementOrType' or 'imageElement', specifies the element that will be used as the content thumbnail.
-                  required:
-                  - source
-                created:
-                  type: string
-                  description: Optional creation date of this type document in ISO 8601 with the format YYYY-MM-DDThh:mm:ss.sssZ. Value is ignored if set in the future.
-                  format: date-time
-                path:
-                  type: string
-                  description: Optional path to associate with this type document. Must be unique. Will default to filesystem friendly version of /[NAME].
-                  example: /myTypes/SampleType.json
-                tags:
-                  type: array
-                  items:
-                    type: string
-                  uniqueItems: true
-                thumbnail:
-                  type: object
-                  description: 'The reference to the asset that should act as the thumbnail of this type.
-
-                    The thumbnail can be referred to by either id or path.
-
-                    '
-                  properties:
-                    id:
-                      type: string
-                      description: The ID of the asset.
-                      example: 6c622bbb-5f5b-45d4-89e1-fce1c054138f
-                    path:
-                      type: string
-                      description: The path of the asset.
-                      example: /sales/images/hub.png
-                    url:
-                      type: string
-                      description: The url of the asset.
-                      example: /authoring/v1/resources/47d535ff288b3bd8383009abf82a9ea8
-                status:
-                  type: string
-                  description: the workflow status.
-                  enum:
-                  - draft
-                  - ready
-                  - retired
-                uiExtensions:
-                  type: object
-                  description: Specifies any user interface extensions registered on this type document.
-                  properties:
-                    element:
-                      type: string
-                      description: 'Registers a user interface extension that customizes the display of the content elements on the content form.
-
-                        The ''kind'' of the type document should also include the value ''custom-ui''.
-
-                        '
-                icon:
-                  type: array
-                  description: 'Specifies the type of icon to show for this type document within the Type user interface''s element palette
-
-                    Only used when the type document has a kind that includes ''embedded''
-
-                    '
-                  items:
-                    type: string
-                    enum:
-                    - category
-                    - datetime
-                    - formattedtext
-                    - file
-                    - group
-                    - image
-                    - link
-                    - location
-                    - number
-                    - reference
-                    - optionselection
-                    - text
-                    - toggle
-                    - variabletype
-                    - video
-                elements:
-                  type: array
-                  description: Represents the elements present on this Type document.
-                  items:
-                    type: object
-                    description: 'Represents an element within a content type.
-
-                      Only properties common to all elements are currently shown.
-
-                      For examples of each of the supported elements, see the documentation for the POST /types end point.
-
-                      '
-                    properties:
-                      key:
-                        type: string
-                        description: The element identifer. Within content items, elements are referred to by key only.
-                        pattern: ^[A-Za-z_][A-Za-z0-9_]*$
-                        maxLength: 50
-                      label:
-                        type: string
-                        description: The display name of the element.
-                        pattern: ^(?!\\s*$).+
-                        maxLength: 100
-                      elementType:
-                        type: string
-                        description: Specifies the type of this element.
-                        enum:
-                        - category
-                        - datetime
-                        - file
-                        - group
-                        - image
-                        - link
-                        - location
-                        - number
-                        - reference
-                        - text
-                        - toggle
-                        - video
-                      allowMultipleValues:
-                        type: boolean
-                        description: 'Indicates whether content items using this content-type can contain multiple values of this element.
-
-                          Valid for all element types except category, toggle and location.
-
-                          '
-                        default: false
-                      minimumValues:
-                        type: integer
-                        description: When allowMulitpleValues is true, indicates the minimum number of values are that required.
-                        minimum: 0
-                        maximum: 50
-                        default: 0
-                      maximumValues:
-                        type: integer
-                        description: When allowMulitpleValues is true, indicates the maximum number of values are that allowed.
-                        minimum: 0
-                        maximum: 50
-                        default: 50
-                      fieldLabel:
-                        type: string
-                        description: 'When allowMultipleValues is true, specifies a display name for each value within the multi valued list.
-
-                          '
-                        pattern: ^(?!\\s*$).+
-                      helpText:
-                        type: string
-                        description: The informational text to show the content author when setting the value of this element.
-                      required:
-                        type: boolean
-                        description: Indicates whether content items must specify a value for this element.
-                        default: false
-                      uiExtensions:
-                        type: object
-                        description: Specifies any user interface extensions registered for this element.
-                        properties:
-                          element:
-                            type: string
-                            description: 'Registers a user interface extension that customizes the display of this element on the content form.
-
-                              Valid for all element types except group
-
-                              '
-                    required:
-                    - key
-                    - label
-                    - elementType
-                isSystem:
-                  type: boolean
-                  description: Indicates whether this item is a 'system item' or not.
-                  default: false
-              required:
-              - name
-              - description
-              - classification
-              - tags
-              - status
-              - elements
-        description: Provide all the type fields that are needed to create the new content type.
-        required: true
+      summary: Create new type documents
+      description: Use the /types end-point to create a new type document.
       responses:
         '200':
           description: Successfully created a new content type with all the requested fields.
@@ -733,11 +505,241 @@ paths:
       x-ibm-dx-security-user-roles:
       - admin
       - manager
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              description: An new type document.
+              properties:
+                name:
+                  type: string
+                  description: The name of the type document.
+                  pattern: ^[a-zA-Z0-9*. \-+_~$!',()]*$
+                  minLength: 1
+                description:
+                  type: string
+                  description: The description of the type document.
+                  pattern: ^[a-zA-Z0-9*. \-+_~$!',()]*$
+                classification:
+                  type: string
+                  description: the type document classification.
+                  enum:
+                  - content-type
+                kind:
+                  type: array
+                  description: "Identifies the sub-classification of the type document.\nValid values include:\n   * custom-ui: This type document has a custom user interface defined\n   * embedded: This type document can be included within another type document\n   * standalone: This type document can be used to create normal content items\n   * page: This type document can be used to create site pages\n   * landing-page: This type document can be used to create landing pages\n   * email: This type document can be used to create email messages\n   * site: This type document can be used to create sites\n"
+                  items:
+                    type: string
+                    enum:
+                    - custom-ui
+                    - embedded
+                    - standalone
+                    - page
+                    - landing-page
+                    - email
+                    - site
+                contentThumbnail:
+                  type: object
+                  description: The thumbnail settings for content using this type.
+                  properties:
+                    source:
+                      type: string
+                      enum:
+                      - imageElementOrType
+                      - imageElement
+                      - type
+                      - none
+                    imageElement:
+                      type: string
+                      description: When the 'source' is either 'imageElementOrType' or 'imageElement', specifies the element that will be used as the content thumbnail.
+                  required:
+                  - source
+                created:
+                  type: string
+                  description: Optional creation date of this type document in ISO 8601 with the format YYYY-MM-DDThh:mm:ss.sssZ. Value is ignored if set in the future.
+                  format: date-time
+                path:
+                  type: string
+                  description: Optional path to associate with this type document. Must be unique. Will default to filesystem friendly version of /[NAME].
+                  example: /myTypes/SampleType.json
+                tags:
+                  type: array
+                  items:
+                    type: string
+                  uniqueItems: true
+                thumbnail:
+                  type: object
+                  description: 'The reference to the asset that should act as the thumbnail of this type.
+
+                    The thumbnail can be referred to by either id or path.
+
+                    '
+                  properties:
+                    id:
+                      type: string
+                      description: The ID of the asset.
+                      example: 6c622bbb-5f5b-45d4-89e1-fce1c054138f
+                    path:
+                      type: string
+                      description: The path of the asset.
+                      example: /sales/images/hub.png
+                    url:
+                      type: string
+                      description: The url of the asset.
+                      example: /authoring/v1/resources/47d535ff288b3bd8383009abf82a9ea8
+                status:
+                  type: string
+                  description: the workflow status.
+                  enum:
+                  - draft
+                  - ready
+                  - retired
+                uiExtensions:
+                  type: object
+                  description: Specifies any user interface extensions registered on this type document.
+                  properties:
+                    element:
+                      type: string
+                      description: 'Registers a user interface extension that customizes the display of the content elements on the content form.
+
+                        The ''kind'' of the type document should also include the value ''custom-ui''.
+
+                        '
+                icon:
+                  type: array
+                  description: 'Specifies the type of icon to show for this type document within the Type user interface''s element palette
+
+                    Only used when the type document has a kind that includes ''embedded''
+
+                    '
+                  items:
+                    type: string
+                    enum:
+                    - category
+                    - datetime
+                    - formattedtext
+                    - file
+                    - group
+                    - image
+                    - link
+                    - location
+                    - number
+                    - reference
+                    - optionselection
+                    - text
+                    - toggle
+                    - variabletype
+                    - video
+                elements:
+                  type: array
+                  description: Represents the elements present on this Type document.
+                  items:
+                    type: object
+                    description: 'Represents an element within a content type.
+
+                      Only properties common to all elements are currently shown.
+
+                      For examples of each of the supported elements, see the documentation for the POST /types end point.
+
+                      '
+                    properties:
+                      key:
+                        type: string
+                        description: The element identifer. Within content items, elements are referred to by key only.
+                        pattern: ^[A-Za-z_][A-Za-z0-9_]*$
+                        maxLength: 50
+                      label:
+                        type: string
+                        description: The display name of the element.
+                        pattern: ^(?!\\s*$).+
+                        maxLength: 100
+                      elementType:
+                        type: string
+                        description: Specifies the type of this element.
+                        enum:
+                        - category
+                        - datetime
+                        - file
+                        - group
+                        - image
+                        - link
+                        - location
+                        - number
+                        - reference
+                        - text
+                        - toggle
+                        - video
+                      allowMultipleValues:
+                        type: boolean
+                        description: 'Indicates whether content items using this content-type can contain multiple values of this element.
+
+                          Valid for all element types except category, toggle and location.
+
+                          '
+                        default: false
+                      minimumValues:
+                        type: integer
+                        description: When allowMulitpleValues is true, indicates the minimum number of values are that required.
+                        minimum: 0
+                        maximum: 50
+                        default: 0
+                      maximumValues:
+                        type: integer
+                        description: When allowMulitpleValues is true, indicates the maximum number of values are that allowed.
+                        minimum: 0
+                        maximum: 50
+                        default: 50
+                      fieldLabel:
+                        type: string
+                        description: 'When allowMultipleValues is true, specifies a display name for each value within the multi valued list.
+
+                          '
+                        pattern: ^(?!\\s*$).+
+                      helpText:
+                        type: string
+                        description: The informational text to show the content author when setting the value of this element.
+                      required:
+                        type: boolean
+                        description: Indicates whether content items must specify a value for this element.
+                        default: false
+                      uiExtensions:
+                        type: object
+                        description: Specifies any user interface extensions registered for this element.
+                        properties:
+                          element:
+                            type: string
+                            description: 'Registers a user interface extension that customizes the display of this element on the content form.
+
+                              Valid for all element types except group
+
+                              '
+                    required:
+                    - key
+                    - label
+                    - elementType
+                isSystem:
+                  type: boolean
+                  description: Indicates whether this item is a 'system item' or not.
+                  default: false
+              required:
+              - name
+              - description
+              - classification
+              - tags
+              - status
+              - elements
+        description: Provide all the type fields that are needed to create the new content type.
+        required: true
+      operationId: postAuthoringV1Types
+      x-operation-id-source: derived
     get:
       tags:
       - Authoring types
-      summary: Retrieve all type documents in the database.
-      description: 'Use the /types endpoint to retrieve all content type documents from the database.<br />User roles: admin, manager, editor, viewer'
+      summary: Retrieve all type documents in the database
+      description: 'Use the /types endpoint to retrieve all content type documents from the database.
+
+        User roles: admin, manager, editor, viewer'
       parameters:
       - name: offset
         in: query
@@ -1116,12 +1118,16 @@ paths:
       - manager
       - editor
       - viewer
+      operationId: getAuthoringV1Types
+      x-operation-id-source: derived
   /authoring/v1/types/by-path:
     get:
       tags:
       - Authoring types
-      summary: Retrieve an existing type by its path.
-      description: 'Use the /types/by-path end-point to retrieve an existing content type from the database.<br />User roles: admin, manager, editor, viewer'
+      summary: Retrieve an existing type by its path
+      description: 'Use the /types/by-path end-point to retrieve an existing content type from the database.
+
+        User roles: admin, manager, editor, viewer'
       parameters:
       - name: path
         in: query
@@ -1642,12 +1648,16 @@ paths:
       - manager
       - editor
       - viewer
+      operationId: getAuthoringV1TypesByPath
+      x-operation-id-source: derived
   /authoring/v1/types/count:
     get:
       tags:
       - Authoring types
-      summary: Retrieve the total number of types.
-      description: 'Use the /types/count endpoint to obtain the total number of content types within the database.<br />User roles: admin, manager, editor, viewer'
+      summary: Retrieve the total number of types
+      description: 'Use the /types/count endpoint to obtain the total number of content types within the database.
+
+        User roles: admin, manager, editor, viewer'
       responses:
         '200':
           description: types count
@@ -1732,12 +1742,16 @@ paths:
       - manager
       - editor
       - viewer
+      operationId: getAuthoringV1TypesCount
+      x-operation-id-source: derived
   /authoring/v1/types/{id}:
     put:
       tags:
       - Authoring types
-      summary: Update an existing type.
-      description: 'Use the /types/{id} end-point to update an existing content type within the database.<br />User roles: admin, manager'
+      summary: Update an existing type
+      description: 'Use the /types/{id} end-point to update an existing content type within the database.
+
+        User roles: admin, manager'
       parameters:
       - name: id
         in: path
@@ -1758,294 +1772,6 @@ paths:
         required: false
         schema:
           type: string
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              description: An existing type document.
-              properties:
-                id:
-                  type: string
-                  description: The ID of the type document.
-                  pattern: ^[a-zA-Z0-9*.\-+_~$!',()]*$
-                  minLength: 1
-                rev:
-                  type: string
-                  description: The current revision of the type document.
-                  minLength: 1
-                name:
-                  type: string
-                  description: The name of the type document.
-                  pattern: ^[a-zA-Z0-9*. \-+_~$!',()]*$
-                  minLength: 1
-                description:
-                  type: string
-                  description: The description of the type document.
-                  pattern: ^[a-zA-Z0-9*. \-+_~$!',()]*$
-                classification:
-                  type: string
-                  description: the type document classification.
-                  enum:
-                  - content-type
-                kind:
-                  type: array
-                  description: "Identifies the sub-classification of the type document.\nValid values include:\n   * custom-ui: This type document has a custom user interface defined\n   * embedded: This type document can be included within another type document\n   * standalone: This type document can be used to create normal content items\n   * page: This type document can be used to create site pages\n   * landing-page: This type document can be used to create landing pages\n   * email: This type document can be used to create email messages\n   * site: This type document can be used to create sites\n"
-                  items:
-                    type: string
-                    enum:
-                    - custom-ui
-                    - embedded
-                    - standalone
-                    - page
-                    - landing-page
-                    - email
-                    - site
-                contentThumbnail:
-                  type: object
-                  description: The thumbnail settings for content using this type.
-                  properties:
-                    source:
-                      type: string
-                      enum:
-                      - imageElementOrType
-                      - imageElement
-                      - type
-                      - none
-                    imageElement:
-                      type: string
-                      description: When the 'source' is either 'imageElementOrType' or 'imageElement', specifies the element that will be used as the content thumbnail.
-                  required:
-                  - source
-                creatorId:
-                  type: string
-                  minLength: 1
-                creator:
-                  type: string
-                  description: 'The display name of the user that created this Type document. This field is only returned when the ''include'' query string option is set to ''ALL'' or ''metadata''.
-
-                    This field is read only.
-
-                    '
-                created:
-                  type: string
-                  description: The created date of this type document in ISO 8601 with the format YYYY-MM-DDThh:mm:ss.sssZ. This field is read only.
-                  format: date-time
-                  minLength: 1
-                lastModifierId:
-                  type: string
-                  minLength: 1
-                lastModifier:
-                  type: string
-                  description: 'The display name of the last user that modified this Type document. This field is only returned when the ''include'' query string option is set to ''ALL'' or ''metadata''.
-
-                    This field is read only.
-
-                    '
-                lastModified:
-                  type: string
-                  description: The last modified date of this type document in ISO 8601 with the format YYYY-MM-DDThh:mm:ss.sssZ. This field is read only.
-                  format: date-time
-                  minLength: 1
-                path:
-                  type: string
-                  description: Optional path to associate with this type document. Must be unique. Will default to filesystem friendly version of /[NAME].
-                  example: /myTypes/SampleType.json
-                tags:
-                  type: array
-                  items:
-                    type: string
-                  uniqueItems: true
-                thumbnail:
-                  type: object
-                  description: 'The reference to the asset that should act as the thumbnail of this type.
-
-                    The thumbnail can be referred to by either id or path.
-
-                    '
-                  properties:
-                    id:
-                      type: string
-                      description: The ID of the asset.
-                      example: 6c622bbb-5f5b-45d4-89e1-fce1c054138f
-                    path:
-                      type: string
-                      description: The path of the asset.
-                      example: /sales/images/hub.png
-                    url:
-                      type: string
-                      description: The url of the asset.
-                      example: /authoring/v1/resources/47d535ff288b3bd8383009abf82a9ea8
-                status:
-                  type: string
-                  description: the workflow status.
-                  enum:
-                  - draft
-                  - ready
-                  - retired
-                linkedDocId:
-                  type: string
-                  description: Only present on Drafts created from existing Ready items, this property indicates the ID of the associated Ready item
-                uiExtensions:
-                  type: object
-                  description: Specifies any user interface extensions registered on this type document.
-                  properties:
-                    element:
-                      type: string
-                      description: 'Registers a user interface extension that customizes the display of the content elements on the content form.
-
-                        The ''kind'' of the type document should also include the value ''custom-ui''.
-
-                        '
-                icon:
-                  type: array
-                  description: 'Specifies the type of icon to show for this type document within the Type user interface''s element palette
-
-                    Only used when the type document has a kind that includes ''embedded''
-
-                    '
-                  items:
-                    type: string
-                    enum:
-                    - category
-                    - datetime
-                    - formattedtext
-                    - file
-                    - group
-                    - image
-                    - link
-                    - location
-                    - number
-                    - reference
-                    - optionselection
-                    - text
-                    - toggle
-                    - variabletype
-                    - video
-                elements:
-                  type: array
-                  description: Represents the elements present on this Type document.
-                  items:
-                    type: object
-                    description: 'Represents an element within a content type.
-
-                      Only properties common to all elements are currently shown.
-
-                      For examples of each of the supported elements, see the documentation for the POST /types end point.
-
-                      '
-                    properties:
-                      key:
-                        type: string
-                        description: The element identifer. Within content items, elements are referred to by key only.
-                        pattern: ^[A-Za-z_][A-Za-z0-9_]*$
-                        maxLength: 50
-                      label:
-                        type: string
-                        description: The display name of the element.
-                        pattern: ^(?!\\s*$).+
-                        maxLength: 100
-                      elementType:
-                        type: string
-                        description: Specifies the type of this element.
-                        enum:
-                        - category
-                        - datetime
-                        - file
-                        - group
-                        - image
-                        - link
-                        - location
-                        - number
-                        - reference
-                        - text
-                        - toggle
-                        - video
-                      allowMultipleValues:
-                        type: boolean
-                        description: 'Indicates whether content items using this content-type can contain multiple values of this element.
-
-                          Valid for all element types except category, toggle and location.
-
-                          '
-                        default: false
-                      minimumValues:
-                        type: integer
-                        description: When allowMulitpleValues is true, indicates the minimum number of values are that required.
-                        minimum: 0
-                        maximum: 50
-                        default: 0
-                      maximumValues:
-                        type: integer
-                        description: When allowMulitpleValues is true, indicates the maximum number of values are that allowed.
-                        minimum: 0
-                        maximum: 50
-                        default: 50
-                      fieldLabel:
-                        type: string
-                        description: 'When allowMultipleValues is true, specifies a display name for each value within the multi valued list.
-
-                          '
-                        pattern: ^(?!\\s*$).+
-                      helpText:
-                        type: string
-                        description: The informational text to show the content author when setting the value of this element.
-                      required:
-                        type: boolean
-                        description: Indicates whether content items must specify a value for this element.
-                        default: false
-                      uiExtensions:
-                        type: object
-                        description: Specifies any user interface extensions registered for this element.
-                        properties:
-                          element:
-                            type: string
-                            description: 'Registers a user interface extension that customizes the display of this element on the content form.
-
-                              Valid for all element types except group
-
-                              '
-                    required:
-                    - key
-                    - label
-                    - elementType
-                links:
-                  type: object
-                  description: List of available operations, only shown when optional 'include' query string parameter includes 'links'.
-                  properties:
-                    self:
-                      type: object
-                      description: self link.
-                      properties:
-                        href:
-                          type: string
-                schema:
-                  type: object
-                  description: 'The Json-Schema representation of this Type document, which can be used to validate a content-item using this Type.
-
-                    This is the same document returned from the ''/types/{id}/schema'' end-point and is only returned when the ''include'' query string option is set to ''ALL'' or ''schema''
-
-                    '
-                mappings:
-                  type: object
-                  description: 'The layout mappings of this Type document. This field is only returned when the ''include'' query string option is set to ''ALL'' or ''mappings''.
-
-                    '
-                isSystem:
-                  type: boolean
-                  description: Indicates whether this item is a 'system item' or not.
-                  default: false
-              required:
-              - rev
-              - name
-              - description
-              - classification
-              - creatorId
-              - tags
-              - status
-              - elements
-        description: Provide all the updated type fields that you want to save to this content type document.
-        required: true
       responses:
         '200':
           description: Successfully updated the content type document that matches the ID provided with the changes made to the type fields.
@@ -2658,11 +2384,303 @@ paths:
       x-ibm-dx-security-user-roles:
       - admin
       - manager
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              description: An existing type document.
+              properties:
+                id:
+                  type: string
+                  description: The ID of the type document.
+                  pattern: ^[a-zA-Z0-9*.\-+_~$!',()]*$
+                  minLength: 1
+                rev:
+                  type: string
+                  description: The current revision of the type document.
+                  minLength: 1
+                name:
+                  type: string
+                  description: The name of the type document.
+                  pattern: ^[a-zA-Z0-9*. \-+_~$!',()]*$
+                  minLength: 1
+                description:
+                  type: string
+                  description: The description of the type document.
+                  pattern: ^[a-zA-Z0-9*. \-+_~$!',()]*$
+                classification:
+                  type: string
+                  description: the type document classification.
+                  enum:
+                  - content-type
+                kind:
+                  type: array
+                  description: "Identifies the sub-classification of the type document.\nValid values include:\n   * custom-ui: This type document has a custom user interface defined\n   * embedded: This type document can be included within another type document\n   * standalone: This type document can be used to create normal content items\n   * page: This type document can be used to create site pages\n   * landing-page: This type document can be used to create landing pages\n   * email: This type document can be used to create email messages\n   * site: This type document can be used to create sites\n"
+                  items:
+                    type: string
+                    enum:
+                    - custom-ui
+                    - embedded
+                    - standalone
+                    - page
+                    - landing-page
+                    - email
+                    - site
+                contentThumbnail:
+                  type: object
+                  description: The thumbnail settings for content using this type.
+                  properties:
+                    source:
+                      type: string
+                      enum:
+                      - imageElementOrType
+                      - imageElement
+                      - type
+                      - none
+                    imageElement:
+                      type: string
+                      description: When the 'source' is either 'imageElementOrType' or 'imageElement', specifies the element that will be used as the content thumbnail.
+                  required:
+                  - source
+                creatorId:
+                  type: string
+                  minLength: 1
+                creator:
+                  type: string
+                  description: 'The display name of the user that created this Type document. This field is only returned when the ''include'' query string option is set to ''ALL'' or ''metadata''.
+
+                    This field is read only.
+
+                    '
+                created:
+                  type: string
+                  description: The created date of this type document in ISO 8601 with the format YYYY-MM-DDThh:mm:ss.sssZ. This field is read only.
+                  format: date-time
+                  minLength: 1
+                lastModifierId:
+                  type: string
+                  minLength: 1
+                lastModifier:
+                  type: string
+                  description: 'The display name of the last user that modified this Type document. This field is only returned when the ''include'' query string option is set to ''ALL'' or ''metadata''.
+
+                    This field is read only.
+
+                    '
+                lastModified:
+                  type: string
+                  description: The last modified date of this type document in ISO 8601 with the format YYYY-MM-DDThh:mm:ss.sssZ. This field is read only.
+                  format: date-time
+                  minLength: 1
+                path:
+                  type: string
+                  description: Optional path to associate with this type document. Must be unique. Will default to filesystem friendly version of /[NAME].
+                  example: /myTypes/SampleType.json
+                tags:
+                  type: array
+                  items:
+                    type: string
+                  uniqueItems: true
+                thumbnail:
+                  type: object
+                  description: 'The reference to the asset that should act as the thumbnail of this type.
+
+                    The thumbnail can be referred to by either id or path.
+
+                    '
+                  properties:
+                    id:
+                      type: string
+                      description: The ID of the asset.
+                      example: 6c622bbb-5f5b-45d4-89e1-fce1c054138f
+                    path:
+                      type: string
+                      description: The path of the asset.
+                      example: /sales/images/hub.png
+                    url:
+                      type: string
+                      description: The url of the asset.
+                      example: /authoring/v1/resources/47d535ff288b3bd8383009abf82a9ea8
+                status:
+                  type: string
+                  description: the workflow status.
+                  enum:
+                  - draft
+                  - ready
+                  - retired
+                linkedDocId:
+                  type: string
+                  description: Only present on Drafts created from existing Ready items, this property indicates the ID of the associated Ready item
+                uiExtensions:
+                  type: object
+                  description: Specifies any user interface extensions registered on this type document.
+                  properties:
+                    element:
+                      type: string
+                      description: 'Registers a user interface extension that customizes the display of the content elements on the content form.
+
+                        The ''kind'' of the type document should also include the value ''custom-ui''.
+
+                        '
+                icon:
+                  type: array
+                  description: 'Specifies the type of icon to show for this type document within the Type user interface''s element palette
+
+                    Only used when the type document has a kind that includes ''embedded''
+
+                    '
+                  items:
+                    type: string
+                    enum:
+                    - category
+                    - datetime
+                    - formattedtext
+                    - file
+                    - group
+                    - image
+                    - link
+                    - location
+                    - number
+                    - reference
+                    - optionselection
+                    - text
+                    - toggle
+                    - variabletype
+                    - video
+                elements:
+                  type: array
+                  description: Represents the elements present on this Type document.
+                  items:
+                    type: object
+                    description: 'Represents an element within a content type.
+
+                      Only properties common to all elements are currently shown.
+
+                      For examples of each of the supported elements, see the documentation for the POST /types end point.
+
+                      '
+                    properties:
+                      key:
+                        type: string
+                        description: The element identifer. Within content items, elements are referred to by key only.
+                        pattern: ^[A-Za-z_][A-Za-z0-9_]*$
+                        maxLength: 50
+                      label:
+                        type: string
+                        description: The display name of the element.
+                        pattern: ^(?!\\s*$).+
+                        maxLength: 100
+                      elementType:
+                        type: string
+                        description: Specifies the type of this element.
+                        enum:
+                        - category
+                        - datetime
+                        - file
+                        - group
+                        - image
+                        - link
+                        - location
+                        - number
+                        - reference
+                        - text
+                        - toggle
+                        - video
+                      allowMultipleValues:
+                        type: boolean
+                        description: 'Indicates whether content items using this content-type can contain multiple values of this element.
+
+                          Valid for all element types except category, toggle and location.
+
+                          '
+                        default: false
+                      minimumValues:
+                        type: integer
+                        description: When allowMulitpleValues is true, indicates the minimum number of values are that required.
+                        minimum: 0
+                        maximum: 50
+                        default: 0
+                      maximumValues:
+                        type: integer
+                        description: When allowMulitpleValues is true, indicates the maximum number of values are that allowed.
+                        minimum: 0
+                        maximum: 50
+                        default: 50
+                      fieldLabel:
+                        type: string
+                        description: 'When allowMultipleValues is true, specifies a display name for each value within the multi valued list.
+
+                          '
+                        pattern: ^(?!\\s*$).+
+                      helpText:
+                        type: string
+                        description: The informational text to show the content author when setting the value of this element.
+                      required:
+                        type: boolean
+                        description: Indicates whether content items must specify a value for this element.
+                        default: false
+                      uiExtensions:
+                        type: object
+                        description: Specifies any user interface extensions registered for this element.
+                        properties:
+                          element:
+                            type: string
+                            description: 'Registers a user interface extension that customizes the display of this element on the content form.
+
+                              Valid for all element types except group
+
+                              '
+                    required:
+                    - key
+                    - label
+                    - elementType
+                links:
+                  type: object
+                  description: List of available operations, only shown when optional 'include' query string parameter includes 'links'.
+                  properties:
+                    self:
+                      type: object
+                      description: self link.
+                      properties:
+                        href:
+                          type: string
+                schema:
+                  type: object
+                  description: 'The Json-Schema representation of this Type document, which can be used to validate a content-item using this Type.
+
+                    This is the same document returned from the ''/types/{id}/schema'' end-point and is only returned when the ''include'' query string option is set to ''ALL'' or ''schema''
+
+                    '
+                mappings:
+                  type: object
+                  description: 'The layout mappings of this Type document. This field is only returned when the ''include'' query string option is set to ''ALL'' or ''mappings''.
+
+                    '
+                isSystem:
+                  type: boolean
+                  description: Indicates whether this item is a 'system item' or not.
+                  default: false
+              required:
+              - rev
+              - name
+              - description
+              - classification
+              - creatorId
+              - tags
+              - status
+              - elements
+        description: Provide all the updated type fields that you want to save to this content type document.
+        required: true
+      operationId: putAuthoringV1TypesById
+      x-operation-id-source: derived
     delete:
       tags:
       - Authoring types
-      summary: Delete an existing type.
-      description: 'Use the /types/{id} endpoint to delete an existing content type from the database.<br />User roles: admin, manager'
+      summary: Delete an existing type
+      description: 'Use the /types/{id} endpoint to delete an existing content type from the database.
+
+        User roles: admin, manager'
       parameters:
       - name: id
         in: path
@@ -2940,11 +2958,15 @@ paths:
       x-ibm-dx-security-user-roles:
       - admin
       - manager
+      operationId: deleteAuthoringV1TypesById
+      x-operation-id-source: derived
     get:
       tags:
       - Authoring types
-      summary: Retrieve an existing type.
-      description: 'Use the /types/{id} end-point to retrieve an existing content type from the database.<br />User roles: admin, manager, editor, viewer'
+      summary: Retrieve an existing type
+      description: 'Use the /types/{id} end-point to retrieve an existing content type from the database.
+
+        User roles: admin, manager, editor, viewer'
       parameters:
       - name: id
         in: path
@@ -3339,12 +3361,16 @@ paths:
       - manager
       - editor
       - viewer
+      operationId: getAuthoringV1TypesById
+      x-operation-id-source: derived
   /authoring/v1/types/{id}/copy:
     post:
       tags:
       - Authoring types
-      summary: Copies an existing type.
-      description: 'Use the /types/{id}/copy end-point to create a duplicate of a content type document. The new type will have a name in the format ''Copy [NUMBER] of [SOURCE-NAME]''<br />User roles: admin, manager'
+      summary: Copies an existing type
+      description: 'Use the /types/{id}/copy end-point to create a duplicate of a content type document. The new type will have a name in the format ''Copy [NUMBER] of [SOURCE-NAME]''
+
+        User roles: admin, manager'
       parameters:
       - name: id
         in: path
@@ -3724,12 +3750,16 @@ paths:
       x-ibm-dx-security-user-roles:
       - admin
       - manager
+      operationId: postAuthoringV1TypesByIdCopy
+      x-operation-id-source: derived
   /authoring/v1/types/{id}/new-content:
     get:
       tags:
       - Authoring types
-      summary: Returns a skeleton content item based on the specified content-type.
-      description: 'Use the /types/{id}/new-content end-point to create a new content item applicable for the specified content type document.<br />User roles: admin, manager, editor, viewer'
+      summary: Returns a skeleton content item based on the specified content-type
+      description: 'Use the /types/{id}/new-content end-point to create a new content item applicable for the specified content type document.
+
+        User roles: admin, manager, editor, viewer'
       parameters:
       - name: id
         in: path
@@ -3861,12 +3891,16 @@ paths:
       - manager
       - editor
       - viewer
+      operationId: getAuthoringV1TypesByIdNewContent
+      x-operation-id-source: derived
   /authoring/v1/types/{id}/schema:
     get:
       tags:
       - Authoring types
-      summary: Retrieve the Json-Schema representation of the document.
-      description: 'Use the /types/{id}/schema end-point to get the Json-Schema of a content type document. Use the Json-Schema to validate content item documents that are created from this content type document.<br />User roles: admin, manager, editor, viewer'
+      summary: Retrieve the Json-Schema representation of the document
+      description: 'Use the /types/{id}/schema end-point to get the Json-Schema of a content type document. Use the Json-Schema to validate content item documents that are created from this content type document.
+
+        User roles: admin, manager, editor, viewer'
       parameters:
       - name: id
         in: path
@@ -3964,12 +3998,16 @@ paths:
       - manager
       - editor
       - viewer
+      operationId: getAuthoringV1TypesByIdSchema
+      x-operation-id-source: derived
   /authoring/v1/types/{id}/validate:
     post:
       tags:
       - Authoring types
-      summary: Validate the supplied type document instance (eg. content item) against the specified type.
-      description: 'Use the /types/{id}/validate end-point to validate if the content items specified match the content type document provided.<br />User roles: admin, manager, editor, viewer'
+      summary: Validate the supplied type document instance (eg.
+      description: 'Use the /types/{id}/validate end-point to validate if the content items specified match the content type document provided.
+
+        User roles: admin, manager, editor, viewer'
       parameters:
       - name: id
         in: path
@@ -3977,12 +4015,6 @@ paths:
         required: true
         schema:
           type: string
-      requestBody:
-        content:
-          application/json:
-            schema: {}
-        description: Provide all the type document instances to validate.
-        required: true
       responses:
         '200':
           description: Validation of the content item against specidfied type passed.
@@ -4407,12 +4439,22 @@ paths:
       - manager
       - editor
       - viewer
+      requestBody:
+        content:
+          application/json:
+            schema: {}
+        description: Provide all the type document instances to validate.
+        required: true
+      operationId: postAuthoringV1TypesByIdValidate
+      x-operation-id-source: derived
   /authoring/v1/types/new:
     get:
       tags:
       - Authoring types
-      summary: Retrieve a blank content type.
-      description: 'Use the /types/new end-point to get a blank content type document.<br />User roles: admin, manager, editor, viewer'
+      summary: Retrieve a blank content type
+      description: 'Use the /types/new end-point to get a blank content type document.
+
+        User roles: admin, manager, editor, viewer'
       parameters:
       - name: If-None-Match
         in: header
@@ -4727,12 +4769,16 @@ paths:
       - manager
       - editor
       - viewer
+      operationId: getAuthoringV1TypesNew
+      x-operation-id-source: derived
   /authoring/v1/types/views/by-modified:
     get:
       tags:
       - Authoring types
-      summary: Retrieve all type documents in the database ordered by last modified date.
-      description: 'Use the /types/views/by-modified endpoint to retrieve all type documents from the database and list them in the order of their last modified date.<br />User roles: admin, manager, editor, viewer'
+      summary: Retrieve all type documents in the database ordered by last modified date
+      description: 'Use the /types/views/by-modified endpoint to retrieve all type documents from the database and list them in the order of their last modified date.
+
+        User roles: admin, manager, editor, viewer'
       parameters:
       - name: start
         in: query
@@ -5157,12 +5203,16 @@ paths:
       - manager
       - editor
       - viewer
+      operationId: getAuthoringV1TypesViewsByModified
+      x-operation-id-source: derived
   /authoring/v1/types/views/by-name:
     get:
       tags:
       - Authoring types
-      summary: Retrieve all types in the database with the specified name.
-      description: 'Use the /types/views/by-name endpoint to retrieve all types from the database with the specified name.<br />User roles: admin, manager, editor, viewer'
+      summary: Retrieve all types in the database with the specified name
+      description: 'Use the /types/views/by-name endpoint to retrieve all types from the database with the specified name.
+
+        User roles: admin, manager, editor, viewer'
       parameters:
       - name: name
         in: query
@@ -5648,12 +5698,27 @@ paths:
       - manager
       - editor
       - viewer
+      operationId: getAuthoringV1TypesViewsByName
+      x-operation-id-source: derived
   /authoring/v1/elementdefs/{id}:
     get:
       tags:
       - Authoring types
-      summary: Retrieve an existing element definition.
-      description: "Use the /elementdefs/{id} end-point to retrieve an existing element definition from the database.\n\nEach element definition describes a variety of element that can be added to a content type.\n\nTo programmatically create a content-type, merge the 'elementFragment' attribute into the 'elements' attribute of the type, performing the following replacements:\n  '$ELEMENT_KEY$': With the desired element key\n  '$ELEMENT_LABEL$': With the desired element label\n<br />User roles: admin, manager, editor, viewer"
+      summary: Retrieve an existing element definition
+      description: 'Use the /elementdefs/{id} end-point to retrieve an existing element definition from the database.
+
+
+        Each element definition describes a variety of element that can be added to a content type.
+
+
+        To programmatically create a content-type, merge the ''elementFragment'' attribute into the ''elements'' attribute of the type, performing the following replacements:
+
+        ''$ELEMENT_KEY$'': With the desired element key
+
+        ''$ELEMENT_LABEL$'': With the desired element label
+
+
+        User roles: admin, manager, editor, viewer'
       parameters:
       - name: id
         in: path
@@ -5826,12 +5891,27 @@ paths:
       - manager
       - editor
       - viewer
+      operationId: getAuthoringV1ElementdefsById
+      x-operation-id-source: derived
   /authoring/v1/elementdefs:
     get:
       tags:
       - Authoring types
-      summary: Retrieve all element definitions in the database.
-      description: "Use the /elementdefs endpoint to retrieve all element definitions from the database.\n\nEach element definition describes a variety of element that can be added to a content type.\n\nTo programmatically create a content-type, merge the 'elementFragment' attribute into the 'elements' attribute of the type, performing the following replacements:\n  '$ELEMENT_KEY$': With the desired element key\n  '$ELEMENT_LABEL$': With the desired element label\n<br />User roles: admin, manager, editor, viewer"
+      summary: Retrieve all element definitions in the database
+      description: 'Use the /elementdefs endpoint to retrieve all element definitions from the database.
+
+
+        Each element definition describes a variety of element that can be added to a content type.
+
+
+        To programmatically create a content-type, merge the ''elementFragment'' attribute into the ''elements'' attribute of the type, performing the following replacements:
+
+        ''$ELEMENT_KEY$'': With the desired element key
+
+        ''$ELEMENT_LABEL$'': With the desired element label
+
+
+        User roles: admin, manager, editor, viewer'
       parameters:
       - name: offset
         in: query
@@ -5969,6 +6049,8 @@ paths:
       - manager
       - editor
       - viewer
+      operationId: getAuthoringV1Elementdefs
+      x-operation-id-source: derived
 components:
   schemas:
     ErrorResponse:
@@ -6020,9 +6102,3 @@ components:
       required:
       - errors
       - requestId
-x-refined-from:
-- acoustic-content-openapi-original.json
-- acoustic-content-swagger2-original.yaml
-x-readme:
-  explorer-enabled: true
-  proxy-enabled: true

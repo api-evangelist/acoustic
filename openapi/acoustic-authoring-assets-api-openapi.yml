@@ -1,48 +1,23 @@
 openapi: 3.2.0
 info:
-  title: Acoustic Authoring assets API
   version: 1.0.142
   x-ibm-name: ibm-watson-content-hub-api
-  description: 'Operations tagged Authoring assets across 2 of this provider''s published API definitions: acoustic-content-openapi-original.json, acoustic-content-swagger2-original.yaml. Each path carries the servers of the definition it was published in.'
+  title: Acoustic Content Authoring assets API
+  description: Copyright © Acoustic, L.P. 2023
 tags:
 - name: Authoring assets
-  description: '
+  description: '## General
 
-    ## General
-
-    Use the Content Asset service Rest APIs to work with assets. Assets are file types that are uploaded or created such as an image file, video file, or text that are used in content items. You can create, retrieve, update, and delete assets in a database. Managed assets are those located in the root dxdam directory as specified by its path and are visible on the Content UI.
-
-    ## Content workflow (status)
-
-    The status of a content item can be determined by the **suffix** of the ID:
-
-    - An ID like xxxx:**draft** indicates that the item is a draft. This is the initial status of a new content item until it is published. A draft of a published content item will also have this suffix.
-
-    - An ID like xxxx:***[publishing_job_id]*** - indicates that the content item has been scheduled for publish in the given publishing job.
-
-    - An ID like xxxx with no suffix indicates that the content is **published** or **retired**.
-
-    A draft can be created from published. When such a draft is published, it will override the previously published content.
-
-
-    **Key notes:**
-
-    - The base ID (xxxx) does not change. Only the suffix changes according to the workflow status of the item.
-
-    - Where content and assets are referenced from within a content item, the ''raw'' ID form, without a suffix, is always used. For example, when a draft content item is referenced by another draft content item, the reference appears as a raw ID, and thus does not change when the items are published.
-
-    - API clients should not depend on the ID format and should not attempt to parse it. Instead, the ***linkedDocId*** and ***links*** properties should be used.
-
-    - Draft item have a property ***linkedDocId***. This is the Id that the draft item will have when it is published.
-
-    - Draft items that have a published version will have a ***linkedDoc*** property within the ***links*** property. This property will not appear for drafts that do not have a published version.'
+    Use the Content Asset service Rest APIs to work with assets.'
 paths:
   /authoring/v1/assets:
     get:
       tags:
       - Authoring assets
-      summary: Retrieve all assets.
-      description: 'Use this endpoint to retrieve all assets from the database.<br />User roles: admin, manager, editor, viewer'
+      summary: Retrieve all assets
+      description: 'Use this endpoint to retrieve all assets from the database.
+
+        User roles: admin, manager, editor, viewer'
       parameters:
       - name: limit
         in: query
@@ -928,11 +903,123 @@ paths:
       - manager
       - editor
       - viewer
+      operationId: getAuthoringV1Assets
+      x-operation-id-source: derived
     post:
       tags:
       - Authoring assets
-      summary: Create an asset.
-      description: "Use this endpoint to create an asset. There are two ways to use this endpoint. The first method is to create a resource separately, then provide the resource id in the json body of the request along with any other desired data. The second method is to provide resource binary as a multipart field. Another multipart field containing any additional data can then be optionally provided. The second method allows the asset and resource to be created simultaneously. Note:- If AI tag analysis is enabled, it starts in the background. AI analyzes and provides tag recommendations for the asset that is created.\n### Method 1 (Create asset and resource separately): ###\n#### Create the resource ####\n  See POST /resource for details on how to create a resource.\n  #\n#### Create the asset ####\n  Create an asset by providing the resource id obtained from the previous step. Additional data about the asset can also be optionally provided. If an asset exists in the specified path, it is overwritten. The path that you provide must contain a leading slash. The path and name fields are optional and are generated from the resource’s name by default.\n  #\n\n#### Example request body: ####\n  ~~~\n    {\n      \"resource\": \"8d21025d21e7b3595cbf630fb9d7212b\",\n      \"path\": \"/Screen Shot 2016-05-11 at 6.52.22 PM\",\n      \"description\": \"Screenshot\",\n      \"name\": \"Important screenshot\",\n      \"tags\": {\n        \"values\": [\n          \"screenshot\"\n        ]\n      },\n      \"status\": \"draft\"\n    }\n  ~~~\n#\n### Method 2 (Create asset and resource simultaneously): ###\n#### Set the Content-Type header ####\n  Set the Content-Type header to 'multipart/form-data'.\n  #\n#### Set the 'resource' field on the multipart form ####\n  The resource field on the multipart form should contain your resource binary. The following headers are required on this form part:\n  1. Content-Type header specifying the format of the resource.\n  2. The filename field on the Content-Disposition header of this form part specifying the resource name.\n  #\n#### Set the 'data' field on the multipart form (optional) ####\n  Additional data about the asset can be optionally provided. If an asset exists in the specified path, it is overwritten. The path that you provide must contain a leading slash. The path and name fields are optional and are generated from the resource’s name by default.\n  #\n#### Example value in field: ####\n  ~~~\n    {\n      \"path\": \"/Screen Shot 2016-05-11 at 6.52.22 PM\",\n      \"description\": \"Screenshot\",\n      \"name\": \"Important screenshot\",\n      \"tags\": {\n        \"values\": [\n          \"screenshot\"\n        ]\n      },\n      \"status\": \"draft\"\n    }\n  ~~~\n#\n#### Create the asset and resource ####\n  Create the asset and resource simultaneously by posting the form.\n  #\n<br />User roles: admin, manager, editor"
+      summary: Create an asset
+      description: 'Use this endpoint to create an asset. There are two ways to use this endpoint. The first method is to create a resource separately, then provide the resource id in the json body of the request along with any other desired data. The second method is to provide resource binary as a multipart field. Another multipart field containing any additional data can then be optionally provided. The second method allows the asset and resource to be created simultaneously. Note:- If AI tag analysis is enabled, it starts in the background. AI analyzes and provides tag recommendations for the asset that is created.
+
+        ### Method 1 (Create asset and resource separately): ###
+
+        #### Create the resource ####
+
+        See POST /resource for details on how to create a resource.
+
+        #
+
+        #### Create the asset ####
+
+        Create an asset by providing the resource id obtained from the previous step. Additional data about the asset can also be optionally provided. If an asset exists in the specified path, it is overwritten. The path that you provide must contain a leading slash. The path and name fields are optional and are generated from the resource’s name by default.
+
+        #
+
+
+        #### Example request body: ####
+
+        ~~~
+
+        {
+
+        "resource": "8d21025d21e7b3595cbf630fb9d7212b",
+
+        "path": "/Screen Shot 2016-05-11 at 6.52.22 PM",
+
+        "description": "Screenshot",
+
+        "name": "Important screenshot",
+
+        "tags": {
+
+        "values": [
+
+        "screenshot"
+
+        ]
+
+        },
+
+        "status": "draft"
+
+        }
+
+        ~~~
+
+        #
+
+        ### Method 2 (Create asset and resource simultaneously): ###
+
+        #### Set the Content-Type header ####
+
+        Set the Content-Type header to ''multipart/form-data''.
+
+        #
+
+        #### Set the ''resource'' field on the multipart form ####
+
+        The resource field on the multipart form should contain your resource binary. The following headers are required on this form part:
+
+        1. Content-Type header specifying the format of the resource.
+
+        2. The filename field on the Content-Disposition header of this form part specifying the resource name.
+
+        #
+
+        #### Set the ''data'' field on the multipart form (optional) ####
+
+        Additional data about the asset can be optionally provided. If an asset exists in the specified path, it is overwritten. The path that you provide must contain a leading slash. The path and name fields are optional and are generated from the resource’s name by default.
+
+        #
+
+        #### Example value in field: ####
+
+        ~~~
+
+        {
+
+        "path": "/Screen Shot 2016-05-11 at 6.52.22 PM",
+
+        "description": "Screenshot",
+
+        "name": "Important screenshot",
+
+        "tags": {
+
+        "values": [
+
+        "screenshot"
+
+        ]
+
+        },
+
+        "status": "draft"
+
+        }
+
+        ~~~
+
+        #
+
+        #### Create the asset and resource ####
+
+        Create the asset and resource simultaneously by posting the form.
+
+        #
+
+
+        User roles: admin, manager, editor'
       parameters:
       - name: md5
         in: query
@@ -982,114 +1069,6 @@ paths:
           enum:
           - now
           - next
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              title: Asset Parameters
-              properties:
-                resource:
-                  type: string
-                  description: The id of the resource this asset is for
-                name:
-                  type: string
-                  description: Name of the asset
-                path:
-                  type: string
-                  description: The path to this asset, must begin with a leading slash. A unique constraint is placed on this path so that no other asset can have the same path. Paths begining with "/dxdam/" are managed assets.
-                description:
-                  type: string
-                  description: Description of the asset
-                tags:
-                  description: The "values" array defines the user selected tags. The other two properties "declined" and "suggested" relate directly to the interaction with the cognitive analysis feature.
-                  type: object
-                  properties:
-                    values:
-                      type: array
-                      items:
-                        type: string
-                        description: The name of the tag
-                id:
-                  description: The id of the asset to create
-                  type: string
-                categoryIds:
-                  description: The IDs of the categories that define how this asset is categorized.
-                  type: array
-                  items:
-                    type: string
-                status:
-                  type: string
-                  description: The workflow status of the asset. This value can only be set for managed assets.
-                  enum:
-                  - ready
-                  - draft
-                  - retired
-              example:
-                resource: 8d21025d21e7b3595cbf630fb9d7212b
-                path: /Screen Shot 2016-05-11 at 6.52.22 PM
-                description: Screenshot
-                name: Important screenshot
-                tags:
-                  values:
-                  - screenshot
-                status: draft
-              required:
-              - resource
-          multipart/form-data:
-            schema:
-              type: object
-              title: Asset Parameters
-              properties:
-                resource:
-                  type: string
-                  description: The id of the resource this asset is for
-                name:
-                  type: string
-                  description: Name of the asset
-                path:
-                  type: string
-                  description: The path to this asset, must begin with a leading slash. A unique constraint is placed on this path so that no other asset can have the same path. Paths begining with "/dxdam/" are managed assets.
-                description:
-                  type: string
-                  description: Description of the asset
-                tags:
-                  description: The "values" array defines the user selected tags. The other two properties "declined" and "suggested" relate directly to the interaction with the cognitive analysis feature.
-                  type: object
-                  properties:
-                    values:
-                      type: array
-                      items:
-                        type: string
-                        description: The name of the tag
-                id:
-                  description: The id of the asset to create
-                  type: string
-                categoryIds:
-                  description: The IDs of the categories that define how this asset is categorized.
-                  type: array
-                  items:
-                    type: string
-                status:
-                  type: string
-                  description: The workflow status of the asset. This value can only be set for managed assets.
-                  enum:
-                  - ready
-                  - draft
-                  - retired
-              example:
-                resource: 8d21025d21e7b3595cbf630fb9d7212b
-                path: /Screen Shot 2016-05-11 at 6.52.22 PM
-                description: Screenshot
-                name: Important screenshot
-                tags:
-                  values:
-                  - screenshot
-                status: draft
-              required:
-              - resource
-        description: Provide all the data that is needed to create a new asset. This is only required when creating an asset and resource separately. The resource id is required. If an asset exists in the specified path, it is overwritten. The path that you provide must contain a leading slash. The path and name fields are optional and are generated from the resource’s name by default.
-        required: true
       responses:
         '201':
           description: Successfully created a new asset.
@@ -2068,12 +2047,124 @@ paths:
       - admin
       - manager
       - editor
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              title: Asset Parameters
+              properties:
+                resource:
+                  type: string
+                  description: The id of the resource this asset is for
+                name:
+                  type: string
+                  description: Name of the asset
+                path:
+                  type: string
+                  description: The path to this asset, must begin with a leading slash. A unique constraint is placed on this path so that no other asset can have the same path. Paths begining with "/dxdam/" are managed assets.
+                description:
+                  type: string
+                  description: Description of the asset
+                tags:
+                  description: The "values" array defines the user selected tags. The other two properties "declined" and "suggested" relate directly to the interaction with the cognitive analysis feature.
+                  type: object
+                  properties:
+                    values:
+                      type: array
+                      items:
+                        type: string
+                        description: The name of the tag
+                id:
+                  description: The id of the asset to create
+                  type: string
+                categoryIds:
+                  description: The IDs of the categories that define how this asset is categorized.
+                  type: array
+                  items:
+                    type: string
+                status:
+                  type: string
+                  description: The workflow status of the asset. This value can only be set for managed assets.
+                  enum:
+                  - ready
+                  - draft
+                  - retired
+              example:
+                resource: 8d21025d21e7b3595cbf630fb9d7212b
+                path: /Screen Shot 2016-05-11 at 6.52.22 PM
+                description: Screenshot
+                name: Important screenshot
+                tags:
+                  values:
+                  - screenshot
+                status: draft
+              required:
+              - resource
+          multipart/form-data:
+            schema:
+              type: object
+              title: Asset Parameters
+              properties:
+                resource:
+                  type: string
+                  description: The id of the resource this asset is for
+                name:
+                  type: string
+                  description: Name of the asset
+                path:
+                  type: string
+                  description: The path to this asset, must begin with a leading slash. A unique constraint is placed on this path so that no other asset can have the same path. Paths begining with "/dxdam/" are managed assets.
+                description:
+                  type: string
+                  description: Description of the asset
+                tags:
+                  description: The "values" array defines the user selected tags. The other two properties "declined" and "suggested" relate directly to the interaction with the cognitive analysis feature.
+                  type: object
+                  properties:
+                    values:
+                      type: array
+                      items:
+                        type: string
+                        description: The name of the tag
+                id:
+                  description: The id of the asset to create
+                  type: string
+                categoryIds:
+                  description: The IDs of the categories that define how this asset is categorized.
+                  type: array
+                  items:
+                    type: string
+                status:
+                  type: string
+                  description: The workflow status of the asset. This value can only be set for managed assets.
+                  enum:
+                  - ready
+                  - draft
+                  - retired
+              example:
+                resource: 8d21025d21e7b3595cbf630fb9d7212b
+                path: /Screen Shot 2016-05-11 at 6.52.22 PM
+                description: Screenshot
+                name: Important screenshot
+                tags:
+                  values:
+                  - screenshot
+                status: draft
+              required:
+              - resource
+        description: Provide all the data that is needed to create a new asset. This is only required when creating an asset and resource separately. The resource id is required. If an asset exists in the specified path, it is overwritten. The path that you provide must contain a leading slash. The path and name fields are optional and are generated from the resource’s name by default.
+        required: true
+      operationId: postAuthoringV1Assets
+      x-operation-id-source: derived
   /authoring/v1/assets/{id}:
     get:
       tags:
       - Authoring assets
-      summary: Retrieve an existing asset.
-      description: 'Use this endpoint to retrieve an existing asset that matches the ID that is specified from the database. A conditional request is supported.<br />User roles: admin, manager, editor, viewer'
+      summary: Retrieve an existing asset
+      description: 'Use this endpoint to retrieve an existing asset that matches the ID that is specified from the database. A conditional request is supported.
+
+        User roles: admin, manager, editor, viewer'
       parameters:
       - name: id
         in: path
@@ -3089,11 +3180,15 @@ paths:
       - manager
       - editor
       - viewer
+      operationId: getAuthoringV1AssetsById
+      x-operation-id-source: derived
     delete:
       tags:
       - Authoring assets
-      summary: Delete an existing asset.
-      description: 'Use this endpoint to immediately delete an existing asset from the database.<br />User roles: admin, manager, editor'
+      summary: Delete an existing asset
+      description: 'Use this endpoint to immediately delete an existing asset from the database.
+
+        User roles: admin, manager, editor'
       parameters:
       - name: id
         in: path
@@ -3440,11 +3535,15 @@ paths:
       - admin
       - manager
       - editor
+      operationId: deleteAuthoringV1AssetsById
+      x-operation-id-source: derived
     put:
       tags:
       - Authoring assets
-      summary: Update an existing asset.
-      description: 'Use this end-point to update an existing asset that matches the ID that is specified. A conditional request is supported. Note:- If AI tag analysis is enabled, it starts in the background. AI analyzes and provides tag recommendations for the asset that is created.<br />User roles: admin, manager, editor'
+      summary: Update an existing asset
+      description: 'Use this end-point to update an existing asset that matches the ID that is specified. A conditional request is supported. Note:- If AI tag analysis is enabled, it starts in the background. AI analyzes and provides tag recommendations for the asset that is created.
+
+        User roles: admin, manager, editor'
       parameters:
       - name: id
         in: path
@@ -3495,39 +3594,6 @@ paths:
           enum:
           - now
           - next
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                resource:
-                  type: string
-                name:
-                  type: string
-                path:
-                  type: string
-                description:
-                  type: string
-                tags:
-                  type: array
-                  items:
-                    type: string
-                categoryIds:
-                  type: array
-                  items:
-                    type: string
-              example:
-                resource: 8d21025d21e7b3595cbf630fb9d7212b
-                path: /Screen Shot 2016-05-11 at 6.52.22 PM
-                description: Screenshot
-                tags:
-                  values:
-                  - screenshot
-              required:
-              - resource
-        description: Provide all the data that you want to update in this asset. The resource data that you provided is validated. If you change the resource of the asset with a new resource, it must not cause any changes to the asset. The path that you provide must contain a leading slash and must be unique and unchanged. The path and name fields are optional and are generated from the resource’s name by default.
-        required: true
       responses:
         '200':
           description: Successfully updated the asset that matches the ID that you provided.
@@ -4586,12 +4652,49 @@ paths:
       - admin
       - manager
       - editor
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                resource:
+                  type: string
+                name:
+                  type: string
+                path:
+                  type: string
+                description:
+                  type: string
+                tags:
+                  type: array
+                  items:
+                    type: string
+                categoryIds:
+                  type: array
+                  items:
+                    type: string
+              example:
+                resource: 8d21025d21e7b3595cbf630fb9d7212b
+                path: /Screen Shot 2016-05-11 at 6.52.22 PM
+                description: Screenshot
+                tags:
+                  values:
+                  - screenshot
+              required:
+              - resource
+        description: Provide all the data that you want to update in this asset. The resource data that you provided is validated. If you change the resource of the asset with a new resource, it must not cause any changes to the asset. The path that you provide must contain a leading slash and must be unique and unchanged. The path and name fields are optional and are generated from the resource’s name by default.
+        required: true
+      operationId: putAuthoringV1AssetsById
+      x-operation-id-source: derived
   /authoring/v1/assets/record:
     get:
       tags:
       - Authoring assets
-      summary: Retrieve an existing asset by path.
-      description: 'Use this endpoint to retrieve an existing asset that matches the path that has been set. A conditional request is supported.<br />User roles: admin, manager, editor, viewer'
+      summary: Retrieve an existing asset by path
+      description: 'Use this endpoint to retrieve an existing asset that matches the path that has been set. A conditional request is supported.
+
+        User roles: admin, manager, editor, viewer'
       parameters:
       - name: path
         in: query
@@ -5687,12 +5790,15 @@ paths:
       - manager
       - editor
       - viewer
+      operationId: getAuthoringV1AssetsRecord
+      x-operation-id-source: derived
   /authoring/v1/assets/{id}/analyze:
     post:
-      summary: AI analyzes the asset. The analysis results are stored on the asset itself.
+      summary: AI analyzes the asset. The analysis results are stored on the asset itself
       description: 'Use the /assets/{id}/analyze endpoint to perform AI analysis on asset if supported.
 
-        <br />User roles: admin, manager, editor'
+
+        User roles: admin, manager, editor'
       parameters:
       - name: id
         in: path
@@ -6606,10 +6712,14 @@ paths:
       - admin
       - manager
       - editor
+      operationId: postAuthoringV1AssetsByIdAnalyze
+      x-operation-id-source: derived
   /authoring/v1/assets/{id}/create-draft:
     post:
-      summary: Create a draft of existing asset.
-      description: 'Use this endpoint to create draft of existing asset and return the draft if successful.<br />User roles: admin, manager, editor'
+      summary: Create a draft of existing asset
+      description: 'Use this endpoint to create draft of existing asset and return the draft if successful.
+
+        User roles: admin, manager, editor'
       parameters:
       - name: id
         in: path
@@ -7538,10 +7648,14 @@ paths:
       - admin
       - manager
       - editor
+      operationId: postAuthoringV1AssetsByIdCreateDraft
+      x-operation-id-source: derived
   /authoring/v1/assets/views/by-modified:
     get:
       summary: Retrieve all assets modified within the specified date
-      description: 'Use the /assets/views/by-modified endpoint to retrieve all assets that was modified within the date range specified.<br />User roles: admin, manager, editor, viewer'
+      description: 'Use the /assets/views/by-modified endpoint to retrieve all assets that was modified within the date range specified.
+
+        User roles: admin, manager, editor, viewer'
       parameters:
       - name: start
         in: query
@@ -7596,8 +7710,6 @@ paths:
         in: query
         description: 'Optional: Parameters used to include additional fields inside each returned asset. Use "links" to include the links section, which contains URLs for actions that can be performed on the asset. Use "metadata" to include additional fields for each of the items referenced by the asset You can specify multiple fields as a comma-separated value. For example, "include=links,metadata".'
         required: false
-        style: form
-        explode: false
         schema:
           type: array
           items:
@@ -8533,6 +8645,8 @@ paths:
       - manager
       - editor
       - viewer
+      operationId: getAuthoringV1AssetsViewsByModified
+      x-operation-id-source: derived
 components:
   schemas:
     ErrorResponse:
@@ -8584,9 +8698,3 @@ components:
       required:
       - errors
       - requestId
-x-refined-from:
-- acoustic-content-openapi-original.json
-- acoustic-content-swagger2-original.yaml
-x-readme:
-  explorer-enabled: true
-  proxy-enabled: true

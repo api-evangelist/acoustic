@@ -1,12 +1,12 @@
 openapi: 3.2.0
 info:
-  title: Acoustic Delivery context search API
   version: 1.0.142
   x-ibm-name: ibm-watson-content-hub-api
-  description: 'Operations tagged Delivery context search across 2 of this provider''s published API definitions: acoustic-content-openapi-original.json, acoustic-content-swagger2-original.yaml. Each path carries the servers of the definition it was published in.'
+  title: Acoustic Content Delivery context search API
+  description: Copyright © Acoustic, L.P. 2023
 tags:
 - name: Delivery context search
-  description: "The Delivery context search is a discretional middleware service that is positioned before the Search service. Use the Delivery context search Rest APIs to retrieve user targeted content items. You can target specific content items by providing the condition requests as filters. The filters that are currently supported by the API are  \n1. `accept-language` : Use this filter to target content items in a language of your preference.  \n2. `location` : Use this filter to target content items that are available in a location, that is, proximity to current location (within `distance` radius) of your preference.\n3. `similar` : Use this filter to target content items or assets that are similar to a specified item.\n"
+  description: The Delivery context search is a discretional middleware service that is positioned before the Search service.
 paths:
   /delivery/v1/contextualsearch:
     get:
@@ -20,7 +20,7 @@ paths:
       - authenticatedVisitor
       - anonymous
       summary: Retrieve contextual search results from the delivery collection
-      description: "Use the /delivery/v1/contextualsearch endpoint to retrieve contextual search results from the delivery collection based on the passed filters.\nSee the Delivery Search documents on the Content API for details of the main search service parameters.\n#### Current filters\n* `accept-language` Searches for content with matching languages. If this filter is specified the `accept-language` request header must be specified with the ordered list of languages to search with. The search iterates through all of the languages in order until a language returns one or more matching content items or the service has completed the search for all the languages without finding any results. If the search returns content items the response header `content-language` is set to the language that returned those content items, otherwise this header is not returned in the response.\n* `proximity` Searches for content located within a certain radius of a specified location. `proximity` is used in combination with `distance` which is the bounding radius around the location. You can specify the location with the `position` parameter. If the parameter is not provided the location is read from the `X-Akamai-Edgescape` header. If the distance parameter is not provided distance is defaulted to 5.\n* `similar` Searches for content or assets that are similar to a specified item. `similar` uses the tags added by AI, a user, or included in the asset, such as image metadata tags to search. The content and assets with matching tags to the specified item are returned. Based on the number of tags that match a 'score' is calculated for each content and asset, the bigger the number of matching tags the higher the score. The results are returned as an ordered array response that starts with items with the highest `score` and lists them in a descending order. Note: Since the specified item in the query would be a perfect match, it is not returned as a result.\n#### Examples\n* **Search by proximity by using user's location:**  \n`q`=type:article&`fl`=description&`filter`=proximity&`distance`=50  \nSearches all content of the type `article` and returns items that are found within 50 km of user's location.\n\n\n* **Search by proximity by providing a location:**  \n`q`=type:article&`fl`=description&`filter`=proximity&`distance`=50&`position`=37.25,-5.796  \nSearches all content of the type `article` and returns items that are found within 50 km of the location that is specifed in the `position` parameter.\n\n\n* **Search by language (setting the `accept-language` request header):**  \n`q`=type:article&`fl`=description&`filter`=accept-language  \n`accept-language` de  \nSearches all content of the type `article` and returns items where the language is set to `German [de]`.\n\n\n* **Search by language with ordered language list (setting the `accept-language` request header):**  \n`q`=type:article&`fl`=description&`filter`=accept-language  \n`accept-language` en,de;q=0.5  \nSearches all content of the type 'article` and returns items where the language is set to `English [en]`. Then, proceeds to search all content of the type `article` for `German [de]` if no content is found for `English`.\n\n\n* **Search for images similar to a specified image:**  \n`q`=\\*:\\*&`filter`=similar&`similar-source-id`=acd-23-564-09-asdf&`similar-source-classification`=asset&fq=assetType:image&rows=100  \nThe search returns images that are similar to the item with the specified ID (`similar-source-id`) and classification (`similar-source-classification`). The results are sorted in order of descending `score` by default.\n\n\n* **Search for images similar to a specified image and sort results in ascending `score` order:**  \n`q`=\\*:\\*&`filter`=similar&`similar-source-id`=acd-23-564-09-asdf&`similar-source-classification`=asset&sort=score asc&fq=assetType:image&rows=100  \nThe search returns images that are similar to the item with the specified ID (`similar-source-id`) and classification (`similar-source-classification`). The results are sorted in order of ascending score.\n\n\n* **Search for images similar to a specified image and sort results in ascending `lastModified` order:**  \n`q`=\\*:\\*&`filter`=similar&`similar-source-id`=acd-23-564-09-asdf&`similar-source-classification`=asset&sort=lastModified asc&fq=assetType:image&rows=100  \nThe search returns images that are similar to the item with the specified ID (`similar-source-id`) and classification (`similar-source-classification`). The results are sorted in order of ascending last modified date.\n\n\n* **Apply location and language filters (setting the `accept-language` request header):**  \n`q`=type:article&`fl`=description&`filter`=proximity&`filter`=accept-language&`position`=0,0  \n`accept-language` en,de;q=0.5  \nSearches all content of the type `article` and returns items where the language is set to `English [en]` and the `location` is within a 5 km radius around the coordinates 0-degrees latitude and 0-degrees longitude. Then, proceeds to search all content of the type article for `German [de]` and `location` within a 5 km radius around the coordinates 0-degrees latitude and 0-degrees longitude if no content is found for `English` based search.\n\n\n* **Apply similar, location, and language filters (setting the `accept-language` request header):**  \n`q`=\\*:\\*&`fl`=description&`filter`=proximity&`filter`=accept-language&`position`=0,0&`filter`=similar&`similar-source-id`=acd-23-564-09-asdf&`similar-source-classification`=content&fq=classification:content&rows=100  \n`accept-language` en  \nThe search returns any type of content which meets all of the following criteria:  \n  1. `location` is within a radius of 5 km around the coordinates 0-degrees latitude and 0-degrees longitude  \n  2. language is set to `English [de]`  \n  3. similar to the item with specified id (`similar-source-id`) and classification (`similar-source-classification`).  \n<br />User roles: admin, manager, editor, viewer, authenticatedVisitor, anonymous"
+      description: Use the /delivery/v1/contextualsearch endpoint to retrieve contextual search results from the delivery collection based on the passed filters.
       parameters:
       - name: filter
         in: query
@@ -229,28 +229,26 @@ paths:
                 properties:
                   query:
                     type: string
-              examples:
+              example:
                 response:
-                  value:
-                    response:
-                      numFound: 359
-                      documents:
-                      - id: '21'
-                        type: article
-                        title: esse anim mollit
-                        description: Commodo excepteur commodo velit aliqua sunt proident mollit.
-                        owner: Harrell Stanton
-                        locale: en_GB
-                        locations:
-                        - -133.250593
-                        - -19.598289
-                        city: Savannah
-                        country: Germany
-                        demographic: teenager
-                        device: desktop
-                        creationDate: '2001-06-09T15:07:30.000Z'
-                        lastModifiedDate: '2001-06-09T15:07:30.000Z'
-                        _version_: '1537298216475688960'
+                  numFound: 359
+                  documents:
+                  - id: '21'
+                    type: article
+                    title: esse anim mollit
+                    description: Commodo excepteur commodo velit aliqua sunt proident mollit.
+                    owner: Harrell Stanton
+                    locale: en_GB
+                    locations:
+                    - -133.250593
+                    - -19.598289
+                    city: Savannah
+                    country: Germany
+                    demographic: teenager
+                    device: desktop
+                    creationDate: '2001-06-09T15:07:30.000Z'
+                    lastModifiedDate: '2001-06-09T15:07:30.000Z'
+                    _version_: '1537298216475688960'
         '400':
           description: Bad request - Unable to complete your request due to missing parameters. Provide all required parameters and try again.
           content:
@@ -288,17 +286,15 @@ paths:
                             type: string
                       locale:
                         type: string
-              examples:
-                response:
-                  value:
-                    service: prod-contextual-content-service
-                    requestId: '1983000440420008'
-                    errors:
-                      code: 101
-                      message: Error running query.
-                      level: ERROR
-                      description: Unable to complete the query due to an unexpected error. Try again or contact Acoustic support if problem persists.
-                      locale: en
+              example:
+                service: prod-contextual-content-service
+                requestId: '1983000440420008'
+                errors:
+                  code: 101
+                  message: Error running query.
+                  level: ERROR
+                  description: Unable to complete the query due to an unexpected error. Try again or contact Acoustic support if problem persists.
+                  locale: en
         '429':
           description: Too Many Requests, the server has reached a limit, the request must be sent again at a later time.
           content:
@@ -342,17 +338,17 @@ paths:
                             type: string
                       locale:
                         type: string
-              examples:
-                response:
-                  value:
-                    service: prod-contextual-content-service
-                    requestId: '455478465455511'
-                    errors:
-                      code: 5004
-                      message: Unexpected error occurred.
-                      level: ERROR
-                      description: Unable to complete the request due to an unexpected error. Try again or contact Acoustic support if problem persists.
-                      locale: en
+              example:
+                service: prod-contextual-content-service
+                requestId: '455478465455511'
+                errors:
+                  code: 5004
+                  message: Unexpected error occurred.
+                  level: ERROR
+                  description: Unable to complete the request due to an unexpected error. Try again or contact Acoustic support if problem persists.
+                  locale: en
+      operationId: getDeliveryV1Contextualsearch
+      x-operation-id-source: derived
 components:
   schemas:
     ErrorResponse:
@@ -404,9 +400,3 @@ components:
       required:
       - errors
       - requestId
-x-refined-from:
-- acoustic-content-openapi-original.json
-- acoustic-content-swagger2-original.yaml
-x-readme:
-  explorer-enabled: true
-  proxy-enabled: true

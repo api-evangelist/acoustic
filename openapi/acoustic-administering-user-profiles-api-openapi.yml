@@ -1,9 +1,9 @@
 openapi: 3.2.0
 info:
-  title: Acoustic Administering user profiles API
   version: 1.0.142
   x-ibm-name: ibm-watson-content-hub-api
-  description: 'Operations tagged Administering user profiles across 2 of this provider''s published API definitions: acoustic-content-openapi-original.json, acoustic-content-swagger2-original.yaml. Each path carries the servers of the definition it was published in.'
+  title: Acoustic Content Administering user profiles API
+  description: Copyright © Acoustic, L.P. 2023
 tags:
 - name: Administering user profiles
 paths:
@@ -19,7 +19,9 @@ paths:
       - authenticatedVisitor
       - anonymous
       summary: Find the current user
-      description: 'Returns the current user<br />User roles: admin, manager, editor, viewer, authenticatedVisitor, anonymous'
+      description: 'Returns the current user
+
+        User roles: admin, manager, editor, viewer, authenticatedVisitor, anonymous'
       parameters:
       - x-ibm-dx-user-auth: private
         in: header
@@ -60,7 +62,7 @@ paths:
                     maxLength: 512
                   uid:
                     type: string
-                    description: Acoustic Id of the user, if not present during POST call an Acoustic Id will be created for the user
+                    description: Acoustic ID of the user, if not present during POST call an Acoustic Id will be created for the user
                     maxLength: 30
                   displayName:
                     type: string
@@ -119,7 +121,7 @@ paths:
                     format: date-time
                     description: Date when this item was created
                   creator:
-                    description: URI pointing to the User who has created the item
+                    description: URI pointing to the user who has created the item
                     type: object
                     required:
                     - id
@@ -132,7 +134,7 @@ paths:
                     format: date-time
                     description: Date when this item was modified for the last time
                   lastModifier:
-                    description: URI pointing to the User who has modified the item
+                    description: URI pointing to the user who has modified the item
                     type: object
                     required:
                     - id
@@ -190,7 +192,7 @@ paths:
                           description: Further explanation of the error condition and potential next steps to resolve the problem.
                         more_info:
                           type: string
-                          description: A URL pointing to a web site that provides more information on the given error condition.
+                          description: A URL pointing to a website that provides more information on the given error condition.
                         level:
                           type: string
                           enum:
@@ -202,7 +204,7 @@ paths:
                           description: Additional properties reflecting the dynamic parts of the error condition.
                         cause:
                           type: object
-                          description: This property can be used to transport causing error message records produced by a down stream service call.
+                          description: This property can be used to transport causing error message records produced by a down-stream service call.
                         locale:
                           type: string
                           description: This property represents the locale of the text contained in properties 'message', and 'description'. This property is mandatory if message and description contain translated text.
@@ -224,6 +226,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+      operationId: getUserProfileV1UsersCurrentuser
+      x-operation-id-source: derived
   /user-profile/v1/users:
     parameters: []
     get:
@@ -231,8 +235,10 @@ paths:
       - Administering user profiles
       x-ibm-dx-security-user-roles:
       - admin
-      summary: Find all users.
-      description: 'Returns an array containing all users matching the query.<br />User roles: admin'
+      summary: Find all users
+      description: 'Returns an array containing all users matching the query.
+
+        User roles: admin'
       parameters:
       - in: query
         name: external-id
@@ -247,35 +253,33 @@ paths:
         description: Parameter which must be set if the users privacy notice should be returned
         required: false
         schema:
-          type: string
+          type: boolean
           default: false
       - name: offset
         in: query
         description: The index of the first item to be included in the response
         required: false
         schema:
-          type: string
+          type: integer
           format: int32
-          minimum: 0
           default: 0
+          minimum: 0
       - name: limit
         in: query
         description: The maximum number of items to be included in the response
         required: false
         schema:
-          type: string
+          type: integer
           format: int32
-          minimum: 1
-          maximum: 10000
           default: 10
+          maximum: 10000
+          minimum: 1
       - name: include
         in: query
         description: Include additional information sections
         required: false
-        style: form
-        explode: false
         schema:
-          type: string
+          type: array
           items:
             type: string
             enum:
@@ -384,7 +388,7 @@ paths:
                           maxLength: 512
                         uid:
                           type: string
-                          description: Acoustic Id of the user, if not present during POST call an Acoustic Id will be created for the user
+                          description: Acoustic ID of the user, if not present during POST call an Acoustic Id will be created for the user
                           maxLength: 30
                         displayName:
                           type: string
@@ -443,7 +447,7 @@ paths:
                           format: date-time
                           description: Date when this item was created
                         creator:
-                          description: URI pointing to the User who has created the item
+                          description: URI pointing to the user who has created the item
                           type: object
                           required:
                           - id
@@ -456,7 +460,7 @@ paths:
                           format: date-time
                           description: Date when this item was modified for the last time
                         lastModifier:
-                          description: URI pointing to the User who has modified the item
+                          description: URI pointing to the user who has modified the item
                           type: object
                           required:
                           - id
@@ -514,7 +518,7 @@ paths:
                           description: Further explanation of the error condition and potential next steps to resolve the problem.
                         more_info:
                           type: string
-                          description: A URL pointing to a web site that provides more information on the given error condition.
+                          description: A URL pointing to a website that provides more information on the given error condition.
                         level:
                           type: string
                           enum:
@@ -526,7 +530,7 @@ paths:
                           description: Additional properties reflecting the dynamic parts of the error condition.
                         cause:
                           type: object
-                          description: This property can be used to transport causing error message records produced by a down stream service call.
+                          description: This property can be used to transport causing error message records produced by a down-stream service call.
                         locale:
                           type: string
                           description: This property represents the locale of the text contained in properties 'message', and 'description'. This property is mandatory if message and description contain translated text.
@@ -548,66 +552,17 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+      operationId: getUserProfileV1Users
+      x-operation-id-source: derived
     post:
       tags:
       - Administering user profiles
       x-ibm-dx-security-user-roles:
       - admin
-      summary: Add a new user.
-      description: 'Adds a new user and returns the user object.<br />User roles: admin'
-      requestBody:
-        content:
-          application/json:
-            schema:
-              description: The user object that might be sent for user creation.
-              type: object
-              required:
-              - externalId
-              - roles
-              properties:
-                externalId:
-                  type: string
-                  pattern: ^[0-9A-Z]{10}$|^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$,
-                  description: The unique external identifier of the user (e.g. BlueID). Although, this field can store email addresses, other types of unique identifiers may be stored too. Do not use this field as a replacement for the user attribute email address.
-                  maxLength: 512
-                firstName:
-                  type: string
-                  description: The first name of the user
-                  maxLength: 512
-                lastName:
-                  type: string
-                  description: The last name of the user
-                  maxLength: 512
-                uid:
-                  type: string
-                  description: Acoustic Id of the user, if not present during POST call an Acoustic Id will be created for the user
-                  maxLength: 30
-                displayName:
-                  type: string
-                  description: The name of the user that can be displayed in the UI
-                  maxLength: 512
-                email:
-                  type: string
-                  description: The email of the user that can be displayed in the UI
-                  format: email
-                  maxLength: 512
-                roles:
-                  type: array
-                  items:
-                    type: string
-                    enum:
-                    - authenticatedVisitor
-                    - viewer
-                    - editor
-                    - manager
-                    - admin
-                  minItems: 1
-                  maxItems: 1
-                  uniqueItems: true
-                  description: The roles of the user that will be used for access control
-              additionalProperties: false
-        description: User object that needs to be added.
-        required: true
+      summary: Add a new user
+      description: 'Adds a new user and returns the user object.
+
+        User roles: admin'
       responses:
         '201':
           description: User was created successfully.
@@ -640,7 +595,7 @@ paths:
                     maxLength: 512
                   uid:
                     type: string
-                    description: Acoustic Id of the user, if not present during POST call an Acoustic Id will be created for the user
+                    description: Acoustic ID of the user, if not present during POST call an Acoustic Id will be created for the user
                     maxLength: 30
                   displayName:
                     type: string
@@ -699,7 +654,7 @@ paths:
                     format: date-time
                     description: Date when this item was created
                   creator:
-                    description: URI pointing to the User who has created the item
+                    description: URI pointing to the user who has created the item
                     type: object
                     required:
                     - id
@@ -712,7 +667,7 @@ paths:
                     format: date-time
                     description: Date when this item was modified for the last time
                   lastModifier:
-                    description: URI pointing to the User who has modified the item
+                    description: URI pointing to the user who has modified the item
                     type: object
                     required:
                     - id
@@ -770,7 +725,7 @@ paths:
                           description: Further explanation of the error condition and potential next steps to resolve the problem.
                         more_info:
                           type: string
-                          description: A URL pointing to a web site that provides more information on the given error condition.
+                          description: A URL pointing to a website that provides more information on the given error condition.
                         level:
                           type: string
                           enum:
@@ -782,7 +737,7 @@ paths:
                           description: Additional properties reflecting the dynamic parts of the error condition.
                         cause:
                           type: object
-                          description: This property can be used to transport causing error message records produced by a down stream service call.
+                          description: This property can be used to transport causing error message records produced by a down-stream service call.
                         locale:
                           type: string
                           description: This property represents the locale of the text contained in properties 'message', and 'description'. This property is mandatory if message and description contain translated text.
@@ -799,7 +754,7 @@ paths:
                 - errors
                 - requestId
         '409':
-          description: A user with same externalID does already exist.
+          description: A user with the same externalID already exists.
           content:
             application/json:
               schema:
@@ -823,7 +778,7 @@ paths:
                           description: Further explanation of the error condition and potential next steps to resolve the problem.
                         more_info:
                           type: string
-                          description: A URL pointing to a web site that provides more information on the given error condition.
+                          description: A URL pointing to a website that provides more information on the given error condition.
                         level:
                           type: string
                           enum:
@@ -835,7 +790,7 @@ paths:
                           description: Additional properties reflecting the dynamic parts of the error condition.
                         cause:
                           type: object
-                          description: This property can be used to transport causing error message records produced by a down stream service call.
+                          description: This property can be used to transport causing error message records produced by a down-stream service call.
                         locale:
                           type: string
                           description: This property represents the locale of the text contained in properties 'message', and 'description'. This property is mandatory if message and description contain translated text.
@@ -857,6 +812,61 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              description: The user object that might be sent for user creation.
+              type: object
+              required:
+              - externalId
+              - roles
+              properties:
+                externalId:
+                  type: string
+                  pattern: ^[0-9A-Z]{10}$|^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$,
+                  description: The unique external identifier of the user (e.g. BlueID). Although, this field can store email addresses, other types of unique identifiers may be stored too. Do not use this field as a replacement for the user attribute email address.
+                  maxLength: 512
+                firstName:
+                  type: string
+                  description: The first name of the user
+                  maxLength: 512
+                lastName:
+                  type: string
+                  description: The last name of the user
+                  maxLength: 512
+                uid:
+                  type: string
+                  description: Acoustic ID of the user, if not present during POST call an Acoustic Id will be created for the user
+                  maxLength: 30
+                displayName:
+                  type: string
+                  description: The name of the user that can be displayed in the UI
+                  maxLength: 512
+                email:
+                  type: string
+                  description: The email of the user that can be displayed in the UI
+                  format: email
+                  maxLength: 512
+                roles:
+                  type: array
+                  items:
+                    type: string
+                    enum:
+                    - authenticatedVisitor
+                    - viewer
+                    - editor
+                    - manager
+                    - admin
+                  minItems: 1
+                  maxItems: 1
+                  uniqueItems: true
+                  description: The roles of the user that will be used for access control
+              additionalProperties: false
+        description: User object that needs to be added.
+        required: true
+      operationId: postUserProfileV1Users
+      x-operation-id-source: derived
   /user-profile/v1/users/{id}:
     parameters:
     - in: path
@@ -871,8 +881,10 @@ paths:
       - Administering user profiles
       x-ibm-dx-security-user-roles:
       - admin
-      summary: Find user by ID.
-      description: 'Returns a single user.<br />User roles: admin'
+      summary: Find user by ID
+      description: 'Returns a single user.
+
+        User roles: admin'
       parameters:
       - in: path
         name: id
@@ -886,7 +898,7 @@ paths:
         description: Parameter which must be set if the users privacy notice should be returned
         required: false
         schema:
-          type: string
+          type: boolean
           default: false
       - x-ibm-dx-user-auth: private
         in: header
@@ -982,7 +994,7 @@ paths:
                     format: date-time
                     description: Date when this item was created
                   creator:
-                    description: URI pointing to the User who has created the item
+                    description: URI pointing to the user who has created the item
                     type: object
                     required:
                     - id
@@ -995,7 +1007,7 @@ paths:
                     format: date-time
                     description: Date when this item was modified for the last time
                   lastModifier:
-                    description: URI pointing to the User who has modified the item
+                    description: URI pointing to the user who has modified the item
                     type: object
                     required:
                     - id
@@ -1053,7 +1065,7 @@ paths:
                           description: Further explanation of the error condition and potential next steps to resolve the problem.
                         more_info:
                           type: string
-                          description: A URL pointing to a web site that provides more information on the given error condition.
+                          description: A URL pointing to a website that provides more information on the given error condition.
                         level:
                           type: string
                           enum:
@@ -1065,7 +1077,7 @@ paths:
                           description: Additional properties reflecting the dynamic parts of the error condition.
                         cause:
                           type: object
-                          description: This property can be used to transport causing error message records produced by a down stream service call.
+                          description: This property can be used to transport causing error message records produced by a down-stream service call.
                         locale:
                           type: string
                           description: This property represents the locale of the text contained in properties 'message', and 'description'. This property is mandatory if message and description contain translated text.
@@ -1089,97 +1101,17 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+      operationId: getUserProfileV1UsersById
+      x-operation-id-source: derived
     put:
       tags:
       - Administering user profiles
       x-ibm-dx-security-user-roles:
       - admin
-      summary: Update an existing user.
-      description: 'Updates an existing user and returns the updated user object.<br />User roles: admin'
-      requestBody:
-        content:
-          application/json:
-            schema:
-              description: The user object that might be sent to replace the user. The fields id, externalId, links, created, creator, lastModified, and lastModifier will be ignored.
-              type: object
-              required:
-              - id
-              properties:
-                id:
-                  type: string
-                  pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
-                  description: The unique internal identifier of the user
-                externalId:
-                  type: string
-                  pattern: ^[0-9A-Z]{10}$|^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$,
-                  description: The unique external identifier of the user (e.g. BlueID). Although, this field can store email addresses, other types of unique identifiers may be stored too. Do not use this field as a replacement for the user attribute email address.
-                  maxLength: 512
-                firstName:
-                  type: string
-                  description: The first name of the user
-                  maxLength: 512
-                lastName:
-                  type: string
-                  description: The last name of the user
-                  maxLength: 512
-                uid:
-                  type: string
-                  description: Acoustic Id of the user, if not present during POST call an Acoustic Id will be created for the user
-                  maxLength: 30
-                displayName:
-                  type: string
-                  description: The name of the user that can be displayed in the UI
-                  maxLength: 512
-                email:
-                  type: string
-                  description: The email of the user that can be displayed in the UI
-                  format: email
-                  maxLength: 512
-                roles:
-                  type: array
-                  items:
-                    type: string
-                    enum:
-                    - authenticatedVisitor
-                    - viewer
-                    - editor
-                    - manager
-                    - admin
-                  minItems: 1
-                  maxItems: 1
-                  uniqueItems: true
-                  description: The roles of the user that will be used for access control
-                links:
-                  type: object
-                created:
-                  type: string
-                  format: date-time
-                  description: Date when this item was created
-                creator:
-                  description: URI pointing to the User who has created the item
-                  type: object
-                  required:
-                  - id
-                  properties:
-                    id:
-                      type: string
-                      pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
-                lastModified:
-                  type: string
-                  format: date-time
-                  description: Date when this item was modified for the last time
-                lastModifier:
-                  description: URI pointing to the User who has modified the item
-                  type: object
-                  required:
-                  - id
-                  properties:
-                    id:
-                      type: string
-                      pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
-              additionalProperties: false
-        description: The existing user object is replaced by the given object. Some fields will be ignored.
-        required: true
+      summary: Update an existing user
+      description: 'Updates an existing user and returns the updated user object.
+
+        User roles: admin'
       responses:
         '200':
           description: The user was updated successfully.
@@ -1212,7 +1144,7 @@ paths:
                     maxLength: 512
                   uid:
                     type: string
-                    description: Acoustic Id of the user, if not present during POST call an Acoustic Id will be created for the user
+                    description: Acoustic ID of the user, if not present during POST call an Acoustic Id will be created for the user
                     maxLength: 30
                   displayName:
                     type: string
@@ -1271,7 +1203,7 @@ paths:
                     format: date-time
                     description: Date when this item was created
                   creator:
-                    description: URI pointing to the User who has created the item
+                    description: URI pointing to the user who has created the item
                     type: object
                     required:
                     - id
@@ -1284,7 +1216,7 @@ paths:
                     format: date-time
                     description: Date when this item was modified for the last time
                   lastModifier:
-                    description: URI pointing to the User who has modified the item
+                    description: URI pointing to the user who has modified the item
                     type: object
                     required:
                     - id
@@ -1342,7 +1274,7 @@ paths:
                           description: Further explanation of the error condition and potential next steps to resolve the problem.
                         more_info:
                           type: string
-                          description: A URL pointing to a web site that provides more information on the given error condition.
+                          description: A URL pointing to a website that provides more information on the given error condition.
                         level:
                           type: string
                           enum:
@@ -1354,7 +1286,7 @@ paths:
                           description: Additional properties reflecting the dynamic parts of the error condition.
                         cause:
                           type: object
-                          description: This property can be used to transport causing error message records produced by a down stream service call.
+                          description: This property can be used to transport causing error message records produced by a down-stream service call.
                         locale:
                           type: string
                           description: This property represents the locale of the text contained in properties 'message', and 'description'. This property is mandatory if message and description contain translated text.
@@ -1378,13 +1310,101 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              description: The user object that might be sent to replace the user. The fields `id`, `externalId`, `links`, `created`, `creator`, `lastModified`, and `lastModifier` will be ignored.
+              type: object
+              required:
+              - id
+              properties:
+                id:
+                  type: string
+                  pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+                  description: The unique internal identifier of the user
+                externalId:
+                  type: string
+                  pattern: ^[0-9A-Z]{10}$|^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$,
+                  description: The unique external identifier of the user (e.g. BlueID). Although, this field can store email addresses, other types of unique identifiers may be stored too. Do not use this field as a replacement for the user attribute email address.
+                  maxLength: 512
+                firstName:
+                  type: string
+                  description: The first name of the user
+                  maxLength: 512
+                lastName:
+                  type: string
+                  description: The last name of the user
+                  maxLength: 512
+                uid:
+                  type: string
+                  description: Acoustic ID of the user, if not present during POST call an Acoustic Id will be created for the user
+                  maxLength: 30
+                displayName:
+                  type: string
+                  description: The name of the user that can be displayed in the UI
+                  maxLength: 512
+                email:
+                  type: string
+                  description: The email of the user that can be displayed in the UI
+                  format: email
+                  maxLength: 512
+                roles:
+                  type: array
+                  items:
+                    type: string
+                    enum:
+                    - authenticatedVisitor
+                    - viewer
+                    - editor
+                    - manager
+                    - admin
+                  minItems: 1
+                  maxItems: 1
+                  uniqueItems: true
+                  description: The roles of the user that will be used for access control
+                links:
+                  type: object
+                created:
+                  type: string
+                  format: date-time
+                  description: Date when this item was created
+                creator:
+                  description: URI pointing to the user who has created the item
+                  type: object
+                  required:
+                  - id
+                  properties:
+                    id:
+                      type: string
+                      pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+                lastModified:
+                  type: string
+                  format: date-time
+                  description: Date when this item was modified for the last time
+                lastModifier:
+                  description: URI pointing to the user who has modified the item
+                  type: object
+                  required:
+                  - id
+                  properties:
+                    id:
+                      type: string
+                      pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+              additionalProperties: false
+        description: The existing user object is replaced by the given object. Some fields will be ignored.
+        required: true
+      operationId: putUserProfileV1UsersById
+      x-operation-id-source: derived
     delete:
       tags:
       - Administering user profiles
       x-ibm-dx-security-user-roles:
       - admin
-      summary: Delete an existing user.
-      description: 'Deletes an existing user.<br />User roles: admin'
+      summary: Delete an existing user
+      description: 'Deletes an existing user.
+
+        User roles: admin'
       parameters:
       - in: path
         name: id
@@ -1398,7 +1418,7 @@ paths:
         description: Parameter which must be set if the users privacy notice should be returned
         required: false
         schema:
-          type: string
+          type: boolean
           default: false
       responses:
         '204':
@@ -1428,7 +1448,7 @@ paths:
                           description: Further explanation of the error condition and potential next steps to resolve the problem.
                         more_info:
                           type: string
-                          description: A URL pointing to a web site that provides more information on the given error condition.
+                          description: A URL pointing to a website that provides more information on the given error condition.
                         level:
                           type: string
                           enum:
@@ -1440,7 +1460,7 @@ paths:
                           description: Additional properties reflecting the dynamic parts of the error condition.
                         cause:
                           type: object
-                          description: This property can be used to transport causing error message records produced by a down stream service call.
+                          description: This property can be used to transport causing error message records produced by a down-stream service call.
                         locale:
                           type: string
                           description: This property represents the locale of the text contained in properties 'message', and 'description'. This property is mandatory if message and description contain translated text.
@@ -1464,6 +1484,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+      operationId: deleteUserProfileV1UsersById
+      x-operation-id-source: derived
 components:
   schemas:
     ErrorResponse:
@@ -1515,9 +1537,3 @@ components:
       required:
       - errors
       - requestId
-x-refined-from:
-- acoustic-content-openapi-original.json
-- acoustic-content-swagger2-original.yaml
-x-readme:
-  explorer-enabled: true
-  proxy-enabled: true

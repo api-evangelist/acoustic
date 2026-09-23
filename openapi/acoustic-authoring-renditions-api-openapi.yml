@@ -1,17 +1,19 @@
 openapi: 3.2.0
 info:
-  title: Acoustic Authoring renditions API
   version: 1.0.142
   x-ibm-name: ibm-watson-content-hub-api
-  description: 'Operations tagged Authoring renditions across 2 of this provider''s published API definitions: acoustic-content-openapi-original.json, acoustic-content-swagger2-original.yaml. Each path carries the servers of the definition it was published in.'
+  title: Acoustic Content Authoring renditions API
+  description: Copyright © Acoustic, L.P. 2023
 tags:
 - name: Authoring renditions
   description: Use the Content renditions data service Rest APIs to work with image renditions. A 'rendition' of an image defines how you can customize a source image such as the width and height to be shown for a particular device or context. Renditions that are not referenced by an asset or content will be cleaned up periodically.
 paths:
   /authoring/v1/renditions:
     get:
-      summary: Retrieve all renditions in the database.
-      description: 'Use this endpoint to list all the renditions in the database.<br />User roles: admin, manager, editor, viewer'
+      summary: Retrieve all renditions in the database
+      description: 'Use this endpoint to list all the renditions in the database.
+
+        User roles: admin, manager, editor, viewer'
       parameters:
       - name: offset
         in: query
@@ -395,11 +397,15 @@ paths:
       - manager
       - editor
       - viewer
+      operationId: getAuthoringV1Renditions
+      x-operation-id-source: derived
     post:
       tags:
       - Authoring renditions
-      summary: Create a new rendition.
-      description: 'Use this endpoint to create a new rendition. The rendition will have resizing parameters applied before the crop is conducted. The generated rendition link will depend on the parameters provided. The scale parameter is required to resize. LocationX, locationY, width and height parameters are required to crop.<br />User roles: admin, manager, editor'
+      summary: Create a new rendition
+      description: 'Use this endpoint to create a new rendition. The rendition will have resizing parameters applied before the crop is conducted. The generated rendition link will depend on the parameters provided. The scale parameter is required to resize. LocationX, locationY, width and height parameters are required to crop.
+
+        User roles: admin, manager, editor'
       parameters:
       - name: fields
         in: query
@@ -428,49 +434,6 @@ paths:
         required: false
         schema:
           type: string
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                locationX:
-                  type: integer
-                  example: 50
-                  description: Offset from the top left corner in the x dimension for where the crop will begin
-                locationY:
-                  type: integer
-                  example: 100
-                  description: Offset from the top left corner in the y dimension for where the crop will begin
-                width:
-                  type: integer
-                  example: 200
-                  description: Width of the crop
-                height:
-                  type: integer
-                  example: 200
-                  description: Height of the crop
-                scale:
-                  type: number
-                  example: 1.5
-                  description: Size image will be scaled to
-                asset:
-                  type: object
-                  properties:
-                    id:
-                      type: string
-                      description: The id of the asset this rendition is for
-                      example: 27c621ed48921b7338b84b4f415cba6b
-                  required:
-                  - id
-                id:
-                  type: string
-                  description: The id of the rendition to create
-                  example: 0a800487f06d71eaf4cffdfde1ab28bc
-              required:
-              - asset
-        description: Provide the data to create a rendition.
-        required: true
       responses:
         '201':
           description: Successfully created a new rendition.
@@ -960,12 +923,59 @@ paths:
       - admin
       - manager
       - editor
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                locationX:
+                  type: integer
+                  example: 50
+                  description: Offset from the top left corner in the x dimension for where the crop will begin
+                locationY:
+                  type: integer
+                  example: 100
+                  description: Offset from the top left corner in the y dimension for where the crop will begin
+                width:
+                  type: integer
+                  example: 200
+                  description: Width of the crop
+                height:
+                  type: integer
+                  example: 200
+                  description: Height of the crop
+                scale:
+                  type: number
+                  example: 1.5
+                  description: Size image will be scaled to
+                asset:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                      description: The id of the asset this rendition is for
+                      example: 27c621ed48921b7338b84b4f415cba6b
+                  required:
+                  - id
+                id:
+                  type: string
+                  description: The id of the rendition to create
+                  example: 0a800487f06d71eaf4cffdfde1ab28bc
+              required:
+              - asset
+        description: Provide the data to create a rendition.
+        required: true
+      operationId: postAuthoringV1Renditions
+      x-operation-id-source: derived
   /authoring/v1/renditions/{id}:
     get:
       tags:
       - Authoring renditions
-      summary: Retrieve an existing rendition.
-      description: 'Use this endpoint to retrieve an existing rendition from the database. Access the rendition applied through the media link. The generated rendition link will depend on the parameters provided. The scale parameter is required to resize. LocationX, locationY, width and height parameters are required to crop.<br />User roles: admin, manager, editor, viewer'
+      summary: Retrieve an existing rendition
+      description: 'Use this endpoint to retrieve an existing rendition from the database. Access the rendition applied through the media link. The generated rendition link will depend on the parameters provided. The scale parameter is required to resize. LocationX, locationY, width and height parameters are required to crop.
+
+        User roles: admin, manager, editor, viewer'
       parameters:
       - name: id
         in: path
@@ -1400,10 +1410,14 @@ paths:
       - manager
       - editor
       - viewer
+      operationId: getAuthoringV1RenditionsById
+      x-operation-id-source: derived
   /authoring/v1/renditions/views/by-created:
     get:
-      summary: Retrieve all renditions created within the specified date range.
-      description: 'Use this endpoint to retrieve all renditions that was created within the date range specified.<br />User roles: admin, manager, editor, viewer'
+      summary: Retrieve all renditions created within the specified date range
+      description: 'Use this endpoint to retrieve all renditions that was created within the date range specified.
+
+        User roles: admin, manager, editor, viewer'
       parameters:
       - name: start
         in: query
@@ -1880,6 +1894,8 @@ paths:
       - manager
       - editor
       - viewer
+      operationId: getAuthoringV1RenditionsViewsByCreated
+      x-operation-id-source: derived
 components:
   schemas:
     ErrorResponse:
@@ -1931,9 +1947,3 @@ components:
       required:
       - errors
       - requestId
-x-refined-from:
-- acoustic-content-openapi-original.json
-- acoustic-content-swagger2-original.yaml
-x-readme:
-  explorer-enabled: true
-  proxy-enabled: true

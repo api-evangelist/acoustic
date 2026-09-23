@@ -1,12 +1,14 @@
 openapi: 3.2.0
 info:
-  title: Acoustic Publishing API
   version: 1.0.142
   x-ibm-name: ibm-watson-content-hub-api
-  description: 'Operations tagged Publishing across 2 of this provider''s published API definitions: acoustic-content-openapi-original.json, acoustic-content-swagger2-original.yaml. Each path carries the servers of the definition it was published in.'
+  title: Acoustic Content Publishing API
+  description: Copyright © Acoustic, L.P. 2023
 tags:
 - name: Publishing
-  description: "Use the Content Publishing APIs to update the default site revision, which is a snapshot of your published site at a specific time. current-job instance is used to track the state of the job.\n A site revision represents a specific revision of a site."
+  description: 'Use the Content Publishing APIs to update the default site revision, which is a snapshot of your published site at a specific time. current-job instance is used to track the state of the job.
+
+    A site revision represents a specific revision of a site.'
 paths:
   /publishing/v1/jobs:
     x-ibm-dx-security-user-roles:
@@ -16,20 +18,9 @@ paths:
       tags:
       - Publishing
       summary: Create a job
-      description: 'Use the /jobs endpoint to create a job. The job starts automatically and runs asynchronously. Use the /jobs/current-job/status to retrieve the details about the current job status.<br />User roles: admin, manager'
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              description: created job. When creating a job, you can specify mode that can be used.
-              properties:
-                mode:
-                  type: string
-                  enum:
-                  - UPDATE
-                  - REBUILD
-                  description: Specifies if the site revision will be updated or rebuilt from scratch. Default is 'UPDATE'
+      description: 'Use the /jobs endpoint to create a job. The job starts automatically and runs asynchronously. Use the /jobs/current-job/status to retrieve the details about the current job status.
+
+        User roles: admin, manager'
       responses:
         '201':
           description: Successfully triggered a new job.
@@ -57,7 +48,7 @@ paths:
                           required:
                           - href
                           - methods
-                          description: url pointing to this document
+                          description: URL pointing to this document
                           properties:
                             href:
                               type: string
@@ -72,7 +63,7 @@ paths:
                                 - PUT
                                 - DELETE
                             name:
-                              description: single value object where key is the locale and value is the display name
+                              description: Single value object where key is the locale and value is the display name
                               type: object
                     id:
                       type: string
@@ -81,16 +72,16 @@ paths:
                     rev:
                       type: string
                       maxLength: 64
-                      description: a string identifying a specific version of the document
+                      description: A string identifying a specific version of the document
                     created:
                       type: string
                       format: date-time
-                      description: date when this item was created
+                      description: Date when this item was created
                     creator:
                       type: object
                       required:
                       - id
-                      description: A reference to the User who has created the item
+                      description: A reference to the user who has created the item
                       properties:
                         id:
                           type: string
@@ -98,12 +89,12 @@ paths:
                     lastModified:
                       type: string
                       format: date-time
-                      description: date when this item was modifed for the last time
+                      description: Date when this item was modified for the last time
                     lastModifier:
                       type: object
                       required:
                       - id
-                      description: A reference to the User who has modified the item
+                      description: A reference to the user who has modified the item
                       properties:
                         id:
                           type: string
@@ -126,7 +117,7 @@ paths:
                     - BUILDING
                     - PENDING
                   childJobIds:
-                    description: If this job has been created manually, the childJob array contains the ids of those jobs that have been triggered by this job.
+                    description: If this job has been created manually, the childJob array contains the IDs of those jobs that have been triggered by this job.
                     type: array
                     items:
                       type: string
@@ -156,7 +147,7 @@ paths:
                           description: Further explanation of the error condition and potential next steps to resolve the problem.
                         more_info:
                           type: string
-                          description: A URL pointing to a web site that provides more information on the given error condition.
+                          description: A URL pointing to a website that provides more information on the given error condition.
                         level:
                           type: string
                           enum:
@@ -168,7 +159,7 @@ paths:
                           description: Additional properties reflecting the dynamic parts of the error condition.
                         cause:
                           type: object
-                          description: This property can be used to transport causing error message records produced by a down stream service calls.
+                          description: This property can be used to transport causing error message records produced by a down-stream service calls.
                         locale:
                           type: string
                           description: This property represents the locale of the text contained in properties 'message', and 'description'. This property is mandatory if message and description contain translated text.
@@ -190,6 +181,21 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              description: created job. When creating a job, you can specify the mode that can be used.
+              properties:
+                mode:
+                  type: string
+                  enum:
+                  - UPDATE
+                  - REBUILD
+                  description: Specifies if the site revision will be updated or rebuilt from scratch. Default is 'UPDATE'
+      operationId: postPublishingV1Jobs
+      x-operation-id-source: derived
   /publishing/v1/jobs/current-job:
     x-ibm-dx-security-user-roles:
     - admin
@@ -202,10 +208,12 @@ paths:
       tags:
       - Publishing
       summary: Retrieve an existing job
-      description: 'Use the /jobs/current-job endpoint to retrieve current-job from the database.<br />User roles: admin, manager, editor'
+      description: 'Use the /jobs/current-job endpoint to retrieve current-job from the database.
+
+        User roles: admin, manager, editor'
       responses:
         '200':
-          description: Successfully retrieved an current-job.
+          description: Successfully retrieved a current-job.
           headers:
             Content-Location:
               description: Provide the URL of the actual revision of the job that is returned.
@@ -235,7 +243,7 @@ paths:
                           required:
                           - href
                           - methods
-                          description: url pointing to this document
+                          description: URL pointing to this document
                           properties:
                             href:
                               type: string
@@ -250,7 +258,7 @@ paths:
                                 - PUT
                                 - DELETE
                             name:
-                              description: single value object where key is the locale and value is the display name
+                              description: Single value object where key is the locale and value is the display name
                               type: object
                     id:
                       type: string
@@ -259,16 +267,16 @@ paths:
                     rev:
                       type: string
                       maxLength: 64
-                      description: a string identifying a specific version of the document
+                      description: A string identifying a specific version of the document
                     created:
                       type: string
                       format: date-time
-                      description: date when this item was created
+                      description: Date when this item was created
                     creator:
                       type: object
                       required:
                       - id
-                      description: A reference to the User who has created the item
+                      description: A reference to the user who has created the item
                       properties:
                         id:
                           type: string
@@ -276,12 +284,12 @@ paths:
                     lastModified:
                       type: string
                       format: date-time
-                      description: date when this item was modifed for the last time
+                      description: Date when this item was modified for the last time
                     lastModifier:
                       type: object
                       required:
                       - id
-                      description: A reference to the User who has modified the item
+                      description: A reference to the user who has modified the item
                       properties:
                         id:
                           type: string
@@ -304,7 +312,7 @@ paths:
                     - BUILDING
                     - PENDING
                   childJobIds:
-                    description: If this job has been created manually, the childJob array contains the ids of those jobs that have been triggered by this job.
+                    description: If this job has been created manually, the childJob array contains the IDs of those jobs that have been triggered by this job.
                     type: array
                     items:
                       type: string
@@ -334,7 +342,7 @@ paths:
                           description: Further explanation of the error condition and potential next steps to resolve the problem.
                         more_info:
                           type: string
-                          description: A URL pointing to a web site that provides more information on the given error condition.
+                          description: A URL pointing to a website that provides more information on the given error condition.
                         level:
                           type: string
                           enum:
@@ -346,7 +354,7 @@ paths:
                           description: Additional properties reflecting the dynamic parts of the error condition.
                         cause:
                           type: object
-                          description: This property can be used to transport causing error message records produced by a down stream service calls.
+                          description: This property can be used to transport causing error message records produced by a down-stream service calls.
                         locale:
                           type: string
                           description: This property represents the locale of the text contained in properties 'message', and 'description'. This property is mandatory if message and description contain translated text.
@@ -387,7 +395,7 @@ paths:
                           description: Further explanation of the error condition and potential next steps to resolve the problem.
                         more_info:
                           type: string
-                          description: A URL pointing to a web site that provides more information on the given error condition.
+                          description: A URL pointing to a website that provides more information on the given error condition.
                         level:
                           type: string
                           enum:
@@ -399,7 +407,7 @@ paths:
                           description: Additional properties reflecting the dynamic parts of the error condition.
                         cause:
                           type: object
-                          description: This property can be used to transport causing error message records produced by a down stream service calls.
+                          description: This property can be used to transport causing error message records produced by a down-stream service calls.
                         locale:
                           type: string
                           description: This property represents the locale of the text contained in properties 'message', and 'description'. This property is mandatory if message and description contain translated text.
@@ -421,6 +429,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+      operationId: getPublishingV1JobsCurrentJob
+      x-operation-id-source: derived
   /publishing/v1/jobs/current-job/status:
     x-ibm-dx-security-user-roles:
     - admin
@@ -433,7 +443,9 @@ paths:
       tags:
       - Publishing
       summary: Retrieve the status of current-job
-      description: 'Use the /jobs/current-job/status endpoint to retrieve the status information for the current-job.<br />User roles: admin, manager, editor'
+      description: 'Use the /jobs/current-job/status endpoint to retrieve the status information for the current-job.
+
+        User roles: admin, manager, editor'
       responses:
         '200':
           description: Successfully retrieved the status for the current-job.
@@ -456,11 +468,11 @@ paths:
                   created:
                     type: string
                     format: date-time
-                    description: date when this item was created
+                    description: Date when this item was created
                   lastModified:
                     type: string
                     format: date-time
-                    description: date when this item was modifed for the last time
+                    description: Date when this item was modified for the last time
                   state:
                     type: string
                     description: Enumeration of publishing job states
@@ -502,7 +514,7 @@ paths:
                           properties:
                             content:
                               type: object
-                              description: Map which enumerates the items that shall be published groupd by their event type ('created', 'updated', etc.)
+                              description: Map which enumerates the items that shall be published, grouped by their event type ('created', 'updated', etc.)
                               properties:
                                 created:
                                   description: List of items that have been created
@@ -521,7 +533,7 @@ paths:
                                     type: string
                             page:
                               type: object
-                              description: Map which enumerates the items that shall be published groupd by their event type ('created', 'updated', etc.)
+                              description: Map which enumerates the items that shall be published, grouped by their event type ('created', 'updated', etc.)
                               properties:
                                 created:
                                   description: List of items that have been created
@@ -540,7 +552,7 @@ paths:
                                     type: string
                             site:
                               type: object
-                              description: Map which enumerates the items that shall be published groupd by their event type ('created', 'updated', etc.)
+                              description: Map which enumerates the items that shall be published, grouped by their event type ('created', 'updated', etc.)
                               properties:
                                 created:
                                   description: List of items that have been created
@@ -559,7 +571,7 @@ paths:
                                     type: string
                             asset:
                               type: object
-                              description: Map which enumerates the items that shall be published groupd by their event type ('created', 'updated', etc.)
+                              description: Map which enumerates the items that shall be published, grouped by their event type ('created', 'updated', etc.)
                               properties:
                                 created:
                                   description: List of items that have been created
@@ -578,7 +590,7 @@ paths:
                                     type: string
                             category:
                               type: object
-                              description: Map which enumerates the items that shall be published groupd by their event type ('created', 'updated', etc.)
+                              description: Map which enumerates the items that shall be published, grouped by their event type ('created', 'updated', etc.)
                               properties:
                                 created:
                                   description: List of items that have been created
@@ -597,7 +609,7 @@ paths:
                                     type: string
                             resource:
                               type: object
-                              description: Map which enumerates the items that shall be published groupd by their event type ('created', 'updated', etc.)
+                              description: Map which enumerates the items that shall be published, grouped by their event type ('created', 'updated', etc.)
                               properties:
                                 created:
                                   description: List of items that have been created
@@ -629,11 +641,11 @@ paths:
                           maxLength: 512
                         locale:
                           type: string
-                          description: locale information for this message
+                          description: Locale information for this message
                           maxLength: 10
                         type:
                           type: string
-                          description: tbd
+                          description: The type of message. One of `ERROR`, `INFO`, or `WARNING`.
                           enum:
                           - ERROR
                           - INFO
@@ -663,7 +675,7 @@ paths:
                           description: Further explanation of the error condition and potential next steps to resolve the problem.
                         more_info:
                           type: string
-                          description: A URL pointing to a web site that provides more information on the given error condition.
+                          description: A URL pointing to a website that provides more information on the given error condition.
                         level:
                           type: string
                           enum:
@@ -675,7 +687,7 @@ paths:
                           description: Additional properties reflecting the dynamic parts of the error condition.
                         cause:
                           type: object
-                          description: This property can be used to transport causing error message records produced by a down stream service calls.
+                          description: This property can be used to transport causing error message records produced by a down-stream service calls.
                         locale:
                           type: string
                           description: This property represents the locale of the text contained in properties 'message', and 'description'. This property is mandatory if message and description contain translated text.
@@ -716,7 +728,7 @@ paths:
                           description: Further explanation of the error condition and potential next steps to resolve the problem.
                         more_info:
                           type: string
-                          description: A URL pointing to a web site that provides more information on the given error condition.
+                          description: A URL pointing to a website that provides more information on the given error condition.
                         level:
                           type: string
                           enum:
@@ -728,7 +740,7 @@ paths:
                           description: Additional properties reflecting the dynamic parts of the error condition.
                         cause:
                           type: object
-                          description: This property can be used to transport causing error message records produced by a down stream service calls.
+                          description: This property can be used to transport causing error message records produced by a down-stream service calls.
                         locale:
                           type: string
                           description: This property represents the locale of the text contained in properties 'message', and 'description'. This property is mandatory if message and description contain translated text.
@@ -750,6 +762,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+      operationId: getPublishingV1JobsCurrentJobStatus
+      x-operation-id-source: derived
   /publishing/v1/site-revisions/default:
     x-ibm-dx-security-user-roles:
     - admin
@@ -762,16 +776,16 @@ paths:
       tags:
       - Publishing
       summary: Get the default site revision
-      description: 'Use the /site-revisions/default endpoint to retrieve the default site revision<br />User roles: admin, manager, editor'
+      description: 'Use the /site-revisions/default endpoint to retrieve the default site revision
+
+        User roles: admin, manager, editor'
       parameters:
       - name: include
         in: query
         description: Optional include parameter. Currently the links section can be included using the value 'links'.
         required: false
-        style: form
-        explode: false
         schema:
-          type: string
+          type: array
           items:
             type: string
             enum:
@@ -809,7 +823,7 @@ paths:
                           required:
                           - href
                           - methods
-                          description: url pointing to this document
+                          description: URL pointing to this document
                           properties:
                             href:
                               type: string
@@ -824,7 +838,7 @@ paths:
                                 - PUT
                                 - DELETE
                             name:
-                              description: single value object where key is the locale and value is the display name
+                              description: Single value object where key is the locale and value is the display name
                               type: object
                     id:
                       type: string
@@ -833,16 +847,16 @@ paths:
                     rev:
                       type: string
                       maxLength: 64
-                      description: a string identifying a specific version of the document
+                      description: A string identifying a specific version of the document
                     created:
                       type: string
                       format: date-time
-                      description: date when this item was created
+                      description: Date when this item was created
                     creator:
                       type: object
                       required:
                       - id
-                      description: A reference to the User who has created the item
+                      description: A reference to the user who has created the item
                       properties:
                         id:
                           type: string
@@ -850,12 +864,12 @@ paths:
                     lastModified:
                       type: string
                       format: date-time
-                      description: date when this item was modifed for the last time
+                      description: Date when this item was modified for the last time
                     lastModifier:
                       type: object
                       required:
                       - id
-                      description: A reference to the User who has modified the item
+                      description: A reference to the user who has modified the item
                       properties:
                         id:
                           type: string
@@ -866,10 +880,10 @@ paths:
                   properties:
                     description:
                       type: object
-                      description: an object holding the localized description for multiple languages
+                      description: An object holding the localized description for multiple languages
                     name:
                       type: object
-                      description: an object holding the localized title for multiple languages
+                      description: An object holding the localized title for multiple languages
                 - type: object
                   properties:
                     state:
@@ -885,10 +899,10 @@ paths:
                     lastSucceeded:
                       type: string
                       format: date-time
-                      description: date when this site revision was last updated successfully (last time a job for that site revision completed successfully)
+                      description: Date when this site revision was last updated successfully (last time a job for that site revision completed successfully)
                     active:
                       type: boolean
-                      description: indicates if this site revision is the active one.
+                      description: Indicates if this site revision is the active one.
                     job:
                       type: object
                       required:
@@ -925,7 +939,7 @@ paths:
                           description: Further explanation of the error condition and potential next steps to resolve the problem.
                         more_info:
                           type: string
-                          description: A URL pointing to a web site that provides more information on the given error condition.
+                          description: A URL pointing to a website that provides more information on the given error condition.
                         level:
                           type: string
                           enum:
@@ -937,7 +951,7 @@ paths:
                           description: Additional properties reflecting the dynamic parts of the error condition.
                         cause:
                           type: object
-                          description: This property can be used to transport causing error message records produced by a down stream service calls.
+                          description: This property can be used to transport causing error message records produced by a down-stream service calls.
                         locale:
                           type: string
                           description: This property represents the locale of the text contained in properties 'message', and 'description'. This property is mandatory if message and description contain translated text.
@@ -959,121 +973,15 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+      operationId: getPublishingV1SiteRevisionsDefault
+      x-operation-id-source: derived
     put:
       tags:
       - Publishing
       summary: Update the default site revision
-      description: 'Use the /site-revisions/default endpoint to update the values of properties ''autoPublishEnabled'', ''name'' and ''description'' by replacing them with the ones in request body. Please note: Modifications to the ''autoPublishEnabled'' flag are not picked up by WCH immediately but with a time lag of up to 30 seconds<br />User roles: admin, manager'
-      requestBody:
-        content:
-          application/json:
-            schema:
-              description: Only properties autoPublishEnabled, name and description will be updated, others will be ignored
-              type: object
-              allOf:
-              - type: object
-                required:
-                - name
-                properties:
-                  name:
-                    type: object
-                    description: an object holding the localized title for multiple languages
-                  description:
-                    type: object
-                    description: an object holding the localized description for multiple languages
-              - type: object
-                required:
-                - rev
-                - id
-                properties:
-                  links:
-                    type: object
-                    properties:
-                      self:
-                        type: object
-                        required:
-                        - href
-                        - methods
-                        description: url pointing to this document
-                        properties:
-                          href:
-                            type: string
-                            maxLength: 1024
-                          methods:
-                            type: array
-                            items:
-                              type: string
-                              enum:
-                              - GET
-                              - POST
-                              - PUT
-                              - DELETE
-                          name:
-                            description: single value object where key is the locale and value is the display name
-                            type: object
-                  id:
-                    type: string
-                    description: Unique identifier representing a specific item
-                    maxLength: 64
-                  rev:
-                    type: string
-                    maxLength: 64
-                    description: a string identifying a specific version of the document
-                  created:
-                    type: string
-                    format: date-time
-                    description: date when this item was created
-                  creator:
-                    type: object
-                    required:
-                    - id
-                    description: A reference to the User who has created the item
-                    properties:
-                      id:
-                        type: string
-                        maxLength: 64
-                  lastModified:
-                    type: string
-                    format: date-time
-                    description: date when this item was modifed for the last time
-                  lastModifier:
-                    type: object
-                    required:
-                    - id
-                    description: A reference to the User who has modified the item
-                    properties:
-                      id:
-                        type: string
-                        maxLength: 64
-              - type: object
-                properties:
-                  state:
-                    type: string
-                    description: State of the site revision
-                    enum:
-                    - READY
-                    - BUILDING
-                    - PENDING
-                  autoPublishEnabled:
-                    description: If true, any updates affecting this site revision will be published automatically. Default is true.
-                    type: boolean
-                  lastSucceeded:
-                    type: string
-                    format: date-time
-                    description: date when this site revision was last updated successfully (last time a job for that site revision completed successfully)
-                  active:
-                    type: boolean
-                    description: indicates if this site revision is the active one.
-                  job:
-                    type: object
-                    required:
-                    - id
-                    description: Reference to the job that modified this site revision most recently
-                    properties:
-                      id:
-                        type: string
-                        maxLength: 64
-        required: true
+      description: 'Use the /site-revisions/default endpoint to update the values of properties ''autoPublishEnabled'', ''name'' and ''description'' by replacing them with the ones in request body. Please note: Modifications to the ''autoPublishEnabled'' flag are not picked up by Content immediately but with a time lag of up to 30 seconds
+
+        User roles: admin, manager'
       responses:
         '200':
           description: Successfully updated the site revision.
@@ -1101,7 +1009,7 @@ paths:
                           required:
                           - href
                           - methods
-                          description: url pointing to this document
+                          description: URL pointing to this document
                           properties:
                             href:
                               type: string
@@ -1116,7 +1024,7 @@ paths:
                                 - PUT
                                 - DELETE
                             name:
-                              description: single value object where key is the locale and value is the display name
+                              description: Single value object where key is the locale and value is the display name
                               type: object
                     id:
                       type: string
@@ -1125,16 +1033,16 @@ paths:
                     rev:
                       type: string
                       maxLength: 64
-                      description: a string identifying a specific version of the document
+                      description: A string identifying a specific version of the document
                     created:
                       type: string
                       format: date-time
-                      description: date when this item was created
+                      description: Date when this item was created
                     creator:
                       type: object
                       required:
                       - id
-                      description: A reference to the User who has created the item
+                      description: A reference to the user who has created the item
                       properties:
                         id:
                           type: string
@@ -1142,12 +1050,12 @@ paths:
                     lastModified:
                       type: string
                       format: date-time
-                      description: date when this item was modifed for the last time
+                      description: Date when this item was modified for the last time
                     lastModifier:
                       type: object
                       required:
                       - id
-                      description: A reference to the User who has modified the item
+                      description: A reference to the user who has modified the item
                       properties:
                         id:
                           type: string
@@ -1158,10 +1066,10 @@ paths:
                   properties:
                     description:
                       type: object
-                      description: an object holding the localized description for multiple languages
+                      description: An object holding the localized description for multiple languages
                     name:
                       type: object
-                      description: an object holding the localized title for multiple languages
+                      description: An object holding the localized title for multiple languages
                 - type: object
                   properties:
                     docs:
@@ -1170,7 +1078,7 @@ paths:
                       properties:
                         content:
                           type: object
-                          description: Map which enumerates the items that shall be published groupd by their event type ('created', 'updated', etc.)
+                          description: Map which enumerates the items that shall be published, grouped by their event type ('created', 'updated', etc.)
                           properties:
                             created:
                               description: List of items that have been created
@@ -1189,7 +1097,7 @@ paths:
                                 type: string
                         page:
                           type: object
-                          description: Map which enumerates the items that shall be published groupd by their event type ('created', 'updated', etc.)
+                          description: Map which enumerates the items that shall be published, grouped by their event type ('created', 'updated', etc.)
                           properties:
                             created:
                               description: List of items that have been created
@@ -1208,7 +1116,7 @@ paths:
                                 type: string
                         site:
                           type: object
-                          description: Map which enumerates the items that shall be published groupd by their event type ('created', 'updated', etc.)
+                          description: Map which enumerates the items that shall be published, grouped by their event type ('created', 'updated', etc.)
                           properties:
                             created:
                               description: List of items that have been created
@@ -1227,7 +1135,7 @@ paths:
                                 type: string
                         asset:
                           type: object
-                          description: Map which enumerates the items that shall be published groupd by their event type ('created', 'updated', etc.)
+                          description: Map which enumerates the items that shall be published, grouped by their event type ('created', 'updated', etc.)
                           properties:
                             created:
                               description: List of items that have been created
@@ -1246,7 +1154,7 @@ paths:
                                 type: string
                         category:
                           type: object
-                          description: Map which enumerates the items that shall be published groupd by their event type ('created', 'updated', etc.)
+                          description: Map which enumerates the items that shall be published, grouped by their event type ('created', 'updated', etc.)
                           properties:
                             created:
                               description: List of items that have been created
@@ -1265,7 +1173,7 @@ paths:
                                 type: string
                         resource:
                           type: object
-                          description: Map which enumerates the items that shall be published groupd by their event type ('created', 'updated', etc.)
+                          description: Map which enumerates the items that shall be published, grouped by their event type ('created', 'updated', etc.)
                           properties:
                             created:
                               description: List of items that have been created
@@ -1307,7 +1215,7 @@ paths:
                           description: Further explanation of the error condition and potential next steps to resolve the problem.
                         more_info:
                           type: string
-                          description: A URL pointing to a web site that provides more information on the given error condition.
+                          description: A URL pointing to a website that provides more information on the given error condition.
                         level:
                           type: string
                           enum:
@@ -1319,7 +1227,7 @@ paths:
                           description: Additional properties reflecting the dynamic parts of the error condition.
                         cause:
                           type: object
-                          description: This property can be used to transport causing error message records produced by a down stream service calls.
+                          description: This property can be used to transport causing error message records produced by a down-stream service calls.
                         locale:
                           type: string
                           description: This property represents the locale of the text contained in properties 'message', and 'description'. This property is mandatory if message and description contain translated text.
@@ -1360,7 +1268,7 @@ paths:
                           description: Further explanation of the error condition and potential next steps to resolve the problem.
                         more_info:
                           type: string
-                          description: A URL pointing to a web site that provides more information on the given error condition.
+                          description: A URL pointing to a website that provides more information on the given error condition.
                         level:
                           type: string
                           enum:
@@ -1372,7 +1280,7 @@ paths:
                           description: Additional properties reflecting the dynamic parts of the error condition.
                         cause:
                           type: object
-                          description: This property can be used to transport causing error message records produced by a down stream service calls.
+                          description: This property can be used to transport causing error message records produced by a down-stream service calls.
                         locale:
                           type: string
                           description: This property represents the locale of the text contained in properties 'message', and 'description'. This property is mandatory if message and description contain translated text.
@@ -1394,6 +1302,118 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              description: Only properties autoPublishEnabled, name and description will be updated, others will be ignored
+              type: object
+              allOf:
+              - type: object
+                required:
+                - name
+                properties:
+                  name:
+                    type: object
+                    description: An object holding the localized title for multiple languages
+                  description:
+                    type: object
+                    description: An object holding the localized description for multiple languages
+              - type: object
+                required:
+                - rev
+                - id
+                properties:
+                  links:
+                    type: object
+                    properties:
+                      self:
+                        type: object
+                        required:
+                        - href
+                        - methods
+                        description: URL pointing to this document
+                        properties:
+                          href:
+                            type: string
+                            maxLength: 1024
+                          methods:
+                            type: array
+                            items:
+                              type: string
+                              enum:
+                              - GET
+                              - POST
+                              - PUT
+                              - DELETE
+                          name:
+                            description: Single value object where key is the locale and value is the display name
+                            type: object
+                  id:
+                    type: string
+                    description: Unique identifier representing a specific item
+                    maxLength: 64
+                  rev:
+                    type: string
+                    maxLength: 64
+                    description: A string identifying a specific version of the document
+                  created:
+                    type: string
+                    format: date-time
+                    description: Date when this item was created
+                  creator:
+                    type: object
+                    required:
+                    - id
+                    description: A reference to the user who has created the item
+                    properties:
+                      id:
+                        type: string
+                        maxLength: 64
+                  lastModified:
+                    type: string
+                    format: date-time
+                    description: Date when this item was modified for the last time
+                  lastModifier:
+                    type: object
+                    required:
+                    - id
+                    description: A reference to the user who has modified the item
+                    properties:
+                      id:
+                        type: string
+                        maxLength: 64
+              - type: object
+                properties:
+                  state:
+                    type: string
+                    description: State of the site revision
+                    enum:
+                    - READY
+                    - BUILDING
+                    - PENDING
+                  autoPublishEnabled:
+                    description: If true, any updates affecting this site revision will be published automatically. Default is true.
+                    type: boolean
+                  lastSucceeded:
+                    type: string
+                    format: date-time
+                    description: Date when this site revision was last updated successfully (last time a job for that site revision completed successfully)
+                  active:
+                    type: boolean
+                    description: Indicates if this site revision is the active one.
+                  job:
+                    type: object
+                    required:
+                    - id
+                    description: Reference to the job that modified this site revision most recently
+                    properties:
+                      id:
+                        type: string
+                        maxLength: 64
+        required: true
+      operationId: putPublishingV1SiteRevisionsDefault
+      x-operation-id-source: derived
 components:
   schemas:
     ErrorResponse:
@@ -1445,9 +1465,3 @@ components:
       required:
       - errors
       - requestId
-x-refined-from:
-- acoustic-content-openapi-original.json
-- acoustic-content-swagger2-original.yaml
-x-readme:
-  explorer-enabled: true
-  proxy-enabled: true

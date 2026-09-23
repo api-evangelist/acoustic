@@ -1,14 +1,12 @@
 openapi: 3.2.0
 info:
-  title: Acoustic Delivery sites API
   version: 1.0.142
   x-ibm-name: ibm-watson-content-hub-api
-  description: 'Operations tagged Delivery sites across 2 of this provider''s published API definitions: acoustic-content-openapi-original.json, acoustic-content-swagger2-original.yaml. Each path carries the servers of the definition it was published in.'
+  title: Acoustic Content Delivery sites API
+  description: Copyright © Acoustic, L.P. 2023
 tags:
 - name: Delivery sites
-  description: 'Use the Content delivery sites service Rest APIs to retrieve published site artefacts.
-
-    '
+  description: Use the Content delivery sites service Rest APIs to retrieve published site artefacts.
 paths:
   /delivery/v1/sites/{siteId}:
     get:
@@ -23,18 +21,19 @@ paths:
       summary: Get the site descriptor of a public site
       description: 'Returns the site descriptor of the site specified by *siteId*.
 
-        <br />User roles: admin, manager, editor, viewer, authenticatedVisitor, anonymous'
+
+        User roles: admin, manager, editor, viewer, authenticatedVisitor, anonymous'
       parameters:
       - name: siteId
         in: path
-        description: The ID of the site item, or `@current` to indicate that the ID of the site is derived from the addressed URL via custom domain site mapping or URL path based site addressing. For further details consult the Content documentation.
+        description: The ID of the site item, or `@current` to indicate that the ID of the site is derived from the addressed URL via custom domain site mapping or URL path-based site addressing. For further details consult the Content documentation.
         required: true
         schema:
           type: string
           format: uuid
       - name: fields
         in: query
-        description: Reduce the returned content down to just the specified fields. Fields specified by a comma seperated list of field names and should only be used once in query string. To only retrieve `id` and `name` this parameter should look like `id,name`. Undefined fields are ignored.
+        description: Reduce the returned content down to just the specified fields. Fields specified by a comma-separated list of field names and should only be used once in query string. To only retrieve `id` and `name` this parameter should look like `id,name`. Undefined fields are ignored.
         required: false
         style: form
         explode: false
@@ -53,7 +52,7 @@ paths:
           description: Success
           headers:
             Etag:
-              description: The etag value identifies this site item for future requests.
+              description: The Etag value identifies this site item for future requests.
               schema:
                 type: string
           content:
@@ -70,7 +69,7 @@ paths:
                     description: The site item name.
                   routingMode:
                     type: string
-                    description: The routing mode. can be "path" or "anchor"
+                    description: The routing mode can be "path" or "anchor"
                   classification:
                     type: string
                     description: The classification defines the document type. For site items, all documents are classified as "site".
@@ -79,13 +78,13 @@ paths:
                     description: The last modified date of this site item in ISO 8601 with the format YYYY-MM-DDTHH:mm:ss.sssZ.
                   lastModifierId:
                     type: string
-                    description: The id of the user which applied the last modification of this item.
+                    description: The ID of the user which applied the last modification of this item.
                   created:
                     type: string
                     description: The created date of this site item in ISO 8601 with the format YYYY-MM-DDTHH:mm:ss.sssZ.
                   creatorId:
                     type: string
-                    description: The id of the user that created this item.
+                    description: The ID of the user that created this item.
                 example:
                   name: Example site
                   routingMode: path
@@ -128,24 +127,22 @@ paths:
                         description: The error severity.
                       description:
                         type: string
-                        description: A detailed description that describes what caused the eror, and how to proceed.
+                        description: A detailed description that describes what caused the error, and how to proceed.
                       cause:
                         type: object
                         description: The causing error.
                       locale:
                         type: string
                         description: The locale setting of the message and description text.
-              examples:
-                response:
-                  value:
-                    service: prod-delivery-sites
-                    requestId: c39d3e05-22f7-4d7c-8d7b-21ba6a2db508
-                    errors:
-                      code: 7001
-                      message: Missing or invalid value for 'fields' query parameter.
-                      level: ERROR
-                      description: Check that the 'fields' parameter is not blank, does not contain spaces or empty values, e.g. 'fields=rev,,last-modified' is considered invalid.
-                      locale: en
+              example:
+                service: prod-delivery-sites
+                requestId: c39d3e05-22f7-4d7c-8d7b-21ba6a2db508
+                errors:
+                  code: 7001
+                  message: Missing or invalid value for 'fields' query parameter.
+                  level: ERROR
+                  description: Check that the 'fields' parameter is not blank, does not contain spaces or empty values, e.g. 'fields=rev,,last-modified' is considered invalid.
+                  locale: en
         '404':
           description: Not found
           content:
@@ -177,24 +174,22 @@ paths:
                         description: The error severity.
                       description:
                         type: string
-                        description: A detailed description that describes what caused the eror, and how to proceed.
+                        description: A detailed description that describes what caused the error, and how to proceed.
                       cause:
                         type: object
                         description: The causing error.
                       locale:
                         type: string
                         description: The locale setting of the message and description text.
-              examples:
-                response:
-                  value:
-                    service: prod-delivery-sites
-                    requestId: c39d3e05-22f7-4d7c-8d7b-21ba6a2db508
-                    errors:
-                      code: 7003
-                      message: 'Site not found for id : f54e763a-fd53-424b-8ad9-7cc690cca2dc.'
-                      level: ERROR
-                      description: A site item with the specified id was not found in the system.
-                      locale: en
+              example:
+                service: prod-delivery-sites
+                requestId: c39d3e05-22f7-4d7c-8d7b-21ba6a2db508
+                errors:
+                  code: 7003
+                  message: 'Site not found for id : f54e763a-fd53-424b-8ad9-7cc690cca2dc.'
+                  level: ERROR
+                  description: A site item with the specified ID was not found in the system.
+                  locale: en
         '429':
           description: Too Many Requests, the server has reached a limit, the request must be sent again at a later time.
           content:
@@ -202,7 +197,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
         default:
-          description: "Unexpected error \n  An internal error has occurred. For example, a dependant service is not running.\n"
+          description: "Unexpected error \n  An internal error has occurred. For example, a dependent service is not running.\n"
           content:
             application/json:
               schema:
@@ -232,26 +227,26 @@ paths:
                         description: The error severity.
                       description:
                         type: string
-                        description: A detailed description that describes what caused the eror, and how to proceed.
+                        description: A detailed description that describes what caused the error, and how to proceed.
                       cause:
                         type: object
                         description: The causing error.
                       locale:
                         type: string
                         description: The locale setting of the message and description text.
-              examples:
-                response:
-                  value:
-                    service: prod-delivery-sites
-                    requestId: c39d3e05-22f7-4d7c-8d7b-21ba6a2db508
-                    errors:
-                      code: 1014
-                      message: Unexpected error occurred.
-                      level: ERROR
-                      description: Unable to complete the request due to an unexpected error. Try again or contact Acoustic support if problem persists.
-                      locale: en
+              example:
+                service: prod-delivery-sites
+                requestId: c39d3e05-22f7-4d7c-8d7b-21ba6a2db508
+                errors:
+                  code: 1014
+                  message: Unexpected error occurred.
+                  level: ERROR
+                  description: Unable to complete the request due to an unexpected error. Try again or contact Acoustic support if problem persists.
+                  locale: en
       tags:
       - Delivery sites
+      operationId: getDeliveryV1SitesBySiteId
+      x-operation-id-source: derived
   /mydelivery/v1/sites/{siteId}:
     get:
       x-ibm-dx-security-user-roles:
@@ -260,21 +255,22 @@ paths:
       - editor
       - viewer
       - authenticatedVisitor
-      summary: Get the site descriptor of a public or protected site.
+      summary: Get the site descriptor of a public or protected site
       description: 'Returns the site descriptor of the site specified by *siteId*.
 
-        <br />User roles: admin, manager, editor, viewer, authenticatedVisitor'
+
+        User roles: admin, manager, editor, viewer, authenticatedVisitor'
       parameters:
       - name: siteId
         in: path
-        description: The ID of the site item, or `@current` to indicate that the ID of the site is derived from the addressed URL via custom domain site mapping or URL path based site addressing. For further details consult the Content documentation.
+        description: The ID of the site item, or `@current` to indicate that the ID of the site is derived from the addressed URL via custom domain site mapping or URL path-based site addressing. For further details consult the Content documentation.
         required: true
         schema:
           type: string
           format: uuid
       - name: fields
         in: query
-        description: Reduce the returned content down to just the specified fields. Fields specified by a comma seperated list of field names and should only be used once in query string. To only retrieve `id` and `name` this parameter should look like `id,name`. Undefined fields are ignored.
+        description: Reduce the returned content down to just the specified fields. Fields specified by a comma-separated list of field names and should only be used once in query string. To only retrieve `id` and `name` this parameter should look like `id,name`. Undefined fields are ignored.
         required: false
         style: form
         explode: false
@@ -293,7 +289,7 @@ paths:
           description: Success
           headers:
             Etag:
-              description: The etag value identifies this site item for future requests.
+              description: The Etag value identifies this site item for future requests.
               schema:
                 type: string
           content:
@@ -310,7 +306,7 @@ paths:
                     description: The site item name.
                   routingMode:
                     type: string
-                    description: The routing mode. can be "path" or "anchor"
+                    description: The routing mode can be "path" or "anchor"
                   classification:
                     type: string
                     description: The classification defines the document type. For site items, all documents are classified as "site".
@@ -319,13 +315,13 @@ paths:
                     description: The last modified date of this site item in ISO 8601 with the format YYYY-MM-DDTHH:mm:ss.sssZ.
                   lastModifierId:
                     type: string
-                    description: The id of the user which applied the last modification of this item.
+                    description: The ID of the user which applied the last modification of this item.
                   created:
                     type: string
                     description: The created date of this site item in ISO 8601 with the format YYYY-MM-DDTHH:mm:ss.sssZ.
                   creatorId:
                     type: string
-                    description: The id of the user that created this item.
+                    description: The ID of the user that created this item.
                 example:
                   name: Example site
                   routingMode: path
@@ -368,24 +364,22 @@ paths:
                         description: The error severity.
                       description:
                         type: string
-                        description: A detailed description that describes what caused the eror, and how to proceed.
+                        description: A detailed description that describes what caused the error, and how to proceed.
                       cause:
                         type: object
                         description: The causing error.
                       locale:
                         type: string
                         description: The locale setting of the message and description text.
-              examples:
-                response:
-                  value:
-                    service: prod-delivery-sites
-                    requestId: c39d3e05-22f7-4d7c-8d7b-21ba6a2db508
-                    errors:
-                      code: 7001
-                      message: Missing or invalid value for 'fields' query parameter.
-                      level: ERROR
-                      description: Check that the 'fields' parameter is not blank, does not contain spaces or empty values, e.g. 'fields=rev,,last-modified' is considered invalid.
-                      locale: en
+              example:
+                service: prod-delivery-sites
+                requestId: c39d3e05-22f7-4d7c-8d7b-21ba6a2db508
+                errors:
+                  code: 7001
+                  message: Missing or invalid value for 'fields' query parameter.
+                  level: ERROR
+                  description: Check that the 'fields' parameter is not blank, does not contain spaces or empty values, e.g. 'fields=rev,,last-modified' is considered invalid.
+                  locale: en
         '404':
           description: Not found
           content:
@@ -417,24 +411,22 @@ paths:
                         description: The error severity.
                       description:
                         type: string
-                        description: A detailed description that describes what caused the eror, and how to proceed.
+                        description: A detailed description that describes what caused the error, and how to proceed.
                       cause:
                         type: object
                         description: The causing error.
                       locale:
                         type: string
                         description: The locale setting of the message and description text.
-              examples:
-                response:
-                  value:
-                    service: prod-delivery-sites
-                    requestId: c39d3e05-22f7-4d7c-8d7b-21ba6a2db508
-                    errors:
-                      code: 7003
-                      message: 'Site not found for id : f54e763a-fd53-424b-8ad9-7cc690cca2dc.'
-                      level: ERROR
-                      description: A site item with the specified id was not found in the system.
-                      locale: en
+              example:
+                service: prod-delivery-sites
+                requestId: c39d3e05-22f7-4d7c-8d7b-21ba6a2db508
+                errors:
+                  code: 7003
+                  message: 'Site not found for id : f54e763a-fd53-424b-8ad9-7cc690cca2dc.'
+                  level: ERROR
+                  description: A site item with the specified ID was not found in the system.
+                  locale: en
         '429':
           description: Too Many Requests, the server has reached a limit, the request must be sent again at a later time.
           content:
@@ -442,7 +434,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
         default:
-          description: "Unexpected error \n  An internal error has occurred. For example, a dependant service is not running.\n"
+          description: "Unexpected error \n  An internal error has occurred. For example, a dependent service is not running.\n"
           content:
             application/json:
               schema:
@@ -472,26 +464,26 @@ paths:
                         description: The error severity.
                       description:
                         type: string
-                        description: A detailed description that describes what caused the eror, and how to proceed.
+                        description: A detailed description that describes what caused the error, and how to proceed.
                       cause:
                         type: object
                         description: The causing error.
                       locale:
                         type: string
                         description: The locale setting of the message and description text.
-              examples:
-                response:
-                  value:
-                    service: prod-delivery-sites
-                    requestId: c39d3e05-22f7-4d7c-8d7b-21ba6a2db508
-                    errors:
-                      code: 1014
-                      message: Unexpected error occurred.
-                      level: ERROR
-                      description: Unable to complete the request due to an unexpected error. Try again or contact Acoustic support if problem persists.
-                      locale: en
+              example:
+                service: prod-delivery-sites
+                requestId: c39d3e05-22f7-4d7c-8d7b-21ba6a2db508
+                errors:
+                  code: 1014
+                  message: Unexpected error occurred.
+                  level: ERROR
+                  description: Unable to complete the request due to an unexpected error. Try again or contact Acoustic support if problem persists.
+                  locale: en
       tags:
       - Delivery sites
+      operationId: getMydeliveryV1SitesBySiteId
+      x-operation-id-source: derived
   /delivery/v2/sites/{siteId}:
     get:
       x-ibm-dx-security-user-roles:
@@ -505,18 +497,19 @@ paths:
       summary: Get the site descriptor of a public site
       description: 'Returns the site descriptor of the site specified by *siteId*.
 
-        <br />User roles: admin, manager, editor, viewer, authenticatedVisitor, anonymous'
+
+        User roles: admin, manager, editor, viewer, authenticatedVisitor, anonymous'
       parameters:
       - name: siteId
         in: path
-        description: The ID of the site item, or `@current` to indicate that the ID of the site is derived from the addressed URL via custom domain site mapping or URL path based site addressing. For further details consult the Content documentation.
+        description: The ID of the site item, or `@current` to indicate that the ID of the site is derived from the addressed URL via custom domain site mapping or URL path-based site addressing. For further details consult the Content documentation.
         required: true
         schema:
           type: string
           format: uuid
       - name: fields
         in: query
-        description: Reduce the returned content down to just the specified fields. Fields specified by a comma seperated list of field names and should only be used once in query string. To only retrieve `id` and `name` this parameter should look like `id,name`. Undefined fields are ignored.
+        description: Reduce the returned content down to just the specified fields. Fields specified by a comma-separated list of field names and should only be used once in query string. To only retrieve `id` and `name` this parameter should look like `id,name`. Undefined fields are ignored.
         required: false
         style: form
         explode: false
@@ -535,7 +528,7 @@ paths:
           description: Success
           headers:
             Etag:
-              description: The etag value identifies this site item for future requests.
+              description: The Etag value identifies this site item for future requests.
               schema:
                 type: string
           content:
@@ -561,21 +554,21 @@ paths:
                     description: The ID of the content type this item belongs to.
                   locale:
                     type: string
-                    description: locale of the document (e.g "en", or "de").
+                    description: The locale of the document (e.g "en", or "de").
                   lastModified:
                     type: string
                     format: date-time
                     description: The last modified date of this content item in ISO 8601 with the format YYYY-MM-DDTHH:mm:ss.sssZ.
                   lastModifierId:
                     type: string
-                    description: name of user for now, this property may change once user management is defined.
+                    description: The ID that last modified the content item.
                   created:
                     type: string
                     format: date-time
                     description: The created date of this content item in ISO 8601 with the format YYYY-MM-DDTHH:mm:ss.sssZ.
                   creatorId:
                     type: string
-                    description: The Id of the user that created this content item.
+                    description: The ID of the user that created this content item.
                   kind:
                     type: array
                     items:
@@ -587,13 +580,13 @@ paths:
                     items:
                       type: string
                     uniqueItems: true
-                    description: The tags which has been set for this content item.
+                    description: The tags which have been set for this content item.
                   elements:
                     type: object
                     description: Defined by the type and capture in the schema given by the type, in a real content, this property will be filled with more information.
                   type:
                     type: string
-                    description: this is the Id of the content type document this content is based on.
+                    description: This is the ID of the content type document this content is based on.
         '304':
           description: The "Not modified" message is returned when the If-None-Match header is used and the Etag value matches the most recent version of the content item.
         '400':
@@ -627,24 +620,22 @@ paths:
                         description: The error severity.
                       description:
                         type: string
-                        description: A detailed description that describes what caused the eror, and how to proceed.
+                        description: A detailed description that describes what caused the error, and how to proceed.
                       cause:
                         type: object
                         description: The causing error.
                       locale:
                         type: string
                         description: The locale setting of the message and description text.
-              examples:
-                response:
-                  value:
-                    service: prod-delivery-sites
-                    requestId: c39d3e05-22f7-4d7c-8d7b-21ba6a2db508
-                    errors:
-                      code: 7001
-                      message: Missing or invalid value for 'fields' query parameter.
-                      level: ERROR
-                      description: Check that the 'fields' parameter is not blank, does not contain spaces or empty values, e.g. 'fields=rev,,last-modified' is considered invalid.
-                      locale: en
+              example:
+                service: prod-delivery-sites
+                requestId: c39d3e05-22f7-4d7c-8d7b-21ba6a2db508
+                errors:
+                  code: 7001
+                  message: Missing or invalid value for 'fields' query parameter.
+                  level: ERROR
+                  description: Check that the 'fields' parameter is not blank, does not contain spaces or empty values, e.g. 'fields=rev,,last-modified' is considered invalid.
+                  locale: en
         '404':
           description: Not found
           content:
@@ -676,24 +667,22 @@ paths:
                         description: The error severity.
                       description:
                         type: string
-                        description: A detailed description that describes what caused the eror, and how to proceed.
+                        description: A detailed description that describes what caused the error, and how to proceed.
                       cause:
                         type: object
                         description: The causing error.
                       locale:
                         type: string
                         description: The locale setting of the message and description text.
-              examples:
-                response:
-                  value:
-                    service: prod-delivery-sites
-                    requestId: c39d3e05-22f7-4d7c-8d7b-21ba6a2db508
-                    errors:
-                      code: 7003
-                      message: 'Site not found for id : f54e763a-fd53-424b-8ad9-7cc690cca2dc.'
-                      level: ERROR
-                      description: A site item with the specified id was not found in the system.
-                      locale: en
+              example:
+                service: prod-delivery-sites
+                requestId: c39d3e05-22f7-4d7c-8d7b-21ba6a2db508
+                errors:
+                  code: 7003
+                  message: 'Site not found for id : f54e763a-fd53-424b-8ad9-7cc690cca2dc.'
+                  level: ERROR
+                  description: A site item with the specified ID was not found in the system.
+                  locale: en
         '429':
           description: Too Many Requests, the server has reached a limit, the request must be sent again at a later time.
           content:
@@ -701,7 +690,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
         default:
-          description: "Unexpected error\n  An internal error has occurred. For example, a dependant service is not running.\n"
+          description: "Unexpected error\n  An internal error has occurred. For example, a dependent service is not running.\n"
           content:
             application/json:
               schema:
@@ -731,26 +720,26 @@ paths:
                         description: The error severity.
                       description:
                         type: string
-                        description: A detailed description that describes what caused the eror, and how to proceed.
+                        description: A detailed description that describes what caused the error, and how to proceed.
                       cause:
                         type: object
                         description: The causing error.
                       locale:
                         type: string
                         description: The locale setting of the message and description text.
-              examples:
-                response:
-                  value:
-                    service: prod-delivery-sites
-                    requestId: c39d3e05-22f7-4d7c-8d7b-21ba6a2db508
-                    errors:
-                      code: 1014
-                      message: Unexpected error occurred.
-                      level: ERROR
-                      description: Unable to complete the request due to an unexpected error. Try again or contact Acoustic support if problem persists.
-                      locale: en
+              example:
+                service: prod-delivery-sites
+                requestId: c39d3e05-22f7-4d7c-8d7b-21ba6a2db508
+                errors:
+                  code: 1014
+                  message: Unexpected error occurred.
+                  level: ERROR
+                  description: Unable to complete the request due to an unexpected error. Try again or contact Acoustic support if problem persists.
+                  locale: en
       tags:
       - Delivery sites
+      operationId: getDeliveryV2SitesBySiteId
+      x-operation-id-source: derived
   /mydelivery/v2/sites/{siteId}:
     get:
       x-ibm-dx-security-user-roles:
@@ -759,21 +748,22 @@ paths:
       - editor
       - viewer
       - authenticatedVisitor
-      summary: Get the site descriptor of a public or protected site.
+      summary: Get the site descriptor of a public or protected site
       description: 'Returns the site descriptor of the site specified by *siteId*.
 
-        <br />User roles: admin, manager, editor, viewer, authenticatedVisitor'
+
+        User roles: admin, manager, editor, viewer, authenticatedVisitor'
       parameters:
       - name: siteId
         in: path
-        description: The ID of the site item, or `@current` to indicate that the ID of the site is derived from the addressed URL via custom domain site mapping or URL path based site addressing. For further details consult the Content documentation.
+        description: The ID of the site item, or `@current` to indicate that the ID of the site is derived from the addressed URL via custom domain site mapping or URL path-based site addressing. For further details consult the Content documentation.
         required: true
         schema:
           type: string
           format: uuid
       - name: fields
         in: query
-        description: Reduce the returned content down to just the specified fields. Fields specified by a comma seperated list of field names and should only be used once in query string. To only retrieve `id` and `name` this parameter should look like `id,name`. Undefined fields are ignored.
+        description: Reduce the returned content down to just the specified fields. Fields specified by a comma-separated list of field names and should only be used once in query string. To only retrieve `id` and `name` this parameter should look like `id,name`. Undefined fields are ignored.
         required: false
         style: form
         explode: false
@@ -792,7 +782,7 @@ paths:
           description: Success
           headers:
             Etag:
-              description: The etag value identifies this site item for future requests.
+              description: The Etag value identifies this site item for future requests.
               schema:
                 type: string
           content:
@@ -818,21 +808,21 @@ paths:
                     description: The ID of the content type this item belongs to.
                   locale:
                     type: string
-                    description: locale of the document (e.g "en", or "de").
+                    description: The locale of the document (e.g "en", or "de").
                   lastModified:
                     type: string
                     format: date-time
                     description: The last modified date of this content item in ISO 8601 with the format YYYY-MM-DDTHH:mm:ss.sssZ.
                   lastModifierId:
                     type: string
-                    description: name of user for now, this property may change once user management is defined.
+                    description: The ID that last modified the content item.
                   created:
                     type: string
                     format: date-time
                     description: The created date of this content item in ISO 8601 with the format YYYY-MM-DDTHH:mm:ss.sssZ.
                   creatorId:
                     type: string
-                    description: The Id of the user that created this content item.
+                    description: The ID of the user that created this content item.
                   kind:
                     type: array
                     items:
@@ -844,13 +834,13 @@ paths:
                     items:
                       type: string
                     uniqueItems: true
-                    description: The tags which has been set for this content item.
+                    description: The tags which have been set for this content item.
                   elements:
                     type: object
                     description: Defined by the type and capture in the schema given by the type, in a real content, this property will be filled with more information.
                   type:
                     type: string
-                    description: this is the Id of the content type document this content is based on.
+                    description: This is the ID of the content type document this content is based on.
         '304':
           description: The "Not modified" message is returned when the If-None-Match header is used and the Etag value matches the most recent version of the content item.
         '400':
@@ -884,24 +874,22 @@ paths:
                         description: The error severity.
                       description:
                         type: string
-                        description: A detailed description that describes what caused the eror, and how to proceed.
+                        description: A detailed description that describes what caused the error, and how to proceed.
                       cause:
                         type: object
                         description: The causing error.
                       locale:
                         type: string
                         description: The locale setting of the message and description text.
-              examples:
-                response:
-                  value:
-                    service: prod-delivery-sites
-                    requestId: c39d3e05-22f7-4d7c-8d7b-21ba6a2db508
-                    errors:
-                      code: 7001
-                      message: Missing or invalid value for 'fields' query parameter.
-                      level: ERROR
-                      description: Check that the 'fields' parameter is not blank, does not contain spaces or empty values, e.g. 'fields=rev,,last-modified' is considered invalid.
-                      locale: en
+              example:
+                service: prod-delivery-sites
+                requestId: c39d3e05-22f7-4d7c-8d7b-21ba6a2db508
+                errors:
+                  code: 7001
+                  message: Missing or invalid value for 'fields' query parameter.
+                  level: ERROR
+                  description: Check that the 'fields' parameter is not blank, does not contain spaces or empty values, e.g. 'fields=rev,,last-modified' is considered invalid.
+                  locale: en
         '404':
           description: Not found
           content:
@@ -933,24 +921,22 @@ paths:
                         description: The error severity.
                       description:
                         type: string
-                        description: A detailed description that describes what caused the eror, and how to proceed.
+                        description: A detailed description that describes what caused the error, and how to proceed.
                       cause:
                         type: object
                         description: The causing error.
                       locale:
                         type: string
                         description: The locale setting of the message and description text.
-              examples:
-                response:
-                  value:
-                    service: prod-delivery-sites
-                    requestId: c39d3e05-22f7-4d7c-8d7b-21ba6a2db508
-                    errors:
-                      code: 7003
-                      message: 'Site not found for id : f54e763a-fd53-424b-8ad9-7cc690cca2dc.'
-                      level: ERROR
-                      description: A site item with the specified id was not found in the system.
-                      locale: en
+              example:
+                service: prod-delivery-sites
+                requestId: c39d3e05-22f7-4d7c-8d7b-21ba6a2db508
+                errors:
+                  code: 7003
+                  message: 'Site not found for id : f54e763a-fd53-424b-8ad9-7cc690cca2dc.'
+                  level: ERROR
+                  description: A site item with the specified ID was not found in the system.
+                  locale: en
         '429':
           description: Too Many Requests, the server has reached a limit, the request must be sent again at a later time.
           content:
@@ -958,7 +944,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
         default:
-          description: "Unexpected error\n  An internal error has occurred. For example, a dependant service is not running.\n"
+          description: "Unexpected error\n  An internal error has occurred. For example, a dependent service is not running.\n"
           content:
             application/json:
               schema:
@@ -988,26 +974,26 @@ paths:
                         description: The error severity.
                       description:
                         type: string
-                        description: A detailed description that describes what caused the eror, and how to proceed.
+                        description: A detailed description that describes what caused the error, and how to proceed.
                       cause:
                         type: object
                         description: The causing error.
                       locale:
                         type: string
                         description: The locale setting of the message and description text.
-              examples:
-                response:
-                  value:
-                    service: prod-delivery-sites
-                    requestId: c39d3e05-22f7-4d7c-8d7b-21ba6a2db508
-                    errors:
-                      code: 1014
-                      message: Unexpected error occurred.
-                      level: ERROR
-                      description: Unable to complete the request due to an unexpected error. Try again or contact Acoustic support if problem persists.
-                      locale: en
+              example:
+                service: prod-delivery-sites
+                requestId: c39d3e05-22f7-4d7c-8d7b-21ba6a2db508
+                errors:
+                  code: 1014
+                  message: Unexpected error occurred.
+                  level: ERROR
+                  description: Unable to complete the request due to an unexpected error. Try again or contact Acoustic support if problem persists.
+                  locale: en
       tags:
       - Delivery sites
+      operationId: getMydeliveryV2SitesBySiteId
+      x-operation-id-source: derived
   /delivery/v1/sites/{siteId}/pages/{pageId}:
     get:
       x-ibm-dx-security-user-roles:
@@ -1018,10 +1004,11 @@ paths:
       - authenticatedVisitor
       - anonymous
       x-ibm-dx-vary: []
-      summary: Get the descriptor of a public page from a site.
+      summary: Get the descriptor of a public page from a site
       description: 'Returns the descriptor of the page item specified by *pageId*. The page is contained in a site that is contained in *siteId*
 
-        <br />User roles: admin, manager, editor, viewer, authenticatedVisitor, anonymous'
+
+        User roles: admin, manager, editor, viewer, authenticatedVisitor, anonymous'
       parameters:
       - name: pageId
         in: path
@@ -1032,14 +1019,14 @@ paths:
           format: uuid
       - name: siteId
         in: path
-        description: The ID of the site item, or `@current` to indicate that the ID of the site is derived from the addressed URL via custom domain site mapping or URL path based site addressing. For further details consult the Content documentation.
+        description: The ID of the site item, or `@current` to indicate that the ID of the site is derived from the addressed URL via custom domain site mapping or URL path-based site addressing. For further details consult the Content documentation.
         required: true
         schema:
           type: string
           format: uuid
       - name: fields
         in: query
-        description: Reduce the returned content down to just the specified fields. Fields specified by a comma seperated list of field names and should only be used once in query string. To only retrieve `id` and `name` this parameter should look like `id,name`. Undefined fields are ignored.
+        description: Reduce the returned content down to just the specified fields. Fields specified by a comma-separated list of field names and should only be used once in query string. To only retrieve `id` and `name` this parameter should look like `id,name`. Undefined fields are ignored.
         required: false
         style: form
         explode: false
@@ -1058,7 +1045,7 @@ paths:
           description: Success
           headers:
             Etag:
-              description: The etag value identifies this site item for future requests.
+              description: The Etag value identifies this site item for future requests.
               schema:
                 type: string
           content:
@@ -1090,22 +1077,22 @@ paths:
                     description: Indicates whether the page is hidden in the navigation view or not.
                   layoutId:
                     type: string
-                    description: The name of the layoutitem for this page.
+                    description: The name of the layout item for this page.
                   contentId:
                     type: string
-                    description: The id of the content item which is associated with this page item.
+                    description: The ID of the content item which is associated with this page item.
                   contentTypeId:
                     type: string
-                    description: The id of the content type of the page content.
+                    description: The ID of the content type of the page content.
                   contentStatus:
                     type: string
                     description: The status of the content of this page. "ready" means that the content is in ready state.
                   url:
                     type: string
-                    description: A relative url which locates this page item.
+                    description: A relative URL which locates this page item.
                   position:
                     type: number
-                    description: an ordinal value which determines the position of this page items in the order of page siblings
+                    description: An ordinal value which determines the position of this page items in the order of page siblings.
                   classification:
                     type: string
                     description: The classification defines the document type. For page items, all documents are classified as "page".
@@ -1114,13 +1101,13 @@ paths:
                     description: The last modified date of this page item in ISO 8601 with the format YYYY-MM-DDTHH:mm:ss.sssZ.
                   lastModifierId:
                     type: string
-                    description: The id of the user which applied the last modification of this item.
+                    description: The ID of the user which applied the last modification of this item.
                   created:
                     type: string
                     description: The created date of this page item in ISO 8601 with the format YYYY-MM-DDTHH:mm:ss.sssZ.
                   creatorId:
                     type: string
-                    description: The id of the user that created this item.
+                    description: The ID of the user that created this item.
                 example:
                   contentId: 980c6e51-1bf7-4fff-9386-b8e96aebf475
                   contentTypeId: 2f313485-dccd-4b3c-ab9b-d049841b1e45
@@ -1173,24 +1160,22 @@ paths:
                         description: The error severity.
                       description:
                         type: string
-                        description: A detailed description that describes what caused the eror, and how to proceed.
+                        description: A detailed description that describes what caused the error, and how to proceed.
                       cause:
                         type: object
                         description: The causing error.
                       locale:
                         type: string
                         description: The locale setting of the message and description text.
-              examples:
-                response:
-                  value:
-                    service: prod-delivery-sites
-                    requestId: c39d3e05-22f7-4d7c-8d7b-21ba6a2db508
-                    errors:
-                      code: 7001
-                      message: Missing or invalid value for 'fields' query parameter.
-                      level: ERROR
-                      description: Check that the 'fields' parameter is not blank, does not contain spaces or empty values, e.g. 'fields=rev,,last-modified' is considered invalid.
-                      locale: en
+              example:
+                service: prod-delivery-sites
+                requestId: c39d3e05-22f7-4d7c-8d7b-21ba6a2db508
+                errors:
+                  code: 7001
+                  message: Missing or invalid value for 'fields' query parameter.
+                  level: ERROR
+                  description: Check that the 'fields' parameter is not blank, does not contain spaces or empty values, e.g. 'fields=rev,,last-modified' is considered invalid.
+                  locale: en
         '404':
           description: Not found
           content:
@@ -1222,24 +1207,22 @@ paths:
                         description: The error severity.
                       description:
                         type: string
-                        description: A detailed description that describes what caused the eror, and how to proceed.
+                        description: A detailed description that describes what caused the error, and how to proceed.
                       cause:
                         type: object
                         description: The causing error.
                       locale:
                         type: string
                         description: The locale setting of the message and description text.
-              examples:
-                response:
-                  value:
-                    service: prod-delivery-sites
-                    requestId: c39d3e05-22f7-4d7c-8d7b-21ba6a2db508
-                    errors:
-                      code: 7003
-                      message: 'Site not found for id : f54e763a-fd53-424b-8ad9-7cc690cca2dc.'
-                      level: ERROR
-                      description: A site item with the specified id was not found in the system.
-                      locale: en
+              example:
+                service: prod-delivery-sites
+                requestId: c39d3e05-22f7-4d7c-8d7b-21ba6a2db508
+                errors:
+                  code: 7003
+                  message: 'Site not found for id : f54e763a-fd53-424b-8ad9-7cc690cca2dc.'
+                  level: ERROR
+                  description: A site item with the specified ID was not found in the system.
+                  locale: en
         '429':
           description: Too Many Requests, the server has reached a limit, the request must be sent again at a later time.
           content:
@@ -1277,26 +1260,26 @@ paths:
                         description: The error severity.
                       description:
                         type: string
-                        description: A detailed description that describes what caused the eror, and how to proceed.
+                        description: A detailed description that describes what caused the error, and how to proceed.
                       cause:
                         type: object
                         description: The causing error.
                       locale:
                         type: string
                         description: The locale setting of the message and description text.
-              examples:
-                response:
-                  value:
-                    service: prod-delivery-sites
-                    requestId: c39d3e05-22f7-4d7c-8d7b-21ba6a2db508
-                    errors:
-                      code: 1014
-                      message: Unexpected error occurred.
-                      level: ERROR
-                      description: Unable to complete the request due to an unexpected error. Try again or contact Acoustic support if problem persists.
-                      locale: en
+              example:
+                service: prod-delivery-sites
+                requestId: c39d3e05-22f7-4d7c-8d7b-21ba6a2db508
+                errors:
+                  code: 1014
+                  message: Unexpected error occurred.
+                  level: ERROR
+                  description: Unable to complete the request due to an unexpected error. Try again or contact Acoustic support if problem persists.
+                  locale: en
       tags:
       - Delivery sites
+      operationId: getDeliveryV1SitesBySiteIdPagesByPageId
+      x-operation-id-source: derived
   /mydelivery/v1/sites/{siteId}/pages/{pageId}:
     get:
       x-ibm-dx-security-user-roles:
@@ -1305,10 +1288,11 @@ paths:
       - editor
       - viewer
       - authenticatedVisitor
-      summary: Get the descriptor of a public or protected page from a site.
+      summary: Get the descriptor of a public or protected page from a site
       description: 'Returns the descriptor of the page item specified by *pageId*. The page is contained in a site that is contained in *siteId*
 
-        <br />User roles: admin, manager, editor, viewer, authenticatedVisitor'
+
+        User roles: admin, manager, editor, viewer, authenticatedVisitor'
       parameters:
       - name: pageId
         in: path
@@ -1319,14 +1303,14 @@ paths:
           format: uuid
       - name: siteId
         in: path
-        description: The ID of the site item, or `@current` to indicate that the ID of the site is derived from the addressed URL via custom domain site mapping or URL path based site addressing. For further details consult the Content documentation.
+        description: The ID of the site item, or `@current` to indicate that the ID of the site is derived from the addressed URL via custom domain site mapping or URL path-based site addressing. For further details consult the Content documentation.
         required: true
         schema:
           type: string
           format: uuid
       - name: fields
         in: query
-        description: Reduce the returned content down to just the specified fields. Fields specified by a comma seperated list of field names and should only be used once in query string. To only retrieve `id` and `name` this parameter should look like `id,name`. Undefined fields are ignored.
+        description: Reduce the returned content down to just the specified fields. Fields specified by a comma-separated list of field names and should only be used once in query string. To only retrieve `id` and `name` this parameter should look like `id,name`. Undefined fields are ignored.
         required: false
         style: form
         explode: false
@@ -1345,7 +1329,7 @@ paths:
           description: Success
           headers:
             Etag:
-              description: The etag value identifies this site item for future requests.
+              description: The Etag value identifies this site item for future requests.
               schema:
                 type: string
           content:
@@ -1377,22 +1361,22 @@ paths:
                     description: Indicates whether the page is hidden in the navigation view or not.
                   layoutId:
                     type: string
-                    description: The name of the layoutitem for this page.
+                    description: The name of the layout item for this page.
                   contentId:
                     type: string
-                    description: The id of the content item which is associated with this page item.
+                    description: The ID of the content item which is associated with this page item.
                   contentTypeId:
                     type: string
-                    description: The id of the content type of the page content.
+                    description: The ID of the content type of the page content.
                   contentStatus:
                     type: string
                     description: The status of the content of this page. "ready" means that the content is in ready state.
                   url:
                     type: string
-                    description: A relative url which locates this page item.
+                    description: A relative URL which locates this page item.
                   position:
                     type: number
-                    description: an ordinal value which determines the position of this page items in the order of page siblings
+                    description: An ordinal value which determines the position of this page items in the order of page siblings.
                   classification:
                     type: string
                     description: The classification defines the document type. For page items, all documents are classified as "page".
@@ -1401,13 +1385,13 @@ paths:
                     description: The last modified date of this page item in ISO 8601 with the format YYYY-MM-DDTHH:mm:ss.sssZ.
                   lastModifierId:
                     type: string
-                    description: The id of the user which applied the last modification of this item.
+                    description: The ID of the user which applied the last modification of this item.
                   created:
                     type: string
                     description: The created date of this page item in ISO 8601 with the format YYYY-MM-DDTHH:mm:ss.sssZ.
                   creatorId:
                     type: string
-                    description: The id of the user that created this item.
+                    description: The ID of the user that created this item.
                 example:
                   contentId: 980c6e51-1bf7-4fff-9386-b8e96aebf475
                   contentTypeId: 2f313485-dccd-4b3c-ab9b-d049841b1e45
@@ -1460,24 +1444,22 @@ paths:
                         description: The error severity.
                       description:
                         type: string
-                        description: A detailed description that describes what caused the eror, and how to proceed.
+                        description: A detailed description that describes what caused the error, and how to proceed.
                       cause:
                         type: object
                         description: The causing error.
                       locale:
                         type: string
                         description: The locale setting of the message and description text.
-              examples:
-                response:
-                  value:
-                    service: prod-delivery-sites
-                    requestId: c39d3e05-22f7-4d7c-8d7b-21ba6a2db508
-                    errors:
-                      code: 7001
-                      message: Missing or invalid value for 'fields' query parameter.
-                      level: ERROR
-                      description: Check that the 'fields' parameter is not blank, does not contain spaces or empty values, e.g. 'fields=rev,,last-modified' is considered invalid.
-                      locale: en
+              example:
+                service: prod-delivery-sites
+                requestId: c39d3e05-22f7-4d7c-8d7b-21ba6a2db508
+                errors:
+                  code: 7001
+                  message: Missing or invalid value for 'fields' query parameter.
+                  level: ERROR
+                  description: Check that the 'fields' parameter is not blank, does not contain spaces or empty values, e.g. 'fields=rev,,last-modified' is considered invalid.
+                  locale: en
         '404':
           description: Not found
           content:
@@ -1509,24 +1491,22 @@ paths:
                         description: The error severity.
                       description:
                         type: string
-                        description: A detailed description that describes what caused the eror, and how to proceed.
+                        description: A detailed description that describes what caused the error, and how to proceed.
                       cause:
                         type: object
                         description: The causing error.
                       locale:
                         type: string
                         description: The locale setting of the message and description text.
-              examples:
-                response:
-                  value:
-                    service: prod-delivery-sites
-                    requestId: c39d3e05-22f7-4d7c-8d7b-21ba6a2db508
-                    errors:
-                      code: 7003
-                      message: 'Site not found for id : f54e763a-fd53-424b-8ad9-7cc690cca2dc.'
-                      level: ERROR
-                      description: A site item with the specified id was not found in the system.
-                      locale: en
+              example:
+                service: prod-delivery-sites
+                requestId: c39d3e05-22f7-4d7c-8d7b-21ba6a2db508
+                errors:
+                  code: 7003
+                  message: 'Site not found for id : f54e763a-fd53-424b-8ad9-7cc690cca2dc.'
+                  level: ERROR
+                  description: A site item with the specified ID was not found in the system.
+                  locale: en
         '429':
           description: Too Many Requests, the server has reached a limit, the request must be sent again at a later time.
           content:
@@ -1564,26 +1544,26 @@ paths:
                         description: The error severity.
                       description:
                         type: string
-                        description: A detailed description that describes what caused the eror, and how to proceed.
+                        description: A detailed description that describes what caused the error, and how to proceed.
                       cause:
                         type: object
                         description: The causing error.
                       locale:
                         type: string
                         description: The locale setting of the message and description text.
-              examples:
-                response:
-                  value:
-                    service: prod-delivery-sites
-                    requestId: c39d3e05-22f7-4d7c-8d7b-21ba6a2db508
-                    errors:
-                      code: 1014
-                      message: Unexpected error occurred.
-                      level: ERROR
-                      description: Unable to complete the request due to an unexpected error. Try again or contact Acoustic support if problem persists.
-                      locale: en
+              example:
+                service: prod-delivery-sites
+                requestId: c39d3e05-22f7-4d7c-8d7b-21ba6a2db508
+                errors:
+                  code: 1014
+                  message: Unexpected error occurred.
+                  level: ERROR
+                  description: Unable to complete the request due to an unexpected error. Try again or contact Acoustic support if problem persists.
+                  locale: en
       tags:
       - Delivery sites
+      operationId: getMydeliveryV1SitesBySiteIdPagesByPageId
+      x-operation-id-source: derived
   /delivery/v1/sites/{siteId}/pages/by-parent/{parentPageId}:
     get:
       x-ibm-dx-security-user-roles:
@@ -1595,11 +1575,12 @@ paths:
       - anonymous
       x-ibm-dx-vary: []
       summary: Get all public child pages of a specified parent page
-      description: 'Returns the descriptors of all public child pages which are  direct children of the parent page that is specified by *parentPageId*. The page is a member of the site that is specified in *siteId*.
+      description: 'Returns the descriptors of all public child pages which are direct children of the parent page that is specified by *parentPageId*. The page is a member of the site that is specified in *siteId*.
 
         If the value of *parentPageId* is ***@top***, then the descriptors of the top-level pages are returned.
 
-        <br />User roles: admin, manager, editor, viewer, authenticatedVisitor, anonymous'
+
+        User roles: admin, manager, editor, viewer, authenticatedVisitor, anonymous'
       parameters:
       - name: parentPageId
         in: path
@@ -1610,14 +1591,14 @@ paths:
           format: uuid
       - name: siteId
         in: path
-        description: The ID of the site item, or `@current` to indicate that the ID of the site is derived from the addressed URL via custom domain site mapping or URL path based site addressing. For further details consult the Content documentation.
+        description: The ID of the site item, or `@current` to indicate that the ID of the site is derived from the addressed URL via custom domain site mapping or URL path-based site addressing. For further details consult the Content documentation.
         required: true
         schema:
           type: string
           format: uuid
       - name: fields
         in: query
-        description: Reduce the returned content down to just the specified fields. Fields specified by a comma seperated list of field names and should only be used once in query string. To only retrieve `id` and `name` this parameter should look like `id,name`. Undefined fields are ignored.
+        description: Reduce the returned content down to just the specified fields. Fields specified by a comma-separated list of field names and should only be used once in query string. To only retrieve `id` and `name` this parameter should look like `id,name`. Undefined fields are ignored.
         required: false
         style: form
         explode: false
@@ -1633,7 +1614,7 @@ paths:
           type: number
       - name: start
         in: query
-        description: specifies the starting offset of the result set being returned. For example, if the value of this paramter is 5, the first 5 items in the result set are ignored. If this parameter is not specified, the starting offset of the result set is 0.
+        description: specifies the starting offset of the result set being returned. For example, if the value of this parameter is 5, the first 5 items in the result set are ignored. If this parameter is not specified, the starting offset of the result set is 0.
         required: false
         schema:
           type: number
@@ -1648,7 +1629,7 @@ paths:
           description: Success
           headers:
             Etag:
-              description: The etag value identifies this site item for future requests.
+              description: The Etag value identifies this site item for future requests.
               schema:
                 type: string
           content:
@@ -1687,22 +1668,22 @@ paths:
                           description: Indicates whether the page is hidden in the navigation view or not.
                         layoutId:
                           type: string
-                          description: The name of the layoutitem for this page.
+                          description: The name of the layout item for this page.
                         contentId:
                           type: string
-                          description: The id of the content item which is associated with this page item.
+                          description: The ID of the content item which is associated with this page item.
                         contentTypeId:
                           type: string
-                          description: The id of the content type of the page content.
+                          description: The ID of the content type of the page content.
                         contentStatus:
                           type: string
                           description: The status of the content of this page. "ready" means that the content is in ready state.
                         url:
                           type: string
-                          description: A relative url which locates this page item.
+                          description: A relative URL which locates this page item.
                         position:
                           type: number
-                          description: an ordinal value which determines the position of this page items in the order of page siblings
+                          description: An ordinal value which determines the position of this page items in the order of page siblings.
                         classification:
                           type: string
                           description: The classification defines the document type. For page items, all documents are classified as "page".
@@ -1711,13 +1692,13 @@ paths:
                           description: The last modified date of this page item in ISO 8601 with the format YYYY-MM-DDTHH:mm:ss.sssZ.
                         lastModifierId:
                           type: string
-                          description: The id of the user which applied the last modification of this item.
+                          description: The ID of the user which applied the last modification of this item.
                         created:
                           type: string
                           description: The created date of this page item in ISO 8601 with the format YYYY-MM-DDTHH:mm:ss.sssZ.
                         creatorId:
                           type: string
-                          description: The id of the user that created this item.
+                          description: The ID of the user that created this item.
                       example:
                         contentId: 980c6e51-1bf7-4fff-9386-b8e96aebf475
                         contentTypeId: 2f313485-dccd-4b3c-ab9b-d049841b1e45
@@ -1770,24 +1751,22 @@ paths:
                         description: The error severity.
                       description:
                         type: string
-                        description: A detailed description that describes what caused the eror, and how to proceed.
+                        description: A detailed description that describes what caused the error, and how to proceed.
                       cause:
                         type: object
                         description: The causing error.
                       locale:
                         type: string
                         description: The locale setting of the message and description text.
-              examples:
-                response:
-                  value:
-                    service: prod-delivery-sites
-                    requestId: c39d3e05-22f7-4d7c-8d7b-21ba6a2db508
-                    errors:
-                      code: 7001
-                      message: Missing or invalid value for 'fields' query parameter.
-                      level: ERROR
-                      description: Check that the 'fields' parameter is not blank, does not contain spaces or empty values, e.g. 'fields=rev,,last-modified' is considered invalid.
-                      locale: en
+              example:
+                service: prod-delivery-sites
+                requestId: c39d3e05-22f7-4d7c-8d7b-21ba6a2db508
+                errors:
+                  code: 7001
+                  message: Missing or invalid value for 'fields' query parameter.
+                  level: ERROR
+                  description: Check that the 'fields' parameter is not blank, does not contain spaces or empty values, e.g. 'fields=rev,,last-modified' is considered invalid.
+                  locale: en
         '429':
           description: Too Many Requests, the server has reached a limit, the request must be sent again at a later time.
           content:
@@ -1825,26 +1804,26 @@ paths:
                         description: The error severity.
                       description:
                         type: string
-                        description: A detailed description that describes what caused the eror, and how to proceed.
+                        description: A detailed description that describes what caused the error, and how to proceed.
                       cause:
                         type: object
                         description: The causing error.
                       locale:
                         type: string
                         description: The locale setting of the message and description text.
-              examples:
-                response:
-                  value:
-                    service: prod-delivery-sites
-                    requestId: c39d3e05-22f7-4d7c-8d7b-21ba6a2db508
-                    errors:
-                      code: 1014
-                      message: Unexpected error occurred.
-                      level: ERROR
-                      description: Unable to complete the request due to an unexpected error. Try again or contact Acoustic support if problem persists.
-                      locale: en
+              example:
+                service: prod-delivery-sites
+                requestId: c39d3e05-22f7-4d7c-8d7b-21ba6a2db508
+                errors:
+                  code: 1014
+                  message: Unexpected error occurred.
+                  level: ERROR
+                  description: Unable to complete the request due to an unexpected error. Try again or contact Acoustic support if problem persists.
+                  locale: en
       tags:
       - Delivery sites
+      operationId: getDeliveryV1SitesBySiteIdPagesByParentByParentPageId
+      x-operation-id-source: derived
   /mydelivery/v1/sites/{siteId}/pages/by-parent/{parentPageId}:
     get:
       x-ibm-dx-security-user-roles:
@@ -1854,11 +1833,12 @@ paths:
       - viewer
       - authenticatedVisitor
       summary: Get all public or protected child pages of a specified parent page
-      description: 'Returns the descriptors of all public or protected child pages which are  direct children of the parent page that is specified by *parentPageId*. The page is a member of the site that is specified in *siteId*.
+      description: 'Returns the descriptors of all public or protected child pages which are direct children of the parent page that is specified by *parentPageId*. The page is a member of the site that is specified in *siteId*.
 
         If the value of *parentPageId* is ***@top***, then the descriptors of the top-level pages are returned.
 
-        <br />User roles: admin, manager, editor, viewer, authenticatedVisitor'
+
+        User roles: admin, manager, editor, viewer, authenticatedVisitor'
       parameters:
       - name: parentPageId
         in: path
@@ -1869,14 +1849,14 @@ paths:
           format: uuid
       - name: siteId
         in: path
-        description: The ID of the site item, or `@current` to indicate that the ID of the site is derived from the addressed URL via custom domain site mapping or URL path based site addressing. For further details consult the Content documentation.
+        description: The ID of the site item, or `@current` to indicate that the ID of the site is derived from the addressed URL via custom domain site mapping or URL path-based site addressing. For further details consult the Content documentation.
         required: true
         schema:
           type: string
           format: uuid
       - name: fields
         in: query
-        description: Reduce the returned content down to just the specified fields. Fields specified by a comma seperated list of field names and should only be used once in query string. To only retrieve `id` and `name` this parameter should look like `id,name`. Undefined fields are ignored.
+        description: Reduce the returned content down to just the specified fields. Fields specified by a comma-separated list of field names and should only be used once in query string. To only retrieve `id` and `name` this parameter should look like `id,name`. Undefined fields are ignored.
         required: false
         style: form
         explode: false
@@ -1892,7 +1872,7 @@ paths:
           type: number
       - name: start
         in: query
-        description: specifies the starting offset of the result set being returned. For example, if the value of this paramter is 5, the first 5 items in the result set are ignored. If this parameter is not specified, the starting offset of the result set is 0.
+        description: specifies the starting offset of the result set being returned. For example, if the value of this parameter is 5, the first 5 items in the result set are ignored. If this parameter is not specified, the starting offset of the result set is 0.
         required: false
         schema:
           type: number
@@ -1907,7 +1887,7 @@ paths:
           description: Success
           headers:
             Etag:
-              description: The etag value identifies this site item for future requests.
+              description: The Etag value identifies this site item for future requests.
               schema:
                 type: string
           content:
@@ -1946,22 +1926,22 @@ paths:
                           description: Indicates whether the page is hidden in the navigation view or not.
                         layoutId:
                           type: string
-                          description: The name of the layoutitem for this page.
+                          description: The name of the layout item for this page.
                         contentId:
                           type: string
-                          description: The id of the content item which is associated with this page item.
+                          description: The ID of the content item which is associated with this page item.
                         contentTypeId:
                           type: string
-                          description: The id of the content type of the page content.
+                          description: The ID of the content type of the page content.
                         contentStatus:
                           type: string
                           description: The status of the content of this page. "ready" means that the content is in ready state.
                         url:
                           type: string
-                          description: A relative url which locates this page item.
+                          description: A relative URL which locates this page item.
                         position:
                           type: number
-                          description: an ordinal value which determines the position of this page items in the order of page siblings
+                          description: An ordinal value which determines the position of this page items in the order of page siblings.
                         classification:
                           type: string
                           description: The classification defines the document type. For page items, all documents are classified as "page".
@@ -1970,13 +1950,13 @@ paths:
                           description: The last modified date of this page item in ISO 8601 with the format YYYY-MM-DDTHH:mm:ss.sssZ.
                         lastModifierId:
                           type: string
-                          description: The id of the user which applied the last modification of this item.
+                          description: The ID of the user which applied the last modification of this item.
                         created:
                           type: string
                           description: The created date of this page item in ISO 8601 with the format YYYY-MM-DDTHH:mm:ss.sssZ.
                         creatorId:
                           type: string
-                          description: The id of the user that created this item.
+                          description: The ID of the user that created this item.
                       example:
                         contentId: 980c6e51-1bf7-4fff-9386-b8e96aebf475
                         contentTypeId: 2f313485-dccd-4b3c-ab9b-d049841b1e45
@@ -2029,24 +2009,22 @@ paths:
                         description: The error severity.
                       description:
                         type: string
-                        description: A detailed description that describes what caused the eror, and how to proceed.
+                        description: A detailed description that describes what caused the error, and how to proceed.
                       cause:
                         type: object
                         description: The causing error.
                       locale:
                         type: string
                         description: The locale setting of the message and description text.
-              examples:
-                response:
-                  value:
-                    service: prod-delivery-sites
-                    requestId: c39d3e05-22f7-4d7c-8d7b-21ba6a2db508
-                    errors:
-                      code: 7001
-                      message: Missing or invalid value for 'fields' query parameter.
-                      level: ERROR
-                      description: Check that the 'fields' parameter is not blank, does not contain spaces or empty values, e.g. 'fields=rev,,last-modified' is considered invalid.
-                      locale: en
+              example:
+                service: prod-delivery-sites
+                requestId: c39d3e05-22f7-4d7c-8d7b-21ba6a2db508
+                errors:
+                  code: 7001
+                  message: Missing or invalid value for 'fields' query parameter.
+                  level: ERROR
+                  description: Check that the 'fields' parameter is not blank, does not contain spaces or empty values, e.g. 'fields=rev,,last-modified' is considered invalid.
+                  locale: en
         '429':
           description: Too Many Requests, the server has reached a limit, the request must be sent again at a later time.
           content:
@@ -2084,26 +2062,26 @@ paths:
                         description: The error severity.
                       description:
                         type: string
-                        description: A detailed description that describes what caused the eror, and how to proceed.
+                        description: A detailed description that describes what caused the error, and how to proceed.
                       cause:
                         type: object
                         description: The causing error.
                       locale:
                         type: string
                         description: The locale setting of the message and description text.
-              examples:
-                response:
-                  value:
-                    service: prod-delivery-sites
-                    requestId: c39d3e05-22f7-4d7c-8d7b-21ba6a2db508
-                    errors:
-                      code: 1014
-                      message: Unexpected error occurred.
-                      level: ERROR
-                      description: Unable to complete the request due to an unexpected error. Try again or contact Acoustic support if problem persists.
-                      locale: en
+              example:
+                service: prod-delivery-sites
+                requestId: c39d3e05-22f7-4d7c-8d7b-21ba6a2db508
+                errors:
+                  code: 1014
+                  message: Unexpected error occurred.
+                  level: ERROR
+                  description: Unable to complete the request due to an unexpected error. Try again or contact Acoustic support if problem persists.
+                  locale: en
       tags:
       - Delivery sites
+      operationId: getMydeliveryV1SitesBySiteIdPagesByParentByParentPageId
+      x-operation-id-source: derived
 components:
   schemas:
     ErrorResponse:
@@ -2155,9 +2133,3 @@ components:
       required:
       - errors
       - requestId
-x-refined-from:
-- acoustic-content-openapi-original.json
-- acoustic-content-swagger2-original.yaml
-x-readme:
-  explorer-enabled: true
-  proxy-enabled: true

@@ -1,14 +1,12 @@
 openapi: 3.2.0
 info:
-  title: Acoustic Authoring sites API
   version: 1.0.142
   x-ibm-name: ibm-watson-content-hub-api
-  description: 'Operations tagged Authoring sites across 2 of this provider''s published API definitions: acoustic-content-openapi-original.json, acoustic-content-swagger2-original.yaml. Each path carries the servers of the definition it was published in.'
+  title: Acoustic Content Authoring sites API
+  description: Copyright © Acoustic, L.P. 2023
 tags:
 - name: Authoring sites
-  description: 'Use the Content authoring sites service Rest APIs to work with sites. Sites are comprised of a site metadata and a hierarchy of pages. You can retrieve or update site metadata and create, read, update, and delete site pages belonging to a site. The out-of-the-box site has an ID of ''default''.
-
-    '
+  description: Use the Content authoring sites service Rest APIs to work with sites. Sites are comprised of a site metadata and a hierarchy of pages. You can retrieve or update site metadata and create, read, update, and delete site pages belonging to a site. The out-of-the-box site has an ID of 'default'.
 paths:
   /authoring/v1/sites:
     get:
@@ -20,7 +18,8 @@ paths:
       summary: Get list of all sites
       description: 'Returns a list of all sites. A default site with id ''default'' exists out of the box.
 
-        <br />User roles: admin, manager, editor, viewer'
+
+        User roles: admin, manager, editor, viewer'
       parameters:
       - name: fields
         in: query
@@ -80,19 +79,17 @@ paths:
                         routingMode:
                           type: string
                           description: The is the routing mode for the site, values are either 'anchor' or 'path'. The property controls the URL structure that is used to address individual pages within the site. With a routing mode of 'anchor' pages are addressed by URL anchors that are relative to the site root document, for example 'https://your.host/#/products'.  With a routing mode of 'path' pages are addressed by URL path fragments instead of '#' anchors, for example 'https://your.host/products'. The 'path' mode is recommended for allowing external search crawlers to index the pages as separate documents.
-              examples:
-                response:
-                  value:
-                    items:
-                    - name: default
-                      classification: site
-                      routingMode: anchor
-                      lastModified: '2017-09-11T14:03:04.348Z'
-                      lastModifierId: 00000000-0000-0000-0000-000000000009
-                      created: '2017-09-11T14:03:04.348Z'
-                      creatorId: 00000000-0000-0000-0000-000000000009
-                      id: default
-                      rev: 1-76a0d8566675d83395d8878fab7d4e5e
+              example:
+                items:
+                - name: default
+                  classification: site
+                  routingMode: anchor
+                  lastModified: '2017-09-11T14:03:04.348Z'
+                  lastModifierId: 00000000-0000-0000-0000-000000000009
+                  created: '2017-09-11T14:03:04.348Z'
+                  creatorId: 00000000-0000-0000-0000-000000000009
+                  id: default
+                  rev: 1-76a0d8566675d83395d8878fab7d4e5e
         '429':
           description: Too Many Requests, the server has reached a limit, the request must be sent again at a later time.
           content:
@@ -138,19 +135,19 @@ paths:
                               type: string
                         locale:
                           type: string
-              examples:
-                response:
-                  value:
-                    service: prod-authoring-sites
-                    requestId: '455478465455511'
-                    errors:
-                    - code: 5004
-                      message: Unexpected error occurred.
-                      level: ERROR
-                      description: Unable to complete the request due to an unexpected error. Try again or contact Acoustic support if problem persists.
-                      locale: en
+              example:
+                service: prod-authoring-sites
+                requestId: '455478465455511'
+                errors:
+                - code: 5004
+                  message: Unexpected error occurred.
+                  level: ERROR
+                  description: Unable to complete the request due to an unexpected error. Try again or contact Acoustic support if problem persists.
+                  locale: en
       tags:
       - Authoring sites
+      operationId: getAuthoringV1Sites
+      x-operation-id-source: derived
     post:
       x-ibm-dx-security-user-roles:
       - admin
@@ -177,7 +174,8 @@ paths:
 
         ''linkedDocId'' must be set to ''default''.
 
-        <br />User roles: admin, manager, editor'
+
+        User roles: admin, manager, editor'
       parameters:
       - name: copySourceSiteId
         in: query
@@ -187,31 +185,6 @@ paths:
         required: false
         schema:
           type: string
-      requestBody:
-        content:
-          application/json:
-            schema:
-              title: Creating Site Metadata
-              description: Create Site Metadata
-              type: object
-              properties:
-                id:
-                  type: string
-                  description: The ID of the site. If creating a draft of the default site the id must start with default.
-                linkedDocId:
-                  type: string
-                  description: The linkedDocId for draft sites. This is an optional field, if provided specify the ID of the ready site to create a draft of.
-                name:
-                  type: string
-                  description: The name of the site. This is a required field.
-                status:
-                  type: string
-                  description: The status of the site metadata (i.e. draft)
-                routingMode:
-                  type: string
-                  description: The is routingMode the routing mode for the site, values are either 'anchor' or 'path'. The property controls the URL structure that is used to address individual pages within the site. With a routing mode of 'anchor' pages are addressed by URL anchors that are relative to the site root document, for example 'https://your.host/#/products'.  With a routing mode of 'path' pages are addressed by URL path fragments instead of '#' anchors, for example 'https://your.host/products'. The 'path' mode is recommended for allowing external search crawlers to index the pages as separate documents.
-        description: The metadata for the new site
-        required: true
       responses:
         '201':
           description: succcess.
@@ -249,22 +222,20 @@ paths:
                   routingMode:
                     type: string
                     description: The is the routing mode for the site, values are either 'anchor' or 'path'. The property controls the URL structure that is used to address individual pages within the site. With a routing mode of 'anchor' pages are addressed by URL anchors that are relative to the site root document, for example 'https://your.host/#/products'.  With a routing mode of 'path' pages are addressed by URL path fragments instead of '#' anchors, for example 'https://your.host/products'. The 'path' mode is recommended for allowing external search crawlers to index the pages as separate documents.
-              examples:
-                response:
-                  value:
-                    name: default
-                    routingMode: anchor
-                    storeId: ''
-                    storeIdentifier: ''
-                    linkedDocId: default
-                    classification: site
-                    lastModified: '2018-07-17T15:17:02.203Z'
-                    lastModifierId: d30a541e-ff2e-45a8-a0eb-52952a3cd6eb
-                    creatorId: 00000000-0000-0000-0000-000000000009
-                    created: '2018-07-16T15:56:20.009Z'
-                    status: ready
-                    id: default:fc81b9d3-76a7-4bd1-8ddc-a23cc9e4b101
-                    rev: 68-8f553a9520a1f3be3b21fd6cc8684dd5
+              example:
+                name: default
+                routingMode: anchor
+                storeId: ''
+                storeIdentifier: ''
+                linkedDocId: default
+                classification: site
+                lastModified: '2018-07-17T15:17:02.203Z'
+                lastModifierId: d30a541e-ff2e-45a8-a0eb-52952a3cd6eb
+                creatorId: 00000000-0000-0000-0000-000000000009
+                created: '2018-07-16T15:56:20.009Z'
+                status: ready
+                id: default:fc81b9d3-76a7-4bd1-8ddc-a23cc9e4b101
+                rev: 68-8f553a9520a1f3be3b21fd6cc8684dd5
         '400':
           description: Bad request
           content:
@@ -304,18 +275,16 @@ paths:
                               type: string
                         locale:
                           type: string
-              examples:
-                response:
-                  value:
-                    service: prod-authoring-sites
-                    requestId: '455478465455511'
-                    errors:
-                    - errorKey: SITE_ITEM_INVALID_ERROR
-                      code: 2003
-                      statusCode: '400'
-                      message: Site metadata supplied is invalid, the 'linkedDocId' may be missing or empty.
-                      messageParameters:
-                        field: linkedDocId
+              example:
+                service: prod-authoring-sites
+                requestId: '455478465455511'
+                errors:
+                - errorKey: SITE_ITEM_INVALID_ERROR
+                  code: 2003
+                  statusCode: '400'
+                  message: Site metadata supplied is invalid, the 'linkedDocId' may be missing or empty.
+                  messageParameters:
+                    field: linkedDocId
         '409':
           description: Conflict
           content:
@@ -355,17 +324,15 @@ paths:
                               type: string
                         locale:
                           type: string
-              examples:
-                response:
-                  value:
-                    service: prod-authoring-sites
-                    requestId: '69982173950058'
-                    errors:
-                    - code: 2096
-                      message: 'Unable to create site with ID: default:fc81b9d3-76a7-4bd1-8ddc-a23cc9e4b101 due to a conflict.'
-                      level: ERROR
-                      description: Unable to create the specified site due to a conflict with an existing item. You may have attempted to create the site but the site already exists.
-                      locale: en
+              example:
+                service: prod-authoring-sites
+                requestId: '69982173950058'
+                errors:
+                - code: 2096
+                  message: 'Unable to create site with ID: default:fc81b9d3-76a7-4bd1-8ddc-a23cc9e4b101 due to a conflict.'
+                  level: ERROR
+                  description: Unable to create the specified site due to a conflict with an existing item. You may have attempted to create the site but the site already exists.
+                  locale: en
         '429':
           description: Too Many Requests, the server has reached a limit, the request must be sent again at a later time.
           content:
@@ -411,19 +378,44 @@ paths:
                               type: string
                         locale:
                           type: string
-              examples:
-                response:
-                  value:
-                    service: prod-authoring-sites
-                    requestId: '455478465455511'
-                    errors:
-                    - code: 5004
-                      message: Unexpected error occurred.
-                      level: ERROR
-                      description: Unable to complete the request due to an unexpected error. Try again or contact Acoustic support if problem persists.
-                      locale: en
+              example:
+                service: prod-authoring-sites
+                requestId: '455478465455511'
+                errors:
+                - code: 5004
+                  message: Unexpected error occurred.
+                  level: ERROR
+                  description: Unable to complete the request due to an unexpected error. Try again or contact Acoustic support if problem persists.
+                  locale: en
       tags:
       - Authoring sites
+      requestBody:
+        content:
+          application/json:
+            schema:
+              title: Creating Site Metadata
+              description: Create Site Metadata
+              type: object
+              properties:
+                id:
+                  type: string
+                  description: The ID of the site. If creating a draft of the default site the id must start with default.
+                linkedDocId:
+                  type: string
+                  description: The linkedDocId for draft sites. This is an optional field, if provided specify the ID of the ready site to create a draft of.
+                name:
+                  type: string
+                  description: The name of the site. This is a required field.
+                status:
+                  type: string
+                  description: The status of the site metadata (i.e. draft)
+                routingMode:
+                  type: string
+                  description: The is routingMode the routing mode for the site, values are either 'anchor' or 'path'. The property controls the URL structure that is used to address individual pages within the site. With a routing mode of 'anchor' pages are addressed by URL anchors that are relative to the site root document, for example 'https://your.host/#/products'.  With a routing mode of 'path' pages are addressed by URL path fragments instead of '#' anchors, for example 'https://your.host/products'. The 'path' mode is recommended for allowing external search crawlers to index the pages as separate documents.
+        description: The metadata for the new site
+        required: true
+      operationId: postAuthoringV1Sites
+      x-operation-id-source: derived
   /authoring/v1/sites/{site-id}:
     get:
       x-ibm-dx-security-user-roles:
@@ -431,10 +423,11 @@ paths:
       - manager
       - editor
       - viewer
-      summary: Retrieve metadata for a site.
+      summary: Retrieve metadata for a site
       description: 'Retrieve the site metadata for an existing site. A default site with ID ''default'' exists out-of-the-box.
 
-        <br />User roles: admin, manager, editor, viewer'
+
+        User roles: admin, manager, editor, viewer'
       parameters:
       - name: site-id
         in: path
@@ -495,18 +488,16 @@ paths:
                   routingMode:
                     type: string
                     description: The is the routing mode for the site, values are either 'anchor' or 'path'. The property controls the URL structure that is used to address individual pages within the site. With a routing mode of 'anchor' pages are addressed by URL anchors that are relative to the site root document, for example 'https://your.host/#/products'.  With a routing mode of 'path' pages are addressed by URL path fragments instead of '#' anchors, for example 'https://your.host/products'. The 'path' mode is recommended for allowing external search crawlers to index the pages as separate documents.
-              examples:
-                response:
-                  value:
-                    name: default
-                    classification: site
-                    routingMode: anchor
-                    lastModified: '2017-09-11T14:03:04.348Z'
-                    lastModifierId: 00000000-0000-0000-0000-000000000009
-                    created: '2017-09-11T14:03:04.348Z'
-                    creatorId: 00000000-0000-0000-0000-000000000009
-                    id: default
-                    rev: 1-76a0d8566675d83395d8878fab7d4e5e
+              example:
+                name: default
+                classification: site
+                routingMode: anchor
+                lastModified: '2017-09-11T14:03:04.348Z'
+                lastModifierId: 00000000-0000-0000-0000-000000000009
+                created: '2017-09-11T14:03:04.348Z'
+                creatorId: 00000000-0000-0000-0000-000000000009
+                id: default
+                rev: 1-76a0d8566675d83395d8878fab7d4e5e
         '400':
           description: Bad request
           content:
@@ -546,17 +537,15 @@ paths:
                               type: string
                         locale:
                           type: string
-              examples:
-                response:
-                  value:
-                    service: prod-authoring-sites
-                    requestId: '455478465455511'
-                    errors:
-                    - code: 2005
-                      message: Invalid site ID parameter provided.
-                      level: ERROR
-                      description: The site ID provided is invalid. The site ID value cannot be empty or contain spaces. Provide a valid site ID and try again.
-                      locale: en
+              example:
+                service: prod-authoring-sites
+                requestId: '455478465455511'
+                errors:
+                - code: 2005
+                  message: Invalid site ID parameter provided.
+                  level: ERROR
+                  description: The site ID provided is invalid. The site ID value cannot be empty or contain spaces. Provide a valid site ID and try again.
+                  locale: en
         '404':
           description: Not found
           content:
@@ -596,17 +585,15 @@ paths:
                               type: string
                         locale:
                           type: string
-              examples:
-                response:
-                  value:
-                    service: prod-authoring-sites
-                    requestId: '455478465455511'
-                    errors:
-                    - code: 2002
-                      message: 'Site not found for ID: dummyId'
-                      level: ERROR
-                      description: A site with the specified ID was not found in the system. Provide a valid ID and try again.
-                      locale: en
+              example:
+                service: prod-authoring-sites
+                requestId: '455478465455511'
+                errors:
+                - code: 2002
+                  message: 'Site not found for ID: dummyId'
+                  level: ERROR
+                  description: A site with the specified ID was not found in the system. Provide a valid ID and try again.
+                  locale: en
         '429':
           description: Too Many Requests, the server has reached a limit, the request must be sent again at a later time.
           content:
@@ -652,31 +639,32 @@ paths:
                               type: string
                         locale:
                           type: string
-              examples:
-                response:
-                  value:
-                    service: prod-authoring-sites
-                    requestId: '455478465455511'
-                    errors:
-                    - code: 5004
-                      message: Unexpected error occurred.
-                      level: ERROR
-                      description: Unable to complete the request due to an unexpected error. Try again or contact Acoustic support if problem persists.
-                      locale: en
+              example:
+                service: prod-authoring-sites
+                requestId: '455478465455511'
+                errors:
+                - code: 5004
+                  message: Unexpected error occurred.
+                  level: ERROR
+                  description: Unable to complete the request due to an unexpected error. Try again or contact Acoustic support if problem persists.
+                  locale: en
       tags:
       - Authoring sites
+      operationId: getAuthoringV1SitesBySiteId
+      x-operation-id-source: derived
     put:
       x-ibm-dx-security-user-roles:
       - admin
       - manager
       - editor
-      summary: Update metadata for a site.
+      summary: Update metadata for a site
       description: 'Update the metadata for an existing site. A default site with ID ''default'' exists out-of-the-box.
 
 
         The update data must include the `rev` and `name` metadata fields.
 
-        <br />User roles: admin, manager, editor'
+
+        User roles: admin, manager, editor'
       parameters:
       - name: site-id
         in: path
@@ -701,28 +689,6 @@ paths:
         required: false
         schema:
           type: boolean
-      requestBody:
-        content:
-          application/json:
-            schema:
-              title: Updating Site Metadata
-              description: Updating Site Metadata
-              type: object
-              properties:
-                id:
-                  type: string
-                  description: The ID of the site.
-                rev:
-                  type: string
-                  description: The current revision of the document. This is a required field.
-                name:
-                  type: string
-                  description: The name of the site. This is a required field.
-                routingMode:
-                  type: string
-                  description: The is the routing mode for the site, values are either 'anchor' or 'path'. The property controls the URL structure that is used to address individual pages within the site. With a routing mode of 'anchor' pages are addressed by URL anchors that are relative to the site root document, for example 'https://your.host/#/products'.  With a routing mode of 'path' pages are addressed by URL path fragments instead of '#' anchors, for example 'https://your.host/products'. The 'path' mode is recommended for allowing external search crawlers to index the pages as separate documents.
-        description: Provide the updated site metadata in the body of the request. The current revision (`rev`) and the site name (`name`) fields must be provided in order to update the site metadata.
-        required: true
       responses:
         '200':
           description: Success, returns updated site
@@ -748,13 +714,11 @@ paths:
                   routingMode:
                     type: string
                     description: The is the routing mode for the site, values are either 'anchor' or 'path'. The property controls the URL structure that is used to address individual pages within the site. With a routing mode of 'anchor' pages are addressed by URL anchors that are relative to the site root document, for example 'https://your.host/#/products'.  With a routing mode of 'path' pages are addressed by URL path fragments instead of '#' anchors, for example 'https://your.host/products'. The 'path' mode is recommended for allowing external search crawlers to index the pages as separate documents.
-              examples:
-                response:
-                  value:
-                    name: default
-                    id: default
-                    rev: 22-ae719cf45c00a55eda54d6480976b3e1
-                    classification: site
+              example:
+                name: default
+                id: default
+                rev: 22-ae719cf45c00a55eda54d6480976b3e1
+                classification: site
         '400':
           description: Bad request
           content:
@@ -794,17 +758,15 @@ paths:
                               type: string
                         locale:
                           type: string
-              examples:
-                response:
-                  value:
-                    service: prod-authoring-sites
-                    requestId: '455478465455511'
-                    errors:
-                    - code: 2003
-                      message: Site metadata supplied is invalid
-                      level: ERROR
-                      description: The site metadata supplied is invalid. Provide a valid site metadata value and try again.
-                      locale: en
+              example:
+                service: prod-authoring-sites
+                requestId: '455478465455511'
+                errors:
+                - code: 2003
+                  message: Site metadata supplied is invalid
+                  level: ERROR
+                  description: The site metadata supplied is invalid. Provide a valid site metadata value and try again.
+                  locale: en
         '401':
           description: Unauthorized
           content:
@@ -844,17 +806,15 @@ paths:
                               type: string
                         locale:
                           type: string
-              examples:
-                response:
-                  value:
-                    service: prod-authoring-sites
-                    requestId: '455478465455511'
-                    errors:
-                    - code: 1016
-                      message: Problem accessing database.
-                      level: ERROR
-                      description: Problem accessing database. Try again or contact Acoustic support if problem persists.
-                      locale: en
+              example:
+                service: prod-authoring-sites
+                requestId: '455478465455511'
+                errors:
+                - code: 1016
+                  message: Problem accessing database.
+                  level: ERROR
+                  description: Problem accessing database. Try again or contact Acoustic support if problem persists.
+                  locale: en
         '403':
           description: Forbidden
           content:
@@ -894,17 +854,15 @@ paths:
                               type: string
                         locale:
                           type: string
-              examples:
-                response:
-                  value:
-                    service: prod-authoring-sites
-                    requestId: '455478465455511'
-                    errors:
-                    - code: 1016
-                      message: Problem accessing database.
-                      level: ERROR
-                      description: Problem accessing database. Try again or contact Acoustic support if problem persists.
-                      locale: en
+              example:
+                service: prod-authoring-sites
+                requestId: '455478465455511'
+                errors:
+                - code: 1016
+                  message: Problem accessing database.
+                  level: ERROR
+                  description: Problem accessing database. Try again or contact Acoustic support if problem persists.
+                  locale: en
         '409':
           description: Conflict
           content:
@@ -944,17 +902,15 @@ paths:
                               type: string
                         locale:
                           type: string
-              examples:
-                response:
-                  value:
-                    service: prod-authoring-sites
-                    requestId: '455478465455511'
-                    errors:
-                    - code: 2051
-                      message: 'Unable to update site with ID: default due to a conflict.'
-                      level: ERROR
-                      description: Unable to update the specified site due to a conflict with an existing item. You may have attempted to update the site with an older version. Resolve the conflict and try again.
-                      locale: en
+              example:
+                service: prod-authoring-sites
+                requestId: '455478465455511'
+                errors:
+                - code: 2051
+                  message: 'Unable to update site with ID: default due to a conflict.'
+                  level: ERROR
+                  description: Unable to update the specified site due to a conflict with an existing item. You may have attempted to update the site with an older version. Resolve the conflict and try again.
+                  locale: en
         '429':
           description: Too Many Requests
           content:
@@ -994,17 +950,15 @@ paths:
                               type: string
                         locale:
                           type: string
-              examples:
-                response:
-                  value:
-                    service: prod-authoring-sites
-                    requestId: '455478465455511'
-                    errors:
-                    - code: 1018
-                      message: Temporarily unable to access the database.
-                      level: ERROR
-                      description: Temporarily unable to access the database. Try again or contact Acoustic support if problem persists.
-                      locale: en
+              example:
+                service: prod-authoring-sites
+                requestId: '455478465455511'
+                errors:
+                - code: 1018
+                  message: Temporarily unable to access the database.
+                  level: ERROR
+                  description: Temporarily unable to access the database. Try again or contact Acoustic support if problem persists.
+                  locale: en
         default:
           description: Unexpected error
           content:
@@ -1044,19 +998,41 @@ paths:
                               type: string
                         locale:
                           type: string
-              examples:
-                response:
-                  value:
-                    service: prod-authoring-sites
-                    requestId: '455478465455511'
-                    errors:
-                    - code: 5004
-                      message: Unexpected error occurred.
-                      level: ERROR
-                      description: Unable to complete the request due to an unexpected error. Try again or contact Acoustic support if problem persists.
-                      locale: en
+              example:
+                service: prod-authoring-sites
+                requestId: '455478465455511'
+                errors:
+                - code: 5004
+                  message: Unexpected error occurred.
+                  level: ERROR
+                  description: Unable to complete the request due to an unexpected error. Try again or contact Acoustic support if problem persists.
+                  locale: en
       tags:
       - Authoring sites
+      requestBody:
+        content:
+          application/json:
+            schema:
+              title: Updating Site Metadata
+              description: Updating Site Metadata
+              type: object
+              properties:
+                id:
+                  type: string
+                  description: The ID of the site.
+                rev:
+                  type: string
+                  description: The current revision of the document. This is a required field.
+                name:
+                  type: string
+                  description: The name of the site. This is a required field.
+                routingMode:
+                  type: string
+                  description: The is the routing mode for the site, values are either 'anchor' or 'path'. The property controls the URL structure that is used to address individual pages within the site. With a routing mode of 'anchor' pages are addressed by URL anchors that are relative to the site root document, for example 'https://your.host/#/products'.  With a routing mode of 'path' pages are addressed by URL path fragments instead of '#' anchors, for example 'https://your.host/products'. The 'path' mode is recommended for allowing external search crawlers to index the pages as separate documents.
+        description: Provide the updated site metadata in the body of the request. The current revision (`rev`) and the site name (`name`) fields must be provided in order to update the site metadata.
+        required: true
+      operationId: putAuthoringV1SitesBySiteId
+      x-operation-id-source: derived
     delete:
       x-ibm-dx-security-user-roles:
       - admin
@@ -1065,7 +1041,8 @@ paths:
       summary: Delete a site and the site pages
       description: 'Use this endpoint to delete a site and the pages in that site.
 
-        <br />User roles: admin, manager, editor'
+
+        User roles: admin, manager, editor'
       parameters:
       - name: site-id
         in: path
@@ -1116,17 +1093,15 @@ paths:
                               type: string
                         locale:
                           type: string
-              examples:
-                response:
-                  value:
-                    service: prod-authoring-sites
-                    requestId: '455478465455511'
-                    errors:
-                    - code: 2005
-                      message: Invalid site ID parameter provided.
-                      level: ERROR
-                      description: The site ID provided is invalid. The site ID value cannot be empty or contain spaces. Provide a valid site ID and try again.
-                      locale: en
+              example:
+                service: prod-authoring-sites
+                requestId: '455478465455511'
+                errors:
+                - code: 2005
+                  message: Invalid site ID parameter provided.
+                  level: ERROR
+                  description: The site ID provided is invalid. The site ID value cannot be empty or contain spaces. Provide a valid site ID and try again.
+                  locale: en
         '404':
           description: Not found
           content:
@@ -1166,17 +1141,15 @@ paths:
                               type: string
                         locale:
                           type: string
-              examples:
-                response:
-                  value:
-                    service: prod-authoring-sites
-                    requestId: '455478465455511'
-                    errors:
-                    - code: 2002
-                      message: 'Site not found for ID: dummyId'
-                      level: ERROR
-                      description: A site with the specified ID was not found in the system. Provide a valid ID and try again.
-                      locale: en
+              example:
+                service: prod-authoring-sites
+                requestId: '455478465455511'
+                errors:
+                - code: 2002
+                  message: 'Site not found for ID: dummyId'
+                  level: ERROR
+                  description: A site with the specified ID was not found in the system. Provide a valid ID and try again.
+                  locale: en
         '409':
           description: conflict
           content:
@@ -1216,17 +1189,15 @@ paths:
                               type: string
                         locale:
                           type: string
-              examples:
-                response:
-                  value:
-                    service: prod-authoring-sites
-                    requestId: '455478465455511'
-                    errors:
-                    - code: 6016
-                      message: Some of the pages for site dummyId could not be deleted.
-                      level: ERROR
-                      description: A site with the specified ID could not be deleted as some of the pages in the site could not be deleted. Please try again.
-                      locale: en
+              example:
+                service: prod-authoring-sites
+                requestId: '455478465455511'
+                errors:
+                - code: 6016
+                  message: Some of the pages for site dummyId could not be deleted.
+                  level: ERROR
+                  description: A site with the specified ID could not be deleted as some of the pages in the site could not be deleted. Please try again.
+                  locale: en
         '429':
           description: Too Many Requests, the server has reached a limit, the request must be sent again at a later time.
           content:
@@ -1272,29 +1243,30 @@ paths:
                               type: string
                         locale:
                           type: string
-              examples:
-                response:
-                  value:
-                    service: prod-authoring-sites
-                    requestId: '455478465455511'
-                    errors:
-                    - code: 5004
-                      message: Unexpected error occurred.
-                      level: ERROR
-                      description: Unable to complete the request due to an unexpected error. Try again or contact Acoustic support if problem persists.
-                      locale: en
+              example:
+                service: prod-authoring-sites
+                requestId: '455478465455511'
+                errors:
+                - code: 5004
+                  message: Unexpected error occurred.
+                  level: ERROR
+                  description: Unable to complete the request due to an unexpected error. Try again or contact Acoustic support if problem persists.
+                  locale: en
       tags:
       - Authoring sites
+      operationId: deleteAuthoringV1SitesBySiteId
+      x-operation-id-source: derived
   /authoring/v1/sites/{site-id}/ready:
     post:
       x-ibm-dx-security-user-roles:
       - admin
       - manager
       - editor
-      summary: Promote the site and pages metadata from draft to ready status.
+      summary: Promote the site and pages metadata from draft to ready status
       description: 'Use this endpoint to change the status of a site''s metadata and the metadata of all pages in the site from draft to ready.
 
-        <br />User roles: admin, manager, editor'
+
+        User roles: admin, manager, editor'
       parameters:
       - name: site-id
         in: path
@@ -1379,17 +1351,15 @@ paths:
                               type: string
                         locale:
                           type: string
-              examples:
-                response:
-                  value:
-                    service: prod-authoring-sites
-                    requestId: '455478465455571'
-                    errors:
-                    - code: 2005
-                      message: Invalid site ID parameter provided.
-                      level: ERROR
-                      description: The site ID provided is invalid. The site ID value cannot be empty or contain spaces. Provide a valid site ID and try again.
-                      locale: en
+              example:
+                service: prod-authoring-sites
+                requestId: '455478465455571'
+                errors:
+                - code: 2005
+                  message: Invalid site ID parameter provided.
+                  level: ERROR
+                  description: The site ID provided is invalid. The site ID value cannot be empty or contain spaces. Provide a valid site ID and try again.
+                  locale: en
         '401':
           description: Unauthorized
           content:
@@ -1429,17 +1399,15 @@ paths:
                               type: string
                         locale:
                           type: string
-              examples:
-                response:
-                  value:
-                    service: prod-authoring-sites
-                    requestId: '455478465455511'
-                    errors:
-                    - code: 1016
-                      message: Problem accessing database.
-                      level: ERROR
-                      description: Problem accessing database. Try again or contact Acoustic support if problem persists.
-                      locale: en
+              example:
+                service: prod-authoring-sites
+                requestId: '455478465455511'
+                errors:
+                - code: 1016
+                  message: Problem accessing database.
+                  level: ERROR
+                  description: Problem accessing database. Try again or contact Acoustic support if problem persists.
+                  locale: en
         '403':
           description: Forbidden
           content:
@@ -1479,17 +1447,15 @@ paths:
                               type: string
                         locale:
                           type: string
-              examples:
-                response:
-                  value:
-                    service: prod-authoring-sites
-                    requestId: '455478465455511'
-                    errors:
-                    - code: 1016
-                      message: Problem accessing database.
-                      level: ERROR
-                      description: Problem accessing database. Try again or contact Acoustic support if problem persists.
-                      locale: en
+              example:
+                service: prod-authoring-sites
+                requestId: '455478465455511'
+                errors:
+                - code: 1016
+                  message: Problem accessing database.
+                  level: ERROR
+                  description: Problem accessing database. Try again or contact Acoustic support if problem persists.
+                  locale: en
         '404':
           description: Not found
           content:
@@ -1529,17 +1495,15 @@ paths:
                               type: string
                         locale:
                           type: string
-              examples:
-                response:
-                  value:
-                    service: prod-authoring-sites
-                    requestId: '455478465455511'
-                    errors:
-                    - code: 2002
-                      message: 'Site not found for ID: dummyId'
-                      level: ERROR
-                      description: A site with the specified ID was not found in the system. Provide a valid ID and try again.
-                      locale: en
+              example:
+                service: prod-authoring-sites
+                requestId: '455478465455511'
+                errors:
+                - code: 2002
+                  message: 'Site not found for ID: dummyId'
+                  level: ERROR
+                  description: A site with the specified ID was not found in the system. Provide a valid ID and try again.
+                  locale: en
         '429':
           description: Too Many Requests
           content:
@@ -1579,17 +1543,15 @@ paths:
                               type: string
                         locale:
                           type: string
-              examples:
-                response:
-                  value:
-                    service: prod-authoring-sites
-                    requestId: '455478465455511'
-                    errors:
-                    - code: 1018
-                      message: Temporarily unable to access the database.
-                      level: ERROR
-                      description: Temporarily unable to access the database. Try again or contact Acoustic support if problem persists.
-                      locale: en
+              example:
+                service: prod-authoring-sites
+                requestId: '455478465455511'
+                errors:
+                - code: 1018
+                  message: Temporarily unable to access the database.
+                  level: ERROR
+                  description: Temporarily unable to access the database. Try again or contact Acoustic support if problem persists.
+                  locale: en
         default:
           description: Unexpected error
           content:
@@ -1629,29 +1591,30 @@ paths:
                               type: string
                         locale:
                           type: string
-              examples:
-                response:
-                  value:
-                    service: prod-authoring-sites
-                    requestId: '455478465455511'
-                    errors:
-                    - code: 5004
-                      message: Unexpected error occurred.
-                      level: ERROR
-                      description: Unable to complete the request due to an unexpected error. Try again or contact Acoustic support if problem persists.
-                      locale: en
+              example:
+                service: prod-authoring-sites
+                requestId: '455478465455511'
+                errors:
+                - code: 5004
+                  message: Unexpected error occurred.
+                  level: ERROR
+                  description: Unable to complete the request due to an unexpected error. Try again or contact Acoustic support if problem persists.
+                  locale: en
       tags:
       - Authoring sites
+      operationId: postAuthoringV1SitesBySiteIdReady
+      x-operation-id-source: derived
   /authoring/v1/sites/{site-id}/cancel:
     post:
       x-ibm-dx-security-user-roles:
       - admin
       - manager
       - editor
-      summary: Cancel the draft site metadata undoing any modifications.
+      summary: Cancel the draft site metadata undoing any modifications
       description: 'Use this endpoint to undo changes to the site''s metadata.
 
-        <br />User roles: admin, manager, editor'
+
+        User roles: admin, manager, editor'
       parameters:
       - name: site-id
         in: path
@@ -1702,17 +1665,15 @@ paths:
                               type: string
                         locale:
                           type: string
-              examples:
-                response:
-                  value:
-                    service: prod-authoring-sites
-                    requestId: '455478465455571'
-                    errors:
-                    - code: 2005
-                      message: Invalid site ID parameter provided.
-                      level: ERROR
-                      description: The site ID provided is invalid. The site ID value cannot be empty or contain spaces. Provide a valid site ID and try again.
-                      locale: en
+              example:
+                service: prod-authoring-sites
+                requestId: '455478465455571'
+                errors:
+                - code: 2005
+                  message: Invalid site ID parameter provided.
+                  level: ERROR
+                  description: The site ID provided is invalid. The site ID value cannot be empty or contain spaces. Provide a valid site ID and try again.
+                  locale: en
         '401':
           description: Unauthorized
           content:
@@ -1752,17 +1713,15 @@ paths:
                               type: string
                         locale:
                           type: string
-              examples:
-                response:
-                  value:
-                    service: prod-authoring-sites
-                    requestId: '455478465455511'
-                    errors:
-                    - code: 1016
-                      message: Problem accessing database.
-                      level: ERROR
-                      description: Problem accessing database. Try again or contact Acoustic support if problem persists.
-                      locale: en
+              example:
+                service: prod-authoring-sites
+                requestId: '455478465455511'
+                errors:
+                - code: 1016
+                  message: Problem accessing database.
+                  level: ERROR
+                  description: Problem accessing database. Try again or contact Acoustic support if problem persists.
+                  locale: en
         '403':
           description: Forbidden
           content:
@@ -1802,17 +1761,15 @@ paths:
                               type: string
                         locale:
                           type: string
-              examples:
-                response:
-                  value:
-                    service: prod-authoring-sites
-                    requestId: '455478465455511'
-                    errors:
-                    - code: 1016
-                      message: Problem accessing database.
-                      level: ERROR
-                      description: Problem accessing database. Try again or contact Acoustic support if problem persists.
-                      locale: en
+              example:
+                service: prod-authoring-sites
+                requestId: '455478465455511'
+                errors:
+                - code: 1016
+                  message: Problem accessing database.
+                  level: ERROR
+                  description: Problem accessing database. Try again or contact Acoustic support if problem persists.
+                  locale: en
         '404':
           description: Not found
           content:
@@ -1852,17 +1809,15 @@ paths:
                               type: string
                         locale:
                           type: string
-              examples:
-                response:
-                  value:
-                    service: prod-authoring-sites
-                    requestId: '455478465455511'
-                    errors:
-                    - code: 2002
-                      message: 'Site not found for ID: dummyId'
-                      level: ERROR
-                      description: A site with the specified ID was not found in the system. Provide a valid ID and try again.
-                      locale: en
+              example:
+                service: prod-authoring-sites
+                requestId: '455478465455511'
+                errors:
+                - code: 2002
+                  message: 'Site not found for ID: dummyId'
+                  level: ERROR
+                  description: A site with the specified ID was not found in the system. Provide a valid ID and try again.
+                  locale: en
         '429':
           description: Too Many Requests
           content:
@@ -1902,17 +1857,15 @@ paths:
                               type: string
                         locale:
                           type: string
-              examples:
-                response:
-                  value:
-                    service: prod-authoring-sites
-                    requestId: '455478465455511'
-                    errors:
-                    - code: 1018
-                      message: Temporarily unable to access the database.
-                      level: ERROR
-                      description: Temporarily unable to access the database. Try again or contact Acoustic support if problem persists.
-                      locale: en
+              example:
+                service: prod-authoring-sites
+                requestId: '455478465455511'
+                errors:
+                - code: 1018
+                  message: Temporarily unable to access the database.
+                  level: ERROR
+                  description: Temporarily unable to access the database. Try again or contact Acoustic support if problem persists.
+                  locale: en
         default:
           description: Unexpected error
           content:
@@ -1952,29 +1905,30 @@ paths:
                               type: string
                         locale:
                           type: string
-              examples:
-                response:
-                  value:
-                    service: prod-authoring-sites
-                    requestId: '455478465455511'
-                    errors:
-                    - code: 5004
-                      message: Unexpected error occurred.
-                      level: ERROR
-                      description: Unable to complete the request due to an unexpected error. Try again or contact Acoustic support if problem persists.
-                      locale: en
+              example:
+                service: prod-authoring-sites
+                requestId: '455478465455511'
+                errors:
+                - code: 5004
+                  message: Unexpected error occurred.
+                  level: ERROR
+                  description: Unable to complete the request due to an unexpected error. Try again or contact Acoustic support if problem persists.
+                  locale: en
       tags:
       - Authoring sites
+      operationId: postAuthoringV1SitesBySiteIdCancel
+      x-operation-id-source: derived
   /authoring/v1/sites/{site-id}/pages/ready:
     post:
       x-ibm-dx-security-user-roles:
       - admin
       - manager
       - editor
-      summary: Bulk promote the specified page Ids in the specified site from draft to ready status.
+      summary: Bulk promote the specified page Ids in the specified site from draft to ready…
       description: 'Use this endpoint to change the status of multiple pages in a specific site from draft to ready.
 
-        <br />User roles: admin, manager, editor'
+
+        User roles: admin, manager, editor'
       parameters:
       - name: site-id
         in: path
@@ -1983,21 +1937,6 @@ paths:
         schema:
           type: string
           format: uuid
-      requestBody:
-        content:
-          application/json:
-            schema:
-              title: List of draft page ids in specified site to ready
-              description: Publish the list of draft page Ids
-              type: object
-              properties:
-                ids:
-                  type: array
-                  description: List of draft page Ids
-                  items:
-                    type: string
-        description: The array of draft page Ids to ready
-        required: true
       responses:
         '204':
           description: Successfully changed the status of all specified pages in the site from draft to ready.
@@ -2040,17 +1979,15 @@ paths:
                               type: string
                         locale:
                           type: string
-              examples:
-                response:
-                  value:
-                    service: prod-authoring-sites
-                    requestId: '455478465455571'
-                    errors:
-                    - code: 2005
-                      message: Invalid site ID parameter provided.
-                      level: ERROR
-                      description: The site ID provided is invalid. The site ID value cannot be empty or contain spaces. Provide a valid site ID and try again.
-                      locale: en
+              example:
+                service: prod-authoring-sites
+                requestId: '455478465455571'
+                errors:
+                - code: 2005
+                  message: Invalid site ID parameter provided.
+                  level: ERROR
+                  description: The site ID provided is invalid. The site ID value cannot be empty or contain spaces. Provide a valid site ID and try again.
+                  locale: en
         '401':
           description: Unauthorized
           content:
@@ -2090,17 +2027,15 @@ paths:
                               type: string
                         locale:
                           type: string
-              examples:
-                response:
-                  value:
-                    service: prod-authoring-sites
-                    requestId: '455478465455511'
-                    errors:
-                    - code: 1016
-                      message: Problem accessing database.
-                      level: ERROR
-                      description: Problem accessing database. Try again or contact Acoustic support if problem persists.
-                      locale: en
+              example:
+                service: prod-authoring-sites
+                requestId: '455478465455511'
+                errors:
+                - code: 1016
+                  message: Problem accessing database.
+                  level: ERROR
+                  description: Problem accessing database. Try again or contact Acoustic support if problem persists.
+                  locale: en
         '403':
           description: Forbidden
           content:
@@ -2140,17 +2075,15 @@ paths:
                               type: string
                         locale:
                           type: string
-              examples:
-                response:
-                  value:
-                    service: prod-authoring-sites
-                    requestId: '455478465455511'
-                    errors:
-                    - code: 1016
-                      message: Problem accessing database.
-                      level: ERROR
-                      description: Problem accessing database. Try again or contact Acoustic support if problem persists.
-                      locale: en
+              example:
+                service: prod-authoring-sites
+                requestId: '455478465455511'
+                errors:
+                - code: 1016
+                  message: Problem accessing database.
+                  level: ERROR
+                  description: Problem accessing database. Try again or contact Acoustic support if problem persists.
+                  locale: en
         '404':
           description: Not found
           content:
@@ -2190,17 +2123,15 @@ paths:
                               type: string
                         locale:
                           type: string
-              examples:
-                response:
-                  value:
-                    service: prod-authoring-sites
-                    requestId: '455478465455511'
-                    errors:
-                    - code: 2002
-                      message: 'Site not found for ID: dummyId'
-                      level: ERROR
-                      description: A site with the specified ID was not found in the system. Provide a valid ID and try again.
-                      locale: en
+              example:
+                service: prod-authoring-sites
+                requestId: '455478465455511'
+                errors:
+                - code: 2002
+                  message: 'Site not found for ID: dummyId'
+                  level: ERROR
+                  description: A site with the specified ID was not found in the system. Provide a valid ID and try again.
+                  locale: en
         '429':
           description: Too Many Requests
           content:
@@ -2240,17 +2171,15 @@ paths:
                               type: string
                         locale:
                           type: string
-              examples:
-                response:
-                  value:
-                    service: prod-authoring-sites
-                    requestId: '455478465455511'
-                    errors:
-                    - code: 1018
-                      message: Temporarily unable to access the database.
-                      level: ERROR
-                      description: Temporarily unable to access the database. Try again or contact Acoustic support if problem persists.
-                      locale: en
+              example:
+                service: prod-authoring-sites
+                requestId: '455478465455511'
+                errors:
+                - code: 1018
+                  message: Temporarily unable to access the database.
+                  level: ERROR
+                  description: Temporarily unable to access the database. Try again or contact Acoustic support if problem persists.
+                  locale: en
         default:
           description: Unexpected error
           content:
@@ -2290,19 +2219,34 @@ paths:
                               type: string
                         locale:
                           type: string
-              examples:
-                response:
-                  value:
-                    service: prod-authoring-sites
-                    requestId: '455478465455511'
-                    errors:
-                    - code: 5004
-                      message: Unexpected error occurred.
-                      level: ERROR
-                      description: Unable to complete the request due to an unexpected error. Try again or contact Acoustic support if problem persists.
-                      locale: en
+              example:
+                service: prod-authoring-sites
+                requestId: '455478465455511'
+                errors:
+                - code: 5004
+                  message: Unexpected error occurred.
+                  level: ERROR
+                  description: Unable to complete the request due to an unexpected error. Try again or contact Acoustic support if problem persists.
+                  locale: en
       tags:
       - Authoring sites
+      requestBody:
+        content:
+          application/json:
+            schema:
+              title: List of draft page ids in specified site to ready
+              description: Publish the list of draft page Ids
+              type: object
+              properties:
+                ids:
+                  type: array
+                  description: List of draft page Ids
+                  items:
+                    type: string
+        description: The array of draft page Ids to ready
+        required: true
+      operationId: postAuthoringV1SitesBySiteIdPagesReady
+      x-operation-id-source: derived
   /authoring/v1/sites/{site-id}/pages:
     get:
       x-ibm-dx-security-user-roles:
@@ -2310,12 +2254,11 @@ paths:
       - manager
       - editor
       - viewer
-      summary: 'Get the full page hierarchy for a site.
-
-        '
+      summary: Get the full page hierarchy for a site
       description: 'Use this endpoint to retrieve the full page hierarchy for site. The metadata for each page will be included. This metadata includes the position of the page relative to its peers, the ID for the page content item, an optional override layout ID to use and encoded route if query parameter included=route is specified.
 
-        <br />User roles: admin, manager, editor, viewer'
+
+        User roles: admin, manager, editor, viewer'
       parameters:
       - name: site-id
         in: path
@@ -2414,52 +2357,50 @@ paths:
                         hideFromNavigation:
                           type: boolean
                           description: This controls the visibility of the page in the site navigation menu. If set to `true` this page is hidden. If set to `true` on a parent page, it will override the corresponding flags in all descendant pages. Therefore, hiding a page will hide all its descendants in the site navigation menu.
-              examples:
-                response:
-                  value:
-                    items:
-                    - id: 1067771c-ec05-4671-951b-18f503953f2d
-                      rev: 22-ae719cf45c00a55eda54d6480976b3e1
-                      name: home
-                      segment: home
-                      contentTypeId: ab7288e3-42r3-h34s-72nm-34vfk4gf894g
-                      description: home page
-                      layoutId: 7655c56d-39ee-4c4d-8689-00bd1c08e6ff
-                      title: Home Page
-                      contentId: 68eb88a6-31d8-4e47-ad5f-da932081b68d
-                      route: /home
-                      position: 0
-                      classification: page
-                      hideFromNavigation: false
-                      children:
-                      - id: aw67771c-ec05-4671-951b-18fqwq53f2d
-                        rev: 20-axz19cf45c00a55eda54d6480976b3e1
-                        name: products
-                        segment: products
-                        contentTypeId: dffa969c-32fc-4079-8a57-eb85ad136ae8
-                        description: products page
-                        layoutId: 13c46fbe-db14-4a24-859f-f4b847a2b843
-                        title: Products Page
-                        contentId: 76sd88a6-31d8-4e47-ad5f-da932081b68d
-                        route: /home/products
-                        parentId: 1067771c-ec05-4671-951b-18f503953f2d
-                        position: 0
-                        hideFromNavigation: false
-                        children: []
-                    - id: 1067771c-ec05-4671-951b-18f632153f2d
-                      rev: 22-ae719cf45c00a55eda54d6480ab6b3e1
-                      name: search results
-                      segment: search-results
-                      contentTypeId: ab7288e3-4ar3-h34s-72nm-3fvf3agf894g
-                      description: search results page
-                      layoutId: 7655c56d-39ee-4c4d-8689-00be1c0854ff
-                      title: Search Results
-                      contentId: 68b192a6-31d8-4e47-ad5f-da472081b68d
-                      route: /search-results
-                      position: 0
-                      classification: page
-                      hideFromNavigation: true
-                      children: []
+              example:
+                items:
+                - id: 1067771c-ec05-4671-951b-18f503953f2d
+                  rev: 22-ae719cf45c00a55eda54d6480976b3e1
+                  name: home
+                  segment: home
+                  contentTypeId: ab7288e3-42r3-h34s-72nm-34vfk4gf894g
+                  description: home page
+                  layoutId: 7655c56d-39ee-4c4d-8689-00bd1c08e6ff
+                  title: Home Page
+                  contentId: 68eb88a6-31d8-4e47-ad5f-da932081b68d
+                  route: /home
+                  position: 0
+                  classification: page
+                  hideFromNavigation: false
+                  children:
+                  - id: aw67771c-ec05-4671-951b-18fqwq53f2d
+                    rev: 20-axz19cf45c00a55eda54d6480976b3e1
+                    name: products
+                    segment: products
+                    contentTypeId: dffa969c-32fc-4079-8a57-eb85ad136ae8
+                    description: products page
+                    layoutId: 13c46fbe-db14-4a24-859f-f4b847a2b843
+                    title: Products Page
+                    contentId: 76sd88a6-31d8-4e47-ad5f-da932081b68d
+                    route: /home/products
+                    parentId: 1067771c-ec05-4671-951b-18f503953f2d
+                    position: 0
+                    hideFromNavigation: false
+                    children: []
+                - id: 1067771c-ec05-4671-951b-18f632153f2d
+                  rev: 22-ae719cf45c00a55eda54d6480ab6b3e1
+                  name: search results
+                  segment: search-results
+                  contentTypeId: ab7288e3-4ar3-h34s-72nm-3fvf3agf894g
+                  description: search results page
+                  layoutId: 7655c56d-39ee-4c4d-8689-00be1c0854ff
+                  title: Search Results
+                  contentId: 68b192a6-31d8-4e47-ad5f-da472081b68d
+                  route: /search-results
+                  position: 0
+                  classification: page
+                  hideFromNavigation: true
+                  children: []
         '400':
           description: Bad request
           content:
@@ -2499,17 +2440,15 @@ paths:
                               type: string
                         locale:
                           type: string
-              examples:
-                response:
-                  value:
-                    service: prod-authoring-sites
-                    requestId: '455478465455511'
-                    errors:
-                    - code: 2005
-                      message: Invalid site ID parameter provided.
-                      level: ERROR
-                      description: The site ID provided is invalid. The site ID value cannot be empty or contain spaces. Provide a valid site ID and try again.
-                      locale: en
+              example:
+                service: prod-authoring-sites
+                requestId: '455478465455511'
+                errors:
+                - code: 2005
+                  message: Invalid site ID parameter provided.
+                  level: ERROR
+                  description: The site ID provided is invalid. The site ID value cannot be empty or contain spaces. Provide a valid site ID and try again.
+                  locale: en
         '401':
           description: Unauthorized
           content:
@@ -2549,17 +2488,15 @@ paths:
                               type: string
                         locale:
                           type: string
-              examples:
-                response:
-                  value:
-                    service: prod-authoring-sites
-                    requestId: '455478465455511'
-                    errors:
-                    - code: 1016
-                      message: Problem accessing database.
-                      level: ERROR
-                      description: Problem accessing database. Try again or contact Acoustic support if problem persists.
-                      locale: en
+              example:
+                service: prod-authoring-sites
+                requestId: '455478465455511'
+                errors:
+                - code: 1016
+                  message: Problem accessing database.
+                  level: ERROR
+                  description: Problem accessing database. Try again or contact Acoustic support if problem persists.
+                  locale: en
         '403':
           description: Forbidden
           content:
@@ -2599,17 +2536,15 @@ paths:
                               type: string
                         locale:
                           type: string
-              examples:
-                response:
-                  value:
-                    service: prod-authoring-sites
-                    requestId: '455478465455511'
-                    errors:
-                    - code: 1016
-                      message: Problem accessing database.
-                      level: ERROR
-                      description: Problem accessing database. Try again or contact Acoustic support if problem persists.
-                      locale: en
+              example:
+                service: prod-authoring-sites
+                requestId: '455478465455511'
+                errors:
+                - code: 1016
+                  message: Problem accessing database.
+                  level: ERROR
+                  description: Problem accessing database. Try again or contact Acoustic support if problem persists.
+                  locale: en
         '404':
           description: Not found
           content:
@@ -2649,17 +2584,15 @@ paths:
                               type: string
                         locale:
                           type: string
-              examples:
-                response:
-                  value:
-                    service: prod-authoring-sites
-                    requestId: '455478465455511'
-                    errors:
-                    - code: 2002
-                      message: 'Site not found for ID: dummyId'
-                      level: ERROR
-                      description: A site with the specified ID was not found in the system. Provide a valid ID and try again.
-                      locale: en
+              example:
+                service: prod-authoring-sites
+                requestId: '455478465455511'
+                errors:
+                - code: 2002
+                  message: 'Site not found for ID: dummyId'
+                  level: ERROR
+                  description: A site with the specified ID was not found in the system. Provide a valid ID and try again.
+                  locale: en
         '429':
           description: Too Many Requests
           content:
@@ -2699,17 +2632,15 @@ paths:
                               type: string
                         locale:
                           type: string
-              examples:
-                response:
-                  value:
-                    service: prod-authoring-sites
-                    requestId: '455478465455511'
-                    errors:
-                    - code: 1018
-                      message: Temporarily unable to access the database.
-                      level: ERROR
-                      description: Temporarily unable to access the database. Try again or contact Acoustic support if problem persists.
-                      locale: en
+              example:
+                service: prod-authoring-sites
+                requestId: '455478465455511'
+                errors:
+                - code: 1018
+                  message: Temporarily unable to access the database.
+                  level: ERROR
+                  description: Temporarily unable to access the database. Try again or contact Acoustic support if problem persists.
+                  locale: en
         default:
           description: Unexpected error
           content:
@@ -2749,24 +2680,24 @@ paths:
                               type: string
                         locale:
                           type: string
-              examples:
-                response:
-                  value:
-                    service: prod-authoring-sites
-                    requestId: '455478465455511'
-                    errors:
-                    - code: 5004
-                      message: Unexpected error occurred.
-                      level: ERROR
-                      description: Unable to complete the request due to an unexpected error. Try again or contact Acoustic support if problem persists.
-                      locale: en
+              example:
+                service: prod-authoring-sites
+                requestId: '455478465455511'
+                errors:
+                - code: 5004
+                  message: Unexpected error occurred.
+                  level: ERROR
+                  description: Unable to complete the request due to an unexpected error. Try again or contact Acoustic support if problem persists.
+                  locale: en
       tags:
       - Authoring sites
+      operationId: getAuthoringV1SitesBySiteIdPages
+      x-operation-id-source: derived
     post:
       x-ibm-dx-security-user-roles:
       - admin
       - manager
-      summary: Create a page.
+      summary: Create a page
       description: 'Use this endpoint to create a page in a specified site. The body of the request should contain the metadata for the new page.
 
         This metadata should include the page ''name'', optional ''position'' relative to its peers and the ''contentId'' or ''contentTypeId''.
@@ -2779,7 +2710,8 @@ paths:
 
         If the ''layoutId'' field is specified it must be the ID of an existing layout. If the specified layout is not mapped to the content type then the default layout mapped to the content type will be used instead.
 
-        <br />User roles: admin, manager'
+
+        User roles: admin, manager'
       parameters:
       - name: site-id
         in: path
@@ -2808,46 +2740,6 @@ paths:
         required: false
         schema:
           type: string
-      requestBody:
-        content:
-          application/json:
-            schema:
-              title: Create Page Metadata
-              description: Creation of Page Metadata
-              type: object
-              properties:
-                name:
-                  type: string
-                  description: The name of the page.
-                contentId:
-                  type: string
-                  description: (Optional) The ID of the page content item to be associated with the new page. Specify this field when the new page is to be associated with an existing page content item.
-                contentTypeId:
-                  type: string
-                  description: (Optional) The ID of the page content type to be used to create the new page content item for the new page. Specify this field when a page content item does not already exist.
-                position:
-                  type: string
-                  description: (Optional) The position of the page relative to its sibling pages. Position is an integer value starting at 0.
-                description:
-                  type: string
-                  description: Page description.
-                layoutId:
-                  type: string
-                  description: (Optional) Page layout template ID for the new page content item. If not specified the default layout mapped to the content type will be used.
-                segment:
-                  type: string
-                  description: Friendly URL segment.
-                title:
-                  type: string
-                  description: Page title.
-                parentId:
-                  type: string
-                  description: (Optional) The ID of the parent page. This should not be set if the new page is to be a root page. Otherwise, set this field to the ID of the parent page.
-                hideFromNavigation:
-                  type: boolean
-                  description: (Optional) This controls the visibility of the page in the site navigation menu. Set it to `true` to hide the page. The default setting (if this field is not supplied) is `false`. If to `true` set on a parent page, it will override the corresponding flags in all descendant pages. Therefore, hiding a page will hide all its descendants in the site navigation menu.
-        description: The metadata for the new page.
-        required: true
       responses:
         '201':
           description: succcess.
@@ -2909,26 +2801,24 @@ paths:
                   hideFromNavigation:
                     type: boolean
                     description: This controls the visibility of the page in the site navigation menu. If set to `true` this page is hidden. If set to `true` on a parent page, it will override the corresponding flags in all descendant pages. Therefore, hiding a page will hide all its descendants in the site navigation menu.
-              examples:
-                response:
-                  value:
-                    id: aw67771c-ec05-4671-951b-18fqwq53f2d
-                    rev: 1-axz19cf45c30a58eda54d6480974b3e1
-                    name: products
-                    segment: products
-                    contentTypeId: dffa969c-32fc-4079-8a57-eb85ad136ae8
-                    description: products page
-                    layoutId: 13c46fbe-db14-4a24-859f-f4b847a2b843
-                    title: Products Page
-                    contentId: 76sd88a6-31d8-4e47-ad5f-da932081b68d
-                    parentId: 1067771c-ec05-4671-951b-18f503953f2d
-                    position: 0
-                    hideFromNavigation: false
-                    classification: page
-                    lastModified: '2017-09-11T14:03:04.348Z'
-                    lastModifierId: 00000000-0000-0000-0000-000000000009
-                    created: '2017-09-11T14:03:04.348Z'
-                    creatorId: 00000000-0000-0000-0000-000000000009
+              example:
+                id: aw67771c-ec05-4671-951b-18fqwq53f2d
+                rev: 1-axz19cf45c30a58eda54d6480974b3e1
+                name: products
+                segment: products
+                contentTypeId: dffa969c-32fc-4079-8a57-eb85ad136ae8
+                description: products page
+                layoutId: 13c46fbe-db14-4a24-859f-f4b847a2b843
+                title: Products Page
+                contentId: 76sd88a6-31d8-4e47-ad5f-da932081b68d
+                parentId: 1067771c-ec05-4671-951b-18f503953f2d
+                position: 0
+                hideFromNavigation: false
+                classification: page
+                lastModified: '2017-09-11T14:03:04.348Z'
+                lastModifierId: 00000000-0000-0000-0000-000000000009
+                created: '2017-09-11T14:03:04.348Z'
+                creatorId: 00000000-0000-0000-0000-000000000009
         '400':
           description: Bad request
           content:
@@ -2968,17 +2858,15 @@ paths:
                               type: string
                         locale:
                           type: string
-              examples:
-                response:
-                  value:
-                    service: prod-authoring-sites
-                    requestId: '455478465455511'
-                    errors:
-                    - code: 2005
-                      message: Invalid site ID parameter provided.
-                      level: ERROR
-                      description: The site ID provided is invalid. The site ID value cannot be empty or contain spaces. Provide a valid site ID and try again.
-                      locale: en
+              example:
+                service: prod-authoring-sites
+                requestId: '455478465455511'
+                errors:
+                - code: 2005
+                  message: Invalid site ID parameter provided.
+                  level: ERROR
+                  description: The site ID provided is invalid. The site ID value cannot be empty or contain spaces. Provide a valid site ID and try again.
+                  locale: en
         '401':
           description: Unauthorized
           content:
@@ -3018,17 +2906,15 @@ paths:
                               type: string
                         locale:
                           type: string
-              examples:
-                response:
-                  value:
-                    service: prod-authoring-sites
-                    requestId: '455478465455511'
-                    errors:
-                    - code: 1016
-                      message: Problem accessing database.
-                      level: ERROR
-                      description: Problem accessing database. Try again or contact Acoustic support if problem persists.
-                      locale: en
+              example:
+                service: prod-authoring-sites
+                requestId: '455478465455511'
+                errors:
+                - code: 1016
+                  message: Problem accessing database.
+                  level: ERROR
+                  description: Problem accessing database. Try again or contact Acoustic support if problem persists.
+                  locale: en
         '403':
           description: Forbidden
           content:
@@ -3068,17 +2954,15 @@ paths:
                               type: string
                         locale:
                           type: string
-              examples:
-                response:
-                  value:
-                    service: prod-authoring-sites
-                    requestId: '455478465455511'
-                    errors:
-                    - code: 1016
-                      message: Problem accessing database.
-                      level: ERROR
-                      description: Problem accessing database. Try again or contact Acoustic support if problem persists.
-                      locale: en
+              example:
+                service: prod-authoring-sites
+                requestId: '455478465455511'
+                errors:
+                - code: 1016
+                  message: Problem accessing database.
+                  level: ERROR
+                  description: Problem accessing database. Try again or contact Acoustic support if problem persists.
+                  locale: en
         '404':
           description: Not found
           content:
@@ -3118,17 +3002,15 @@ paths:
                               type: string
                         locale:
                           type: string
-              examples:
-                response:
-                  value:
-                    service: prod-authoring-sites
-                    requestId: '455478465455511'
-                    errors:
-                    - code: 2012
-                      message: 'Page not found for ID: dummyId'
-                      level: ERROR
-                      description: A page with the specified ID was not found in the system. Provide a valid ID and try again.
-                      locale: en
+              example:
+                service: prod-authoring-sites
+                requestId: '455478465455511'
+                errors:
+                - code: 2012
+                  message: 'Page not found for ID: dummyId'
+                  level: ERROR
+                  description: A page with the specified ID was not found in the system. Provide a valid ID and try again.
+                  locale: en
         '429':
           description: Too Many Requests
           content:
@@ -3168,17 +3050,15 @@ paths:
                               type: string
                         locale:
                           type: string
-              examples:
-                response:
-                  value:
-                    service: prod-authoring-sites
-                    requestId: '455478465455511'
-                    errors:
-                    - code: 1018
-                      message: Temporarily unable to access the database.
-                      level: ERROR
-                      description: Temporarily unable to access the database. Try again or contact Acoustic support if problem persists.
-                      locale: en
+              example:
+                service: prod-authoring-sites
+                requestId: '455478465455511'
+                errors:
+                - code: 1018
+                  message: Temporarily unable to access the database.
+                  level: ERROR
+                  description: Temporarily unable to access the database. Try again or contact Acoustic support if problem persists.
+                  locale: en
         default:
           description: Unexpected error
           content:
@@ -3218,19 +3098,59 @@ paths:
                               type: string
                         locale:
                           type: string
-              examples:
-                response:
-                  value:
-                    service: prod-authoring-sites
-                    requestId: '455478465455511'
-                    errors:
-                    - code: 5004
-                      message: Unexpected error occurred.
-                      level: ERROR
-                      description: Unable to complete the request due to an unexpected error. Try again or contact Acoustic support if problem persists.
-                      locale: en
+              example:
+                service: prod-authoring-sites
+                requestId: '455478465455511'
+                errors:
+                - code: 5004
+                  message: Unexpected error occurred.
+                  level: ERROR
+                  description: Unable to complete the request due to an unexpected error. Try again or contact Acoustic support if problem persists.
+                  locale: en
       tags:
       - Authoring sites
+      requestBody:
+        content:
+          application/json:
+            schema:
+              title: Create Page Metadata
+              description: Creation of Page Metadata
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: The name of the page.
+                contentId:
+                  type: string
+                  description: (Optional) The ID of the page content item to be associated with the new page. Specify this field when the new page is to be associated with an existing page content item.
+                contentTypeId:
+                  type: string
+                  description: (Optional) The ID of the page content type to be used to create the new page content item for the new page. Specify this field when a page content item does not already exist.
+                position:
+                  type: string
+                  description: (Optional) The position of the page relative to its sibling pages. Position is an integer value starting at 0.
+                description:
+                  type: string
+                  description: Page description.
+                layoutId:
+                  type: string
+                  description: (Optional) Page layout template ID for the new page content item. If not specified the default layout mapped to the content type will be used.
+                segment:
+                  type: string
+                  description: Friendly URL segment.
+                title:
+                  type: string
+                  description: Page title.
+                parentId:
+                  type: string
+                  description: (Optional) The ID of the parent page. This should not be set if the new page is to be a root page. Otherwise, set this field to the ID of the parent page.
+                hideFromNavigation:
+                  type: boolean
+                  description: (Optional) This controls the visibility of the page in the site navigation menu. Set it to `true` to hide the page. The default setting (if this field is not supplied) is `false`. If to `true` set on a parent page, it will override the corresponding flags in all descendant pages. Therefore, hiding a page will hide all its descendants in the site navigation menu.
+        description: The metadata for the new page.
+        required: true
+      operationId: postAuthoringV1SitesBySiteIdPages
+      x-operation-id-source: derived
   /authoring/v1/sites/{site-id}/pages/views/by-modified:
     get:
       x-ibm-dx-security-user-roles:
@@ -3238,10 +3158,11 @@ paths:
       - manager
       - editor
       - viewer
-      summary: Get pages modified between two dates.
+      summary: Get pages modified between two dates
       description: 'Returns the page metadata for pages modified between the specified last modified date range in the site specified by `site-id`.
 
-        <br />User roles: admin, manager, editor, viewer'
+
+        User roles: admin, manager, editor, viewer'
       parameters:
       - name: site-id
         in: path
@@ -3382,47 +3303,45 @@ paths:
                         hideFromNavigation:
                           type: boolean
                           description: This controls the visibility of the page in the site navigation menu. If set to `true` this page is hidden. If set to `true` on a parent page, it will override the corresponding flags in all descendant pages. Therefore, hiding a page will hide all its descendants in the site navigation menu.
-              examples:
-                response:
-                  value:
-                    items:
-                    - id: 1067771c-ec05-4671-951b-18f503953f2d
-                      rev: 22-ae719cf45c00a55eda54d6480976b3e1
-                      name: home
-                      segment: home
-                      contentTypeId: ab7288e3-42r3-h34s-72nm-34vfk4gf894g
-                      description: home page
-                      layoutId: 7655c56d-39ee-4c4d-8689-00bd1c08e6ff
-                      title: Home Page
-                      contentId: 68eb88a6-31d8-4e47-ad5f-da932081b68d
-                      position: 0
-                      hideFromNavigation: false
-                      classification: page
-                    - id: 2867771c-ec05-4671-951b-18f500053f2d
-                      rev: 20-ae719cf45c00a55eda54d6350976b3e1
-                      name: About Us
-                      segment: about-us
-                      contentTypeId: ab7288e3-42r3-h34s-72nm-34vfk4gf894g
-                      description: About Us page
-                      layoutId: 7655c56d-39ee-4c4d-8689-00bd1c08e6ff
-                      title: About Us
-                      contentId: 68eb88a6-31d8-441e-ad5f-da932081b68d
-                      position: 1
-                      hideFromNavigation: false
-                      classification: page
-                    - id: 35575721-ec45-9871-921b-18f500053f4d
-                      rev: 20-ae7a9cff5c00a55eda5dd6350976b3a1
-                      name: Our Events
-                      segment: our-events
-                      contentTypeId: ab2748e3-42r3-h34s-72nm-34vfk4gf457g
-                      description: Events page
-                      layoutId: 7655c56d-39ee-4c4d-8689-00bd1c08e6ff
-                      title: Our Events page
-                      contentId: 62ab38a6-34a8-121e-dc32-de441563f6ad
-                      position: 0
-                      parentId: 1067771c-ec05-4671-951b-18f503953f2d
-                      hideFromNavigation: false
-                      classification: page
+              example:
+                items:
+                - id: 1067771c-ec05-4671-951b-18f503953f2d
+                  rev: 22-ae719cf45c00a55eda54d6480976b3e1
+                  name: home
+                  segment: home
+                  contentTypeId: ab7288e3-42r3-h34s-72nm-34vfk4gf894g
+                  description: home page
+                  layoutId: 7655c56d-39ee-4c4d-8689-00bd1c08e6ff
+                  title: Home Page
+                  contentId: 68eb88a6-31d8-4e47-ad5f-da932081b68d
+                  position: 0
+                  hideFromNavigation: false
+                  classification: page
+                - id: 2867771c-ec05-4671-951b-18f500053f2d
+                  rev: 20-ae719cf45c00a55eda54d6350976b3e1
+                  name: About Us
+                  segment: about-us
+                  contentTypeId: ab7288e3-42r3-h34s-72nm-34vfk4gf894g
+                  description: About Us page
+                  layoutId: 7655c56d-39ee-4c4d-8689-00bd1c08e6ff
+                  title: About Us
+                  contentId: 68eb88a6-31d8-441e-ad5f-da932081b68d
+                  position: 1
+                  hideFromNavigation: false
+                  classification: page
+                - id: 35575721-ec45-9871-921b-18f500053f4d
+                  rev: 20-ae7a9cff5c00a55eda5dd6350976b3a1
+                  name: Our Events
+                  segment: our-events
+                  contentTypeId: ab2748e3-42r3-h34s-72nm-34vfk4gf457g
+                  description: Events page
+                  layoutId: 7655c56d-39ee-4c4d-8689-00bd1c08e6ff
+                  title: Our Events page
+                  contentId: 62ab38a6-34a8-121e-dc32-de441563f6ad
+                  position: 0
+                  parentId: 1067771c-ec05-4671-951b-18f503953f2d
+                  hideFromNavigation: false
+                  classification: page
         '400':
           description: Bad request
           content:
@@ -3462,17 +3381,15 @@ paths:
                               type: string
                         locale:
                           type: string
-              examples:
-                response:
-                  value:
-                    service: prod-authoring-sites
-                    requestId: '455478465455511'
-                    errors:
-                    - code: 2005
-                      message: Invalid site ID parameter provided.
-                      level: ERROR
-                      description: The site ID provided is invalid. The site ID value cannot be empty or contain spaces. Provide a valid site ID and try again.
-                      locale: en
+              example:
+                service: prod-authoring-sites
+                requestId: '455478465455511'
+                errors:
+                - code: 2005
+                  message: Invalid site ID parameter provided.
+                  level: ERROR
+                  description: The site ID provided is invalid. The site ID value cannot be empty or contain spaces. Provide a valid site ID and try again.
+                  locale: en
         '401':
           description: Unauthorized
           content:
@@ -3512,17 +3429,15 @@ paths:
                               type: string
                         locale:
                           type: string
-              examples:
-                response:
-                  value:
-                    service: prod-authoring-sites
-                    requestId: '455478465455511'
-                    errors:
-                    - code: 1016
-                      message: Problem accessing database.
-                      level: ERROR
-                      description: Problem accessing database. Try again or contact Acoustic support if problem persists.
-                      locale: en
+              example:
+                service: prod-authoring-sites
+                requestId: '455478465455511'
+                errors:
+                - code: 1016
+                  message: Problem accessing database.
+                  level: ERROR
+                  description: Problem accessing database. Try again or contact Acoustic support if problem persists.
+                  locale: en
         '403':
           description: Forbidden
           content:
@@ -3562,17 +3477,15 @@ paths:
                               type: string
                         locale:
                           type: string
-              examples:
-                response:
-                  value:
-                    service: prod-authoring-sites
-                    requestId: '455478465455511'
-                    errors:
-                    - code: 1016
-                      message: Problem accessing database.
-                      level: ERROR
-                      description: Problem accessing database. Try again or contact Acoustic support if problem persists.
-                      locale: en
+              example:
+                service: prod-authoring-sites
+                requestId: '455478465455511'
+                errors:
+                - code: 1016
+                  message: Problem accessing database.
+                  level: ERROR
+                  description: Problem accessing database. Try again or contact Acoustic support if problem persists.
+                  locale: en
         '404':
           description: Not found
           content:
@@ -3612,17 +3525,15 @@ paths:
                               type: string
                         locale:
                           type: string
-              examples:
-                response:
-                  value:
-                    service: prod-authoring-sites
-                    requestId: '455478465455511'
-                    errors:
-                    - code: 2002
-                      message: 'Site not found for ID: dummyId'
-                      level: ERROR
-                      description: A site with the specified ID was not found in the system. Provide a valid ID and try again.
-                      locale: en
+              example:
+                service: prod-authoring-sites
+                requestId: '455478465455511'
+                errors:
+                - code: 2002
+                  message: 'Site not found for ID: dummyId'
+                  level: ERROR
+                  description: A site with the specified ID was not found in the system. Provide a valid ID and try again.
+                  locale: en
         '429':
           description: Too Many Requests
           content:
@@ -3662,17 +3573,15 @@ paths:
                               type: string
                         locale:
                           type: string
-              examples:
-                response:
-                  value:
-                    service: prod-authoring-sites
-                    requestId: '455478465455511'
-                    errors:
-                    - code: 1018
-                      message: Temporarily unable to access the database.
-                      level: ERROR
-                      description: Temporarily unable to access the database. Try again or contact Acoustic support if problem persists.
-                      locale: en
+              example:
+                service: prod-authoring-sites
+                requestId: '455478465455511'
+                errors:
+                - code: 1018
+                  message: Temporarily unable to access the database.
+                  level: ERROR
+                  description: Temporarily unable to access the database. Try again or contact Acoustic support if problem persists.
+                  locale: en
         default:
           description: Unexpected error
           content:
@@ -3712,19 +3621,19 @@ paths:
                               type: string
                         locale:
                           type: string
-              examples:
-                response:
-                  value:
-                    service: prod-authoring-sites
-                    requestId: '455478465455511'
-                    errors:
-                    - code: 5004
-                      message: Unexpected error occurred.
-                      level: ERROR
-                      description: Unable to complete the request due to an unexpected error. Try again or contact Acoustic support if problem persists.
-                      locale: en
+              example:
+                service: prod-authoring-sites
+                requestId: '455478465455511'
+                errors:
+                - code: 5004
+                  message: Unexpected error occurred.
+                  level: ERROR
+                  description: Unable to complete the request due to an unexpected error. Try again or contact Acoustic support if problem persists.
+                  locale: en
       tags:
       - Authoring sites
+      operationId: getAuthoringV1SitesBySiteIdPagesViewsByModified
+      x-operation-id-source: derived
   /authoring/v1/sites/{site-id}/pages/{page-id}:
     get:
       x-ibm-dx-security-user-roles:
@@ -3732,13 +3641,14 @@ paths:
       - manager
       - editor
       - viewer
-      summary: Get a page by id.
+      summary: Get a page by id
       description: 'Returns the page metadata specified by `page-id` in the site specified by `site-id`.
 
 
         If the page is a root page then no parentId will be returned in the response.
 
-        <br />User roles: admin, manager, editor, viewer'
+
+        User roles: admin, manager, editor, viewer'
       parameters:
       - name: site-id
         in: path
@@ -3843,21 +3753,19 @@ paths:
                   hideFromNavigation:
                     type: boolean
                     description: This controls the visibility of the page in the site navigation menu. If set to `true` this page is hidden. If set to `true` on a parent page, it will override the corresponding flags in all descendant pages. Therefore, hiding a page will hide all its descendants in the site navigation menu.
-              examples:
-                response:
-                  value:
-                    id: aw67771c-ec05-4671-951b-18fqwq53f2d
-                    rev: 20-axz19cf45c00a55eda54d6480976b3e1
-                    name: products
-                    segment: products
-                    contentTypeId: dffa969c-32fc-4079-8a57-eb85ad136ae8
-                    description: products page
-                    layoutId: 13c46fbe-db14-4a24-859f-f4b847a2b843
-                    title: Products Page
-                    contentId: 76sd88a6-31d8-4e47-ad5f-da932081b68d
-                    parentId: 1067771c-ec05-4671-951b-18f503953f2d
-                    position: 0
-                    hideFromNavigation: false
+              example:
+                id: aw67771c-ec05-4671-951b-18fqwq53f2d
+                rev: 20-axz19cf45c00a55eda54d6480976b3e1
+                name: products
+                segment: products
+                contentTypeId: dffa969c-32fc-4079-8a57-eb85ad136ae8
+                description: products page
+                layoutId: 13c46fbe-db14-4a24-859f-f4b847a2b843
+                title: Products Page
+                contentId: 76sd88a6-31d8-4e47-ad5f-da932081b68d
+                parentId: 1067771c-ec05-4671-951b-18f503953f2d
+                position: 0
+                hideFromNavigation: false
         '400':
           description: Bad request
           content:
@@ -3897,17 +3805,15 @@ paths:
                               type: string
                         locale:
                           type: string
-              examples:
-                response:
-                  value:
-                    service: prod-authoring-sites
-                    requestId: '455478465455511'
-                    errors:
-                    - code: 2011
-                      message: Invalid page ID parameter provided.
-                      level: ERROR
-                      description: The page ID provided is missing or invalid. The page ID cannot be empty or contain spaces. Provide a valid page ID and try again.
-                      locale: en
+              example:
+                service: prod-authoring-sites
+                requestId: '455478465455511'
+                errors:
+                - code: 2011
+                  message: Invalid page ID parameter provided.
+                  level: ERROR
+                  description: The page ID provided is missing or invalid. The page ID cannot be empty or contain spaces. Provide a valid page ID and try again.
+                  locale: en
         '401':
           description: Unauthorized
           content:
@@ -3947,17 +3853,15 @@ paths:
                               type: string
                         locale:
                           type: string
-              examples:
-                response:
-                  value:
-                    service: prod-authoring-sites
-                    requestId: '455478465455511'
-                    errors:
-                    - code: 1016
-                      message: Problem accessing database.
-                      level: ERROR
-                      description: Problem accessing database. Try again or contact Acoustic support if problem persists.
-                      locale: en
+              example:
+                service: prod-authoring-sites
+                requestId: '455478465455511'
+                errors:
+                - code: 1016
+                  message: Problem accessing database.
+                  level: ERROR
+                  description: Problem accessing database. Try again or contact Acoustic support if problem persists.
+                  locale: en
         '403':
           description: Forbidden
           content:
@@ -3997,17 +3901,15 @@ paths:
                               type: string
                         locale:
                           type: string
-              examples:
-                response:
-                  value:
-                    service: prod-authoring-sites
-                    requestId: '455478465455511'
-                    errors:
-                    - code: 1016
-                      message: Problem accessing database.
-                      level: ERROR
-                      description: Problem accessing database. Try again or contact Acoustic support if problem persists.
-                      locale: en
+              example:
+                service: prod-authoring-sites
+                requestId: '455478465455511'
+                errors:
+                - code: 1016
+                  message: Problem accessing database.
+                  level: ERROR
+                  description: Problem accessing database. Try again or contact Acoustic support if problem persists.
+                  locale: en
         '404':
           description: Not found
           content:
@@ -4047,17 +3949,15 @@ paths:
                               type: string
                         locale:
                           type: string
-              examples:
-                response:
-                  value:
-                    service: prod-authoring-sites
-                    requestId: '455478465455511'
-                    errors:
-                    - code: 2012
-                      message: 'Page not found for ID: dummyId'
-                      level: ERROR
-                      description: A page with the specified ID was not found in the system. Provide a valid ID and try again.
-                      locale: en
+              example:
+                service: prod-authoring-sites
+                requestId: '455478465455511'
+                errors:
+                - code: 2012
+                  message: 'Page not found for ID: dummyId'
+                  level: ERROR
+                  description: A page with the specified ID was not found in the system. Provide a valid ID and try again.
+                  locale: en
         '429':
           description: Too Many Requests
           content:
@@ -4097,17 +3997,15 @@ paths:
                               type: string
                         locale:
                           type: string
-              examples:
-                response:
-                  value:
-                    service: prod-authoring-sites
-                    requestId: '455478465455511'
-                    errors:
-                    - code: 1018
-                      message: Temporarily unable to access the database.
-                      level: ERROR
-                      description: Temporarily unable to access the database. Try again or contact Acoustic support if problem persists.
-                      locale: en
+              example:
+                service: prod-authoring-sites
+                requestId: '455478465455511'
+                errors:
+                - code: 1018
+                  message: Temporarily unable to access the database.
+                  level: ERROR
+                  description: Temporarily unable to access the database. Try again or contact Acoustic support if problem persists.
+                  locale: en
         default:
           description: Unexpected error
           content:
@@ -4147,30 +4045,31 @@ paths:
                               type: string
                         locale:
                           type: string
-              examples:
-                response:
-                  value:
-                    service: prod-authoring-sites
-                    requestId: '455478465455511'
-                    errors:
-                    - code: 5004
-                      message: Unexpected error occurred.
-                      level: ERROR
-                      description: Unable to complete the request due to an unexpected error. Try again or contact Acoustic support if problem persists.
-                      locale: en
+              example:
+                service: prod-authoring-sites
+                requestId: '455478465455511'
+                errors:
+                - code: 5004
+                  message: Unexpected error occurred.
+                  level: ERROR
+                  description: Unable to complete the request due to an unexpected error. Try again or contact Acoustic support if problem persists.
+                  locale: en
       tags:
       - Authoring sites
+      operationId: getAuthoringV1SitesBySiteIdPagesByPageId
+      x-operation-id-source: derived
     delete:
       x-ibm-dx-security-user-roles:
       - admin
       - manager
       - editor
-      summary: Delete a page.
+      summary: Delete a page
       description: 'Deletes the page specified by `page-id` and all descendant pages in the site specified by `site-id`.
 
         By default the page and descendant pages associated content is not deleted, set ''delete-content'' query parameter to ''true'' to delete the page and descendant pages associated content.
 
-        <br />User roles: admin, manager, editor'
+
+        User roles: admin, manager, editor'
       parameters:
       - name: site-id
         in: path
@@ -4234,17 +4133,15 @@ paths:
                               type: string
                         locale:
                           type: string
-              examples:
-                response:
-                  value:
-                    service: prod-authoring-sites
-                    requestId: '455478465455511'
-                    errors:
-                    - code: 2011
-                      message: Invalid page ID parameter provided.
-                      level: ERROR
-                      description: The page ID provided is missing or invalid. The page ID cannot be empty or contain spaces. Provide a valid page ID and try again.
-                      locale: en
+              example:
+                service: prod-authoring-sites
+                requestId: '455478465455511'
+                errors:
+                - code: 2011
+                  message: Invalid page ID parameter provided.
+                  level: ERROR
+                  description: The page ID provided is missing or invalid. The page ID cannot be empty or contain spaces. Provide a valid page ID and try again.
+                  locale: en
         '401':
           description: Unauthorized
           content:
@@ -4284,17 +4181,15 @@ paths:
                               type: string
                         locale:
                           type: string
-              examples:
-                response:
-                  value:
-                    service: prod-authoring-sites
-                    requestId: '455478465455511'
-                    errors:
-                    - code: 1016
-                      message: Problem accessing database.
-                      level: ERROR
-                      description: Problem accessing database. Try again or contact Acoustic support if problem persists.
-                      locale: en
+              example:
+                service: prod-authoring-sites
+                requestId: '455478465455511'
+                errors:
+                - code: 1016
+                  message: Problem accessing database.
+                  level: ERROR
+                  description: Problem accessing database. Try again or contact Acoustic support if problem persists.
+                  locale: en
         '403':
           description: Forbidden
           content:
@@ -4334,17 +4229,15 @@ paths:
                               type: string
                         locale:
                           type: string
-              examples:
-                response:
-                  value:
-                    service: prod-authoring-sites
-                    requestId: '455478465455511'
-                    errors:
-                    - code: 1016
-                      message: Problem accessing database.
-                      level: ERROR
-                      description: Problem accessing database. Try again or contact Acoustic support if problem persists.
-                      locale: en
+              example:
+                service: prod-authoring-sites
+                requestId: '455478465455511'
+                errors:
+                - code: 1016
+                  message: Problem accessing database.
+                  level: ERROR
+                  description: Problem accessing database. Try again or contact Acoustic support if problem persists.
+                  locale: en
         '404':
           description: Not found
           content:
@@ -4384,17 +4277,15 @@ paths:
                               type: string
                         locale:
                           type: string
-              examples:
-                response:
-                  value:
-                    service: prod-authoring-sites
-                    requestId: '455478465455511'
-                    errors:
-                    - code: 2012
-                      message: 'Page not found for ID: dummyId'
-                      level: ERROR
-                      description: A page with the specified ID was not found in the system. Provide a valid ID and try again.
-                      locale: en
+              example:
+                service: prod-authoring-sites
+                requestId: '455478465455511'
+                errors:
+                - code: 2012
+                  message: 'Page not found for ID: dummyId'
+                  level: ERROR
+                  description: A page with the specified ID was not found in the system. Provide a valid ID and try again.
+                  locale: en
         '409':
           description: Conflict
           content:
@@ -4434,17 +4325,15 @@ paths:
                               type: string
                         locale:
                           type: string
-              examples:
-                response:
-                  value:
-                    service: prod-authoring-sites
-                    requestId: '455478465455511'
-                    errors:
-                    - code: 6001
-                      message: 'There was a conflict deleting page: dummyId and its child pages.'
-                      level: ERROR
-                      description: 'Unable to delete the page: {pageId} and its child pages due to conflict. Resolve the conflict and try again.'
-                      locale: en
+              example:
+                service: prod-authoring-sites
+                requestId: '455478465455511'
+                errors:
+                - code: 6001
+                  message: 'There was a conflict deleting page: dummyId and its child pages.'
+                  level: ERROR
+                  description: 'Unable to delete the page: {pageId} and its child pages due to conflict. Resolve the conflict and try again.'
+                  locale: en
         '429':
           description: Too Many Requests
           content:
@@ -4484,17 +4373,15 @@ paths:
                               type: string
                         locale:
                           type: string
-              examples:
-                response:
-                  value:
-                    service: prod-authoring-sites
-                    requestId: '455478465455511'
-                    errors:
-                    - code: 1018
-                      message: Temporarily unable to access the database.
-                      level: ERROR
-                      description: Temporarily unable to access the database. Try again or contact Acoustic support if problem persists.
-                      locale: en
+              example:
+                service: prod-authoring-sites
+                requestId: '455478465455511'
+                errors:
+                - code: 1018
+                  message: Temporarily unable to access the database.
+                  level: ERROR
+                  description: Temporarily unable to access the database. Try again or contact Acoustic support if problem persists.
+                  locale: en
         default:
           description: Unexpected error
           content:
@@ -4534,32 +4421,33 @@ paths:
                               type: string
                         locale:
                           type: string
-              examples:
-                response:
-                  value:
-                    service: prod-authoring-sites
-                    requestId: '455478465455511'
-                    errors:
-                    - code: 5004
-                      message: Unexpected error occurred.
-                      level: ERROR
-                      description: Unable to complete the request due to an unexpected error. Try again or contact Acoustic support if problem persists.
-                      locale: en
+              example:
+                service: prod-authoring-sites
+                requestId: '455478465455511'
+                errors:
+                - code: 5004
+                  message: Unexpected error occurred.
+                  level: ERROR
+                  description: Unable to complete the request due to an unexpected error. Try again or contact Acoustic support if problem persists.
+                  locale: en
       tags:
       - Authoring sites
+      operationId: deleteAuthoringV1SitesBySiteIdPagesByPageId
+      x-operation-id-source: derived
     put:
       x-ibm-dx-security-user-roles:
       - admin
       - manager
       - editor
-      summary: Update a page.
+      summary: Update a page
       description: 'Updates the page metadata specified by `page-id` in the site specified by `site-id`.
 
         Move of a page to a different parent or repositioning with other sibling pages is not supported, use the move endpoint instead.
 
         The full page metadata must be supplied, partial updates are not supported.
 
-        <br />User roles: admin, manager, editor'
+
+        User roles: admin, manager, editor'
       parameters:
       - name: site-id
         in: path
@@ -4585,55 +4473,6 @@ paths:
         required: false
         schema:
           type: boolean
-      requestBody:
-        content:
-          application/json:
-            schema:
-              title: Update of Page Metadata
-              description: Update of Page Metadata
-              type: object
-              properties:
-                name:
-                  type: string
-                  description: The name of the page.
-                id:
-                  type: string
-                  description: The ID of the page item.
-                rev:
-                  type: string
-                  description: (Optional) The revision of the document.
-                position:
-                  type: string
-                  description: The position of the page relative to its sibling pages. Position is an integer value starting at 0.
-                description:
-                  type: string
-                  description: Page description.
-                layoutId:
-                  type: string
-                  description: Page layout template ID.
-                contentId:
-                  type: string
-                  description: The ID of the page content item this item represents.
-                contentTypeId:
-                  type: string
-                  description: The ID of the page content type.
-                segment:
-                  type: string
-                  description: Friendly URL segment.
-                title:
-                  type: string
-                  description: Page title.
-                parentId:
-                  type: string
-                  description: (Optional) The ID of the parent page. This should not be set if the new page is to be a root page. Otherwise, set this field to the ID of the parent page.
-                classification:
-                  type: string
-                  description: this is always `page`
-                hideFromNavigation:
-                  type: boolean
-                  description: (Optional) This controls the visibility of the page in the site navigation menu. Set it to `true` to hide the page. The default setting (if this field is not supplied) is `false`. If to `true` set on a parent page, it will override the corresponding flags in all descendant pages. Therefore, hiding a page will hide all its descendants in the site navigation menu.
-        description: The metadata for the updated page.
-        required: true
       responses:
         '200':
           description: Page successfully updated.
@@ -4695,26 +4534,24 @@ paths:
                   hideFromNavigation:
                     type: boolean
                     description: This controls the visibility of the page in the site navigation menu. If set to `true` this page is hidden. If set to `true` on a parent page, it will override the corresponding flags in all descendant pages. Therefore, hiding a page will hide all its descendants in the site navigation menu.
-              examples:
-                response:
-                  value:
-                    id: aw67771c-ec05-4671-951b-18fqwq53f2d
-                    rev: 20-axz19cf45c00a55eda54d6480976b3e1
-                    name: products
-                    segment: products
-                    contentTypeId: dffa969c-32fc-4079-8a57-eb85ad136ae8
-                    description: products page
-                    layoutId: 13c46fbe-db14-4a24-859f-f4b847a2b843
-                    title: Products Page
-                    contentId: 76sd88a6-31d8-4e47-ad5f-da932081b68d
-                    parentId: 1067771c-ec05-4671-951b-18f503953f2d
-                    hideFromNavigation: false
-                    position: 0
-                    classification: page
-                    lastModified: '2017-09-11T14:03:04.348Z'
-                    lastModifierId: 00000000-0000-0000-0000-000000000009
-                    created: '2017-09-11T14:03:04.348Z'
-                    creatorId: 00000000-0000-0000-0000-000000000009
+              example:
+                id: aw67771c-ec05-4671-951b-18fqwq53f2d
+                rev: 20-axz19cf45c00a55eda54d6480976b3e1
+                name: products
+                segment: products
+                contentTypeId: dffa969c-32fc-4079-8a57-eb85ad136ae8
+                description: products page
+                layoutId: 13c46fbe-db14-4a24-859f-f4b847a2b843
+                title: Products Page
+                contentId: 76sd88a6-31d8-4e47-ad5f-da932081b68d
+                parentId: 1067771c-ec05-4671-951b-18f503953f2d
+                hideFromNavigation: false
+                position: 0
+                classification: page
+                lastModified: '2017-09-11T14:03:04.348Z'
+                lastModifierId: 00000000-0000-0000-0000-000000000009
+                created: '2017-09-11T14:03:04.348Z'
+                creatorId: 00000000-0000-0000-0000-000000000009
         '400':
           description: Bad request
           content:
@@ -4754,17 +4591,15 @@ paths:
                               type: string
                         locale:
                           type: string
-              examples:
-                response:
-                  value:
-                    service: prod-authoring-sites
-                    requestId: '455478465455511'
-                    errors:
-                    - code: 2011
-                      message: Invalid page ID parameter provided.
-                      level: ERROR
-                      description: The page ID provided is missing or invalid. The page ID cannot be empty or contain spaces. Provide a valid page ID and try again.
-                      locale: en
+              example:
+                service: prod-authoring-sites
+                requestId: '455478465455511'
+                errors:
+                - code: 2011
+                  message: Invalid page ID parameter provided.
+                  level: ERROR
+                  description: The page ID provided is missing or invalid. The page ID cannot be empty or contain spaces. Provide a valid page ID and try again.
+                  locale: en
         '401':
           description: Unauthorized
           content:
@@ -4804,17 +4639,15 @@ paths:
                               type: string
                         locale:
                           type: string
-              examples:
-                response:
-                  value:
-                    service: prod-authoring-sites
-                    requestId: '455478465455511'
-                    errors:
-                    - code: 1016
-                      message: Problem accessing database.
-                      level: ERROR
-                      description: Problem accessing database. Try again or contact Acoustic support if problem persists.
-                      locale: en
+              example:
+                service: prod-authoring-sites
+                requestId: '455478465455511'
+                errors:
+                - code: 1016
+                  message: Problem accessing database.
+                  level: ERROR
+                  description: Problem accessing database. Try again or contact Acoustic support if problem persists.
+                  locale: en
         '403':
           description: Forbidden
           content:
@@ -4854,17 +4687,15 @@ paths:
                               type: string
                         locale:
                           type: string
-              examples:
-                response:
-                  value:
-                    service: prod-authoring-sites
-                    requestId: '455478465455511'
-                    errors:
-                    - code: 1016
-                      message: Problem accessing database.
-                      level: ERROR
-                      description: Problem accessing database. Try again or contact Acoustic support if problem persists.
-                      locale: en
+              example:
+                service: prod-authoring-sites
+                requestId: '455478465455511'
+                errors:
+                - code: 1016
+                  message: Problem accessing database.
+                  level: ERROR
+                  description: Problem accessing database. Try again or contact Acoustic support if problem persists.
+                  locale: en
         '404':
           description: Not found
           content:
@@ -4904,17 +4735,15 @@ paths:
                               type: string
                         locale:
                           type: string
-              examples:
-                response:
-                  value:
-                    service: prod-authoring-sites
-                    requestId: '455478465455511'
-                    errors:
-                    - code: 2012
-                      message: 'Page not found for ID: 1067771c-ec05-4671-951b-18f503953f2d'
-                      level: ERROR
-                      description: A page with the specified ID was not found in the system. Provide a valid ID and try again.
-                      locale: en
+              example:
+                service: prod-authoring-sites
+                requestId: '455478465455511'
+                errors:
+                - code: 2012
+                  message: 'Page not found for ID: 1067771c-ec05-4671-951b-18f503953f2d'
+                  level: ERROR
+                  description: A page with the specified ID was not found in the system. Provide a valid ID and try again.
+                  locale: en
         '409':
           description: Conflict
           content:
@@ -4954,17 +4783,15 @@ paths:
                               type: string
                         locale:
                           type: string
-              examples:
-                response:
-                  value:
-                    service: prod-authoring-sites
-                    requestId: '455478465455511'
-                    errors:
-                    - code: 2025
-                      message: 'The page with ID: 1067771c-ec05-4671-951b-18f503953f2d has a different ''rev'' value than the one supplied.'
-                      level: ERROR
-                      description: Unable to update the page. A page with the specified ID has a different 'rev' value than the one supplied. Change the 'rev' to be currently stored value and try to update the page again.
-                      locale: en
+              example:
+                service: prod-authoring-sites
+                requestId: '455478465455511'
+                errors:
+                - code: 2025
+                  message: 'The page with ID: 1067771c-ec05-4671-951b-18f503953f2d has a different ''rev'' value than the one supplied.'
+                  level: ERROR
+                  description: Unable to update the page. A page with the specified ID has a different 'rev' value than the one supplied. Change the 'rev' to be currently stored value and try to update the page again.
+                  locale: en
         '429':
           description: Too Many Requests
           content:
@@ -5004,17 +4831,15 @@ paths:
                               type: string
                         locale:
                           type: string
-              examples:
-                response:
-                  value:
-                    service: prod-authoring-sites
-                    requestId: '455478465455511'
-                    errors:
-                    - code: 1018
-                      message: Temporarily unable to access the database.
-                      level: ERROR
-                      description: Temporarily unable to access the database. Try again or contact Acoustic support if problem persists.
-                      locale: en
+              example:
+                service: prod-authoring-sites
+                requestId: '455478465455511'
+                errors:
+                - code: 1018
+                  message: Temporarily unable to access the database.
+                  level: ERROR
+                  description: Temporarily unable to access the database. Try again or contact Acoustic support if problem persists.
+                  locale: en
         default:
           description: Unexpected error
           content:
@@ -5054,33 +4879,82 @@ paths:
                               type: string
                         locale:
                           type: string
-              examples:
-                response:
-                  value:
-                    service: prod-authoring-sites
-                    requestId: '455478465455511'
-                    errors:
-                    - code: 5004
-                      message: Unexpected error occurred.
-                      level: ERROR
-                      description: Unable to complete the request due to an unexpected error. Try again or contact Acoustic support if problem persists.
-                      locale: en
+              example:
+                service: prod-authoring-sites
+                requestId: '455478465455511'
+                errors:
+                - code: 5004
+                  message: Unexpected error occurred.
+                  level: ERROR
+                  description: Unable to complete the request due to an unexpected error. Try again or contact Acoustic support if problem persists.
+                  locale: en
       tags:
       - Authoring sites
+      requestBody:
+        content:
+          application/json:
+            schema:
+              title: Update of Page Metadata
+              description: Update of Page Metadata
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: The name of the page.
+                id:
+                  type: string
+                  description: The ID of the page item.
+                rev:
+                  type: string
+                  description: (Optional) The revision of the document.
+                position:
+                  type: string
+                  description: The position of the page relative to its sibling pages. Position is an integer value starting at 0.
+                description:
+                  type: string
+                  description: Page description.
+                layoutId:
+                  type: string
+                  description: Page layout template ID.
+                contentId:
+                  type: string
+                  description: The ID of the page content item this item represents.
+                contentTypeId:
+                  type: string
+                  description: The ID of the page content type.
+                segment:
+                  type: string
+                  description: Friendly URL segment.
+                title:
+                  type: string
+                  description: Page title.
+                parentId:
+                  type: string
+                  description: (Optional) The ID of the parent page. This should not be set if the new page is to be a root page. Otherwise, set this field to the ID of the parent page.
+                classification:
+                  type: string
+                  description: this is always `page`
+                hideFromNavigation:
+                  type: boolean
+                  description: (Optional) This controls the visibility of the page in the site navigation menu. Set it to `true` to hide the page. The default setting (if this field is not supplied) is `false`. If to `true` set on a parent page, it will override the corresponding flags in all descendant pages. Therefore, hiding a page will hide all its descendants in the site navigation menu.
+        description: The metadata for the updated page.
+        required: true
+      operationId: putAuthoringV1SitesBySiteIdPagesByPageId
+      x-operation-id-source: derived
   /authoring/v1/sites/{site-id}/pages/move:
     post:
       x-ibm-dx-security-user-roles:
       - admin
       - manager
       - editor
-      summary: Move a page.
+      summary: Move a page
       description: 'Use this endpoint to move a page. The body of the request should be empty.
 
         The query parameters should include the ''sourceId'', ''sourceRev'', ''targetPosition'', the optional ''targetId'' and ''targetRev''.
 
         `sourceId` and `sourceRev` relate to the page to be moved.
 
-        `targetId` and `targetRev` relate to the destination parent page.  These are optional parameters, if not set it means the source page is to be moved to the site root.
+        `targetId` and `targetRev` relate to the destination parent page. These are optional parameters, if not set it means the source page is to be moved to the site root.
 
         The `targetPosition` field is required, it is an integer value starting at 0. It cannot exceed the number of child pages of the destination parent page.
 
@@ -5088,7 +4962,8 @@ paths:
 
         A refresh of the page hierarchy is recommended after moving a page to a different parent page.
 
-        <br />User roles: admin, manager, editor'
+
+        User roles: admin, manager, editor'
       parameters:
       - name: site-id
         in: path
@@ -5184,17 +5059,15 @@ paths:
                               type: string
                         locale:
                           type: string
-              examples:
-                response:
-                  value:
-                    service: prod-authoring-sites
-                    requestId: '455478465455511'
-                    errors:
-                    - code: 2041
-                      message: A target position of 10 is not valid for the children of page with ID dummyPage, so no move occurred
-                      level: ERROR
-                      description: Unable to move the page. The target position supplied is invalid for the target page. Change the targetPosition and try again
-                      locale: en
+              example:
+                service: prod-authoring-sites
+                requestId: '455478465455511'
+                errors:
+                - code: 2041
+                  message: A target position of 10 is not valid for the children of page with ID dummyPage, so no move occurred
+                  level: ERROR
+                  description: Unable to move the page. The target position supplied is invalid for the target page. Change the targetPosition and try again
+                  locale: en
         '401':
           description: Unauthorized
           content:
@@ -5234,17 +5107,15 @@ paths:
                               type: string
                         locale:
                           type: string
-              examples:
-                response:
-                  value:
-                    service: prod-authoring-sites
-                    requestId: '455478465455511'
-                    errors:
-                    - code: 1016
-                      message: Problem accessing database.
-                      level: ERROR
-                      description: Problem accessing database. Try again or contact Acoustic support if problem persists.
-                      locale: en
+              example:
+                service: prod-authoring-sites
+                requestId: '455478465455511'
+                errors:
+                - code: 1016
+                  message: Problem accessing database.
+                  level: ERROR
+                  description: Problem accessing database. Try again or contact Acoustic support if problem persists.
+                  locale: en
         '403':
           description: Forbidden
           content:
@@ -5284,17 +5155,15 @@ paths:
                               type: string
                         locale:
                           type: string
-              examples:
-                response:
-                  value:
-                    service: prod-authoring-sites
-                    requestId: '455478465455511'
-                    errors:
-                    - code: 1016
-                      message: Problem accessing database.
-                      level: ERROR
-                      description: Problem accessing database. Try again or contact Acoustic support if problem persists.
-                      locale: en
+              example:
+                service: prod-authoring-sites
+                requestId: '455478465455511'
+                errors:
+                - code: 1016
+                  message: Problem accessing database.
+                  level: ERROR
+                  description: Problem accessing database. Try again or contact Acoustic support if problem persists.
+                  locale: en
         '404':
           description: Not found
           content:
@@ -5334,17 +5203,15 @@ paths:
                               type: string
                         locale:
                           type: string
-              examples:
-                response:
-                  value:
-                    service: prod-authoring-sites
-                    requestId: '455478465455511'
-                    errors:
-                    - code: 2012
-                      message: 'Page not found for ID: dummyId'
-                      level: ERROR
-                      description: A page with the specified ID was not found in the system. Provide a valid ID and try again.
-                      locale: en
+              example:
+                service: prod-authoring-sites
+                requestId: '455478465455511'
+                errors:
+                - code: 2012
+                  message: 'Page not found for ID: dummyId'
+                  level: ERROR
+                  description: A page with the specified ID was not found in the system. Provide a valid ID and try again.
+                  locale: en
         '429':
           description: Too Many Requests
           content:
@@ -5384,17 +5251,15 @@ paths:
                               type: string
                         locale:
                           type: string
-              examples:
-                response:
-                  value:
-                    service: prod-authoring-sites
-                    requestId: '455478465455511'
-                    errors:
-                    - code: 1018
-                      message: Temporarily unable to access the database.
-                      level: ERROR
-                      description: Temporarily unable to access the database. Try again or contact Acoustic support if problem persists.
-                      locale: en
+              example:
+                service: prod-authoring-sites
+                requestId: '455478465455511'
+                errors:
+                - code: 1018
+                  message: Temporarily unable to access the database.
+                  level: ERROR
+                  description: Temporarily unable to access the database. Try again or contact Acoustic support if problem persists.
+                  locale: en
         default:
           description: Unexpected error
           content:
@@ -5434,29 +5299,30 @@ paths:
                               type: string
                         locale:
                           type: string
-              examples:
-                response:
-                  value:
-                    service: prod-authoring-sites
-                    requestId: '455478465455511'
-                    errors:
-                    - code: 5004
-                      message: Unexpected error occurred.
-                      level: ERROR
-                      description: Unable to complete the request due to an unexpected error. Try again or contact Acoustic support if problem persists.
-                      locale: en
+              example:
+                service: prod-authoring-sites
+                requestId: '455478465455511'
+                errors:
+                - code: 5004
+                  message: Unexpected error occurred.
+                  level: ERROR
+                  description: Unable to complete the request due to an unexpected error. Try again or contact Acoustic support if problem persists.
+                  locale: en
       tags:
       - Authoring sites
+      operationId: postAuthoringV1SitesBySiteIdPagesMove
+      x-operation-id-source: derived
   /authoring/v1/sites/{site-id}/pages/{page-id}/ready:
     post:
       x-ibm-dx-security-user-roles:
       - admin
       - manager
       - editor
-      summary: Promote the page from draft to ready status.
+      summary: Promote the page from draft to ready status
       description: 'Use this endpoint to change the status of a page from draft to ready.
 
-        <br />User roles: admin, manager, editor'
+
+        User roles: admin, manager, editor'
       parameters:
       - name: site-id
         in: path
@@ -5572,17 +5438,15 @@ paths:
                               type: string
                         locale:
                           type: string
-              examples:
-                response:
-                  value:
-                    service: prod-authoring-sites
-                    requestId: '455478465455571'
-                    errors:
-                    - code: 2062
-                      message: 'Unable to ready the draft of the page with ID: dummyDraftPageId in site with ID: dummySiteId as the page is not in a draft state.'
-                      level: ERROR
-                      description: Unable to ready a draft of the page as the page is not in a draft state. Ensure the correct id is been used and try again.
-                      locale: en
+              example:
+                service: prod-authoring-sites
+                requestId: '455478465455571'
+                errors:
+                - code: 2062
+                  message: 'Unable to ready the draft of the page with ID: dummyDraftPageId in site with ID: dummySiteId as the page is not in a draft state.'
+                  level: ERROR
+                  description: Unable to ready a draft of the page as the page is not in a draft state. Ensure the correct id is been used and try again.
+                  locale: en
         '401':
           description: Unauthorized
           content:
@@ -5622,17 +5486,15 @@ paths:
                               type: string
                         locale:
                           type: string
-              examples:
-                response:
-                  value:
-                    service: prod-authoring-sites
-                    requestId: '455478465455511'
-                    errors:
-                    - code: 1016
-                      message: Problem accessing database.
-                      level: ERROR
-                      description: Problem accessing database. Try again or contact Acoustic support if problem persists.
-                      locale: en
+              example:
+                service: prod-authoring-sites
+                requestId: '455478465455511'
+                errors:
+                - code: 1016
+                  message: Problem accessing database.
+                  level: ERROR
+                  description: Problem accessing database. Try again or contact Acoustic support if problem persists.
+                  locale: en
         '403':
           description: Forbidden
           content:
@@ -5672,17 +5534,15 @@ paths:
                               type: string
                         locale:
                           type: string
-              examples:
-                response:
-                  value:
-                    service: prod-authoring-sites
-                    requestId: '455478465455511'
-                    errors:
-                    - code: 1016
-                      message: Problem accessing database.
-                      level: ERROR
-                      description: Problem accessing database. Try again or contact Acoustic support if problem persists.
-                      locale: en
+              example:
+                service: prod-authoring-sites
+                requestId: '455478465455511'
+                errors:
+                - code: 1016
+                  message: Problem accessing database.
+                  level: ERROR
+                  description: Problem accessing database. Try again or contact Acoustic support if problem persists.
+                  locale: en
         '404':
           description: Not found
           content:
@@ -5722,17 +5582,15 @@ paths:
                               type: string
                         locale:
                           type: string
-              examples:
-                response:
-                  value:
-                    service: prod-authoring-sites
-                    requestId: '455478465455511'
-                    errors:
-                    - code: 2012
-                      message: 'Page not found for ID: dummyId'
-                      level: ERROR
-                      description: A page with the specified ID was not found in the system. Provide a valid ID and try again.
-                      locale: en
+              example:
+                service: prod-authoring-sites
+                requestId: '455478465455511'
+                errors:
+                - code: 2012
+                  message: 'Page not found for ID: dummyId'
+                  level: ERROR
+                  description: A page with the specified ID was not found in the system. Provide a valid ID and try again.
+                  locale: en
         '429':
           description: Too Many Requests
           content:
@@ -5772,17 +5630,15 @@ paths:
                               type: string
                         locale:
                           type: string
-              examples:
-                response:
-                  value:
-                    service: prod-authoring-sites
-                    requestId: '455478465455511'
-                    errors:
-                    - code: 1018
-                      message: Temporarily unable to access the database.
-                      level: ERROR
-                      description: Temporarily unable to access the database. Try again or contact Acoustic support if problem persists.
-                      locale: en
+              example:
+                service: prod-authoring-sites
+                requestId: '455478465455511'
+                errors:
+                - code: 1018
+                  message: Temporarily unable to access the database.
+                  level: ERROR
+                  description: Temporarily unable to access the database. Try again or contact Acoustic support if problem persists.
+                  locale: en
         default:
           description: Unexpected error
           content:
@@ -5822,19 +5678,19 @@ paths:
                               type: string
                         locale:
                           type: string
-              examples:
-                response:
-                  value:
-                    service: prod-authoring-sites
-                    requestId: '455478465455511'
-                    errors:
-                    - code: 5004
-                      message: Unexpected error occurred.
-                      level: ERROR
-                      description: Unable to complete the request due to an unexpected error. Try again or contact Acoustic support if problem persists.
-                      locale: en
+              example:
+                service: prod-authoring-sites
+                requestId: '455478465455511'
+                errors:
+                - code: 5004
+                  message: Unexpected error occurred.
+                  level: ERROR
+                  description: Unable to complete the request due to an unexpected error. Try again or contact Acoustic support if problem persists.
+                  locale: en
       tags:
       - Authoring sites
+      operationId: postAuthoringV1SitesBySiteIdPagesByPageIdReady
+      x-operation-id-source: derived
   /authoring/v1/sites/pages/{page-id}:
     get:
       x-ibm-dx-security-user-roles:
@@ -5842,13 +5698,14 @@ paths:
       - manager
       - editor
       - viewer
-      summary: Get a page by unique id.
+      summary: Get a page by unique id
       description: 'Returns the page metadata specified by unique `page-id`. This API is equalivent to `/sites/pages/{site-id/pages{page-id}` but does not require a `site-id`.
 
 
         If the page is a root page then no parentId will be returned in the response.
 
-        <br />User roles: admin, manager, editor, viewer'
+
+        User roles: admin, manager, editor, viewer'
       parameters:
       - name: page-id
         in: path
@@ -5946,21 +5803,19 @@ paths:
                   hideFromNavigation:
                     type: boolean
                     description: This controls the visibility of the page in the site navigation menu. If set to `true` this page is hidden. If set to `true` on a parent page, it will override the corresponding flags in all descendant pages. Therefore, hiding a page will hide all its descendants in the site navigation menu.
-              examples:
-                response:
-                  value:
-                    id: aw67771c-ec05-4671-951b-18fqwq53f2d
-                    rev: 20-axz19cf45c00a55eda54d6480976b3e1
-                    name: products
-                    segment: products
-                    contentTypeId: dffa969c-32fc-4079-8a57-eb85ad136ae8
-                    description: products page
-                    layoutId: 13c46fbe-db14-4a24-859f-f4b847a2b843
-                    title: Products Page
-                    contentId: 76sd88a6-31d8-4e47-ad5f-da932081b68d
-                    parentId: 1067771c-ec05-4671-951b-18f503953f2d
-                    position: 0
-                    hideFromNavigation: false
+              example:
+                id: aw67771c-ec05-4671-951b-18fqwq53f2d
+                rev: 20-axz19cf45c00a55eda54d6480976b3e1
+                name: products
+                segment: products
+                contentTypeId: dffa969c-32fc-4079-8a57-eb85ad136ae8
+                description: products page
+                layoutId: 13c46fbe-db14-4a24-859f-f4b847a2b843
+                title: Products Page
+                contentId: 76sd88a6-31d8-4e47-ad5f-da932081b68d
+                parentId: 1067771c-ec05-4671-951b-18f503953f2d
+                position: 0
+                hideFromNavigation: false
         '400':
           description: Bad request
           content:
@@ -6000,17 +5855,15 @@ paths:
                               type: string
                         locale:
                           type: string
-              examples:
-                response:
-                  value:
-                    service: prod-authoring-sites
-                    requestId: '455478465455511'
-                    errors:
-                    - code: 2011
-                      message: Invalid page ID parameter provided.
-                      level: ERROR
-                      description: The page ID provided is missing or invalid. The page ID cannot be empty or contain spaces. Provide a valid page ID and try again.
-                      locale: en
+              example:
+                service: prod-authoring-sites
+                requestId: '455478465455511'
+                errors:
+                - code: 2011
+                  message: Invalid page ID parameter provided.
+                  level: ERROR
+                  description: The page ID provided is missing or invalid. The page ID cannot be empty or contain spaces. Provide a valid page ID and try again.
+                  locale: en
         '401':
           description: Unauthorized
           content:
@@ -6050,17 +5903,15 @@ paths:
                               type: string
                         locale:
                           type: string
-              examples:
-                response:
-                  value:
-                    service: prod-authoring-sites
-                    requestId: '455478465455511'
-                    errors:
-                    - code: 1016
-                      message: Problem accessing database.
-                      level: ERROR
-                      description: Problem accessing database. Try again or contact Acoustic support if problem persists.
-                      locale: en
+              example:
+                service: prod-authoring-sites
+                requestId: '455478465455511'
+                errors:
+                - code: 1016
+                  message: Problem accessing database.
+                  level: ERROR
+                  description: Problem accessing database. Try again or contact Acoustic support if problem persists.
+                  locale: en
         '403':
           description: Forbidden
           content:
@@ -6100,17 +5951,15 @@ paths:
                               type: string
                         locale:
                           type: string
-              examples:
-                response:
-                  value:
-                    service: prod-authoring-sites
-                    requestId: '455478465455511'
-                    errors:
-                    - code: 1016
-                      message: Problem accessing database.
-                      level: ERROR
-                      description: Problem accessing database. Try again or contact Acoustic support if problem persists.
-                      locale: en
+              example:
+                service: prod-authoring-sites
+                requestId: '455478465455511'
+                errors:
+                - code: 1016
+                  message: Problem accessing database.
+                  level: ERROR
+                  description: Problem accessing database. Try again or contact Acoustic support if problem persists.
+                  locale: en
         '404':
           description: Not found
           content:
@@ -6150,17 +5999,15 @@ paths:
                               type: string
                         locale:
                           type: string
-              examples:
-                response:
-                  value:
-                    service: prod-authoring-sites
-                    requestId: '455478465455511'
-                    errors:
-                    - code: 2012
-                      message: 'Page not found for ID: dummyId'
-                      level: ERROR
-                      description: A page with the specified ID was not found in the system. Provide a valid ID and try again.
-                      locale: en
+              example:
+                service: prod-authoring-sites
+                requestId: '455478465455511'
+                errors:
+                - code: 2012
+                  message: 'Page not found for ID: dummyId'
+                  level: ERROR
+                  description: A page with the specified ID was not found in the system. Provide a valid ID and try again.
+                  locale: en
         '429':
           description: Too Many Requests
           content:
@@ -6200,17 +6047,15 @@ paths:
                               type: string
                         locale:
                           type: string
-              examples:
-                response:
-                  value:
-                    service: prod-authoring-sites
-                    requestId: '455478465455511'
-                    errors:
-                    - code: 1018
-                      message: Temporarily unable to access the database.
-                      level: ERROR
-                      description: Temporarily unable to access the database. Try again or contact Acoustic support if problem persists.
-                      locale: en
+              example:
+                service: prod-authoring-sites
+                requestId: '455478465455511'
+                errors:
+                - code: 1018
+                  message: Temporarily unable to access the database.
+                  level: ERROR
+                  description: Temporarily unable to access the database. Try again or contact Acoustic support if problem persists.
+                  locale: en
         default:
           description: Unexpected error
           content:
@@ -6250,19 +6095,19 @@ paths:
                               type: string
                         locale:
                           type: string
-              examples:
-                response:
-                  value:
-                    service: prod-authoring-sites
-                    requestId: '455478465455511'
-                    errors:
-                    - code: 5004
-                      message: Unexpected error occurred.
-                      level: ERROR
-                      description: Unable to complete the request due to an unexpected error. Try again or contact Acoustic support if problem persists.
-                      locale: en
+              example:
+                service: prod-authoring-sites
+                requestId: '455478465455511'
+                errors:
+                - code: 5004
+                  message: Unexpected error occurred.
+                  level: ERROR
+                  description: Unable to complete the request due to an unexpected error. Try again or contact Acoustic support if problem persists.
+                  locale: en
       tags:
       - Authoring sites
+      operationId: getAuthoringV1SitesPagesByPageId
+      x-operation-id-source: derived
 components:
   schemas:
     ErrorResponse:
@@ -6314,9 +6159,3 @@ components:
       required:
       - errors
       - requestId
-x-refined-from:
-- acoustic-content-openapi-original.json
-- acoustic-content-swagger2-original.yaml
-x-readme:
-  explorer-enabled: true
-  proxy-enabled: true

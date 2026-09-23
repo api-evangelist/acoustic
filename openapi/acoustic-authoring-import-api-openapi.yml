@@ -1,9 +1,9 @@
 openapi: 3.2.0
 info:
-  title: Acoustic Authoring Import API
   version: 1.0.142
   x-ibm-name: ibm-watson-content-hub-api
-  description: 'Operations tagged Authoring Import across 2 of this provider''s published API definitions: acoustic-content-openapi-original.json, acoustic-content-swagger2-original.yaml. Each path carries the servers of the definition it was published in.'
+  title: Acoustic Content Authoring Import API
+  description: Copyright © Acoustic, L.P. 2023
 tags:
 - name: Authoring Import
   description: Provides generic copying and importing functionality
@@ -12,7 +12,7 @@ paths:
     post:
       tags:
       - Authoring Import
-      summary: Copies the specified documents.
+      summary: Copies the specified documents
       x-ibm-dx-security-user-roles:
       - admin
       - manager
@@ -22,7 +22,8 @@ paths:
 
         As for all Acoustic Content PUT and POST requests, the Content-Type header should be set to application/json.
 
-        <br />User roles: admin, manager'
+
+        User roles: admin, manager'
       parameters:
       - name: referencesToClear
         in: query
@@ -69,33 +70,6 @@ paths:
           format: string
           enum:
           - now
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: array
-              description: 'The items to copy. The items need to be either ready OR belong to same project. Additional parameters "name", "add" and "remove" can be passed with each item to modify the name and add or remove a property from the copied item. Format is "[classification]:[id]?name=[custom-name];remove={\"kind\":[\"sample\"],\"description\":\"\"};add={\"kind\":[\"email\"]}"
-
-                The above parameters mean that the
-
-                (a) name of the copied item would be <custom-name>.
-
-                (b) "email" will be added to the "kind" array in the copied object.
-
-                (c) "sample" will be removed from "kind" array in the copied object.
-
-                (d) "description" will be removed from the copied object.
-
-                '
-              items:
-                type: string
-              example:
-              - content:2fd35e68-b4d2-4608-8dbe-82c42b321bd9
-              - content:2fd35e68-b4d2-4608-8dbe-82c42b321bd9:draft
-              - content:2fd35e68-b4d2-4608-8dbe-82c42b321bd9?name=custom-name
-              - 'content:2fd35e68-b4d2-4608-8dbe-82c42b321bd9?name=mycontent;remove={"kind": ["sample"]};add={"kind":["email"]'
-        description: The list of documents to copy
-        required: true
       responses:
         '200':
           description: Results of the copy operation.
@@ -221,6 +195,35 @@ paths:
                   requestUri:
                     type: string
                     description: The current request uri.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              description: 'The items to copy. The items need to be either ready OR belong to same project. Additional parameters "name", "add" and "remove" can be passed with each item to modify the name and add or remove a property from the copied item. Format is "[classification]:[id]?name=[custom-name];remove={\"kind\":[\"sample\"],\"description\":\"\"};add={\"kind\":[\"email\"]}"
+
+                The above parameters mean that the
+
+                (a) name of the copied item would be <custom-name>.
+
+                (b) "email" will be added to the "kind" array in the copied object.
+
+                (c) "sample" will be removed from "kind" array in the copied object.
+
+                (d) "description" will be removed from the copied object.
+
+                '
+              items:
+                type: string
+              example:
+              - content:2fd35e68-b4d2-4608-8dbe-82c42b321bd9
+              - content:2fd35e68-b4d2-4608-8dbe-82c42b321bd9:draft
+              - content:2fd35e68-b4d2-4608-8dbe-82c42b321bd9?name=custom-name
+              - 'content:2fd35e68-b4d2-4608-8dbe-82c42b321bd9?name=mycontent;remove={"kind": ["sample"]};add={"kind":["email"]'
+        description: The list of documents to copy
+        required: true
+      operationId: postAuthoringV1CopySync
+      x-operation-id-source: derived
 components:
   schemas:
     ErrorResponse:
@@ -272,9 +275,3 @@ components:
       required:
       - errors
       - requestId
-x-refined-from:
-- acoustic-content-openapi-original.json
-- acoustic-content-swagger2-original.yaml
-x-readme:
-  explorer-enabled: true
-  proxy-enabled: true

@@ -1,9 +1,9 @@
 openapi: 3.2.0
 info:
-  title: Acoustic Authoring comments API
   version: 1.0.142
   x-ibm-name: ibm-watson-content-hub-api
-  description: 'Operations tagged Authoring comments across 2 of this provider''s published API definitions: acoustic-content-openapi-original.json, acoustic-content-swagger2-original.yaml. Each path carries the servers of the definition it was published in.'
+  title: Acoustic Content Authoring comments API
+  description: Copyright © Acoustic, L.P. 2023
 tags:
 - name: Authoring comments
   description: Use the Content Authoring comment APIs to work with comments. Comments are a simple way to associate a message to an item in Content. Comments are associated with a single item and user (creatorId). An item can have many comments. You can create, retrieve, and delete comments from a database.
@@ -12,40 +12,10 @@ paths:
     post:
       tags:
       - Authoring comments
-      summary: Create a comment.
-      description: 'Use the /comments endpoint to create a comment. You must provide a message and a target to create the comment.<br />User roles: admin, manager, editor'
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                message:
-                  type: string
-                  description: The actual comment message.
-                  example: More images should be added to slideshow
-                target:
-                  type: object
-                  properties:
-                    id:
-                      type: string
-                      description: The id of the item that the comment is associated with.
-                      example: 6eac5498-3545-458a-962b-e17742aa7b56
-                    classification:
-                      type: string
-                      description: The classification of the item that the comment is associated with.
-                      enum:
-                      - asset
-                      - content
-                      example: content
-                  required:
-                  - id
-                  - classification
-              required:
-              - message
-              - target
-        description: Provide the comment message and target to create a comment.
-        required: true
+      summary: Create a comment
+      description: 'Use the /comments endpoint to create a comment. You must provide a message and a target to create the comment.
+
+        User roles: admin, manager, editor'
       responses:
         '201':
           description: Successfully created a comment for an item.
@@ -395,12 +365,48 @@ paths:
       - admin
       - manager
       - editor
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  description: The actual comment message.
+                  example: More images should be added to slideshow
+                target:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                      description: The id of the item that the comment is associated with.
+                      example: 6eac5498-3545-458a-962b-e17742aa7b56
+                    classification:
+                      type: string
+                      description: The classification of the item that the comment is associated with.
+                      enum:
+                      - asset
+                      - content
+                      example: content
+                  required:
+                  - id
+                  - classification
+              required:
+              - message
+              - target
+        description: Provide the comment message and target to create a comment.
+        required: true
+      operationId: postAuthoringV1Comments
+      x-operation-id-source: derived
   /authoring/v1/comments/{id}:
     get:
       tags:
       - Authoring comments
-      summary: Retrieve an existing comment.
-      description: 'Use the /comments/{id} endpoint to retrieve an existing comment that matches the ID that is specified from the database.<br />User roles: admin, manager, editor, viewer'
+      summary: Retrieve an existing comment
+      description: 'Use the /comments/{id} endpoint to retrieve an existing comment that matches the ID that is specified from the database.
+
+        User roles: admin, manager, editor, viewer'
       parameters:
       - name: id
         in: path
@@ -769,11 +775,15 @@ paths:
       - manager
       - editor
       - viewer
+      operationId: getAuthoringV1CommentsById
+      x-operation-id-source: derived
     put:
       tags:
       - Authoring comments
-      summary: Update an existing comment.
-      description: 'Use the /comments/{id} end point to update an existing comment that matches the ID that is specified.<br />User roles: admin, manager, editor'
+      summary: Update an existing comment
+      description: 'Use the /comments/{id} end point to update an existing comment that matches the ID that is specified.
+
+        User roles: admin, manager, editor'
       parameters:
       - name: id
         in: path
@@ -792,20 +802,6 @@ paths:
           type: array
           items:
             type: string
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                message:
-                  type: string
-                  description: The actual comment message.
-                  example: More images should be added to slideshow.
-              required:
-              - message
-        description: Provide the comment revision and message to update a comment.
-        required: true
       responses:
         '200':
           description: Successfully updated the comment that matches the ID specified.
@@ -1315,11 +1311,29 @@ paths:
       - admin
       - manager
       - editor
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  description: The actual comment message.
+                  example: More images should be added to slideshow.
+              required:
+              - message
+        description: Provide the comment revision and message to update a comment.
+        required: true
+      operationId: putAuthoringV1CommentsById
+      x-operation-id-source: derived
     delete:
       tags:
       - Authoring comments
-      summary: Delete an existing comment.
-      description: 'Use the /comments/{id} endpoint to delete an existing comment from the database.<br />User roles: admin, manager, editor'
+      summary: Delete an existing comment
+      description: 'Use the /comments/{id} endpoint to delete an existing comment from the database.
+
+        User roles: admin, manager, editor'
       parameters:
       - name: id
         in: path
@@ -1500,10 +1514,14 @@ paths:
       - admin
       - manager
       - editor
+      operationId: deleteAuthoringV1CommentsById
+      x-operation-id-source: derived
   /authoring/v1/comments/by-item/{classification}/{id}:
     get:
-      summary: Retrieve all comments for a specific item.
-      description: 'Use the /comments/by-item/{classification}/{id} endpoint to fetch all comments that are associated to a specific item. Use the query parameter ''since'' to fetch comments since a specific date. Conditional requests are supported.<br />User roles: admin, manager, editor, viewer'
+      summary: Retrieve all comments for a specific item
+      description: 'Use the /comments/by-item/{classification}/{id} endpoint to fetch all comments that are associated to a specific item. Use the query parameter ''since'' to fetch comments since a specific date. Conditional requests are supported.
+
+        User roles: admin, manager, editor, viewer'
       parameters:
       - name: classification
         in: path
@@ -1865,10 +1883,14 @@ paths:
       - manager
       - editor
       - viewer
+      operationId: getAuthoringV1CommentsByItemByClassificationById
+      x-operation-id-source: derived
   /authoring/v1/comments/by-user/{userId}:
     get:
-      summary: Retrieve all comments that were created by a user.
-      description: 'Use the /comments/by-user/{userId} endpoint to fetch all comments that were created by the specified user. Optionally, the query parameter since can be used to fetch comments only ''since'' a specific date.<br />User roles: admin, manager, editor, viewer'
+      summary: Retrieve all comments that were created by a user
+      description: 'Use the /comments/by-user/{userId} endpoint to fetch all comments that were created by the specified user. Optionally, the query parameter since can be used to fetch comments only ''since'' a specific date.
+
+        User roles: admin, manager, editor, viewer'
       parameters:
       - name: userId
         in: path
@@ -2221,6 +2243,8 @@ paths:
       - manager
       - editor
       - viewer
+      operationId: getAuthoringV1CommentsByUserByUserId
+      x-operation-id-source: derived
 components:
   schemas:
     ErrorResponse:
@@ -2272,9 +2296,3 @@ components:
       required:
       - errors
       - requestId
-x-refined-from:
-- acoustic-content-openapi-original.json
-- acoustic-content-swagger2-original.yaml
-x-readme:
-  explorer-enabled: true
-  proxy-enabled: true

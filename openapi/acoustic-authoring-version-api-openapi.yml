@@ -1,19 +1,20 @@
 openapi: 3.2.0
 info:
-  title: Acoustic Authoring version API
   version: 1.0.142
   x-ibm-name: ibm-watson-content-hub-api
-  description: 'Operations tagged Authoring version across 2 of this provider''s published API definitions: acoustic-content-openapi-original.json, acoustic-content-swagger2-original.yaml. Each path carries the servers of the definition it was published in.'
+  title: Acoustic Content Authoring version API
+  description: Copyright © Acoustic, L.P. 2023
 tags:
 - name: Authoring version
   description: Use the Content version Rest APIs to work with authoring items that have versions. Versioned documents currently includes assets and content items within Content. The version APIs allow you to retrieve versions.
 paths:
   /authoring/v1/versions/{classification}/{id}:
     get:
-      summary: Retrieve all versions for the specified authoring item.
+      summary: Retrieve all versions for the specified authoring item
       description: 'Use the /versions/{classification}/{id} endpoint to retrieve all the versions for the specified authoring item.
 
-        <br />User roles: admin, manager, editor, viewer'
+
+        User roles: admin, manager, editor, viewer'
       parameters:
       - name: id
         in: path
@@ -407,12 +408,15 @@ paths:
       - manager
       - editor
       - viewer
+      operationId: getAuthoringV1VersionsByClassificationById
+      x-operation-id-source: derived
   /authoring/v1/versions/{classification}/{id}/{timestamp}:
     get:
-      summary: Retrieve a specific version for a specific authoring item.
+      summary: Retrieve a specific version for a specific authoring item
       description: 'Use the /versions/{classification}/{id}/{timestamp} endpoint to retrieve a specific version for the specified authoring item.
 
-        <br />User roles: admin, manager, editor, viewer'
+
+        User roles: admin, manager, editor, viewer'
       parameters:
       - name: id
         in: path
@@ -693,12 +697,15 @@ paths:
       - manager
       - editor
       - viewer
+      operationId: getAuthoringV1VersionsByClassificationByIdByTimestamp
+      x-operation-id-source: derived
   /authoring/v1/versions/restore:
     post:
-      summary: Restore a versioned item - currently supported for content and assets.
+      summary: Restore a versioned item - currently supported for content and assets
       description: 'Use this endpoint to restore a specific version of a content or an asset item by sending the JSON payload as the request body. The restored item will always be a draft - overwriting an existing one or creating a new one. Link to the new draft is sent as a response-header `Location`.
 
-        <br />User roles: admin, manager, editor'
+
+        User roles: admin, manager, editor'
       tags:
       - Authoring version
       parameters:
@@ -887,14 +894,17 @@ paths:
       - admin
       - manager
       - editor
+      operationId: postAuthoringV1VersionsRestore
+      x-operation-id-source: derived
   /authoring/v1/versions/policy:
     get:
-      summary: Retrieve the current version policy.
+      summary: Retrieve the current version policy
       description: 'Use this endpoint to fetch the current version policy that determines how specific documents are versioned in the authoring system.
 
         Only the policy status is being returned at this point.
 
-        <br />User roles: admin, manager, editor, viewer'
+
+        User roles: admin, manager, editor, viewer'
       tags:
       - Authoring version
       responses:
@@ -1082,10 +1092,14 @@ paths:
       - manager
       - editor
       - viewer
+      operationId: getAuthoringV1VersionsPolicy
+      x-operation-id-source: derived
   /authoring/v1/versions/policy/on:
     post:
-      summary: Turn on the version-policy.
-      description: 'Use this endpoint to turn on the version-policy.<br />User roles: admin'
+      summary: Turn on the version-policy
+      description: 'Use this endpoint to turn on the version-policy.
+
+        User roles: admin'
       tags:
       - Authoring version
       responses:
@@ -1179,10 +1193,14 @@ paths:
                 - errors
       x-ibm-dx-security-user-roles:
       - admin
+      operationId: postAuthoringV1VersionsPolicyOn
+      x-operation-id-source: derived
   /authoring/v1/versions/policy/off:
     post:
-      summary: Turn off the version-policy.
-      description: 'Use this endpoint to turn off the version-policy. It will also trigger the version clean-up.<br />User roles: admin'
+      summary: Turn off the version-policy
+      description: 'Use this endpoint to turn off the version-policy. It will also trigger the version clean-up.
+
+        User roles: admin'
       tags:
       - Authoring version
       responses:
@@ -1276,10 +1294,14 @@ paths:
                 - errors
       x-ibm-dx-security-user-roles:
       - admin
+      operationId: postAuthoringV1VersionsPolicyOff
+      x-operation-id-source: derived
   /authoring/v1/versions/policy/disable:
     post:
-      summary: Disable the version-policy.
-      description: 'Use this endpoint to disable the version-policy.<br />User roles: admin'
+      summary: Disable the version-policy
+      description: 'Use this endpoint to disable the version-policy.
+
+        User roles: admin'
       tags:
       - Authoring version
       responses:
@@ -1373,6 +1395,8 @@ paths:
                 - errors
       x-ibm-dx-security-user-roles:
       - admin
+      operationId: postAuthoringV1VersionsPolicyDisable
+      x-operation-id-source: derived
 components:
   schemas:
     ErrorResponse:
@@ -1424,9 +1448,3 @@ components:
       required:
       - errors
       - requestId
-x-refined-from:
-- acoustic-content-openapi-original.json
-- acoustic-content-swagger2-original.yaml
-x-readme:
-  explorer-enabled: true
-  proxy-enabled: true

@@ -1,9 +1,9 @@
 openapi: 3.2.0
 info:
-  title: Acoustic Authoring resources API
   version: 1.0.142
   x-ibm-name: ibm-watson-content-hub-api
-  description: 'Operations tagged Authoring resources across 2 of this provider''s published API definitions: acoustic-content-openapi-original.json, acoustic-content-swagger2-original.yaml. Each path carries the servers of the definition it was published in.'
+  title: Acoustic Content Authoring resources API
+  description: Copyright © Acoustic, L.P. 2023
 tags:
 - name: Authoring resources
   description: Use the Content resources data service Rest APIs to work with resources. Resources are binary files that are stored in the CMS and used in content or site design. Resources that are not referenced by an asset or content will be cleaned up periodically.
@@ -12,8 +12,10 @@ paths:
     post:
       tags:
       - Authoring resources
-      summary: Create a new resource.
-      description: 'Use this endpoint to create a new resource with the binary data that is provided in the request body. If the md5 checksum parameter is provided, the uploaded resource is validated against the provided checksum.<br />User roles: admin, manager, editor'
+      summary: Create a new resource
+      description: 'Use this endpoint to create a new resource with the binary data that is provided in the request body. If the md5 checksum parameter is provided, the uploaded resource is validated against the provided checksum.
+
+        User roles: admin, manager, editor'
       responses:
         '201':
           description: Successfully created a new resource and the ID is returned.
@@ -291,18 +293,28 @@ paths:
         required: false
         schema:
           type: string
-      requestBody:
-        $ref: '#/components/requestBodies/Binary'
       x-ibm-dx-security-user-roles:
       - admin
       - manager
       - editor
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              type: string
+              format: binary
+        description: Provide the binary data that is required to create a resource.
+        required: true
+      operationId: postAuthoringV1Resources
+      x-operation-id-source: derived
   /authoring/v1/resources/{id}:
     get:
       tags:
       - Authoring resources
-      summary: Retrieve an existing resource.
-      description: 'Use this endpoint to retrieve an existing resource from the database. The media type of the binary is defined in the Content-Type header. Byte serving is supported. The Cache-Control response header is set to expire the resource in a year.<br />User roles: admin, manager, editor, viewer'
+      summary: Retrieve an existing resource
+      description: 'Use this endpoint to retrieve an existing resource from the database. The media type of the binary is defined in the Content-Type header. Byte serving is supported. The Cache-Control response header is set to expire the resource in a year.
+
+        User roles: admin, manager, editor, viewer'
       parameters:
       - name: id
         in: path
@@ -431,13 +443,13 @@ paths:
         '429':
           description: Too Many Requests, the server has reached a limit, the request must be sent again at a later time.
           content:
-            application/json:
+            '*/*':
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
         '503':
           description: Connection failed to data store.
           content:
-            application/json:
+            '*/*':
               schema:
                 type: object
                 description: an error response.
@@ -516,7 +528,7 @@ paths:
         default:
           description: Unexpected error.
           content:
-            application/json:
+            '*/*':
               schema:
                 type: object
                 description: an error response.
@@ -597,11 +609,15 @@ paths:
       - manager
       - editor
       - viewer
+      operationId: getAuthoringV1ResourcesById
+      x-operation-id-source: derived
     put:
       tags:
       - Authoring resources
-      summary: Create a resource at the given id.
-      description: 'Use this end point to create a resource at the required ID with the binary data provided in the request body. If a resource already exists with that id, then the md5 checksum is compared. If it matches, then the request will respond with a 200 OK. If it does not match, a 409 Conflict response is returned. The created resource will be validated against the checksum.<br />User roles: admin, manager, editor'
+      summary: Create a resource at the given id
+      description: 'Use this end point to create a resource at the required ID with the binary data provided in the request body. If a resource already exists with that id, then the md5 checksum is compared. If it matches, then the request will respond with a 200 OK. If it does not match, a 409 Conflict response is returned. The created resource will be validated against the checksum.
+
+        User roles: admin, manager, editor'
       responses:
         '200':
           description: The resource provided already exists at the given ID.
@@ -955,16 +971,26 @@ paths:
         required: true
         schema:
           type: string
-      requestBody:
-        $ref: '#/components/requestBodies/Binary'
       x-ibm-dx-security-user-roles:
       - admin
       - manager
       - editor
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              type: string
+              format: binary
+        description: Provide the binary data that is required to create a resource.
+        required: true
+      operationId: putAuthoringV1ResourcesById
+      x-operation-id-source: derived
   /authoring/v1/resources/views/by-created:
     get:
-      summary: Retrieve all resources created within the specified date range.
-      description: 'Use this endpoint to retrieve all resources that was created within the date range specified.<br />User roles: admin, manager, editor, viewer'
+      summary: Retrieve all resources created within the specified date range
+      description: 'Use this endpoint to retrieve all resources that was created within the date range specified.
+
+        User roles: admin, manager, editor, viewer'
       parameters:
       - name: start
         in: query
@@ -1328,16 +1354,9 @@ paths:
       - manager
       - editor
       - viewer
+      operationId: getAuthoringV1ResourcesViewsByCreated
+      x-operation-id-source: derived
 components:
-  requestBodies:
-    Binary:
-      content:
-        '*/*':
-          schema:
-            type: string
-            format: binary
-      description: Provide the binary data that is required to create a resource.
-      required: true
   schemas:
     ErrorResponse:
       description: This JSON record represents an error condition.
@@ -1388,9 +1407,3 @@ components:
       required:
       - errors
       - requestId
-x-refined-from:
-- acoustic-content-openapi-original.json
-- acoustic-content-swagger2-original.yaml
-x-readme:
-  explorer-enabled: true
-  proxy-enabled: true

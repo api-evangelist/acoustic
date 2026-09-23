@@ -1,33 +1,12 @@
 openapi: 3.2.0
 info:
-  title: Acoustic Delivery resources API
   version: 1.0.142
   x-ibm-name: ibm-watson-content-hub-api
-  description: 'Operations tagged Delivery resources across 2 of this provider''s published API definitions: acoustic-content-openapi-original.json, acoustic-content-swagger2-original.yaml. Each path carries the servers of the definition it was published in.'
+  title: Acoustic Content Delivery resources API
+  description: Copyright © Acoustic, L.P. 2023
 tags:
 - name: Delivery resources
-  description: 'The Delivery Resource Service (DRS) provides access to the published resources in Akamai.
-
-
-    The recommended URL for addressing published resources is the Akamai URL which is a static file access.
-
-    For more information see [here](https://developer.goacoustic.com/acoustic-content/docs/publishing-and-delivering-content).
-
-
-    You can use the /delivery/v1/resources routes to access resources as an unauthenticated user or the
-
-    /mydelivery/v1/resources routes to access resources including restricted ones as an authenticated user.
-
-    While access to the latter routes requires at least Viewer role, accessing the anonymous routes does not
-
-    require any authentication.
-
-
-    To access draft resources you need to access the system in preview mode. For more information on the
-
-    preview mode and previewing in general, please refer to https://developer.goacoustic.com/acoustic-content/docs/preview-content.
-
-    '
+  description: The Delivery Resource Service (DRS) provides access to the published resources in Akamai.
 paths:
   /delivery/v1/resources:
     get:
@@ -41,8 +20,43 @@ paths:
       - authenticatedVisitor
       - anonymous
       x-ibm-dx-vary: []
-      summary: Retrieve a resource by path.
-      description: "This endpoint retrieves the resource at the given path. Restricted resources cannot be accessed. To access those resources too, you have to use /mydelivery/v1/resources.\nThe resource's path can be obtained using the Authoring assets API: /authoring/v1/assets\n\n    {\n        \"items\": [\n            {\n                \"mediaType\": \"image/jpeg\",\n                \"name\": \"myPicture.jpg\",\n                \"path\": \"/path/to/myPicture.jpg\",\n                ...\n\nThe delivery URL for this endpoint would look like:\n\n    /delivery/v1/resources?path=/path/to/myPicture.jpg\n\n**Note:** This endpoint should not be used for rendering published resources on a site, retrieving resources from Akamai directly is better optimized for this use case.\n\nTo retrieve the resource directly from Akamai:\n\n    https://[host]/[TenantID]/path/to/myPicture.jpg\n<br />User roles: admin, manager, editor, viewer, authenticatedVisitor, anonymous"
+      summary: Retrieve a resource by path
+      description: 'This endpoint retrieves the resource at the given path. Restricted resources cannot be accessed. To access those resources too, you have to use /mydelivery/v1/resources.
+
+        The resource''s path can be obtained using the Authoring assets API: /authoring/v1/assets
+
+
+        {
+
+        "items": [
+
+        {
+
+        "mediaType": "image/jpeg",
+
+        "name": "myPicture.jpg",
+
+        "path": "/path/to/myPicture.jpg",
+
+        ...
+
+
+        The delivery URL for this endpoint would look like:
+
+
+        /delivery/v1/resources?path=/path/to/myPicture.jpg
+
+
+        **Note:** This endpoint should not be used for rendering published resources on a site, retrieving resources from Akamai directly is better optimized for this use case.
+
+
+        To retrieve the resource directly from Akamai:
+
+
+        https://[host]/[TenantID]/path/to/myPicture.jpg
+
+
+        User roles: admin, manager, editor, viewer, authenticatedVisitor, anonymous'
       parameters:
       - name: path
         in: query
@@ -59,6 +73,10 @@ paths:
               schema:
                 type: string
           content:
+            file:
+              schema:
+                type: string
+                format: binary
             application/json:
               schema:
                 type: string
@@ -66,6 +84,29 @@ paths:
         '404':
           description: Not found
           content:
+            file:
+              schema:
+                type: object
+                properties:
+                  service:
+                    type: string
+                    description: Service name.
+                  requestId:
+                    type: string
+                    description: Request ID.
+                  errors:
+                    type: object
+                    properties:
+                      code:
+                        type: integer
+                      message:
+                        type: string
+                      level:
+                        type: string
+                      description:
+                        type: string
+                      locale:
+                        type: string
             application/json:
               schema:
                 type: object
@@ -89,26 +130,50 @@ paths:
                         type: string
                       locale:
                         type: string
-              examples:
-                response:
-                  value:
-                    service: prod-delivery-resource
-                    requestId: a0c938dd-ab79-4a7c-b124-5f8bc57bb657
-                    errors:
-                      code: 3003
-                      message: 'Path not found: {path}.'
-                      level: ERROR
-                      description: The resource at the specified path could not be found.
-                      locale: en
+              example:
+                service: prod-delivery-resource
+                requestId: a0c938dd-ab79-4a7c-b124-5f8bc57bb657
+                errors:
+                  code: 3003
+                  message: 'Path not found: {path}.'
+                  level: ERROR
+                  description: The resource at the specified path could not be found.
+                  locale: en
         '429':
           description: Too Many Requests, the server has reached a limit, the request must be sent again at a later time.
           content:
+            file:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
         default:
           description: Unexpected error
           content:
+            file:
+              schema:
+                type: object
+                properties:
+                  service:
+                    type: string
+                    description: Service name.
+                  requestId:
+                    type: string
+                    description: Request ID.
+                  errors:
+                    type: object
+                    properties:
+                      code:
+                        type: integer
+                      message:
+                        type: string
+                      level:
+                        type: string
+                      description:
+                        type: string
+                      locale:
+                        type: string
             application/json:
               schema:
                 type: object
@@ -132,17 +197,17 @@ paths:
                         type: string
                       locale:
                         type: string
-              examples:
-                response:
-                  value:
-                    service: prod-delivery-resource
-                    requestId: a0c938dd-ab79-4a7c-b124-5f8bc57bb657
-                    errors:
-                      code: 1014
-                      message: Unexpected error occurred.
-                      level: ERROR
-                      description: Unable to complete the request due to an unexpected error. Try again or contact Acoustic support if problem persists.
-                      locale: en
+              example:
+                service: prod-delivery-resource
+                requestId: a0c938dd-ab79-4a7c-b124-5f8bc57bb657
+                errors:
+                  code: 1014
+                  message: Unexpected error occurred.
+                  level: ERROR
+                  description: Unable to complete the request due to an unexpected error. Try again or contact Acoustic support if problem persists.
+                  locale: en
+      operationId: getDeliveryV1Resources
+      x-operation-id-source: derived
   /delivery/v1/resources/{fileIdentifier}:
     get:
       tags:
@@ -155,8 +220,30 @@ paths:
       - authenticatedVisitor
       - anonymous
       x-ibm-dx-vary: []
-      summary: Retrieve a resource by Id.
-      description: "This endpoint retrieves the resource for the specified resource Id. Restricted resources cannot be accessed. To access those resources too, you have to use /mydelivery/v1/resources/{fileIdentifier}.\nThe resource's Id can be obtained using the Authoring assets API: /authoring/v1/assets\n\n    {\n        \"items\": [\n            {\n                \"resource\": \"06763fa56ceec4d5bcafb37b53de2cd1\",\n                ...\n\n\nThe delivery Url for this endpoint would look like:\n\n    /delivery/v1/resources/06763fa56ceec4d5bcafb37b53de2cd1\n<br />User roles: admin, manager, editor, viewer, authenticatedVisitor, anonymous"
+      summary: Retrieve a resource by Id
+      description: 'This endpoint retrieves the resource for the specified resource Id. Restricted resources cannot be accessed. To access those resources too, you have to use /mydelivery/v1/resources/{fileIdentifier}.
+
+        The resource''s Id can be obtained using the Authoring assets API: /authoring/v1/assets
+
+
+        {
+
+        "items": [
+
+        {
+
+        "resource": "06763fa56ceec4d5bcafb37b53de2cd1",
+
+        ...
+
+
+        The delivery Url for this endpoint would look like:
+
+
+        /delivery/v1/resources/06763fa56ceec4d5bcafb37b53de2cd1
+
+
+        User roles: admin, manager, editor, viewer, authenticatedVisitor, anonymous'
       parameters:
       - name: fileIdentifier
         in: path
@@ -177,6 +264,10 @@ paths:
               schema:
                 type: string
           content:
+            file:
+              schema:
+                type: string
+                format: binary
             application/json:
               schema:
                 type: string
@@ -184,6 +275,29 @@ paths:
         '404':
           description: Not found
           content:
+            file:
+              schema:
+                type: object
+                properties:
+                  service:
+                    type: string
+                    description: Service name.
+                  requestId:
+                    type: string
+                    description: Request ID.
+                  errors:
+                    type: object
+                    properties:
+                      code:
+                        type: integer
+                      message:
+                        type: string
+                      level:
+                        type: string
+                      description:
+                        type: string
+                      locale:
+                        type: string
             application/json:
               schema:
                 type: object
@@ -207,26 +321,50 @@ paths:
                         type: string
                       locale:
                         type: string
-              examples:
-                response:
-                  value:
-                    service: prod-delivery-resource
-                    requestId: a0c938dd-ab79-4a7c-b124-5f8bc57bb657
-                    errors:
-                      code: 3009
-                      message: 'File not found for resourceId: {resourceId}.'
-                      level: ERROR
-                      description: The resource with the specified resourceId could not be found.
-                      locale: en
+              example:
+                service: prod-delivery-resource
+                requestId: a0c938dd-ab79-4a7c-b124-5f8bc57bb657
+                errors:
+                  code: 3009
+                  message: 'File not found for resourceId: {resourceId}.'
+                  level: ERROR
+                  description: The resource with the specified resourceId could not be found.
+                  locale: en
         '429':
           description: Too Many Requests, the server has reached a limit, the request must be sent again at a later time.
           content:
+            file:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
         default:
           description: Unexpected error
           content:
+            file:
+              schema:
+                type: object
+                properties:
+                  service:
+                    type: string
+                    description: Service name.
+                  requestId:
+                    type: string
+                    description: Request ID.
+                  errors:
+                    type: object
+                    properties:
+                      code:
+                        type: integer
+                      message:
+                        type: string
+                      level:
+                        type: string
+                      description:
+                        type: string
+                      locale:
+                        type: string
             application/json:
               schema:
                 type: object
@@ -250,17 +388,17 @@ paths:
                         type: string
                       locale:
                         type: string
-              examples:
-                response:
-                  value:
-                    service: prod-delivery-resource
-                    requestId: a0c938dd-ab79-4a7c-b124-5f8bc57bb657
-                    errors:
-                      code: 1014
-                      message: Unexpected error occurred.
-                      level: ERROR
-                      description: Unable to complete the request due to an unexpected error. Try again or contact Acoustic support if problem persists.
-                      locale: en
+              example:
+                service: prod-delivery-resource
+                requestId: a0c938dd-ab79-4a7c-b124-5f8bc57bb657
+                errors:
+                  code: 1014
+                  message: Unexpected error occurred.
+                  level: ERROR
+                  description: Unable to complete the request due to an unexpected error. Try again or contact Acoustic support if problem persists.
+                  locale: en
+      operationId: getDeliveryV1ResourcesByFileIdentifier
+      x-operation-id-source: derived
 components:
   schemas:
     ErrorResponse:
@@ -312,9 +450,3 @@ components:
       required:
       - errors
       - requestId
-x-refined-from:
-- acoustic-content-openapi-original.json
-- acoustic-content-swagger2-original.yaml
-x-readme:
-  explorer-enabled: true
-  proxy-enabled: true

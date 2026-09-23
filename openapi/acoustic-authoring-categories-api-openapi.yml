@@ -1,9 +1,9 @@
 openapi: 3.2.0
 info:
-  title: Acoustic Authoring categories API
   version: 1.0.142
   x-ibm-name: ibm-watson-content-hub-api
-  description: 'Operations tagged Authoring categories across 2 of this provider''s published API definitions: acoustic-content-openapi-original.json, acoustic-content-swagger2-original.yaml. Each path carries the servers of the definition it was published in.'
+  title: Acoustic Content Authoring categories API
+  description: Copyright © Acoustic, L.P. 2023
 tags:
 - name: Authoring categories
   description: Use the Acoustic Content category authoring data service Rest APIs to work with category and taxonomy items.
@@ -12,8 +12,10 @@ paths:
     get:
       tags:
       - Authoring categories
-      summary: Retrieve all the taxonomies.
-      description: 'Retrieve all the taxonomies (root categories).<br />User roles: admin, manager, editor, viewer'
+      summary: Retrieve all the taxonomies
+      description: 'Retrieve all the taxonomies (root categories).
+
+        User roles: admin, manager, editor, viewer'
       parameters:
       - name: offset
         in: query
@@ -83,6 +85,9 @@ paths:
                         permanent:
                           type: boolean
                           description: Used to identify system categories, if true the category can not be deleted.
+                        isSystem:
+                          type: boolean
+                          description: Used to identify system categories, if true the category can not be deleted or updated by users
                         hidden:
                           type: boolean
                           description: If true the category is hidden in the Shell, value is not returned if false.  Default is false.
@@ -109,6 +114,12 @@ paths:
                             type: string
                           uniqueItems: true
                           description: Array of tags. This field is applicable only for taxonomy.
+                        kind:
+                          type: array
+                          items:
+                            type: string
+                          uniqueItems: true
+                          description: Array of kinds for the taxonomy/category
                         links:
                           type: object
                           description: A set of links to related documents.
@@ -158,45 +169,15 @@ paths:
       - manager
       - editor
       - viewer
+      operationId: getAuthoringV1Categories
+      x-operation-id-source: derived
     post:
       tags:
       - Authoring categories
-      summary: Create a new category.
-      description: 'Create a category with the contents of the JSON body.<br />User roles: admin, manager'
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                name:
-                  type: string
-                  description: The name of the category. It can contain any character except for a forward slash (/).
-                parent:
-                  type: string
-                  description: The ID of the parent category. A taxonomy will be created if this is omitted.
-                description:
-                  type: string
-                  description: The description of the category.
-                permanent:
-                  type: boolean
-                  description: Used to identify system categories, if true the category can not be deleted.
-                hidden:
-                  type: boolean
-                  description: If true the category is hidden in the Shell, value is not returned if false.  Default is false.
-                firstClassFor:
-                  type: string
-                  description: Array of item classifications to which this taxonomy is enabled.  Acceptable values "" and "imagesAndVideos", default "".  By default the taxonomy is only shown where generic selection of any category in any taxonomy is allowed.
-                tags:
-                  type: array
-                  items:
-                    type: string
-                  uniqueItems: true
-                  description: Array of tags. This field is applicable only for taxonomy.
-              required:
-              - name
-        description: The JSON data that is used to create the category.
-        required: true
+      summary: Create a new category
+      description: 'Create a category with the contents of the JSON body.
+
+        User roles: admin, manager'
       responses:
         '201':
           description: The category was successfully created.
@@ -226,6 +207,9 @@ paths:
                   permanent:
                     type: boolean
                     description: Used to identify system categories, if true the category can not be deleted.
+                  isSystem:
+                    type: boolean
+                    description: Used to identify system categories, if true the category can not be deleted or updated by users
                   hidden:
                     type: boolean
                     description: If true the category is hidden in the Shell, value is not returned if false.  Default is false.
@@ -252,6 +236,12 @@ paths:
                       type: string
                     uniqueItems: true
                     description: Array of tags. This field is applicable only for taxonomy.
+                  kind:
+                    type: array
+                    items:
+                      type: string
+                    uniqueItems: true
+                    description: Array of kinds for the taxonomy/category
                   links:
                     type: object
                     description: A set of links to related documents.
@@ -306,10 +296,10 @@ paths:
                     description: The name of the service that produced the error
                   requestMethod:
                     type: string
-                    description: The Http method type of the current request
+                    description: The HTTP method type of the current request
                   requestUri:
                     type: string
-                    description: The request uri
+                    description: The request URI
                   errors:
                     type: array
                     items:
@@ -333,7 +323,7 @@ paths:
                           description: Optional additional information for the message
                         category:
                           type: string
-                          description: The message category whereby only user messages are designed to be shown to an end user
+                          description: The message category whereby only user messages are designed to be shown to an end-user
                           enum:
                           - API
                           - USER
@@ -386,10 +376,10 @@ paths:
                     description: The name of the service that produced the error
                   requestMethod:
                     type: string
-                    description: The Http method type of the current request
+                    description: The HTTP method type of the current request
                   requestUri:
                     type: string
-                    description: The request uri
+                    description: The request URI
                   errors:
                     type: array
                     items:
@@ -413,7 +403,7 @@ paths:
                           description: Optional additional information for the message
                         category:
                           type: string
-                          description: The message category whereby only user messages are designed to be shown to an end user
+                          description: The message category whereby only user messages are designed to be shown to an end-user
                           enum:
                           - API
                           - USER
@@ -459,12 +449,59 @@ paths:
       x-ibm-dx-security-user-roles:
       - admin
       - manager
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: The name of the category. It can contain any character except for a forward slash (/).
+                parent:
+                  type: string
+                  description: The ID of the parent category. A taxonomy will be created if this is omitted.
+                description:
+                  type: string
+                  description: The description of the category.
+                permanent:
+                  type: boolean
+                  description: Used to identify system categories, if true the category can not be deleted.
+                isSystem:
+                  type: boolean
+                  description: Used to identify system categories, if true the category can not be deleted or updated by users
+                hidden:
+                  type: boolean
+                  description: If true the category is hidden in the Shell, value is not returned if false.  Default is false.
+                firstClassFor:
+                  type: string
+                  description: Array of item classifications to which this taxonomy is enabled.  Acceptable values "" and "imagesAndVideos", default "".  By default the taxonomy is only shown where generic selection of any category in any taxonomy is allowed.
+                tags:
+                  type: array
+                  items:
+                    type: string
+                  uniqueItems: true
+                  description: Array of tags. This field is applicable only for taxonomy.
+                kind:
+                  type: array
+                  items:
+                    type: string
+                  uniqueItems: true
+                  description: Array of kinds for the taxonomy/category
+              required:
+              - name
+        description: The JSON data that is used to create the category.
+        required: true
+      operationId: postAuthoringV1Categories
+      x-operation-id-source: derived
   /authoring/v1/categories/{id}:
     get:
       tags:
       - Authoring categories
-      summary: Retrieve an existing category item.
-      description: 'Retrieve the category with ID {id}.<br />User roles: admin, manager, editor, viewer'
+      summary: Retrieve an existing category item
+      description: 'Retrieve the category with ID {id}.
+
+        User roles: admin, manager, editor, viewer'
       parameters:
       - name: id
         in: path
@@ -501,6 +538,9 @@ paths:
                   permanent:
                     type: boolean
                     description: Used to identify system categories, if true the category can not be deleted.
+                  isSystem:
+                    type: boolean
+                    description: Used to identify system categories, if true the category can not be deleted or updated by users
                   hidden:
                     type: boolean
                     description: If true the category is hidden in the Shell, value is not returned if false.  Default is false.
@@ -527,6 +567,12 @@ paths:
                       type: string
                     uniqueItems: true
                     description: Array of tags. This field is applicable only for taxonomy.
+                  kind:
+                    type: array
+                    items:
+                      type: string
+                    uniqueItems: true
+                    description: Array of kinds for the taxonomy/category
                   links:
                     type: object
                     description: A set of links to related documents.
@@ -581,10 +627,10 @@ paths:
                     description: The name of the service that produced the error
                   requestMethod:
                     type: string
-                    description: The Http method type of the current request
+                    description: The HTTP method type of the current request
                   requestUri:
                     type: string
-                    description: The request uri
+                    description: The request URI
                   errors:
                     type: array
                     items:
@@ -608,7 +654,7 @@ paths:
                           description: Optional additional information for the message
                         category:
                           type: string
-                          description: The message category whereby only user messages are designed to be shown to an end user
+                          description: The message category whereby only user messages are designed to be shown to an end-user
                           enum:
                           - API
                           - USER
@@ -656,11 +702,15 @@ paths:
       - manager
       - editor
       - viewer
+      operationId: getAuthoringV1CategoriesById
+      x-operation-id-source: derived
     put:
       tags:
       - Authoring categories
-      summary: Update an existing category item.
-      description: 'Update the category with ID {id}.<br />User roles: admin, manager'
+      summary: Update an existing category item
+      description: 'Update the category with ID {id}.
+
+        User roles: admin, manager'
       parameters:
       - name: id
         in: path
@@ -668,38 +718,6 @@ paths:
         description: The ID of the category to update.
         schema:
           type: string
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                name:
-                  type: string
-                  description: The name of the category. It can contain any character except for a forward slash (/).
-                parent:
-                  type: string
-                  description: The ID of the parent category. A taxonomy will be created if this is omitted.
-                description:
-                  type: string
-                  description: The description of the category.
-                permanent:
-                  type: boolean
-                  description: Used to identify system categories, if true the category can not be deleted.
-                hidden:
-                  type: boolean
-                  description: If true the category is hidden in the Shell, value is not returned if false.  Default is false.
-                firstClassFor:
-                  type: string
-                  description: Array of item classifications to which this taxonomy is enabled.  Acceptable values "" and "imagesAndVideos", default "".  By default the taxonomy is only shown where generic selection of any category in any taxonomy is allowed.
-                tags:
-                  type: array
-                  items:
-                    type: string
-                  uniqueItems: true
-                  description: Array of tags. This field is applicable only for taxonomy.
-              required:
-              - name
       responses:
         '200':
           description: The category was successfully updated.
@@ -729,6 +747,9 @@ paths:
                   permanent:
                     type: boolean
                     description: Used to identify system categories, if true the category can not be deleted.
+                  isSystem:
+                    type: boolean
+                    description: Used to identify system categories, if true the category can not be deleted or updated by users
                   hidden:
                     type: boolean
                     description: If true the category is hidden in the Shell, value is not returned if false.  Default is false.
@@ -755,6 +776,12 @@ paths:
                       type: string
                     uniqueItems: true
                     description: Array of tags. This field is applicable only for taxonomy.
+                  kind:
+                    type: array
+                    items:
+                      type: string
+                    uniqueItems: true
+                    description: Array of kinds for the taxonomy/category
                   links:
                     type: object
                     description: A set of links to related documents.
@@ -809,10 +836,10 @@ paths:
                     description: The name of the service that produced the error
                   requestMethod:
                     type: string
-                    description: The Http method type of the current request
+                    description: The HTTP method type of the current request
                   requestUri:
                     type: string
-                    description: The request uri
+                    description: The request URI
                   errors:
                     type: array
                     items:
@@ -836,7 +863,7 @@ paths:
                           description: Optional additional information for the message
                         category:
                           type: string
-                          description: The message category whereby only user messages are designed to be shown to an end user
+                          description: The message category whereby only user messages are designed to be shown to an end-user
                           enum:
                           - API
                           - USER
@@ -889,10 +916,10 @@ paths:
                     description: The name of the service that produced the error
                   requestMethod:
                     type: string
-                    description: The Http method type of the current request
+                    description: The HTTP method type of the current request
                   requestUri:
                     type: string
-                    description: The request uri
+                    description: The request URI
                   errors:
                     type: array
                     items:
@@ -916,7 +943,7 @@ paths:
                           description: Optional additional information for the message
                         category:
                           type: string
-                          description: The message category whereby only user messages are designed to be shown to an end user
+                          description: The message category whereby only user messages are designed to be shown to an end-user
                           enum:
                           - API
                           - USER
@@ -969,10 +996,10 @@ paths:
                     description: The name of the service that produced the error
                   requestMethod:
                     type: string
-                    description: The Http method type of the current request
+                    description: The HTTP method type of the current request
                   requestUri:
                     type: string
-                    description: The request uri
+                    description: The request URI
                   errors:
                     type: array
                     items:
@@ -996,7 +1023,7 @@ paths:
                           description: Optional additional information for the message
                         category:
                           type: string
-                          description: The message category whereby only user messages are designed to be shown to an end user
+                          description: The message category whereby only user messages are designed to be shown to an end-user
                           enum:
                           - API
                           - USER
@@ -1042,11 +1069,56 @@ paths:
       x-ibm-dx-security-user-roles:
       - admin
       - manager
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: The name of the category. It can contain any character except for a forward slash (/).
+                parent:
+                  type: string
+                  description: The ID of the parent category. A taxonomy will be created if this is omitted.
+                description:
+                  type: string
+                  description: The description of the category.
+                permanent:
+                  type: boolean
+                  description: Used to identify system categories, if true the category can not be deleted.
+                isSystem:
+                  type: boolean
+                  description: Used to identify system categories, if true the category can not be deleted or updated by users
+                hidden:
+                  type: boolean
+                  description: If true the category is hidden in the Shell, value is not returned if false.  Default is false.
+                firstClassFor:
+                  type: string
+                  description: Array of item classifications to which this taxonomy is enabled.  Acceptable values "" and "imagesAndVideos", default "".  By default the taxonomy is only shown where generic selection of any category in any taxonomy is allowed.
+                tags:
+                  type: array
+                  items:
+                    type: string
+                  uniqueItems: true
+                  description: Array of tags. This field is applicable only for taxonomy.
+                kind:
+                  type: array
+                  items:
+                    type: string
+                  uniqueItems: true
+                  description: Array of kinds for the taxonomy/category
+              required:
+              - name
+      operationId: putAuthoringV1CategoriesById
+      x-operation-id-source: derived
     delete:
       tags:
       - Authoring categories
-      summary: Delete an existing category item.
-      description: 'Delete the category with ID {id} along with all the categories under it.<br />User roles: admin, manager'
+      summary: Delete an existing category item
+      description: 'Delete the category with ID {id} along with all the categories under it.
+
+        User roles: admin, manager'
       parameters:
       - name: id
         in: path
@@ -1086,10 +1158,10 @@ paths:
                     description: The name of the service that produced the error
                   requestMethod:
                     type: string
-                    description: The Http method type of the current request
+                    description: The HTTP method type of the current request
                   requestUri:
                     type: string
-                    description: The request uri
+                    description: The request URI
                   errors:
                     type: array
                     items:
@@ -1113,7 +1185,7 @@ paths:
                           description: Optional additional information for the message
                         category:
                           type: string
-                          description: The message category whereby only user messages are designed to be shown to an end user
+                          description: The message category whereby only user messages are designed to be shown to an end-user
                           enum:
                           - API
                           - USER
@@ -1166,10 +1238,10 @@ paths:
                     description: The name of the service that produced the error
                   requestMethod:
                     type: string
-                    description: The Http method type of the current request
+                    description: The HTTP method type of the current request
                   requestUri:
                     type: string
-                    description: The request uri
+                    description: The request URI
                   errors:
                     type: array
                     items:
@@ -1193,7 +1265,7 @@ paths:
                           description: Optional additional information for the message
                         category:
                           type: string
-                          description: The message category whereby only user messages are designed to be shown to an end user
+                          description: The message category whereby only user messages are designed to be shown to an end-user
                           enum:
                           - API
                           - USER
@@ -1239,23 +1311,27 @@ paths:
       x-ibm-dx-security-user-roles:
       - admin
       - manager
+      operationId: deleteAuthoringV1CategoriesById
+      x-operation-id-source: derived
   /authoring/v1/categories/views/by-modified:
     get:
       tags:
       - Authoring categories
-      summary: Gets all categories modified between the start and end date.
-      description: 'This endpoint returns a paged result view of category items modified within a range specified by start and end date.<br />User roles: admin, manager, editor, viewer'
+      summary: Gets all categories modified between the start and end date
+      description: 'This endpoint returns a paged result view of category items modified within a range specified by start and end date.
+
+        User roles: admin, manager, editor, viewer'
       parameters:
       - name: start
         in: query
-        description: Provide the date and time of when the last modifications were made to the category items that you want returned. The category items that are modified on or after this date and time are returned. The date value must be in the ISO 8601 format YYYY-MM-DD T hh:mm:ss:sssZ.
+        description: Provide the date and time when the last modifications were made to the category items that you want returned. The category items that are modified on or after this date and time are returned. The date value must be in the ISO 8601 format YYYY-MM-DD T hh:mm:ss:sssZ.
         required: false
         schema:
           type: string
           format: date-time
       - name: end
         in: query
-        description: Provide the date and time of when the last modifications were made to the category items that you want returned. The category items that are modified on or before this date and time are returned. The date value must be in the ISO 8601 format YYYY-MM-DD T hh:mm:ss:sssZ.
+        description: Provide the date and time when the last modifications were made to the category items that you want returned. The category items that are modified on or before this date and time are returned. The date value must be in the ISO 8601 format YYYY-MM-DD T hh:mm:ss:sssZ.
         required: false
         schema:
           type: string
@@ -1340,6 +1416,9 @@ paths:
                         permanent:
                           type: boolean
                           description: Used to identify system categories, if true the category can not be deleted.
+                        isSystem:
+                          type: boolean
+                          description: Used to identify system categories, if true the category can not be deleted or updated by users
                         hidden:
                           type: boolean
                           description: If true the category is hidden in the Shell, value is not returned if false.  Default is false.
@@ -1366,6 +1445,12 @@ paths:
                             type: string
                           uniqueItems: true
                           description: Array of tags. This field is applicable only for taxonomy.
+                        kind:
+                          type: array
+                          items:
+                            type: string
+                          uniqueItems: true
+                          description: Array of kinds for the taxonomy/category
                         links:
                           type: object
                           description: A set of links to related documents.
@@ -1426,10 +1511,10 @@ paths:
                     description: The name of the service that produced the error
                   requestMethod:
                     type: string
-                    description: The Http method type of the current request
+                    description: The HTTP method type of the current request
                   requestUri:
                     type: string
-                    description: The request uri
+                    description: The request URI
                   errors:
                     type: array
                     items:
@@ -1453,7 +1538,7 @@ paths:
                           description: Optional additional information for the message
                         category:
                           type: string
-                          description: The message category whereby only user messages are designed to be shown to an end user
+                          description: The message category whereby only user messages are designed to be shown to an end-user
                           enum:
                           - API
                           - USER
@@ -1506,10 +1591,10 @@ paths:
                     description: The name of the service that produced the error
                   requestMethod:
                     type: string
-                    description: The Http method type of the current request
+                    description: The HTTP method type of the current request
                   requestUri:
                     type: string
-                    description: The request uri
+                    description: The request URI
                   errors:
                     type: array
                     items:
@@ -1533,7 +1618,7 @@ paths:
                           description: Optional additional information for the message
                         category:
                           type: string
-                          description: The message category whereby only user messages are designed to be shown to an end user
+                          description: The message category whereby only user messages are designed to be shown to an end-user
                           enum:
                           - API
                           - USER
@@ -1575,12 +1660,16 @@ paths:
       - manager
       - editor
       - viewer
+      operationId: getAuthoringV1CategoriesViewsByModified
+      x-operation-id-source: derived
   /authoring/v1/categories/{id}/children:
     get:
       tags:
       - Authoring categories
-      summary: Retrieve the child categories of the category with ID {id}.
-      description: 'Retrieve the child categories of the category with ID {id}.<br />User roles: admin, manager, editor, viewer'
+      summary: Retrieve the child categories of the category with ID {id}
+      description: 'Retrieve the child categories of the category with ID {id}.
+
+        User roles: admin, manager, editor, viewer'
       parameters:
       - name: id
         in: path
@@ -1648,6 +1737,9 @@ paths:
                         permanent:
                           type: boolean
                           description: Used to identify system categories, if true the category can not be deleted.
+                        isSystem:
+                          type: boolean
+                          description: Used to identify system categories, if true the category can not be deleted or updated by users
                         hidden:
                           type: boolean
                           description: If true the category is hidden in the Shell, value is not returned if false.  Default is false.
@@ -1674,6 +1766,12 @@ paths:
                             type: string
                           uniqueItems: true
                           description: Array of tags. This field is applicable only for taxonomy.
+                        kind:
+                          type: array
+                          items:
+                            type: string
+                          uniqueItems: true
+                          description: Array of kinds for the taxonomy/category
                         links:
                           type: object
                           description: A set of links to related documents.
@@ -1723,169 +1821,16 @@ paths:
       - manager
       - editor
       - viewer
-  /authoring/v2/categories:
-    get:
-      tags:
-      - Authoring categories
-      summary: Retrieve all the taxonomies and their children.
-      description: 'Retrieve all the taxonomies and thier children.  Optional depth query string limits the depth of the categories returned.<br />User roles: admin, manager, editor, viewer'
-      parameters:
-      - name: offset
-        in: query
-        description: Use the offset parameter to specify the number of content items to skip from the beginning of the list and return the rest.
-        required: false
-        schema:
-          type: number
-          format: integer
-      - name: limit
-        in: query
-        description: Set the limit for the maximum number of content items to return in a single result. The default value is 50.
-        required: false
-        schema:
-          type: number
-          format: integer
-      - name: depth
-        in: query
-        description: Used to specify the depth of the children to return.  1 -7 returns the given depth.  Values above 7 or no value result in all categories.
-        required: false
-        schema:
-          type: number
-          format: integer
-      responses:
-        '200':
-          description: The child categories were successfully retrieved.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  limit:
-                    type: integer
-                    description: The page size.
-                    example: 50
-                  offset:
-                    type: integer
-                    description: The number of items to skip from the beginning of the list.
-                    example: 0
-                  href:
-                    type: string
-                    description: A link to the current page.
-                    example: /authoring/v2/categories?depth=2&limit=10&offset=10
-                  next:
-                    type: string
-                    description: A link to the next page. Only shown if a next page exists.
-                    example: /authoring/v2/categories?depth=2&limit=2&offset=20
-                  previous:
-                    type: string
-                    description: A link to the previous page. Only shown if a previous page exists.
-                    example: /authoring/v2/categories?depth=2&limit=2&offset=0
-                  items:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        id:
-                          type: string
-                          description: The ID of category.
-                        rev:
-                          type: string
-                          description: The revision of category.
-                        name:
-                          type: string
-                          description: The name of the category.
-                        classification:
-                          type: string
-                          description: Either a Taxonomy or category.
-                        description:
-                          type: string
-                          description: A written representation of the category.
-                        creatorId:
-                          type: string
-                          description: The uuid of the user who created the category.
-                        permanent:
-                          type: boolean
-                          description: Used to identify system categories, if true the category can not be deleted.
-                        hidden:
-                          type: boolean
-                          description: If true the category is hidden in the Shell, value is not returned if false.  Default is false.
-                        firstClassFor:
-                          type: string
-                          description: Array of item classifications to which this taxonomy is enabled.  Acceptable values "" and "imagesAndVideos", default "".  By default the taxonomy is only shown where generic selection of any category in any taxonomy is allowed.
-                        parent:
-                          type: string
-                          description: The ID of the parent category. This is only required if the classification is a CATEGORY.
-                        ancestorIds:
-                          type: array
-                          description: An array of IDs for each of the category's ancestor categories. The ID of this category is not included.
-                          items:
-                            type: string
-                        namePath:
-                          type: array
-                          description: An array of names for each of the category's ancestor categories, in addition to the name of this category.
-                          minItems: 1
-                          items:
-                            type: string
-                        tags:
-                          type: array
-                          items:
-                            type: string
-                          uniqueItems: true
-                          description: Array of tags. This field is applicable only for taxonomy.
-                        links:
-                          type: object
-                          description: A set of links to related documents.
-                          properties:
-                            self:
-                              type: object
-                              properties:
-                                href:
-                                  type: string
-                            taxonomy:
-                              type: object
-                              description: A link to this category's taxonomy. This will only be included if this category is not a taxonomy.
-                              properties:
-                                href:
-                                  type: string
-                            parent:
-                              type: object
-                              description: A link to this category's parent. This will only be included if this category is not a taxonomy.
-                              properties:
-                                href:
-                                  type: string
-                        lastModified:
-                          type: string
-                          format: date
-                          description: When the category was last modified in ISO 8601 format.
-                        created:
-                          type: string
-                          format: date
-                          description: When the category was created in ISO 8601 format.
-                      required:
-                      - id
-                      - rev
-                      - name
-                      - classification
-                      - namePath
-                      - links
-                      - created
-                      - lastModified
-        '429':
-          description: Too Many Requests, the server has reached a limit, the request must be sent again at a later time.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-      x-ibm-dx-security-user-roles:
-      - admin
-      - manager
-      - editor
-      - viewer
+      operationId: getAuthoringV1CategoriesByIdChildren
+      x-operation-id-source: derived
   /authoring/v2/categories/{id}/children:
     get:
       tags:
       - Authoring categories
-      summary: Retrieve the child categories of the category with ID {id}.
-      description: 'Retrieve the child categories of the category with ID {id}.<br />User roles: admin, manager, editor, viewer'
+      summary: Retrieve the child categories of the category with ID {id}
+      description: 'Retrieve the child categories of the category with ID {id}.
+
+        User roles: admin, manager, editor, viewer'
       parameters:
       - name: id
         in: path
@@ -2044,6 +1989,181 @@ paths:
       - manager
       - editor
       - viewer
+      operationId: getAuthoringV2CategoriesByIdChildren
+      x-operation-id-source: derived
+  /authoring/v2/categories:
+    get:
+      tags:
+      - Authoring categories
+      summary: Retrieve all the taxonomies and their children
+      description: 'Retrieve all the taxonomies and their children. Optional depth query string limits the depth of the categories returned.
+
+        User roles: admin, manager, editor, viewer'
+      parameters:
+      - name: offset
+        in: query
+        description: Use the offset parameter to specify the number of content items to skip from the beginning of the list and return the rest.
+        required: false
+        schema:
+          type: number
+          format: integer
+      - name: limit
+        in: query
+        description: Set the limit for the maximum number of content items to return in a single result. The default value is 50.
+        required: false
+        schema:
+          type: number
+          format: integer
+      - name: depth
+        in: query
+        description: Used to specify the depth of the children to return.  1 -7 returns the given depth.  Values above 7 or no value result in all categories.
+        required: false
+        schema:
+          type: number
+          format: integer
+      responses:
+        '200':
+          description: The child categories were successfully retrieved.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  limit:
+                    type: integer
+                    description: The page size.
+                    example: 50
+                  offset:
+                    type: integer
+                    description: The number of items to skip from the beginning of the list.
+                    example: 0
+                  href:
+                    type: string
+                    description: A link to the current page.
+                    example: /authoring/v2/categories?depth=2&limit=10&offset=10
+                  next:
+                    type: string
+                    description: A link to the next page. Only shown if a next page exists.
+                    example: /authoring/v2/categories?depth=2&limit=2&offset=20
+                  previous:
+                    type: string
+                    description: A link to the previous page. Only shown if a previous page exists.
+                    example: /authoring/v2/categories?depth=2&limit=2&offset=0
+                  total_count:
+                    type: integer
+                    description: The total number of results (regardless of offset/limit values).  Need to include 'total_count' in the query param 'fields' for this field to be calculated.
+                  items:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          description: The ID of category.
+                        rev:
+                          type: string
+                          description: The revision of category.
+                        name:
+                          type: string
+                          description: The name of the category.
+                        classification:
+                          type: string
+                          description: Either a Taxonomy or category.
+                        description:
+                          type: string
+                          description: A written representation of the category.
+                        creatorId:
+                          type: string
+                          description: The uuid of the user who created the category.
+                        permanent:
+                          type: boolean
+                          description: Used to identify system categories, if true the category can not be deleted.
+                        isSystem:
+                          type: boolean
+                          description: Used to identify system categories, if true the category can not be deleted or updated by users
+                        hidden:
+                          type: boolean
+                          description: If true the category is hidden in the Shell, value is not returned if false.  Default is false.
+                        firstClassFor:
+                          type: string
+                          description: Array of item classifications to which this taxonomy is enabled.  Acceptable values "" and "imagesAndVideos", default "".  By default the taxonomy is only shown where generic selection of any category in any taxonomy is allowed.
+                        parent:
+                          type: string
+                          description: The ID of the parent category. This is only required if the classification is a CATEGORY.
+                        ancestorIds:
+                          type: array
+                          description: An array of IDs for each of the category's ancestor categories. The ID of this category is not included.
+                          items:
+                            type: string
+                        namePath:
+                          type: array
+                          description: An array of names for each of the category's ancestor categories, in addition to the name of this category.
+                          minItems: 1
+                          items:
+                            type: string
+                        tags:
+                          type: array
+                          items:
+                            type: string
+                          uniqueItems: true
+                          description: Array of tags. This field is applicable only for taxonomy.
+                        kind:
+                          type: array
+                          items:
+                            type: string
+                          uniqueItems: true
+                          description: Array of kinds for the taxonomy/category
+                        links:
+                          type: object
+                          description: A set of links to related documents.
+                          properties:
+                            self:
+                              type: object
+                              properties:
+                                href:
+                                  type: string
+                            taxonomy:
+                              type: object
+                              description: A link to this category's taxonomy. This will only be included if this category is not a taxonomy.
+                              properties:
+                                href:
+                                  type: string
+                            parent:
+                              type: object
+                              description: A link to this category's parent. This will only be included if this category is not a taxonomy.
+                              properties:
+                                href:
+                                  type: string
+                        lastModified:
+                          type: string
+                          format: date
+                          description: When the category was last modified in ISO 8601 format.
+                        created:
+                          type: string
+                          format: date
+                          description: When the category was created in ISO 8601 format.
+                      required:
+                      - id
+                      - rev
+                      - name
+                      - classification
+                      - namePath
+                      - links
+                      - created
+                      - lastModified
+        '429':
+          description: Too Many Requests, the server has reached a limit, the request must be sent again at a later time.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      x-ibm-dx-security-user-roles:
+      - admin
+      - manager
+      - editor
+      - viewer
+      operationId: getAuthoringV2Categories
+      x-operation-id-source: derived
 components:
   schemas:
     ErrorResponse:
@@ -2095,9 +2215,3 @@ components:
       required:
       - errors
       - requestId
-x-refined-from:
-- acoustic-content-openapi-original.json
-- acoustic-content-swagger2-original.yaml
-x-readme:
-  explorer-enabled: true
-  proxy-enabled: true

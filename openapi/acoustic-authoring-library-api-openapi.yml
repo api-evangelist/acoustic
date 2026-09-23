@@ -11,7 +11,9 @@ paths:
   /authoring/v1/libraries/{id}:
     get:
       summary: Get an existing library
-      description: 'Use this endpoint to retrieve an existing library.<br />User roles: admin, manager, editor, viewer'
+      description: 'Use this endpoint to retrieve an existing library.
+
+        User roles: admin, manager, editor, viewer'
       tags:
       - Authoring library
       parameters:
@@ -240,9 +242,13 @@ paths:
       - manager
       - editor
       - viewer
+      operationId: getAuthoringV1LibrariesById
+      x-operation-id-source: derived
     put:
       summary: Update an existing library
-      description: 'Use this endpoint to update an existing library.<br />User roles: admin, manager, editor'
+      description: 'Use this endpoint to update an existing library.
+
+        User roles: admin, manager, editor'
       parameters:
       - name: id
         in: path
@@ -460,9 +466,13 @@ paths:
       - admin
       - manager
       - editor
+      operationId: putAuthoringV1LibrariesById
+      x-operation-id-source: derived
     delete:
       summary: Delete an existing library
-      description: 'Use this endpoint to delete an existing library.<br />User roles: admin, manager, editor'
+      description: 'Use this endpoint to delete an existing library.
+
+        User roles: admin, manager, editor'
       parameters:
       - name: id
         in: path
@@ -565,10 +575,14 @@ paths:
       - admin
       - manager
       - editor
+      operationId: deleteAuthoringV1LibrariesById
+      x-operation-id-source: derived
   /authoring/v1/libraries:
     get:
       summary: Get all the libraries
-      description: 'Use this endpoint to retrieve all libraries.<br />User roles: admin, manager, editor, viewer'
+      description: 'Use this endpoint to retrieve all libraries.
+
+        User roles: admin, manager, editor, viewer'
       parameters:
       - name: start
         in: query
@@ -1009,9 +1023,13 @@ paths:
       - manager
       - editor
       - viewer
+      operationId: getAuthoringV1Libraries
+      x-operation-id-source: derived
     post:
       summary: Create a new library
-      description: 'Use this endpoint to create a new library.<br />User roles: admin, manager'
+      description: 'Use this endpoint to create a new library.
+
+        User roles: admin, manager'
       parameters:
       - name: ignoreUsers
         in: query
@@ -1169,10 +1187,14 @@ paths:
       x-ibm-dx-security-user-roles:
       - admin
       - manager
+      operationId: postAuthoringV1Libraries
+      x-operation-id-source: derived
   /authoring/v1/libraries/views/by-modified:
     get:
-      summary: Retrieve all libraries modified within the specified date.
-      description: 'Use the /libraries/views/by-modified endpoint to retrieve all libraries that were modified within the date range specified.<br />User roles: admin, manager, editor, viewer'
+      summary: Retrieve all libraries modified within the specified date
+      description: 'Use the /libraries/views/by-modified endpoint to retrieve all libraries that were modified within the date range specified.
+
+        User roles: admin, manager, editor, viewer'
       parameters:
       - name: start
         in: query
@@ -1613,9 +1635,11 @@ paths:
       - manager
       - editor
       - viewer
+      operationId: getAuthoringV1LibrariesViewsByModified
+      x-operation-id-source: derived
   /authoring/v1/libraries/count:
     get:
-      summary: Retrieve the total number of libraries in the database.
+      summary: Retrieve the total number of libraries in the database
       tags:
       - Authoring library
       responses:
@@ -1723,7 +1747,9 @@ paths:
       - manager
       - editor
       - viewer
-      description: '<br />User roles: admin, manager, editor, viewer'
+      description: 'User roles: admin, manager, editor, viewer'
+      operationId: getAuthoringV1LibrariesCount
+      x-operation-id-source: derived
 components:
   schemas:
     ErrorResponse:
