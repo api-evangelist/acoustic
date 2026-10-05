@@ -1,0 +1,12 @@
+{
+ "url": "https://raw.githubusercontent.com/acoustic-content-samples/wch-openapi-documentation/master/wch_complete.yaml",
+ "requested_url": "https://raw.githubusercontent.com/acoustic-content-samples/wch-openapi-documentation/master/wch_complete.yaml",
+ "status": 200,
+ "content_type": "text/plain; charset=utf-8",
+ "bytes": 1100655,
+ "sha256": "d74e981ee04a2ffd6e8548226f13afebadb1e23281e218ecb464f112252531d0",
+ "fetched_at": "2026-10-04",
+ "fetched_by": "APIEvangelist-Harvest/1.0 (+https://apievangelist.com)",
+ "match": "equivalent",
+ "note": "Re-fetched from the provider by verify-openapi-sources.py; the provider's current document describes the same operations (Jaccard 0.952), but the bytes differ, so the archive is an earlier or reformatted copy."
+}
