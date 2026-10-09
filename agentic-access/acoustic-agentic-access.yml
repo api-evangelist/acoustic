@@ -1,1942 +1,37 @@
-generated: '2026-08-13'
+generated: '2026-09-23'
 method: generated
-source: openapi/acoustic-content-openapi-original.json, openapi/acoustic-content-swagger2-original.yaml
+source: openapi/acoustic-administering-user-profiles-api-openapi.yml, openapi/acoustic-authoring-assets-api-openapi.yml,
+  openapi/acoustic-authoring-categories-api-openapi.yml, openapi/acoustic-authoring-changes-api-openapi.yml,
+  openapi/acoustic-authoring-comments-api-openapi.yml, openapi/acoustic-authoring-content-api-openapi.yml,
+  openapi/acoustic-authoring-context-search-api-openapi.yml, openapi/acoustic-authoring-image-profiles-api-openapi.yml,
+  openapi/acoustic-authoring-import-api-openapi.yml, openapi/acoustic-authoring-layouts-api-openapi.yml,
+  openapi/acoustic-authoring-library-api-openapi.yml, openapi/acoustic-authoring-reference-api-openapi.yml,
+  openapi/acoustic-authoring-renditions-api-openapi.yml, openapi/acoustic-authoring-resources-api-openapi.yml,
+  openapi/acoustic-authoring-review-api-openapi.yml, openapi/acoustic-authoring-search-api-openapi.yml,
+  openapi/acoustic-authoring-sites-api-openapi.yml, openapi/acoustic-authoring-types-api-openapi.yml,
+  openapi/acoustic-authoring-version-api-openapi.yml, openapi/acoustic-delivery-content-api-openapi.yml,
+  openapi/acoustic-delivery-context-search-api-openapi.yml, openapi/acoustic-delivery-render-api-openapi.yml,
+  openapi/acoustic-delivery-resources-api-openapi.yml, openapi/acoustic-delivery-search-api-openapi.yml,
+  openapi/acoustic-delivery-sites-api-openapi.yml, openapi/acoustic-login-service-api-openapi.yml,
+  openapi/acoustic-publishing-api-openapi.yml, openapi/acoustic-tenant-registry-api-openapi.yml,
+  openapi/acoustic-webhook-profiles-api-openapi.yml
 description: Recommended x-agentic-access execution contracts, classified heuristically from
   the OpenAPI. A governance starting point for exposing this API to AI agents — review and bind
   audience per deployment. See research/curity/agentic-governance/.
 summary:
-  operations: 365
+  operations: 187
   by_action_class:
-    connected: 199
-    acting: 166
+    connected: 107
+    acting: 80
   by_consequence:
-    read: 199
-    write: 164
-    safety-critical: 2
-  human_in_the_loop_required: 2
+    read: 107
+    write: 79
+    safety-critical: 1
+  human_in_the_loop_required: 1
 operations:
-- path: /authoring/v1/assets
-  method: get
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /authoring/v1/assets
-  method: post
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /authoring/v1/assets/{id}
-  method: get
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /authoring/v1/assets/{id}
-  method: delete
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /authoring/v1/assets/{id}
-  method: put
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /authoring/v1/assets/record
-  method: get
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /authoring/v1/assets/{id}/analyze
-  method: post
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /authoring/v1/assets/{id}/create-draft
-  method: post
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /authoring/v1/assets/views/by-modified
-  method: get
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /authoring/v1/categories
-  method: get
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /authoring/v1/categories
-  method: post
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /authoring/v1/categories/{id}
-  method: get
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /authoring/v1/categories/{id}
-  method: put
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /authoring/v1/categories/{id}
-  method: delete
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /authoring/v1/categories/views/by-modified
-  method: get
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /authoring/v1/categories/{id}/children
-  method: get
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /authoring/v2/categories
-  method: get
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /authoring/v1/changes/status/ready
-  method: post
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /authoring/v1/changes/status/retire
-  method: post
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /authoring/v1/changes/delete
-  method: post
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /authoring/v1/changes/set-library
-  method: post
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /authoring/v1/changes/{uid}/status/ready
-  method: post
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /authoring/v1/changes/{uid}/status/retire
-  method: post
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /authoring/v1/changes/{classification}/{id}/status/ready
-  method: post
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /authoring/v1/changes/{classification}/{id}/status/retire
-  method: post
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /authoring/v1/comments
-  method: post
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /authoring/v1/comments/{id}
-  method: get
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /authoring/v1/comments/{id}
-  method: put
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /authoring/v1/comments/{id}
-  method: delete
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /authoring/v1/comments/by-item/{classification}/{id}
-  method: get
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /authoring/v1/comments/by-user/{userId}
-  method: get
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /authoring/v1/content
-  method: get
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /authoring/v1/content
-  method: post
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /authoring/v1/content/{id}
-  method: get
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /authoring/v1/content/{id}
-  method: put
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /authoring/v1/content/{id}
-  method: delete
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /authoring/v1/content/views/by-type
-  method: get
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /authoring/v1/content/views/by-modified
-  method: get
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /authoring/v1/content/{id}/create-draft
-  method: post
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /authoring/v1/content/count
-  method: get
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /authoring/v1/content/{id}/analyze
-  method: post
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /authoring/v1/content/{id}/validate
-  method: post
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /authoring/v1/copy/sync
-  method: post
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /authoring/v1/layouts
-  method: post
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /authoring/v1/layouts
-  method: get
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /authoring/v1/layouts/by-content/{content-id}
-  method: get
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /authoring/v1/layouts/by-path
-  method: get
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /authoring/v1/layouts/count
-  method: get
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /authoring/v1/layouts/{id}
-  method: put
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /authoring/v1/layouts/{id}
-  method: delete
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /authoring/v1/layouts/{id}
-  method: get
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /authoring/v1/layouts/views/by-modified
-  method: get
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /authoring/v1/layouts/views/by-name
-  method: get
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /authoring/v1/layout-mappings
-  method: post
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /authoring/v1/layout-mappings
-  method: get
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /authoring/v1/layout-mappings/by-path
-  method: get
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /authoring/v1/layout-mappings/by-type/{type-id}
-  method: get
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /authoring/v1/layout-mappings/by-type/{type-id}
-  method: delete
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /authoring/v1/layout-mappings/by-type/{type-id}/copy
-  method: post
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /authoring/v1/layout-mappings/count
-  method: get
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /authoring/v1/layout-mappings/{id}
-  method: put
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /authoring/v1/layout-mappings/{id}
-  method: delete
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /authoring/v1/layout-mappings/{id}
-  method: get
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /authoring/v1/layout-mappings/{id}/copy
-  method: post
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /authoring/v1/layout-mappings/views/by-modified
-  method: get
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /authoring/v1/layout-mappings/views/by-name
-  method: get
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /authoring/v1/references/outgoing
-  method: post
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /authoring/v1/references/outgoing/{classification}/{id}
-  method: get
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /authoring/v1/references/incoming
-  method: post
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /authoring/v1/references/incoming/{classification}/{id}
-  method: get
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /authoring/v1/renditions
-  method: get
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /authoring/v1/renditions
-  method: post
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /authoring/v1/renditions/{id}
-  method: get
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /authoring/v1/renditions/views/by-created
-  method: get
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /authoring/v1/image-profiles
-  method: post
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /authoring/v1/image-profiles
-  method: get
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /authoring/v1/image-profiles/count
-  method: get
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /authoring/v1/image-profiles/{id}
-  method: put
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /authoring/v1/image-profiles/{id}
-  method: delete
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /authoring/v1/image-profiles/{id}
-  method: get
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /authoring/v1/image-profiles/views/by-modified
-  method: get
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /authoring/v1/resources
-  method: post
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /authoring/v1/resources/{id}
-  method: get
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /authoring/v1/resources/{id}
-  method: put
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /authoring/v1/resources/views/by-created
-  method: get
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /authoring/v1/review
-  method: post
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /authoring/v1/review/{id}
-  method: get
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /authoring/v1/review/{id}
-  method: put
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /authoring/v1/review/{id}
-  method: delete
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /authoring/v1/review/{id}/approve
-  method: post
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /authoring/v1/review/{id}/approve-all
-  method: post
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /authoring/v1/review/{id}/complete
-  method: post
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /authoring/v1/search
-  method: get
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /authoring/v1/search/json
-  method: post
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /authoring/v1/sites
-  method: get
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /authoring/v1/sites
-  method: post
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /authoring/v1/sites/{site-id}
-  method: get
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /authoring/v1/sites/{site-id}
-  method: put
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /authoring/v1/sites/{site-id}
-  method: delete
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /authoring/v1/sites/{site-id}/ready
-  method: post
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /authoring/v1/sites/{site-id}/cancel
-  method: post
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /authoring/v1/sites/{site-id}/pages/ready
-  method: post
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /authoring/v1/sites/{site-id}/pages
-  method: get
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /authoring/v1/sites/{site-id}/pages
-  method: post
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /authoring/v1/sites/{site-id}/pages/views/by-modified
-  method: get
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /authoring/v1/sites/{site-id}/pages/{page-id}
-  method: get
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /authoring/v1/sites/{site-id}/pages/{page-id}
-  method: delete
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /authoring/v1/sites/{site-id}/pages/{page-id}
-  method: put
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /authoring/v1/sites/{site-id}/pages/move
-  method: post
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /authoring/v1/sites/{site-id}/pages/{page-id}/ready
-  method: post
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /authoring/v1/sites/pages/{page-id}
-  method: get
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /authoring/v1/types
-  method: post
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /authoring/v1/types
-  method: get
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /authoring/v1/types/by-path
-  method: get
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /authoring/v1/types/count
-  method: get
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /authoring/v1/types/{id}
-  method: put
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /authoring/v1/types/{id}
-  method: delete
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /authoring/v1/types/{id}
-  method: get
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /authoring/v1/types/{id}/copy
-  method: post
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /authoring/v1/types/{id}/new-content
-  method: get
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /authoring/v1/types/{id}/schema
-  method: get
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /authoring/v1/types/{id}/validate
-  method: post
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /authoring/v1/types/new
-  method: get
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /authoring/v1/types/views/by-modified
-  method: get
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /authoring/v1/types/views/by-name
-  method: get
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /authoring/v1/elementdefs/{id}
-  method: get
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /authoring/v1/elementdefs
-  method: get
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /authoring/v1/versions/{classification}/{id}
-  method: get
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /authoring/v1/versions/{classification}/{id}/{timestamp}
-  method: get
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /authoring/v1/versions/restore
-  method: post
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /authoring/v1/versions/policy
-  method: get
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /authoring/v1/versions/policy/on
-  method: post
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /authoring/v1/versions/policy/off
-  method: post
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /authoring/v1/versions/policy/disable
-  method: post
-  x-agentic-access:
-    action-class: acting
-    consequence: safety-critical
-    subject: required
-    audience: null
-    token:
-      max-ttl: 120
-      exchange: true
-      purpose-required: true
-      proof-of-possession: true
-    escalation:
-      human-in-the-loop: required
-    audit: required
-- path: /authoring/v1/contextualsearch
-  method: get
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /delivery/v1/contextualsearch
-  method: get
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /delivery/v1/content/bulk_retrieve
-  method: post
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /mydelivery/v1/content/bulk_retrieve
-  method: post
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /delivery/v1/content/{id}
-  method: get
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /mydelivery/v1/content/{id}
-  method: get
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /delivery/v1/rendering/render/content/{id}
-  method: get
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /delivery/v1/rendering/sites/{id}
-  method: get
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /delivery/v1/rendering/context/{id}
-  method: get
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /delivery/v1/rendering/type/{id}
-  method: get
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /delivery/v1/rendering/search
-  method: get
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /mydelivery/v1/rendering/render/content/{id}
-  method: get
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /mydelivery/v1/rendering/type/{id}
-  method: get
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /delivery/v1/resources
-  method: get
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /delivery/v1/resources/{fileIdentifier}
-  method: get
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /delivery/v1/search
-  method: get
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /mydelivery/v1/search
-  method: get
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /delivery/v1/sites/{siteId}
-  method: get
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /mydelivery/v1/sites/{siteId}
-  method: get
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /delivery/v2/sites/{siteId}
-  method: get
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /mydelivery/v2/sites/{siteId}
-  method: get
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /delivery/v1/sites/{siteId}/pages/{pageId}
-  method: get
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /mydelivery/v1/sites/{siteId}/pages/{pageId}
-  method: get
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /delivery/v1/sites/{siteId}/pages/by-parent/{parentPageId}
-  method: get
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /mydelivery/v1/sites/{siteId}/pages/by-parent/{parentPageId}
-  method: get
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /registry/v1/currenttenant
-  method: get
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /registry/v1/currenttenant
-  method: put
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /login/v1/removecookies
-  method: get
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /login/v1/basicauth
-  method: get
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /login/v1/basicauth
-  method: post
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
 - path: /user-profile/v1/users/currentuser
   method: get
+  operationId: getUserProfileV1UsersCurrentuser
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -1946,6 +41,7 @@ operations:
     audit: none
 - path: /user-profile/v1/users
   method: get
+  operationId: getUserProfileV1Users
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -1955,6 +51,7 @@ operations:
     audit: none
 - path: /user-profile/v1/users
   method: post
+  operationId: postUserProfileV1Users
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -1970,6 +67,7 @@ operations:
     audit: required
 - path: /user-profile/v1/users/{id}
   method: get
+  operationId: getUserProfileV1UsersById
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -1979,6 +77,7 @@ operations:
     audit: none
 - path: /user-profile/v1/users/{id}
   method: put
+  operationId: putUserProfileV1UsersById
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -1994,102 +93,7 @@ operations:
     audit: required
 - path: /user-profile/v1/users/{id}
   method: delete
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /webhook/v1/profile
-  method: get
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /webhook/v1/profile
-  method: put
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /webhook/v1/profile
-  method: delete
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /publishing/v1/jobs
-  method: post
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /publishing/v1/jobs/current-job
-  method: get
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /publishing/v1/jobs/current-job/status
-  method: get
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /publishing/v1/site-revisions/default
-  method: get
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /publishing/v1/site-revisions/default
-  method: put
+  operationId: deleteUserProfileV1UsersById
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -2105,6 +109,7 @@ operations:
     audit: required
 - path: /authoring/v1/assets
   method: get
+  operationId: getAuthoringV1Assets
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -2114,6 +119,7 @@ operations:
     audit: none
 - path: /authoring/v1/assets
   method: post
+  operationId: postAuthoringV1Assets
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -2129,6 +135,7 @@ operations:
     audit: required
 - path: /authoring/v1/assets/{id}
   method: get
+  operationId: getAuthoringV1AssetsById
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -2138,6 +145,7 @@ operations:
     audit: none
 - path: /authoring/v1/assets/{id}
   method: delete
+  operationId: deleteAuthoringV1AssetsById
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -2153,6 +161,7 @@ operations:
     audit: required
 - path: /authoring/v1/assets/{id}
   method: put
+  operationId: putAuthoringV1AssetsById
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -2168,6 +177,7 @@ operations:
     audit: required
 - path: /authoring/v1/assets/record
   method: get
+  operationId: getAuthoringV1AssetsRecord
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -2177,6 +187,7 @@ operations:
     audit: none
 - path: /authoring/v1/assets/{id}/analyze
   method: post
+  operationId: postAuthoringV1AssetsByIdAnalyze
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -2192,6 +203,7 @@ operations:
     audit: required
 - path: /authoring/v1/assets/{id}/create-draft
   method: post
+  operationId: postAuthoringV1AssetsByIdCreateDraft
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -2207,6 +219,7 @@ operations:
     audit: required
 - path: /authoring/v1/assets/views/by-modified
   method: get
+  operationId: getAuthoringV1AssetsViewsByModified
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -2216,6 +229,7 @@ operations:
     audit: none
 - path: /authoring/v1/categories
   method: get
+  operationId: getAuthoringV1Categories
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -2225,6 +239,7 @@ operations:
     audit: none
 - path: /authoring/v1/categories
   method: post
+  operationId: postAuthoringV1Categories
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -2240,6 +255,7 @@ operations:
     audit: required
 - path: /authoring/v1/categories/{id}
   method: get
+  operationId: getAuthoringV1CategoriesById
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -2249,6 +265,7 @@ operations:
     audit: none
 - path: /authoring/v1/categories/{id}
   method: put
+  operationId: putAuthoringV1CategoriesById
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -2264,6 +281,7 @@ operations:
     audit: required
 - path: /authoring/v1/categories/{id}
   method: delete
+  operationId: deleteAuthoringV1CategoriesById
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -2279,6 +297,7 @@ operations:
     audit: required
 - path: /authoring/v1/categories/views/by-modified
   method: get
+  operationId: getAuthoringV1CategoriesViewsByModified
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -2288,6 +307,7 @@ operations:
     audit: none
 - path: /authoring/v1/categories/{id}/children
   method: get
+  operationId: getAuthoringV1CategoriesByIdChildren
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -2297,6 +317,7 @@ operations:
     audit: none
 - path: /authoring/v2/categories/{id}/children
   method: get
+  operationId: getAuthoringV2CategoriesByIdChildren
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -2306,6 +327,7 @@ operations:
     audit: none
 - path: /authoring/v2/categories
   method: get
+  operationId: getAuthoringV2Categories
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -2315,6 +337,7 @@ operations:
     audit: none
 - path: /authoring/v1/changes/status/ready
   method: post
+  operationId: postAuthoringV1ChangesStatusReady
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -2330,6 +353,7 @@ operations:
     audit: required
 - path: /authoring/v1/changes/status/retire
   method: post
+  operationId: postAuthoringV1ChangesStatusRetire
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -2345,6 +369,7 @@ operations:
     audit: required
 - path: /authoring/v1/changes/delete
   method: post
+  operationId: postAuthoringV1ChangesDelete
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -2360,6 +385,7 @@ operations:
     audit: required
 - path: /authoring/v1/changes/set-library
   method: post
+  operationId: postAuthoringV1ChangesSetLibrary
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -2375,6 +401,7 @@ operations:
     audit: required
 - path: /authoring/v1/changes/{uid}/status/ready
   method: post
+  operationId: postAuthoringV1ChangesByUidStatusReady
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -2390,6 +417,7 @@ operations:
     audit: required
 - path: /authoring/v1/changes/{uid}/status/retire
   method: post
+  operationId: postAuthoringV1ChangesByUidStatusRetire
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -2405,6 +433,7 @@ operations:
     audit: required
 - path: /authoring/v1/changes/{classification}/{id}/status/ready
   method: post
+  operationId: postAuthoringV1ChangesByClassificationByIdStatusReady
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -2420,6 +449,7 @@ operations:
     audit: required
 - path: /authoring/v1/changes/{classification}/{id}/status/retire
   method: post
+  operationId: postAuthoringV1ChangesByClassificationByIdStatusRetire
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -2435,6 +465,7 @@ operations:
     audit: required
 - path: /authoring/v1/comments
   method: post
+  operationId: postAuthoringV1Comments
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -2450,6 +481,7 @@ operations:
     audit: required
 - path: /authoring/v1/comments/{id}
   method: get
+  operationId: getAuthoringV1CommentsById
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -2459,6 +491,7 @@ operations:
     audit: none
 - path: /authoring/v1/comments/{id}
   method: put
+  operationId: putAuthoringV1CommentsById
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -2474,6 +507,7 @@ operations:
     audit: required
 - path: /authoring/v1/comments/{id}
   method: delete
+  operationId: deleteAuthoringV1CommentsById
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -2489,6 +523,7 @@ operations:
     audit: required
 - path: /authoring/v1/comments/by-item/{classification}/{id}
   method: get
+  operationId: getAuthoringV1CommentsByItemByClassificationById
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -2498,6 +533,7 @@ operations:
     audit: none
 - path: /authoring/v1/comments/by-user/{userId}
   method: get
+  operationId: getAuthoringV1CommentsByUserByUserId
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -2507,6 +543,7 @@ operations:
     audit: none
 - path: /authoring/v1/content
   method: get
+  operationId: getAuthoringV1Content
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -2516,6 +553,7 @@ operations:
     audit: none
 - path: /authoring/v1/content
   method: post
+  operationId: postAuthoringV1Content
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -2531,6 +569,7 @@ operations:
     audit: required
 - path: /authoring/v1/content/{id}
   method: get
+  operationId: getAuthoringV1ContentById
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -2540,6 +579,7 @@ operations:
     audit: none
 - path: /authoring/v1/content/{id}
   method: put
+  operationId: putAuthoringV1ContentById
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -2555,6 +595,7 @@ operations:
     audit: required
 - path: /authoring/v1/content/{id}
   method: delete
+  operationId: deleteAuthoringV1ContentById
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -2570,6 +611,7 @@ operations:
     audit: required
 - path: /authoring/v1/content/{id}/unpublish
   method: post
+  operationId: postAuthoringV1ContentByIdUnpublish
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -2585,6 +627,7 @@ operations:
     audit: required
 - path: /authoring/v1/content/views/by-type
   method: get
+  operationId: getAuthoringV1ContentViewsByType
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -2594,6 +637,7 @@ operations:
     audit: none
 - path: /authoring/v1/content/views/by-modified
   method: get
+  operationId: getAuthoringV1ContentViewsByModified
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -2603,6 +647,7 @@ operations:
     audit: none
 - path: /authoring/v1/content/{id}/create-draft
   method: post
+  operationId: postAuthoringV1ContentByIdCreateDraft
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -2618,6 +663,7 @@ operations:
     audit: required
 - path: /authoring/v1/content/count
   method: get
+  operationId: getAuthoringV1ContentCount
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -2627,6 +673,7 @@ operations:
     audit: none
 - path: /authoring/v1/content/{id}/analyze
   method: post
+  operationId: postAuthoringV1ContentByIdAnalyze
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -2642,6 +689,7 @@ operations:
     audit: required
 - path: /authoring/v1/content/{id}/validate
   method: post
+  operationId: postAuthoringV1ContentByIdValidate
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -2655,8 +703,107 @@ operations:
       - abnormal
       - high-value
     audit: required
+- path: /authoring/v1/contextualsearch
+  method: get
+  operationId: getAuthoringV1Contextualsearch
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /authoring/v1/image-profiles
+  method: post
+  operationId: postAuthoringV1ImageProfiles
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /authoring/v1/image-profiles
+  method: get
+  operationId: getAuthoringV1ImageProfiles
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /authoring/v1/image-profiles/count
+  method: get
+  operationId: getAuthoringV1ImageProfilesCount
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /authoring/v1/image-profiles/{id}
+  method: put
+  operationId: putAuthoringV1ImageProfilesById
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /authoring/v1/image-profiles/{id}
+  method: delete
+  operationId: deleteAuthoringV1ImageProfilesById
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /authoring/v1/image-profiles/{id}
+  method: get
+  operationId: getAuthoringV1ImageProfilesById
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /authoring/v1/image-profiles/views/by-modified
+  method: get
+  operationId: getAuthoringV1ImageProfilesViewsByModified
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
 - path: /authoring/v1/copy/sync
   method: post
+  operationId: postAuthoringV1CopySync
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -2672,6 +819,7 @@ operations:
     audit: required
 - path: /authoring/v1/layouts
   method: post
+  operationId: postAuthoringV1Layouts
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -2687,6 +835,7 @@ operations:
     audit: required
 - path: /authoring/v1/layouts
   method: get
+  operationId: getAuthoringV1Layouts
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -2696,6 +845,7 @@ operations:
     audit: none
 - path: /authoring/v1/layouts/by-content/{content-id}
   method: get
+  operationId: getAuthoringV1LayoutsByContentByContentId
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -2705,6 +855,7 @@ operations:
     audit: none
 - path: /authoring/v1/layouts/by-path
   method: get
+  operationId: getAuthoringV1LayoutsByPath
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -2714,6 +865,7 @@ operations:
     audit: none
 - path: /authoring/v1/layouts/count
   method: get
+  operationId: getAuthoringV1LayoutsCount
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -2723,6 +875,7 @@ operations:
     audit: none
 - path: /authoring/v1/layouts/{id}
   method: put
+  operationId: putAuthoringV1LayoutsById
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -2738,6 +891,7 @@ operations:
     audit: required
 - path: /authoring/v1/layouts/{id}
   method: delete
+  operationId: deleteAuthoringV1LayoutsById
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -2753,6 +907,7 @@ operations:
     audit: required
 - path: /authoring/v1/layouts/{id}
   method: get
+  operationId: getAuthoringV1LayoutsById
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -2762,6 +917,7 @@ operations:
     audit: none
 - path: /authoring/v1/layouts/views/by-modified
   method: get
+  operationId: getAuthoringV1LayoutsViewsByModified
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -2771,6 +927,7 @@ operations:
     audit: none
 - path: /authoring/v1/layouts/views/by-name
   method: get
+  operationId: getAuthoringV1LayoutsViewsByName
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -2780,6 +937,7 @@ operations:
     audit: none
 - path: /authoring/v1/layout-mappings
   method: post
+  operationId: postAuthoringV1LayoutMappings
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -2795,6 +953,7 @@ operations:
     audit: required
 - path: /authoring/v1/layout-mappings
   method: get
+  operationId: getAuthoringV1LayoutMappings
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -2804,6 +963,7 @@ operations:
     audit: none
 - path: /authoring/v1/layout-mappings/by-path
   method: get
+  operationId: getAuthoringV1LayoutMappingsByPath
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -2813,6 +973,7 @@ operations:
     audit: none
 - path: /authoring/v1/layout-mappings/by-type/{type-id}
   method: get
+  operationId: getAuthoringV1LayoutMappingsByTypeByTypeId
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -2822,6 +983,7 @@ operations:
     audit: none
 - path: /authoring/v1/layout-mappings/by-type/{type-id}
   method: delete
+  operationId: deleteAuthoringV1LayoutMappingsByTypeByTypeId
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -2837,6 +999,7 @@ operations:
     audit: required
 - path: /authoring/v1/layout-mappings/by-type/{type-id}/copy
   method: post
+  operationId: postAuthoringV1LayoutMappingsByTypeByTypeIdCopy
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -2852,6 +1015,7 @@ operations:
     audit: required
 - path: /authoring/v1/layout-mappings/count
   method: get
+  operationId: getAuthoringV1LayoutMappingsCount
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -2861,6 +1025,7 @@ operations:
     audit: none
 - path: /authoring/v1/layout-mappings/{id}
   method: put
+  operationId: putAuthoringV1LayoutMappingsById
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -2876,6 +1041,7 @@ operations:
     audit: required
 - path: /authoring/v1/layout-mappings/{id}
   method: delete
+  operationId: deleteAuthoringV1LayoutMappingsById
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -2891,6 +1057,7 @@ operations:
     audit: required
 - path: /authoring/v1/layout-mappings/{id}
   method: get
+  operationId: getAuthoringV1LayoutMappingsById
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -2900,6 +1067,7 @@ operations:
     audit: none
 - path: /authoring/v1/layout-mappings/{id}/copy
   method: post
+  operationId: postAuthoringV1LayoutMappingsByIdCopy
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -2915,6 +1083,7 @@ operations:
     audit: required
 - path: /authoring/v1/layout-mappings/views/by-modified
   method: get
+  operationId: getAuthoringV1LayoutMappingsViewsByModified
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -2924,6 +1093,7 @@ operations:
     audit: none
 - path: /authoring/v1/layout-mappings/views/by-name
   method: get
+  operationId: getAuthoringV1LayoutMappingsViewsByName
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -2933,6 +1103,7 @@ operations:
     audit: none
 - path: /authoring/v1/libraries/{id}
   method: get
+  operationId: getAuthoringV1LibrariesById
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -2942,6 +1113,7 @@ operations:
     audit: none
 - path: /authoring/v1/libraries/{id}
   method: put
+  operationId: putAuthoringV1LibrariesById
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -2957,6 +1129,7 @@ operations:
     audit: required
 - path: /authoring/v1/libraries/{id}
   method: delete
+  operationId: deleteAuthoringV1LibrariesById
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -2972,6 +1145,7 @@ operations:
     audit: required
 - path: /authoring/v1/libraries
   method: get
+  operationId: getAuthoringV1Libraries
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -2981,6 +1155,7 @@ operations:
     audit: none
 - path: /authoring/v1/libraries
   method: post
+  operationId: postAuthoringV1Libraries
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -2996,6 +1171,7 @@ operations:
     audit: required
 - path: /authoring/v1/libraries/views/by-modified
   method: get
+  operationId: getAuthoringV1LibrariesViewsByModified
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -3005,6 +1181,7 @@ operations:
     audit: none
 - path: /authoring/v1/libraries/count
   method: get
+  operationId: getAuthoringV1LibrariesCount
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -3014,21 +1191,17 @@ operations:
     audit: none
 - path: /authoring/v1/references/outgoing
   method: post
+  operationId: postAuthoringV1ReferencesOutgoing
   x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
+    action-class: connected
+    consequence: read
+    subject: optional
     token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
+      max-ttl: 3600
+    audit: none
 - path: /authoring/v1/references/outgoing/{classification}/{id}
   method: get
+  operationId: getAuthoringV1ReferencesOutgoingByClassificationById
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -3038,21 +1211,17 @@ operations:
     audit: none
 - path: /authoring/v1/references/incoming
   method: post
+  operationId: postAuthoringV1ReferencesIncoming
   x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
+    action-class: connected
+    consequence: read
+    subject: optional
     token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
+      max-ttl: 3600
+    audit: none
 - path: /authoring/v1/references/incoming/{classification}/{id}
   method: get
+  operationId: getAuthoringV1ReferencesIncomingByClassificationById
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -3062,6 +1231,7 @@ operations:
     audit: none
 - path: /authoring/v1/renditions
   method: get
+  operationId: getAuthoringV1Renditions
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -3071,6 +1241,7 @@ operations:
     audit: none
 - path: /authoring/v1/renditions
   method: post
+  operationId: postAuthoringV1Renditions
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -3086,6 +1257,7 @@ operations:
     audit: required
 - path: /authoring/v1/renditions/{id}
   method: get
+  operationId: getAuthoringV1RenditionsById
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -3095,87 +1267,7 @@ operations:
     audit: none
 - path: /authoring/v1/renditions/views/by-created
   method: get
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /authoring/v1/image-profiles
-  method: post
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /authoring/v1/image-profiles
-  method: get
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /authoring/v1/image-profiles/count
-  method: get
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /authoring/v1/image-profiles/{id}
-  method: put
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /authoring/v1/image-profiles/{id}
-  method: delete
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /authoring/v1/image-profiles/{id}
-  method: get
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /authoring/v1/image-profiles/views/by-modified
-  method: get
+  operationId: getAuthoringV1RenditionsViewsByCreated
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -3185,6 +1277,7 @@ operations:
     audit: none
 - path: /authoring/v1/resources
   method: post
+  operationId: postAuthoringV1Resources
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -3200,6 +1293,7 @@ operations:
     audit: required
 - path: /authoring/v1/resources/{id}
   method: get
+  operationId: getAuthoringV1ResourcesById
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -3209,6 +1303,7 @@ operations:
     audit: none
 - path: /authoring/v1/resources/{id}
   method: put
+  operationId: putAuthoringV1ResourcesById
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -3224,6 +1319,7 @@ operations:
     audit: required
 - path: /authoring/v1/resources/views/by-created
   method: get
+  operationId: getAuthoringV1ResourcesViewsByCreated
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -3233,6 +1329,7 @@ operations:
     audit: none
 - path: /authoring/v1/review
   method: post
+  operationId: postAuthoringV1Review
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -3248,6 +1345,7 @@ operations:
     audit: required
 - path: /authoring/v1/review/{id}
   method: get
+  operationId: getAuthoringV1ReviewById
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -3257,6 +1355,7 @@ operations:
     audit: none
 - path: /authoring/v1/review/{id}
   method: put
+  operationId: putAuthoringV1ReviewById
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -3272,6 +1371,7 @@ operations:
     audit: required
 - path: /authoring/v1/review/{id}
   method: delete
+  operationId: deleteAuthoringV1ReviewById
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -3287,6 +1387,7 @@ operations:
     audit: required
 - path: /authoring/v1/review/{id}/approve
   method: post
+  operationId: postAuthoringV1ReviewByIdApprove
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -3302,6 +1403,7 @@ operations:
     audit: required
 - path: /authoring/v1/review/{id}/approve-all
   method: post
+  operationId: postAuthoringV1ReviewByIdApproveAll
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -3317,6 +1419,7 @@ operations:
     audit: required
 - path: /authoring/v1/review/{id}/complete
   method: post
+  operationId: postAuthoringV1ReviewByIdComplete
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -3332,6 +1435,7 @@ operations:
     audit: required
 - path: /authoring/v1/search
   method: get
+  operationId: getAuthoringV1Search
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -3341,21 +1445,17 @@ operations:
     audit: none
 - path: /authoring/v1/search/json
   method: post
+  operationId: postAuthoringV1SearchJson
   x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
+    action-class: connected
+    consequence: read
+    subject: optional
     token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
+      max-ttl: 3600
+    audit: none
 - path: /authoring/v1/sites
   method: get
+  operationId: getAuthoringV1Sites
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -3365,6 +1465,7 @@ operations:
     audit: none
 - path: /authoring/v1/sites
   method: post
+  operationId: postAuthoringV1Sites
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -3380,6 +1481,7 @@ operations:
     audit: required
 - path: /authoring/v1/sites/{site-id}
   method: get
+  operationId: getAuthoringV1SitesBySiteId
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -3389,6 +1491,7 @@ operations:
     audit: none
 - path: /authoring/v1/sites/{site-id}
   method: put
+  operationId: putAuthoringV1SitesBySiteId
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -3404,6 +1507,7 @@ operations:
     audit: required
 - path: /authoring/v1/sites/{site-id}
   method: delete
+  operationId: deleteAuthoringV1SitesBySiteId
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -3419,6 +1523,7 @@ operations:
     audit: required
 - path: /authoring/v1/sites/{site-id}/ready
   method: post
+  operationId: postAuthoringV1SitesBySiteIdReady
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -3434,6 +1539,7 @@ operations:
     audit: required
 - path: /authoring/v1/sites/{site-id}/cancel
   method: post
+  operationId: postAuthoringV1SitesBySiteIdCancel
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -3449,6 +1555,7 @@ operations:
     audit: required
 - path: /authoring/v1/sites/{site-id}/pages/ready
   method: post
+  operationId: postAuthoringV1SitesBySiteIdPagesReady
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -3464,6 +1571,7 @@ operations:
     audit: required
 - path: /authoring/v1/sites/{site-id}/pages
   method: get
+  operationId: getAuthoringV1SitesBySiteIdPages
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -3473,6 +1581,7 @@ operations:
     audit: none
 - path: /authoring/v1/sites/{site-id}/pages
   method: post
+  operationId: postAuthoringV1SitesBySiteIdPages
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -3488,6 +1597,7 @@ operations:
     audit: required
 - path: /authoring/v1/sites/{site-id}/pages/views/by-modified
   method: get
+  operationId: getAuthoringV1SitesBySiteIdPagesViewsByModified
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -3497,6 +1607,7 @@ operations:
     audit: none
 - path: /authoring/v1/sites/{site-id}/pages/{page-id}
   method: get
+  operationId: getAuthoringV1SitesBySiteIdPagesByPageId
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -3506,6 +1617,7 @@ operations:
     audit: none
 - path: /authoring/v1/sites/{site-id}/pages/{page-id}
   method: delete
+  operationId: deleteAuthoringV1SitesBySiteIdPagesByPageId
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -3521,6 +1633,7 @@ operations:
     audit: required
 - path: /authoring/v1/sites/{site-id}/pages/{page-id}
   method: put
+  operationId: putAuthoringV1SitesBySiteIdPagesByPageId
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -3536,6 +1649,7 @@ operations:
     audit: required
 - path: /authoring/v1/sites/{site-id}/pages/move
   method: post
+  operationId: postAuthoringV1SitesBySiteIdPagesMove
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -3551,6 +1665,7 @@ operations:
     audit: required
 - path: /authoring/v1/sites/{site-id}/pages/{page-id}/ready
   method: post
+  operationId: postAuthoringV1SitesBySiteIdPagesByPageIdReady
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -3566,6 +1681,7 @@ operations:
     audit: required
 - path: /authoring/v1/sites/pages/{page-id}
   method: get
+  operationId: getAuthoringV1SitesPagesByPageId
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -3575,6 +1691,7 @@ operations:
     audit: none
 - path: /authoring/v1/types
   method: post
+  operationId: postAuthoringV1Types
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -3590,6 +1707,7 @@ operations:
     audit: required
 - path: /authoring/v1/types
   method: get
+  operationId: getAuthoringV1Types
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -3599,6 +1717,7 @@ operations:
     audit: none
 - path: /authoring/v1/types/by-path
   method: get
+  operationId: getAuthoringV1TypesByPath
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -3608,6 +1727,7 @@ operations:
     audit: none
 - path: /authoring/v1/types/count
   method: get
+  operationId: getAuthoringV1TypesCount
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -3617,6 +1737,7 @@ operations:
     audit: none
 - path: /authoring/v1/types/{id}
   method: put
+  operationId: putAuthoringV1TypesById
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -3632,6 +1753,7 @@ operations:
     audit: required
 - path: /authoring/v1/types/{id}
   method: delete
+  operationId: deleteAuthoringV1TypesById
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -3647,6 +1769,7 @@ operations:
     audit: required
 - path: /authoring/v1/types/{id}
   method: get
+  operationId: getAuthoringV1TypesById
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -3656,6 +1779,7 @@ operations:
     audit: none
 - path: /authoring/v1/types/{id}/copy
   method: post
+  operationId: postAuthoringV1TypesByIdCopy
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -3671,6 +1795,7 @@ operations:
     audit: required
 - path: /authoring/v1/types/{id}/new-content
   method: get
+  operationId: getAuthoringV1TypesByIdNewContent
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -3680,6 +1805,7 @@ operations:
     audit: none
 - path: /authoring/v1/types/{id}/schema
   method: get
+  operationId: getAuthoringV1TypesByIdSchema
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -3689,6 +1815,7 @@ operations:
     audit: none
 - path: /authoring/v1/types/{id}/validate
   method: post
+  operationId: postAuthoringV1TypesByIdValidate
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -3704,6 +1831,7 @@ operations:
     audit: required
 - path: /authoring/v1/types/new
   method: get
+  operationId: getAuthoringV1TypesNew
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -3713,6 +1841,7 @@ operations:
     audit: none
 - path: /authoring/v1/types/views/by-modified
   method: get
+  operationId: getAuthoringV1TypesViewsByModified
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -3722,6 +1851,7 @@ operations:
     audit: none
 - path: /authoring/v1/types/views/by-name
   method: get
+  operationId: getAuthoringV1TypesViewsByName
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -3731,6 +1861,7 @@ operations:
     audit: none
 - path: /authoring/v1/elementdefs/{id}
   method: get
+  operationId: getAuthoringV1ElementdefsById
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -3740,6 +1871,7 @@ operations:
     audit: none
 - path: /authoring/v1/elementdefs
   method: get
+  operationId: getAuthoringV1Elementdefs
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -3749,6 +1881,7 @@ operations:
     audit: none
 - path: /authoring/v1/versions/{classification}/{id}
   method: get
+  operationId: getAuthoringV1VersionsByClassificationById
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -3758,6 +1891,7 @@ operations:
     audit: none
 - path: /authoring/v1/versions/{classification}/{id}/{timestamp}
   method: get
+  operationId: getAuthoringV1VersionsByClassificationByIdByTimestamp
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -3767,6 +1901,7 @@ operations:
     audit: none
 - path: /authoring/v1/versions/restore
   method: post
+  operationId: postAuthoringV1VersionsRestore
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -3782,6 +1917,7 @@ operations:
     audit: required
 - path: /authoring/v1/versions/policy
   method: get
+  operationId: getAuthoringV1VersionsPolicy
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -3791,6 +1927,7 @@ operations:
     audit: none
 - path: /authoring/v1/versions/policy/on
   method: post
+  operationId: postAuthoringV1VersionsPolicyOn
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -3806,6 +1943,7 @@ operations:
     audit: required
 - path: /authoring/v1/versions/policy/off
   method: post
+  operationId: postAuthoringV1VersionsPolicyOff
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -3821,6 +1959,7 @@ operations:
     audit: required
 - path: /authoring/v1/versions/policy/disable
   method: post
+  operationId: postAuthoringV1VersionsPolicyDisable
   x-agentic-access:
     action-class: acting
     consequence: safety-critical
@@ -3834,56 +1973,29 @@ operations:
     escalation:
       human-in-the-loop: required
     audit: required
-- path: /authoring/v1/contextualsearch
-  method: get
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /delivery/v1/contextualsearch
-  method: get
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
 - path: /delivery/v1/content/bulk_retrieve
   method: post
+  operationId: postDeliveryV1ContentBulkRetrieve
   x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
+    action-class: connected
+    consequence: read
+    subject: optional
     token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
+      max-ttl: 3600
+    audit: none
 - path: /mydelivery/v1/content/bulk_retrieve
   method: post
+  operationId: postMydeliveryV1ContentBulkRetrieve
   x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
+    action-class: connected
+    consequence: read
+    subject: optional
     token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
+      max-ttl: 3600
+    audit: none
 - path: /delivery/v1/content/{id}
   method: get
+  operationId: getDeliveryV1ContentById
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -3893,6 +2005,17 @@ operations:
     audit: none
 - path: /mydelivery/v1/content/{id}
   method: get
+  operationId: getMydeliveryV1ContentById
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /delivery/v1/contextualsearch
+  method: get
+  operationId: getDeliveryV1Contextualsearch
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -3902,6 +2025,7 @@ operations:
     audit: none
 - path: /delivery/v1/rendering/render/content/{id}
   method: get
+  operationId: getDeliveryV1RenderingRenderContentById
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -3911,6 +2035,7 @@ operations:
     audit: none
 - path: /delivery/v1/rendering/sites/{id}
   method: get
+  operationId: getDeliveryV1RenderingSitesById
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -3920,6 +2045,7 @@ operations:
     audit: none
 - path: /delivery/v1/rendering/context/{id}
   method: get
+  operationId: getDeliveryV1RenderingContextById
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -3929,6 +2055,7 @@ operations:
     audit: none
 - path: /delivery/v1/rendering/type/{id}
   method: get
+  operationId: getDeliveryV1RenderingTypeById
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -3938,6 +2065,7 @@ operations:
     audit: none
 - path: /delivery/v1/rendering/search
   method: get
+  operationId: getDeliveryV1RenderingSearch
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -3947,6 +2075,7 @@ operations:
     audit: none
 - path: /mydelivery/v1/rendering/render/content/{id}
   method: get
+  operationId: getMydeliveryV1RenderingRenderContentById
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -3956,6 +2085,7 @@ operations:
     audit: none
 - path: /mydelivery/v1/rendering/type/{id}
   method: get
+  operationId: getMydeliveryV1RenderingTypeById
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -3965,6 +2095,7 @@ operations:
     audit: none
 - path: /delivery/v1/resources
   method: get
+  operationId: getDeliveryV1Resources
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -3974,6 +2105,7 @@ operations:
     audit: none
 - path: /delivery/v1/resources/{fileIdentifier}
   method: get
+  operationId: getDeliveryV1ResourcesByFileIdentifier
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -3983,6 +2115,7 @@ operations:
     audit: none
 - path: /delivery/v1/search
   method: get
+  operationId: getDeliveryV1Search
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -3992,6 +2125,7 @@ operations:
     audit: none
 - path: /mydelivery/v1/search
   method: get
+  operationId: getMydeliveryV1Search
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -4001,6 +2135,7 @@ operations:
     audit: none
 - path: /delivery/v1/sites/{siteId}
   method: get
+  operationId: getDeliveryV1SitesBySiteId
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -4010,6 +2145,7 @@ operations:
     audit: none
 - path: /mydelivery/v1/sites/{siteId}
   method: get
+  operationId: getMydeliveryV1SitesBySiteId
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -4019,6 +2155,7 @@ operations:
     audit: none
 - path: /delivery/v2/sites/{siteId}
   method: get
+  operationId: getDeliveryV2SitesBySiteId
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -4028,6 +2165,7 @@ operations:
     audit: none
 - path: /mydelivery/v2/sites/{siteId}
   method: get
+  operationId: getMydeliveryV2SitesBySiteId
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -4037,6 +2175,7 @@ operations:
     audit: none
 - path: /delivery/v1/sites/{siteId}/pages/{pageId}
   method: get
+  operationId: getDeliveryV1SitesBySiteIdPagesByPageId
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -4046,6 +2185,7 @@ operations:
     audit: none
 - path: /mydelivery/v1/sites/{siteId}/pages/{pageId}
   method: get
+  operationId: getMydeliveryV1SitesBySiteIdPagesByPageId
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -4055,6 +2195,7 @@ operations:
     audit: none
 - path: /delivery/v1/sites/{siteId}/pages/by-parent/{parentPageId}
   method: get
+  operationId: getDeliveryV1SitesBySiteIdPagesByParentByParentPageId
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -4064,6 +2205,7 @@ operations:
     audit: none
 - path: /mydelivery/v1/sites/{siteId}/pages/by-parent/{parentPageId}
   method: get
+  operationId: getMydeliveryV1SitesBySiteIdPagesByParentByParentPageId
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -4071,32 +2213,9 @@ operations:
     token:
       max-ttl: 3600
     audit: none
-- path: /registry/v1/currenttenant
-  method: get
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /registry/v1/currenttenant
-  method: put
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
 - path: /login/v1/removecookies
   method: get
+  operationId: getLoginV1Removecookies
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -4106,6 +2225,7 @@ operations:
     audit: none
 - path: /login/v1/basicauth
   method: get
+  operationId: getLoginV1Basicauth
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -4115,117 +2235,7 @@ operations:
     audit: none
 - path: /login/v1/basicauth
   method: post
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /user-profile/v1/users/currentuser
-  method: get
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /user-profile/v1/users
-  method: get
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /user-profile/v1/users
-  method: post
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /user-profile/v1/users/{id}
-  method: get
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /user-profile/v1/users/{id}
-  method: put
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /user-profile/v1/users/{id}
-  method: delete
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /webhook/v1/profile
-  method: get
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /webhook/v1/profile
-  method: put
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /webhook/v1/profile
-  method: delete
+  operationId: postLoginV1Basicauth
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -4241,6 +2251,7 @@ operations:
     audit: required
 - path: /publishing/v1/jobs
   method: post
+  operationId: postPublishingV1Jobs
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -4256,6 +2267,7 @@ operations:
     audit: required
 - path: /publishing/v1/jobs/current-job
   method: get
+  operationId: getPublishingV1JobsCurrentJob
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -4265,6 +2277,7 @@ operations:
     audit: none
 - path: /publishing/v1/jobs/current-job/status
   method: get
+  operationId: getPublishingV1JobsCurrentJobStatus
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -4274,6 +2287,7 @@ operations:
     audit: none
 - path: /publishing/v1/site-revisions/default
   method: get
+  operationId: getPublishingV1SiteRevisionsDefault
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -4283,6 +2297,75 @@ operations:
     audit: none
 - path: /publishing/v1/site-revisions/default
   method: put
+  operationId: putPublishingV1SiteRevisionsDefault
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /registry/v1/currenttenant
+  method: get
+  operationId: getRegistryV1Currenttenant
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /registry/v1/currenttenant
+  method: put
+  operationId: putRegistryV1Currenttenant
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /webhook/v1/profile
+  method: get
+  operationId: getWebhookV1Profile
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /webhook/v1/profile
+  method: put
+  operationId: putWebhookV1Profile
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /webhook/v1/profile
+  method: delete
+  operationId: deleteWebhookV1Profile
   x-agentic-access:
     action-class: acting
     consequence: write
