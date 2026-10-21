@@ -1,5 +1,35 @@
 generated: '2026-10-14'
 edges:
+- partner_name: npm registry
+  partner: npm
+  partner_match: register
+  type: register
+  direction: provider-built
+  category: official SDK (JavaScript/TypeScript)
+  evidence: https://www.npmjs.com/package/@acoustic-content/delivery-sdk
+  channel: package-registry
+  relationship: distribution-channel
+  contract_reference:
+    register: npm registry (public registry JSON)
+    spec_file: null
+    language: JavaScript/TypeScript
+    packages:
+    - name: '@acoustic-content/delivery-sdk'
+      version: 1.0.3
+      released: '2022-04-04'
+      released_field: modified
+      lapsed: true
+      page: https://www.npmjs.com/package/@acoustic-content/delivery-sdk
+      repo_leg: github-org:acoustic-content-samples
+      publisher_leg: email:acoustic.com
+      matched_by: domain
+    current: false
+    signal_note: 'an official package on the registry: distribution, not an integration; lapsed = no release in
+      24 months'
+    detected_by: sweep-official-sdks.py
+    detected: '2026-10-18'
+  detected_by: sweep-official-sdks.py
+  first_seen: '2026-10-18'
 - partner_name: Twilio Segment
   partner: segment
   partner_match: aggregator
@@ -50,36 +80,23 @@ edges:
       - upsert
   detected_by: sweep-cdp.py
   first_seen: '2026-10-14'
-- partner_name: npm registry
-  partner: npm
-  partner_match: register
-  type: register
-  direction: provider-built
-  category: official SDK (JavaScript/TypeScript)
-  evidence: https://www.npmjs.com/package/@acoustic-content/delivery-sdk
-  channel: package-registry
-  relationship: distribution-channel
-  contract_reference:
-    register: npm registry (public registry JSON)
-    spec_file: null
-    language: JavaScript/TypeScript
-    packages:
-    - name: '@acoustic-content/delivery-sdk'
-      version: 1.0.3
-      released: '2022-04-04'
-      released_field: modified
-      lapsed: true
-      page: https://www.npmjs.com/package/@acoustic-content/delivery-sdk
-      repo_leg: github-org:acoustic-content-samples
-      publisher_leg: email:acoustic.com
-      matched_by: domain
-    current: false
-    signal_note: 'an official package on the registry: distribution, not an integration; lapsed = no release in
-      24 months'
-    detected_by: sweep-official-sdks.py
-    detected: '2026-10-18'
-  detected_by: sweep-official-sdks.py
-  first_seen: '2026-10-18'
+- partner_name: Salesforce (own)
+  partner: salesforce
+  partner_match: mirror
+  mirror_match: domain
+  type: marketplace
+  relationship: platform-app
+  direction: third-party
+  channel: partner-built
+  marketplace: own
+  evidence: https://appexchange.salesforce.com/appxListingDetail?listingId=a0N300000016aesEAA
+  mirror_of: salesforce/integrations/salesforce-integration-edges.yml
+  apps:
+  - 'Acoustic Campaign CRMi: Increase Engagement and Attract New Customers'
+  listing_count: 1
+  detected: '2026-10-21'
+  detected_by: mirror-platform-listings.py
+  category: marketingAutomation
 method: searched
 checked:
 - https://api.nuget.org/v3
@@ -91,6 +108,7 @@ checked:
 - https://repo1.maven.org/maven2
 - https://rubygems.org/api/v1
 - https://www.twilio.com/docs/segment/connections/destinations/catalog/actions-acoustic
+- salesforce/integrations/salesforce-integration-edges.yml
 source:
 - https://hightouch.com/docs/destinations/acoustic
 - https://www.twilio.com/docs/segment/connections/destinations/catalog/actions-acoustic
